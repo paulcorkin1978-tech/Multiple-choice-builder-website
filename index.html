@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HSC Economics Quiz Builder</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Verdana',sans-serif;font-size:13px;background:#f5f4f0;color:#2c2c2a}
+
+/* ── MENU ── */
+.menu{display:flex;flex-direction:column;align-items:center;gap:20px;padding:40px 20px;min-height:100vh;justify-content:center}
+.menu h2{font-size:22px;font-weight:600;color:#2c2c2a}
+.menu-cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.menu-card{background:#fff;border:1.5px solid #d3d1c7;border-radius:12px;padding:28px 32px;cursor:pointer;transition:all .2s;text-align:center;width:210px}
+.menu-card:hover{border-color:#5f5e5a;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+.menu-card h3{font-size:16px;font-weight:600;margin-bottom:8px;color:#2c2c2a}
+.menu-card p{font-size:12px;color:#5f5e5a;line-height:1.6}
+.menu-info{font-size:13px;color:#5f5e5a}
+.menu-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* ── BUILDER LAYOUT ── */
+.builder{display:none}
+.builder.active{display:grid;grid-template-columns:340px 1fr;min-height:100vh;gap:0}
+.diag-panel{background:#fff;border-right:1.5px solid #d3d1c7;padding:16px;display:flex;flex-direction:column;gap:12px}
+.form-panel{background:#f5f4f0;padding:20px;overflow-y:auto;max-height:100vh;display:flex;flex-direction:column;gap:14px}
+
+/* ── CARDS ── */
+.card{background:#fff;border:1.5px solid #d3d1c7;border-radius:10px;padding:16px}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888780;margin-bottom:12px}
+.info-card{background:#e6f1fb;border:1.5px solid #b5d4f4;border-radius:10px;padding:14px}
+.info-card p{font-size:12px;color:#0c447c;line-height:1.7}
+.step{display:inline-block;background:#185FA5;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;text-align:center;line-height:18px;margin-right:6px}
+.cap-card{background:#eaf3de;border:1.5px solid #3b6d11;border-radius:10px;padding:14px;display:none}
+.cap-card p{font-size:12px;color:#27500a;font-weight:500}
+
+/* ── FORM ELEMENTS ── */
+.field{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.field label{font-size:13px;color:#444441;min-width:80px;flex-shrink:0;font-weight:500}
+.field input[type=text],
+.field input[type=number]{flex:1;font-size:13px;font-family:'Verdana',sans-serif;padding:8px 10px;border:1.5px solid #d3d1c7;border-radius:6px;background:#fff;color:#2c2c2a;outline:none}
+.field input[type=text]:focus,
+.field input[type=number]:focus{border-color:#185FA5}
+.field input[type=color]{width:40px;height:32px;padding:2px;border:1.5px solid #d3d1c7;border-radius:6px;cursor:pointer}
+textarea{width:100%;font-size:13px;font-family:'Verdana',sans-serif;padding:10px 12px;border:1.5px solid #d3d1c7;border-radius:6px;background:#fff;color:#2c2c2a;resize:vertical;min-height:80px;outline:none;line-height:1.6}
+textarea:focus{border-color:#185FA5}
+textarea::placeholder{color:#b4b2a9}
+
+/* ── ANSWER ROWS ── */
+.arow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.arow input[type=radio]{width:16px;height:16px;accent-color:#0F6E56;flex-shrink:0;cursor:pointer}
+.arow .alabel{font-size:13px;font-weight:600;color:#444441;width:20px;flex-shrink:0}
+.arow input[type=text]{flex:1;font-size:13px;font-family:'Verdana',sans-serif;padding:8px 10px;border:1.5px solid #d3d1c7;border-radius:6px;background:#fff;color:#2c2c2a;outline:none}
+.arow input[type=text]:focus{border-color:#0F6E56}
+.correct-hint{font-size:11px;color:#5f5e5a;margin-bottom:10px}
+
+/* ── BUTTONS ── */
+.btn{font-family:'Verdana',sans-serif;font-size:12px;font-weight:600;padding:8px 14px;border-radius:6px;cursor:pointer;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;transition:all .15s}
+.btn:hover{background:#f1efe8;border-color:#888780}
+.btn:active{transform:scale(0.97)}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.btn-primary{background:#185FA5;color:#fff;border-color:#185FA5}
+.btn-primary:hover{background:#0c447c;border-color:#0c447c}
+.btn-success{background:#3b6d11;color:#fff;border-color:#3b6d11}
+.btn-success:hover{background:#27500a;border-color:#27500a}
+.btn-capture{background:#f5f4f0;color:#2c2c2a;border:2px solid #2c2c2a;width:100%;font-size:13px;padding:10px;margin-top:4px}
+.btn-capture:hover{background:#2c2c2a;color:#fff}
+.btn-back{background:none;border:none;color:#888780;font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline}
+.btn-back:hover{color:#2c2c2a}
+.btn-danger{background:#fcebeb;color:#a32d2d;border-color:#f09595;font-size:11px;padding:3px 8px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── DIAGRAM CONTROLS ── */
+.diag-ctrl-group{background:#f5f4f0;border:1.5px solid #d3d1c7;border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.diag-ctrl-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#888780;margin-bottom:8px}
+
+/* ── QUIZ LIST ── */
+.qlist{max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.qitem{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#fff;border:1px solid #d3d1c7;border-radius:6px;font-size:12px}
+.qitem span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2c2c2a}
+.hint{font-size:11px;color:#888780}
+.msg{font-size:12px;color:#888780;min-height:16px;margin-top:4px}
+.sep{border:none;border-top:1px solid #d3d1c7;margin:4px 0}
+
+/* ── QUIZ PAGE (student view) ── */
+.quiz-body{font-family:'Verdana',sans-serif;background:#f5f4f0;padding:24px;color:#2c2c2a}
+.quiz-h1{font-size:20px;font-weight:600;text-align:center;margin-bottom:28px}
+.quiz-wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.qcard{background:#fff;border-radius:12px;border:1px solid #d3d1c7;padding:24px;display:flex;gap:24px;align-items:flex-start}
+.qdiag{flex-shrink:0;width:400px}
+.qright{flex:1;display:flex;flex-direction:column;gap:12px}
+.qnum{font-size:11px;color:#888780;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.qtext{font-size:15px;line-height:1.7;font-weight:600}
+.abtns{display:flex;flex-direction:column;gap:8px}
+.abtn{font-family:'Verdana',sans-serif;font-size:13px;padding:11px 15px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;cursor:pointer;text-align:left;color:#2c2c2a;transition:all .2s;line-height:1.4}
+.abtn:hover{background:#f1efe8;border-color:#888780}
+.abtn.wrong{background:#fcebeb;border-color:#a32d2d;color:#a32d2d;pointer-events:none}
+.abtn.correct{background:#eaf3de;border-color:#3b6d11;color:#3b6d11;font-weight:600;pointer-events:none}
+.fb{font-size:13px;font-weight:600;min-height:20px}
+.fb.c{color:#3b6d11}.fb.w{color:#a32d2d}
+.score-card{background:#fff;border-radius:12px;border:1px solid #d3d1c7;padding:28px;text-align:center;font-size:20px;font-weight:600;display:none;max-width:900px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<!-- ══ MAIN MENU ══ -->
+<div id="menuScreen">
+  <div class="menu">
+    <h2>HSC Economics Quiz Builder</h2>
+    <div class="menu-cards">
+      <div class="menu-card" onclick="openBuilder('sd')">
+        <h3>Supply &amp; Demand</h3>
+        <p>Both curves, equilibrium shifts, new equilibrium animation</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('sc')">
+        <h3>Single Curve</h3>
+        <p>Demand or Supply only, fixed price, expansion &amp; contraction</p>
+      </div>
+    </div>
+    <div id="menuInfo" class="menu-info">Build questions then download your quiz.</div>
+    <div class="menu-btns">
+      <button class="btn btn-success" id="dlBtnMenu" onclick="downloadQuiz()" disabled>⬇ Download Quiz HTML</button>
+      <button class="btn btn-danger" id="clearBtn" onclick="clearQuiz()" style="display:none">Clear Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S&D BUILDER ══ -->
+<div class="builder" id="sdBuilder">
+  <!-- LEFT: diagram + controls -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <svg id="sdChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Demand</div>
+      <div class="btn-row">
+        <button class="btn" id="sdDL" onclick="sdShift('d',-1)">◀ Left</button>
+        <button class="btn" id="sdDR" onclick="sdShift('d',1)">Right ▶</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Supply</div>
+      <div class="btn-row">
+        <button class="btn" id="sdSL" onclick="sdShift('s',-1)">◀ Left</button>
+        <button class="btn" id="sdSR" onclick="sdShift('s',1)">Right ▶</button>
+      </div>
+    </div>
+    <button class="btn" onclick="sdReset()" style="width:100%">↺ Reset Diagram</button>
+  </div>
+
+  <!-- RIGHT: form -->
+  <div class="form-panel">
+    <div class="info-card">
+      <p>
+        <span class="step">1</span>Set axis units and labels below<br>
+        <span class="step">2</span>Shift curves to the <strong>correct answer position</strong><br>
+        <span class="step">3</span>Hit <strong>Capture Answer</strong> — diagram auto-resets<br>
+        <span class="step">4</span>Write your question &amp; answers, then add to quiz
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Axis &amp; Labels</div>
+      <div class="field"><label>Price unit</label><input type="number" id="sdVUnit" value="1" min="0.01" step="0.01" oninput="sdDraw()"></div>
+      <div class="field"><label>Qty unit</label><input type="number" id="sdHUnit" value="5" min="1" step="1" oninput="sdDraw()"></div>
+      <div class="field"><label>Title</label><input type="text" id="sdTitle" placeholder="e.g. Wheat Market" oninput="sdDraw()"></div>
+      <div class="field"><label>Y-axis</label><input type="text" id="sdYLbl" value="Price ($)" oninput="sdDraw()"></div>
+      <div class="field"><label>X-axis</label><input type="text" id="sdXLbl" value="Quantity" oninput="sdDraw()"></div>
+      <div class="field"><label>D colour</label><input type="color" id="sdDCol" value="#185FA5" oninput="sdDraw()"></div>
+      <div class="field"><label>S colour</label><input type="color" id="sdSCol" value="#0F6E56" oninput="sdDraw()"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Capture Answer</div>
+      <p style="font-size:13px;color:#444;margin-bottom:10px;line-height:1.6">Shift the curves above to show the <strong>correct answer position</strong>, then click capture. The diagram will automatically animate back to the starting position.</p>
+      <button class="btn btn-capture" onclick="sdCapture()">📸 Capture Answer &amp; Reset</button>
+      <div class="cap-card" id="sdCapCard" style="display:none;margin-top:10px">
+        <p id="sdCapMsg"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Question Text</div>
+      <textarea id="sdQText" placeholder="Type your question here — e.g. An improvement in technology causes an increase in supply. What is the new equilibrium price?"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Answer Options</div>
+      <p class="correct-hint">Select the radio button next to the correct answer</p>
+      <div class="arow"><input type="radio" name="sdC" value="0"><span class="alabel">A</span><input type="text" id="sdA0" placeholder="Answer A"></div>
+      <div class="arow"><input type="radio" name="sdC" value="1"><span class="alabel">B</span><input type="text" id="sdA1" placeholder="Answer B"></div>
+      <div class="arow"><input type="radio" name="sdC" value="2"><span class="alabel">C</span><input type="text" id="sdA2" placeholder="Answer C"></div>
+      <div class="arow"><input type="radio" name="sdC" value="3"><span class="alabel">D</span><input type="text" id="sdA3" placeholder="Answer D"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Quiz <span id="sdQCount" class="hint"></span></div>
+      <div class="qlist" id="sdQList"><div class="hint">No questions yet</div></div>
+      <div class="btn-row">
+        <button class="btn btn-success" onclick="sdAddQ()">+ Add to Quiz</button>
+        <button class="btn btn-primary" onclick="sdPreview()">Preview ↗</button>
+      </div>
+      <div class="msg" id="sdMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SINGLE CURVE BUILDER ══ -->
+<div class="builder" id="scBuilder">
+  <!-- LEFT: diagram + controls -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <svg id="scChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Curve Type</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="scBtnD" onclick="scSetCurve('demand')">Demand</button>
+        <button class="btn" id="scBtnS" onclick="scSetCurve('supply')">Supply</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Price</div>
+      <div class="btn-row">
+        <button class="btn" id="scPUp" onclick="scShiftPrice(1)">▲ Increase</button>
+        <button class="btn" id="scPDn" onclick="scShiftPrice(-1)">▼ Decrease</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Curve</div>
+      <div class="btn-row">
+        <button class="btn" id="scCL" onclick="scShiftCurve(-1)">◀ Left</button>
+        <button class="btn" id="scCR" onclick="scShiftCurve(1)">Right ▶</button>
+      </div>
+    </div>
+    <button class="btn" onclick="scReset()" style="width:100%">↺ Reset Diagram</button>
+  </div>
+
+  <!-- RIGHT: form -->
+  <div class="form-panel">
+    <div class="info-card">
+      <p>
+        <span class="step">1</span>Choose Demand or Supply, set units &amp; labels<br>
+        <span class="step">2</span>Set fixed price &amp; shift to the <strong>correct answer position</strong><br>
+        <span class="step">3</span>Hit <strong>Capture Answer</strong> — diagram auto-resets<br>
+        <span class="step">4</span>Write your question &amp; answers, then add to quiz
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Axis &amp; Labels</div>
+      <div class="field"><label>Price unit</label><input type="number" id="scVUnit" value="1" min="0.01" step="0.01" oninput="scDraw()"></div>
+      <div class="field"><label>Qty unit</label><input type="number" id="scHUnit" value="5" min="1" step="1" oninput="scDraw()"></div>
+      <div class="field"><label>Title</label><input type="text" id="scTitle" placeholder="e.g. Orange Market" oninput="scDraw()"></div>
+      <div class="field"><label>Y-axis</label><input type="text" id="scYLbl" value="Price ($)" oninput="scDraw()"></div>
+      <div class="field"><label>X-axis</label><input type="text" id="scXLbl" value="Quantity" oninput="scDraw()"></div>
+      <div class="field"><label>Colour</label><input type="color" id="scCol" value="#185FA5" oninput="scDraw()"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Capture Answer</div>
+      <p style="font-size:13px;color:#444;margin-bottom:10px;line-height:1.6">Shift the price or curve to show the <strong>correct answer position</strong>, then capture. The diagram resets automatically.</p>
+      <button class="btn btn-capture" onclick="scCapture()">📸 Capture Answer &amp; Reset</button>
+      <div class="cap-card" id="scCapCard" style="display:none;margin-top:10px">
+        <p id="scCapMsg"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Question Text</div>
+      <textarea id="scQText" placeholder="Type your question here — e.g. If the price of oranges falls from $5 to $3 per kg, what happens to quantity demanded?"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Answer Options</div>
+      <p class="correct-hint">Select the radio button next to the correct answer</p>
+      <div class="arow"><input type="radio" name="scC" value="0"><span class="alabel">A</span><input type="text" id="scA0" placeholder="Answer A"></div>
+      <div class="arow"><input type="radio" name="scC" value="1"><span class="alabel">B</span><input type="text" id="scA1" placeholder="Answer B"></div>
+      <div class="arow"><input type="radio" name="scC" value="2"><span class="alabel">C</span><input type="text" id="scA2" placeholder="Answer C"></div>
+      <div class="arow"><input type="radio" name="scC" value="3"><span class="alabel">D</span><input type="text" id="scA3" placeholder="Answer D"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Quiz <span id="scQCount" class="hint"></span></div>
+      <div class="qlist" id="scQList"><div class="hint">No questions yet</div></div>
+      <div class="btn-row">
+        <button class="btn btn-success" onclick="scAddQ()">+ Add to Quiz</button>
+        <button class="btn btn-primary" onclick="scPreview()">Preview ↗</button>
+      </div>
+      <div class="msg" id="scMsg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GRID=9,QS=1,QE=9;
+const W=300,H=270,PAD={l:36,r:28,t:22,b:30};
+let quizQuestions=[];
+
+function fmt(n){return Math.round(n*100)/100;}
+function dPf(q,ds){return 10-q+ds*2;}
+function sPf(q,ss){return q-ss*2;}
+function dQf(p,ds){return 10-p+ds*2;}
+function sQf(p,ss){return p+ss*2;}
+function getEq(ds,ss){const q=(10+ds*2+ss*2)/2;return{q,p:q-ss*2};}
+function gxF(q,pad,W){return pad.l+q*(W-pad.l-pad.r)/GRID;}
+function gyF(p,pad,H){return pad.t+(GRID-p)*(H-pad.t-pad.b)/GRID;}
+
+function clipLine(qA,pA,qB,pB,pad,W,H){
+  let t0=0,t1=1;const dq=qB-qA,dp=pB-pA;
+  if(dp!==0){const tL=(0-pA)/dp,tH=(GRID-pA)/dp;if(dp<0){t1=Math.min(t1,tL);t0=Math.max(t0,tH);}else{t0=Math.max(t0,tL);t1=Math.min(t1,tH);}}
+  else if(pA<0||pA>GRID)return null;
+  if(t0>=t1)return null;
+  return{x1:gxF(qA+t0*dq,pad,W),y1:gyF(pA+t0*dp,pad,H),x2:gxF(qA+t1*dq,pad,W),y2:gyF(pA+t1*dp,pad,H)};
+}
+
+function getYLbl(id,vU){
+  const b=document.getElementById(id).value||'Price ($)';
+  return vU>=1000?b.replace('($)','(thousands $)'):b;
+}
+
+function buildSVGInner(cfg){
+  const{W,H,pad,title,yLbl,xLbl,vU,hU,type,dCol,sCol,col,curve,dA,sA,fpA,startDS,startSS,startCS,showFaded}=cfg;
+  const gx=q=>gxF(q,pad,W),gy=p=>gyF(p,pad,H);
+  const fs=11,fs2=9;
+  let s=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+  if(title) s+=`<text x="${W/2}" y="13" text-anchor="middle" font-size="${fs}" font-family="Verdana" font-weight="bold" fill="#2c2c2a">${title}</text>`;
+  for(let i=1;i<=GRID;i++) s+=`<line x1="${pad.l}" y1="${gy(i)}" x2="${W-pad.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+  s+=`<line x1="${pad.l}" y1="${pad.t-6}" x2="${pad.l}" y2="${H-pad.b+6}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>`;
+  s+=`<line x1="${pad.l-6}" y1="${H-pad.b}" x2="${W-pad.r+6}" y2="${H-pad.b}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>`;
+
+  if(type==='sd'){
+    const eq=getEq(dA,sA);
+    for(let i=1;i<=GRID;i++){
+      const eP=Math.abs(i-eq.p)<0.05,eQ=Math.abs(i-eq.q)<0.05;
+      if(!eP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vU)}</text>`;
+      if(!eQ) s+=`<text x="${gx(i)}" y="${H-pad.b+11}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hU)}</text>`;
+    }
+    s+=`<text x="${pad.l-4}" y="${H-pad.b}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-1}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${xLbl}</text>`;
+    s+=`<text x="${fs2}" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,${fs2},${pad.t+(H-pad.t-pad.b)/2})">${yLbl}</text>`;
+    const shifted=dA!==startDS||sA!==startSS;
+    if(shifted&&showFaded){
+      const cd=clipLine(QS,dPf(QS,startDS),QE,dPf(QE,startDS),pad,W,H);
+      const cs=clipLine(QS,sPf(QS,startSS),QE,sPf(QE,startSS),pad,W,H);
+      if(cd) s+=`<line x1="${cd.x1}" y1="${cd.y1}" x2="${cd.x2}" y2="${cd.y2}" stroke="${dCol}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="${cd.x2+4}" y="${cd.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${dCol}" opacity="0.3" font-weight="bold">D1</text>`;
+      if(cs) s+=`<line x1="${cs.x1}" y1="${cs.y1}" x2="${cs.x2}" y2="${cs.y2}" stroke="${sCol}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="${cs.x2+4}" y="${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${sCol}" opacity="0.3" font-weight="bold">S1</text>`;
+    }
+    const dl=shifted?'D2':'D1',sl=shifted?'S2':'S1';
+    const cd=clipLine(QS,dPf(QS,dA),QE,dPf(QE,dA),pad,W,H);
+    const cs=clipLine(QS,sPf(QS,sA),QE,sPf(QE,sA),pad,W,H);
+    if(cd) s+=`<line x1="${cd.x1}" y1="${cd.y1}" x2="${cd.x2}" y2="${cd.y2}" stroke="${dCol}" stroke-width="2.5" stroke-linecap="round"/><text x="${cd.x2+4}" y="${cd.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${dCol}" font-weight="bold">${dl}</text>`;
+    if(cs) s+=`<line x1="${cs.x1}" y1="${cs.y1}" x2="${cs.x2}" y2="${cs.y2}" stroke="${sCol}" stroke-width="2.5" stroke-linecap="round"/><text x="${cs.x2+4}" y="${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${sCol}" font-weight="bold">${sl}</text>`;
+    if(eq.q>=QS&&eq.q<=QE&&eq.p>=1&&eq.p<=GRID){
+      const ex=gx(eq.q),ey=gy(eq.p);
+      s+=`<line x1="${pad.l}" y1="${ey}" x2="${ex}" y2="${ey}" stroke="#888" stroke-width="1" stroke-dasharray="5,4"/>`;
+      s+=`<line x1="${ex}" y1="${H-pad.b}" x2="${ex}" y2="${ey}" stroke="#888" stroke-width="1" stroke-dasharray="5,4"/>`;
+      s+=`<circle cx="${ex}" cy="${ey}" r="6" fill="#D85A30" stroke="white" stroke-width="2"/>`;
+      s+=`<text x="${pad.l-4}" y="${ey}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq.p*vU)}</text>`;
+      s+=`<text x="${ex}" y="${H-pad.b+11}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq.q*hU)}</text>`;
+    }
+  } else {
+    const fp=fpA;
+    const qInt=curve==='demand'?dQf(fp,dA):sQf(fp,sA);
+    for(let i=1;i<=GRID;i++){
+      const isFP=Math.abs(i-fp)<0.05,isIQ=Math.abs(i-qInt)<0.05;
+      if(!isFP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vU)}</text>`;
+      if(!isIQ) s+=`<text x="${gx(i)}" y="${H-pad.b+11}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hU)}</text>`;
+    }
+    s+=`<text x="${pad.l-4}" y="${H-pad.b}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-1}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${xLbl}</text>`;
+    s+=`<text x="${fs2}" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,${fs2},${pad.t+(H-pad.t-pad.b)/2})">${yLbl}</text>`;
+    if(startCS!==0&&showFaded){
+      const c1=curve==='demand'?clipLine(QS,dPf(QS,startCS),QE,dPf(QE,startCS),pad,W,H):clipLine(QS,sPf(QS,startCS),QE,sPf(QE,startCS),pad,W,H);
+      if(c1){const ly=curve==='demand'?c1.y2:Math.min(c1.y1,c1.y2);s+=`<line x1="${c1.x1}" y1="${c1.y1}" x2="${c1.x2}" y2="${c1.y2}" stroke="${col}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="${c1.x2+4}" y="${ly}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${col}" opacity="0.3" font-weight="bold">${curve==='demand'?'D1':'S1'}</text>`;}
+    }
+    const shifted=dA!==0;
+    const lbl=shifted?(curve==='demand'?'D2':'S2'):(curve==='demand'?'D1':'S1');
+    const c=curve==='demand'?clipLine(QS,dPf(QS,dA),QE,dPf(QE,dA),pad,W,H):clipLine(QS,sPf(QS,sA),QE,sPf(QE,sA),pad,W,H);
+    if(c){const ly=curve==='demand'?c.y2:Math.min(c.y1,c.y2);s+=`<line x1="${c.x1}" y1="${c.y1}" x2="${c.x2}" y2="${c.y2}" stroke="${col}" stroke-width="2.5" stroke-linecap="round"/><text x="${c.x2+4}" y="${ly}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${col}" font-weight="bold">${lbl}</text>`;}
+    if(qInt>=QS&&qInt<=QE){
+      const ix=gx(qInt),py=gy(fp);
+      s+=`<line x1="${pad.l}" y1="${py}" x2="${ix}" y2="${py}" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="6,4"/>`;
+      s+=`<line x1="${ix}" y1="${py}" x2="${ix}" y2="${H-pad.b}" stroke="#D85A30" stroke-width="1" stroke-dasharray="4,3"/>`;
+      s+=`<circle cx="${ix}" cy="${py}" r="5" fill="#D85A30" stroke="white" stroke-width="2"/>`;
+      s+=`<text x="${pad.l-4}" y="${py}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(fp*vU)}</text>`;
+      s+=`<text x="${ix}" y="${H-pad.b+11}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(qInt*hU)}</text>`;
+    }
+  }
+  return s;
+}
+
+// ── NAV ──
+function openBuilder(type){
+  document.getElementById('menuScreen').style.display='none';
+  if(type==='sd'){document.getElementById('sdBuilder').classList.add('active');sdDraw();}
+  else{document.getElementById('scBuilder').classList.add('active');scDraw();}
+}
+function goMenu(){
+  document.getElementById('sdBuilder').classList.remove('active');
+  document.getElementById('scBuilder').classList.remove('active');
+  document.getElementById('menuScreen').style.display='';
+  updateMenu();
+}
+function updateMenu(){
+  const n=quizQuestions.length;
+  document.getElementById('menuInfo').textContent=n?`${n} question${n!==1?'s':''} saved in quiz.`:'Build questions then download your quiz.';
+  document.getElementById('dlBtnMenu').disabled=!n;
+  document.getElementById('clearBtn').style.display=n?'':'none';
+}
+function clearQuiz(){quizQuestions=[];updateMenu();}
+
+// ══ S&D ══
+let sdDA=0,sdSA=0,sdDS=0,sdSS=0,sdCap=null,sdAnim=null;
+
+function sdDraw(){
+  const vU=parseFloat(document.getElementById('sdVUnit').value)||1;
+  const hU=parseFloat(document.getElementById('sdHUnit').value)||5;
+  document.getElementById('sdChart').innerHTML=buildSVGInner({
+    W,H,pad:PAD,
+    title:document.getElementById('sdTitle').value,
+    yLbl:getYLbl('sdYLbl',vU),xLbl:document.getElementById('sdXLbl').value||'Quantity',
+    vU,hU,type:'sd',
+    dCol:document.getElementById('sdDCol').value,sCol:document.getElementById('sdSCol').value,
+    dA:sdDA,sA:sdSA,fpA:5,startDS:0,startSS:0,showFaded:true
+  });
+  document.getElementById('sdDL').disabled=sdDS<=-2;
+  document.getElementById('sdDR').disabled=sdDS>=2;
+  document.getElementById('sdSL').disabled=sdSS<=-2;
+  document.getElementById('sdSR').disabled=sdSS>=2;
+}
+
+function sdShift(curve,dir){
+  if(sdAnim)return;
+  const nD=curve==='d'?sdDS+dir:sdDS,nS=curve==='s'?sdSS+dir:sdSS;
+  if(nD<-2||nD>2||nS<-2||nS>2)return;
+  const fD=sdDA,fS=sdSA;sdDS=nD;sdSS=nS;
+  const start=performance.now(),dur=500;
+  function step(now){
+    const t=Math.min((now-start)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    sdDA=fD+(nD-fD)*e;sdSA=fS+(nS-fS)*e;sdDraw();
+    if(t<1)sdAnim=requestAnimationFrame(step);
+    else{sdDA=nD;sdSA=nS;sdAnim=null;sdDraw();}
+  }
+  sdAnim=requestAnimationFrame(step);
+}
+
+function sdReset(){
+  if(sdAnim){cancelAnimationFrame(sdAnim);sdAnim=null;}
+  sdDA=0;sdSA=0;sdDS=0;sdSS=0;sdDraw();
+}
+
+function sdCapture(){
+  sdCap={dShift:sdDS,sShift:sdSS};
+  if(sdAnim){cancelAnimationFrame(sdAnim);sdAnim=null;}
+  const fD=sdDA,fS=sdSA;sdDS=0;sdSS=0;
+  const start=performance.now(),dur=500;
+  function step(now){
+    const t=Math.min((now-start)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    sdDA=fD*(1-e);sdSA=fS*(1-e);sdDraw();
+    if(t<1)sdAnim=requestAnimationFrame(step);
+    else{sdDA=0;sdSA=0;sdAnim=null;sdDraw();}
+  }
+  sdAnim=requestAnimationFrame(step);
+  const card=document.getElementById('sdCapCard');
+  card.style.display='block';
+  document.getElementById('sdCapMsg').textContent=`✓ Answer captured (D shift: ${sdCap.dShift > 0 ? '+' : ''}${sdCap.dShift}, S shift: ${sdCap.sShift > 0 ? '+' : ''}${sdCap.sShift}). Diagram reset — now write your question below.`;
+}
+
+function sdGetCorrect(){for(let r of document.querySelectorAll('input[name="sdC"]'))if(r.checked)return parseInt(r.value);return -1;}
+
+function sdBuildQ(){
+  const vU=parseFloat(document.getElementById('sdVUnit').value)||1;
+  const hU=parseFloat(document.getElementById('sdHUnit').value)||5;
+  return{type:'sd',
+    title:document.getElementById('sdTitle').value,
+    yLabel:getYLbl('sdYLbl',vU),xLabel:document.getElementById('sdXLbl').value||'Quantity',
+    dColor:document.getElementById('sdDCol').value,sColor:document.getElementById('sdSCol').value,
+    vUnit:vU,hUnit:hU,startDS:0,startSS:0,
+    ansDS:sdCap?sdCap.dShift:sdDS,ansSS:sdCap?sdCap.sShift:sdSS,
+    questionText:document.getElementById('sdQText').value,
+    answers:[0,1,2,3].map(i=>document.getElementById('sdA'+i).value),
+    correctIndex:sdGetCorrect()};
+}
+
+function sdAddQ(){
+  const q=sdBuildQ(),msg=document.getElementById('sdMsg');
+  if(!q.questionText.trim()){msg.textContent='⚠ Please enter a question.';return;}
+  if(q.correctIndex<0){msg.textContent='⚠ Please select the correct answer.';return;}
+  if(q.answers.some(a=>!a.trim())){msg.textContent='⚠ Please fill in all four answers.';return;}
+  quizQuestions.push(q);
+  renderList('sdQList','sdQCount');
+  msg.textContent=`✓ Question ${quizQuestions.length} added to quiz!`;
+  sdCap=null;document.getElementById('sdCapCard').style.display='none';
+  // Clear fields for next question
+  document.getElementById('sdQText').value='';
+  [0,1,2,3].forEach(i=>document.getElementById('sdA'+i).value='');
+  document.querySelectorAll('input[name="sdC"]').forEach(r=>r.checked=false);
+}
+
+function sdPreview(){
+  const q=sdBuildQ();
+  if(!q.questionText.trim()){document.getElementById('sdMsg').textContent='⚠ Enter a question to preview.';return;}
+  const w=window.open('','_blank');
+  if(w)w.document.write(buildQuizHTML([q]));
+}
+
+// ══ SINGLE CURVE ══
+let scCurve='demand',scFP=5,scFPA=5,scCS=0,scCA=0,scCap=null,scAnim=null;
+
+function scSetCurve(c){
+  scCurve=c;
+  document.getElementById('scBtnD').className='btn'+(c==='demand'?' btn-primary':'');
+  document.getElementById('scBtnS').className='btn'+(c==='supply'?' btn-primary':'');
+  document.getElementById('scCol').value=c==='demand'?'#185FA5':'#0F6E56';
+  scDraw();
+}
+
+function scShiftPrice(dir){
+  if(scAnim)return;
+  const nFP=Math.max(1,Math.min(GRID,scFP+dir));
+  if(nFP===scFP)return;
+  const fFP=scFPA;scFP=nFP;
+  const start=performance.now(),dur=400;
+  function step(now){
+    const t=Math.min((now-start)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    scFPA=fFP+(nFP-fFP)*e;scDraw();
+    if(t<1)scAnim=requestAnimationFrame(step);
+    else{scFPA=nFP;scAnim=null;scDraw();}
+  }
+  scAnim=requestAnimationFrame(step);
+}
+
+function scShiftCurve(dir){
+  if(scAnim)return;
+  const nCS=Math.max(-2,Math.min(2,scCS+dir));
+  if(nCS===scCS)return;
+  const fCA=scCA;scCS=nCS;
+  const start=performance.now(),dur=450;
+  function step(now){
+    const t=Math.min((now-start)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    scCA=fCA+(nCS-fCA)*e;scDraw();
+    if(t<1)scAnim=requestAnimationFrame(step);
+    else{scCA=nCS;scAnim=null;scDraw();}
+  }
+  scAnim=requestAnimationFrame(step);
+}
+
+function scReset(){
+  if(scAnim){cancelAnimationFrame(scAnim);scAnim=null;}
+  scFP=5;scFPA=5;scCS=0;scCA=0;scDraw();
+}
+
+function scDraw(){
+  const vU=parseFloat(document.getElementById('scVUnit').value)||1;
+  const hU=parseFloat(document.getElementById('scHUnit').value)||5;
+  const dA=scCurve==='demand'?scCA:0;
+  const sA=scCurve==='supply'?scCA:0;
+  document.getElementById('scChart').innerHTML=buildSVGInner({
+    W,H,pad:PAD,
+    title:document.getElementById('scTitle').value,
+    yLbl:getYLbl('scYLbl',vU),xLbl:document.getElementById('scXLbl').value||'Quantity',
+    vU,hU,type:'sc',curve:scCurve,
+    col:document.getElementById('scCol').value,
+    dA,sA,fpA:scFPA,startCS:0,showFaded:true
+  });
+  document.getElementById('scPUp').disabled=scFP>=GRID;
+  document.getElementById('scPDn').disabled=scFP<=1;
+  document.getElementById('scCL').disabled=scCS<=-2;
+  document.getElementById('scCR').disabled=scCS>=2;
+}
+
+function scCapture(){
+  scCap={fp:scFP,cs:scCS};
+  if(scAnim){cancelAnimationFrame(scAnim);scAnim=null;}
+  const fFP=scFPA,fCA=scCA;scFP=5;scCS=0;
+  const start=performance.now(),dur=500;
+  function step(now){
+    const t=Math.min((now-start)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    scFPA=fFP+(5-fFP)*e;scCA=fCA*(1-e);scDraw();
+    if(t<1)scAnim=requestAnimationFrame(step);
+    else{scFPA=5;scCA=0;scAnim=null;scDraw();}
+  }
+  scAnim=requestAnimationFrame(step);
+  const card=document.getElementById('scCapCard');
+  card.style.display='block';
+  document.getElementById('scCapMsg').textContent=`✓ Answer captured (price: ${scCap.fp}, curve shift: ${scCap.cs > 0 ? '+' : ''}${scCap.cs}). Diagram reset — now write your question below.`;
+}
+
+function scGetCorrect(){for(let r of document.querySelectorAll('input[name="scC"]'))if(r.checked)return parseInt(r.value);return -1;}
+
+function scBuildQ(){
+  const vU=parseFloat(document.getElementById('scVUnit').value)||1;
+  const hU=parseFloat(document.getElementById('scHUnit').value)||5;
+  return{type:'sc',curve:scCurve,
+    title:document.getElementById('scTitle').value,
+    yLabel:getYLbl('scYLbl',vU),xLabel:document.getElementById('scXLbl').value||'Quantity',
+    color:document.getElementById('scCol').value,
+    vUnit:vU,hUnit:hU,startFP:5,startCS:0,
+    ansFP:scCap?scCap.fp:scFP,ansCS:scCap?scCap.cs:scCS,
+    questionText:document.getElementById('scQText').value,
+    answers:[0,1,2,3].map(i=>document.getElementById('scA'+i).value),
+    correctIndex:scGetCorrect()};
+}
+
+function scAddQ(){
+  const q=scBuildQ(),msg=document.getElementById('scMsg');
+  if(!q.questionText.trim()){msg.textContent='⚠ Please enter a question.';return;}
+  if(q.correctIndex<0){msg.textContent='⚠ Please select the correct answer.';return;}
+  if(q.answers.some(a=>!a.trim())){msg.textContent='⚠ Please fill in all four answers.';return;}
+  quizQuestions.push(q);
+  renderList('scQList','scQCount');
+  msg.textContent=`✓ Question ${quizQuestions.length} added to quiz!`;
+  scCap=null;document.getElementById('scCapCard').style.display='none';
+  document.getElementById('scQText').value='';
+  [0,1,2,3].forEach(i=>document.getElementById('scA'+i).value='');
+  document.querySelectorAll('input[name="scC"]').forEach(r=>r.checked=false);
+}
+
+function scPreview(){
+  const q=scBuildQ();
+  if(!q.questionText.trim()){document.getElementById('scMsg').textContent='⚠ Enter a question to preview.';return;}
+  const w=window.open('','_blank');
+  if(w)w.document.write(buildQuizHTML([q]));
+}
+
+// ── SHARED ──
+function renderList(listId,countId){
+  const n=quizQuestions.length;
+  if(countId) document.getElementById(countId).textContent=n?`(${n} saved)`:'';
+  const el=document.getElementById(listId);
+  if(!n){el.innerHTML='<div class="hint">No questions added yet</div>';return;}
+  el.innerHTML=quizQuestions.map((q,i)=>`<div class="qitem"><span>Q${i+1}: ${q.questionText.substring(0,50)}${q.questionText.length>50?'…':''}</span><button class="btn btn-danger" onclick="removeQ(${i})">✕</button></div>`).join('');
+}
+function removeQ(i){quizQuestions.splice(i,1);renderList('sdQList','sdQCount');renderList('scQList','scQCount');}
+
+function downloadQuiz(){
+  if(!quizQuestions.length)return;
+  const blob=new Blob([buildQuizHTML(quizQuestions)],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='hsc-economics-quiz.html';
+  a.click();
+}
+
+// ── QUIZ EXPORT ──
+function buildQuizHTML(questions){
+  return`<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HSC Economics Quiz</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Verdana',sans-serif;background:#f5f4f0;padding:28px;color:#2c2c2a}
+h1{font-size:22px;font-weight:700;text-align:center;margin-bottom:30px;color:#2c2c2a}
+.wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.qcard{background:#fff;border-radius:12px;border:1.5px solid #d3d1c7;padding:24px;display:flex;gap:24px;align-items:flex-start;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.qdiag{flex-shrink:0;width:400px}
+.qright{flex:1;display:flex;flex-direction:column;gap:14px;min-width:200px}
+.qnum{font-size:11px;color:#888780;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.qtext{font-size:15px;line-height:1.7;font-weight:600;color:#2c2c2a}
+.abtns{display:flex;flex-direction:column;gap:8px}
+.abtn{font-family:'Verdana',sans-serif;font-size:13px;padding:11px 16px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;cursor:pointer;text-align:left;color:#2c2c2a;transition:all .2s;line-height:1.5}
+.abtn:hover{background:#f1efe8;border-color:#5f5e5a}
+.abtn.wrong{background:#fcebeb;border-color:#a32d2d;color:#a32d2d;pointer-events:none;font-weight:600}
+.abtn.correct{background:#eaf3de;border-color:#3b6d11;color:#3b6d11;font-weight:700;pointer-events:none}
+.fb{font-size:13px;font-weight:600;min-height:20px;margin-top:4px}
+.fb.c{color:#3b6d11}.fb.w{color:#a32d2d}
+.score{background:#fff;border-radius:12px;border:1.5px solid #d3d1c7;padding:28px;text-align:center;font-size:20px;font-weight:700;display:none;max-width:920px;margin:0 auto;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+</style></head><body>
+<h1>HSC Economics Quiz</h1>
+<div class="wrap" id="wrap"></div>
+<div class="score" id="score"></div>
+<script>
+const GRID=9,QS=1,QE=9;
+const qs=${JSON.stringify(questions)};
+const done=new Array(qs.length).fill(false);
+function fmt(n){return Math.round(n*100)/100;}
+function dPf(q,ds){return 10-q+ds*2;}
+function sPf(q,ss){return q-ss*2;}
+function dQf(p,ds){return 10-p+ds*2;}
+function sQf(p,ss){return p+ss*2;}
+function getEq(ds,ss){const q=(10+ds*2+ss*2)/2;return{q,p:q-ss*2};}
+function gxF(q,pad,W){return pad.l+q*(W-pad.l-pad.r)/GRID;}
+function gyF(p,pad,H){return pad.t+(GRID-p)*(H-pad.t-pad.b)/GRID;}
+function clip(qA,pA,qB,pB,pad,W,H){
+  let t0=0,t1=1;const dq=qB-qA,dp=pB-pA;
+  if(dp!==0){const tL=(0-pA)/dp,tH=(GRID-pA)/dp;if(dp<0){t1=Math.min(t1,tL);t0=Math.max(t0,tH);}else{t0=Math.max(t0,tL);t1=Math.min(t1,tH);}}
+  else if(pA<0||pA>GRID)return null;
+  if(t0>=t1)return null;
+  return{x1:gxF(qA+t0*dq,pad,W),y1:gyF(pA+t0*dp,pad,H),x2:gxF(qA+t1*dq,pad,W),y2:gyF(pA+t1*dp,pad,H)};
+}
+function mkSVG(q,dA,sA,fpA){
+  const W=400,H=340,pad={l:44,r:38,t:26,b:34};
+  const gx=v=>gxF(v,pad,W),gy=v=>gyF(v,pad,H);
+  const vU=q.vUnit,hU=q.hUnit;const fs=12,fs2=10;
+  let s=\`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>\`;
+  if(q.title) s+=\`<text x="\${W/2}" y="16" text-anchor="middle" font-size="\${fs}" font-family="Verdana" font-weight="bold" fill="#2c2c2a">\${q.title}</text>\`;
+  for(let i=1;i<=GRID;i++) s+=\`<line x1="\${pad.l}" y1="\${gy(i)}" x2="\${W-pad.r}" y2="\${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>\`;
+  s+=\`<line x1="\${pad.l}" y1="\${pad.t-6}" x2="\${pad.l}" y2="\${H-pad.b+6}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>\`;
+  s+=\`<line x1="\${pad.l-6}" y1="\${H-pad.b}" x2="\${W-pad.r+6}" y2="\${H-pad.b}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>\`;
+  if(q.type==='sd'){
+    const eq=getEq(dA,sA);
+    for(let i=1;i<=GRID;i++){
+      const eP=Math.abs(i-eq.p)<0.05,eQ=Math.abs(i-eq.q)<0.05;
+      if(!eP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vU)}</text>\`;
+      if(!eQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hU)}</text>\`;
+    }
+    s+=\`<text x="\${pad.l-4}" y="\${H-pad.b}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
+    s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${q.xLabel}</text>\`;
+    s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
+    const sh=dA!==0||sA!==0;
+    if(sh){
+      const cd=clip(QS,dPf(QS,0),QE,dPf(QE,0),pad,W,H);
+      const cs=clip(QS,sPf(QS,0),QE,sPf(QE,0),pad,W,H);
+      if(cd) s+=\`<line x1="\${cd.x1}" y1="\${cd.y1}" x2="\${cd.x2}" y2="\${cd.y2}" stroke="\${q.dColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="\${cd.x2+5}" y="\${cd.y2}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" opacity="0.3" font-weight="bold">D1</text>\`;
+      if(cs) s+=\`<line x1="\${cs.x1}" y1="\${cs.y1}" x2="\${cs.x2}" y2="\${cs.y2}" stroke="\${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="\${cs.x2+5}" y="\${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" opacity="0.3" font-weight="bold">S1</text>\`;
+    }
+    const dl=sh?'D2':'D1',sl=sh?'S2':'S1';
+    const cd=clip(QS,dPf(QS,dA),QE,dPf(QE,dA),pad,W,H);
+    const cs=clip(QS,sPf(QS,sA),QE,sPf(QE,sA),pad,W,H);
+    if(cd) s+=\`<line x1="\${cd.x1}" y1="\${cd.y1}" x2="\${cd.x2}" y2="\${cd.y2}" stroke="\${q.dColor}" stroke-width="2.5" stroke-linecap="round"/><text x="\${cd.x2+5}" y="\${cd.y2}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" font-weight="bold">\${dl}</text>\`;
+    if(cs) s+=\`<line x1="\${cs.x1}" y1="\${cs.y1}" x2="\${cs.x2}" y2="\${cs.y2}" stroke="\${q.sColor}" stroke-width="2.5" stroke-linecap="round"/><text x="\${cs.x2+5}" y="\${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" font-weight="bold">\${sl}</text>\`;
+    if(eq.q>=QS&&eq.q<=QE&&eq.p>=1&&eq.p<=GRID){
+      const ex=gx(eq.q),ey=gy(eq.p);
+      s+=\`<line x1="\${pad.l}" y1="\${ey}" x2="\${ex}" y2="\${ey}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>\`;
+      s+=\`<line x1="\${ex}" y1="\${H-pad.b}" x2="\${ex}" y2="\${ey}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>\`;
+      s+=\`<circle cx="\${ex}" cy="\${ey}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>\`;
+      s+=\`<text x="\${pad.l-4}" y="\${ey}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(eq.p*vU)}</text>\`;
+      s+=\`<text x="\${ex}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(eq.q*hU)}</text>\`;
+    }
+  } else {
+    const fp=fpA,qInt=q.curve==='demand'?dQf(fp,dA):sQf(fp,sA);
+    for(let i=1;i<=GRID;i++){
+      const isFP=Math.abs(i-fp)<0.05,isIQ=Math.abs(i-qInt)<0.05;
+      if(!isFP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vU)}</text>\`;
+      if(!isIQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hU)}</text>\`;
+    }
+    s+=\`<text x="\${pad.l-4}" y="\${H-pad.b}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
+    s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${q.xLabel}</text>\`;
+    s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
+    if(dA!==0){
+      const c1=q.curve==='demand'?clip(QS,dPf(QS,0),QE,dPf(QE,0),pad,W,H):clip(QS,sPf(QS,0),QE,sPf(QE,0),pad,W,H);
+      if(c1){const ly=q.curve==='demand'?c1.y2:Math.min(c1.y1,c1.y2);s+=\`<line x1="\${c1.x1}" y1="\${c1.y1}" x2="\${c1.x2}" y2="\${c1.y2}" stroke="\${q.color}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="\${c1.x2+5}" y="\${ly}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.color}" opacity="0.3" font-weight="bold">\${q.curve==='demand'?'D1':'S1'}</text>\`;}
+    }
+    const sh=dA!==0;
+    const lbl=sh?(q.curve==='demand'?'D2':'S2'):(q.curve==='demand'?'D1':'S1');
+    const c=q.curve==='demand'?clip(QS,dPf(QS,dA),QE,dPf(QE,dA),pad,W,H):clip(QS,sPf(QS,sA),QE,sPf(QE,sA),pad,W,H);
+    if(c){const ly=q.curve==='demand'?c.y2:Math.min(c.y1,c.y2);s+=\`<line x1="\${c.x1}" y1="\${c.y1}" x2="\${c.x2}" y2="\${c.y2}" stroke="\${q.color}" stroke-width="2.5" stroke-linecap="round"/><text x="\${c.x2+5}" y="\${ly}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.color}" font-weight="bold">\${lbl}</text>\`;}
+    if(qInt>=QS&&qInt<=QE){
+      const ix=gx(qInt),py=gy(fp);
+      s+=\`<line x1="\${pad.l}" y1="\${py}" x2="\${ix}" y2="\${py}" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="6,4"/>\`;
+      s+=\`<line x1="\${ix}" y1="\${py}" x2="\${ix}" y2="\${H-pad.b}" stroke="#D85A30" stroke-width="1" stroke-dasharray="4,3"/>\`;
+      s+=\`<circle cx="\${ix}" cy="\${py}" r="6" fill="#D85A30" stroke="white" stroke-width="2"/>\`;
+      s+=\`<text x="\${pad.l-4}" y="\${py}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(fp*vU)}</text>\`;
+      s+=\`<text x="\${ix}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(qInt*hU)}</text>\`;
+    }
+  }
+  return \`<svg width="100%" viewBox="0 0 \${W} \${H}">\${s}</svg>\`;
+}
+function render(){
+  document.getElementById('wrap').innerHTML=qs.map((q,qi)=>\`
+    <div class="qcard">
+      <div class="qdiag" id="d\${qi}">\${mkSVG(q,0,0,q.startFP||5)}</div>
+      <div class="qright">
+        <div class="qnum">Question \${qi+1} of \${qs.length}</div>
+        <div class="qtext">\${q.questionText}</div>
+        <div class="abtns">\${['A','B','C','D'].map((l,ai)=>\`<button class="abtn" id="b\${qi}_\${ai}" onclick="go(\${qi},\${ai})">\${l}. \${q.answers[ai]}</button>\`).join('')}</div>
+        <div class="fb" id="f\${qi}"></div>
+      </div>
+    </div>\`).join('');
+}
+function go(qi,ai){
+  if(done[qi])return;
+  const q=qs[qi];
+  const btns=document.querySelectorAll(\`[id^="b\${qi}_"]\`);
+  const fb=document.getElementById(\`f\${qi}\`);
+  if(ai===q.correctIndex){
+    done[qi]=true;btns[ai].classList.add('correct');
+    fb.textContent='✓ Correct!';fb.className='fb c';
+    anim(qi,q);
+    if(done.every(Boolean)){const s=document.getElementById('score');s.style.display='block';s.textContent=\`🎉 Quiz complete! \${done.filter(Boolean).length}/\${qs.length} correct\`;}
+  } else {
+    btns[ai].classList.add('wrong');fb.textContent='✗ Try again';fb.className='fb w';
+    setTimeout(()=>{btns[ai].classList.remove('wrong');fb.textContent='';fb.className='fb';},1400);
+  }
+}
+function anim(qi,q){
+  const el=document.getElementById(\`d\${qi}\`);
+  const tD=q.type==='sd'?q.ansDS:q.ansCS;
+  const tS=q.type==='sd'?q.ansSS:q.ansCS;
+  const tFP=q.ansFP||5,sFP=q.startFP||5;
+  const start=performance.now(),dur=700;
+  function step(now){
+    const t=Math.min((now-start)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    el.innerHTML=mkSVG(q,tD*e,tS*e,sFP+(tFP-sFP)*e);
+    if(t<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+render();
+<\/script></body></html>`;
+}
+</script>
+</body>
+</html>

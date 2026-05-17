@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HSC Economics Quiz Builder</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ══ MAIN MENU ══ -->
+<div id="menuScreen">
+  <div class="menu">
+    <h2>HSC Economics Quiz Builder</h2>
+    <div class="menu-cards">
+      <div class="menu-card" onclick="openBuilder('sd')">
+        <h3>Supply &amp; Demand</h3>
+        <p>Both curves, equilibrium shifts, new equilibrium animation</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('sc')">
+        <h3>Single Curve</h3>
+        <p>Demand or Supply only, fixed price, expansion &amp; contraction</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('ppf')">
+        <h3>PPF</h3>
+        <p>Production Possibility Frontier — curved shift or data-point schedule</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('table')">
+        <h3>Data Table</h3>
+        <p>Custom rows &amp; columns — supply/demand schedules, economic data</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('plain')">
+        <h3>Text Only</h3>
+        <p>Plain multiple choice question — no diagram or table needed</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('pm')">
+        <h3>Price Mechanism</h3>
+        <p>Starting price above or below equilibrium — surplus / shortage bracket animates to equilibrium</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('tax')">
+        <h3>Tax &amp; Subsidy</h3>
+        <p>Supply shifts left (tax) or right (subsidy) — reveals tax revenue, consumer cost &amp; producer impact rectangles step by step</p>
+      </div>
+      <!-- NEW DIAGRAM TYPES: add a menu card here and a builder section below -->
+    </div>
+    <div id="menuQuizSection" style="display:none">
+      <div class="menu-quiz">
+        <div class="menu-quiz-title" id="menuQTitle">Quiz</div>
+        <div id="menuQList" class="menu-qlist"></div>
+      </div>
+    </div>
+    <div id="menuInfo" class="menu-info">Build questions then download your quiz.</div>
+    <div class="menu-btns">
+      <button class="btn btn-success" id="dlBtnMenu"     onclick="downloadQuiz()" disabled>⬇ Download Quiz HTML</button>
+      <button class="btn btn-primary" id="previewAllBtn" onclick="previewQuiz()"  style="display:none">👁 Preview Quiz</button>
+      <button class="btn"             id="importBtn"     onclick="importCSV()">⬆ Import CSV</button>
+      <button class="btn btn-danger"  id="clearBtn"      onclick="clearQuiz()"   style="display:none">Clear Quiz</button>
+    </div>
+    <div class="menu-btns" style="margin-top:6px">
+      <button class="btn" id="saveBankBtn" onclick="saveBank()" style="display:none">💾 Save Question Bank</button>
+      <button class="btn" id="loadBankBtn" onclick="loadBank()">📂 Load Question Bank</button>
+    </div>
+    <div class="import-hint">
+      <strong>Save / Load</strong> preserves all question data (diagrams, settings, answers) as a JSON file you can reload later.<br>
+      <strong>Import CSV</strong> adds plain text questions — use ✏ Edit to add diagrams.
+      <a href="#" onclick="downloadCSVTemplate();return false">Download CSV template ↓</a>
+    </div>
+    <input type="file" id="csvInput"  accept=".csv,.txt"  style="display:none" onchange="handleCSVFile(this)">
+    <input type="file" id="bankInput" accept=".json"       style="display:none" onchange="handleBankFile(this)">
+  </div>
+</div>
+
+<!-- ══ EDIT MODAL ══ -->
+<div id="editModal" style="display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center">
+  <div style="position:absolute;inset:0;background:rgba(44,44,42,0.5)" onclick="closeEditModal()"></div>
+  <div class="modal-card">
+    <div class="modal-title">Edit Question <span id="editModalQNum"></span></div>
+    <div class="modal-qtext" id="editModalQText"></div>
+    <div class="modal-label">Open in which editor?</div>
+    <div class="modal-type-grid">
+      <button class="btn" id="editType_plain" onclick="editWithType('plain')">✍ Text Only</button>
+      <button class="btn" id="editType_sc"    onclick="editWithType('sc')">Single Curve</button>
+      <button class="btn" id="editType_sd"    onclick="editWithType('sd')">Supply &amp; Demand</button>
+      <button class="btn" id="editType_ppf"   onclick="editWithType('ppf')">PPF</button>
+      <button class="btn" id="editType_table" onclick="editWithType('table')">Data Table</button>
+      <button class="btn" id="editType_pm"    onclick="editWithType('pm')">Price Mechanism</button>
+      <button class="btn" id="editType_tax"   onclick="editWithType('tax')">Tax &amp; Subsidy</button>
+    </div>
+    <button class="btn" style="width:100%;margin-top:12px" onclick="closeEditModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ S&D BUILDER ══ -->
+<div class="builder" id="sdBuilder">
+  <!-- LEFT: diagram + controls -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <svg id="sdChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Demand</div>
+      <div class="btn-row">
+        <button class="btn" id="sdDL" onclick="sdShift('d',-1)">◀ Left</button>
+        <button class="btn" id="sdDR" onclick="sdShift('d', 1)">Right ▶</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Supply</div>
+      <div class="btn-row">
+        <button class="btn" id="sdSL" onclick="sdShift('s',-1)">◀ Left</button>
+        <button class="btn" id="sdSR" onclick="sdShift('s', 1)">Right ▶</button>
+      </div>
+    </div>
+    <button class="btn" onclick="sdReset()" style="width:100%">↺ Reset Diagram</button>
+  </div>
+
+  <div class="resizer" onmousedown="startResize(event, 'sdBuilder')"></div>
+
+  <!-- RIGHT: question form -->
+  <div class="form-panel">
+    <div class="form-cols">
+
+      <!-- Axis & Labels (1/4) -->
+      <div class="form-col-narrow">
+        <div class="card">
+          <div class="card-title">Axis &amp; Labels</div>
+          <div class="field"><label>Price unit</label><input type="number" id="sdVUnit" value="1"  min="0.01" step="0.01" oninput="sdDraw()"></div>
+          <div class="field"><label>Qty unit</label>  <input type="number" id="sdHUnit" value="5"  min="1"    step="1"    oninput="sdDraw()"></div>
+          <div class="field"><label>Title</label>      <input type="text"   id="sdTitle" placeholder="e.g. Wheat Market"  oninput="sdDraw()"></div>
+          <div class="field"><label>Y-axis</label>     <input type="text"   id="sdYLbl"  value="Price ($)"                oninput="sdDraw()"></div>
+          <div class="field"><label>X-axis</label>     <input type="text"   id="sdXLbl"  value="Quantity"                 oninput="sdDraw()"></div>
+          <div class="field"><label>D colour</label>   <input type="color"  id="sdDCol"  value="#185FA5"                  oninput="sdDraw()"></div>
+          <div class="field"><label>S colour</label>   <input type="color"  id="sdSCol"  value="#0F6E56"                  oninput="sdDraw()"></div>
+          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="sdShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="sdDraw()"></div>
+        </div>
+      </div>
+
+      <!-- Question builder (3/4) -->
+      <div class="form-col-wide">
+        <div class="info-card">
+          <p>
+            <span class="step">1</span>Set axis units and labels<br>
+            <span class="step">2</span><em>(Optional)</em> Shift to a <strong>starting position</strong> and set it, then shift to the answer<br>
+            <span class="step">3</span>Shift curves to the <strong>correct answer position</strong> and capture<br>
+            <span class="step">4</span>Write your question &amp; answers, then add to quiz
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Starting Position <span style="font-size:11px;font-weight:400;color:#888">(optional)</span></div>
+          <p style="font-size:13px;color:#444;margin-bottom:10px;line-height:1.6">If the diagram should <strong>start already shifted</strong> (e.g. D2 visible from the start), shift curves there first, then click below. Skip this step for a standard origin start.</p>
+          <button class="btn" onclick="sdSetStart()">📍 Set as Starting Position</button>
+          <div class="cap-card" id="sdStartCard" style="display:none;margin-top:10px">
+            <p id="sdStartMsg"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Capture Answer</div>
+          <p style="font-size:13px;color:#444;margin-bottom:10px;line-height:1.6">Shift the curves above to show the <strong>correct answer position</strong>, then click capture. The diagram will automatically animate back to the starting position.</p>
+          <button class="btn btn-capture" onclick="sdCapture()">📸 Capture Answer &amp; Reset</button>
+          <div class="cap-card" id="sdCapCard" style="display:none;margin-top:10px">
+            <p id="sdCapMsg"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Question Text</div>
+          <textarea id="sdQText" placeholder="Type your question here — e.g. An improvement in technology causes an increase in supply. What is the new equilibrium price?"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Answer Options</div>
+          <p class="correct-hint">Select the radio button next to the correct answer</p>
+          <div class="arow"><input type="radio" name="sdC" value="0"><span class="alabel">A</span><input type="text" id="sdA0" placeholder="Answer A"></div>
+          <div class="arow"><input type="radio" name="sdC" value="1"><span class="alabel">B</span><input type="text" id="sdA1" placeholder="Answer B"></div>
+          <div class="arow"><input type="radio" name="sdC" value="2"><span class="alabel">C</span><input type="text" id="sdA2" placeholder="Answer C"></div>
+          <div class="arow"><input type="radio" name="sdC" value="3"><span class="alabel">D</span><input type="text" id="sdA3" placeholder="Answer D"></div>
+        </div>
+
+        <div class="add-bar">
+          <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-success" id="sdAddBtn" onclick="sdAddQ()">+ Add to Quiz</button>
+            <button class="btn" onclick="sdPreview()">Preview this ↗</button>
+          </div>
+          <div class="msg" id="sdMsg"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ SINGLE CURVE BUILDER ══ -->
+<div class="builder" id="scBuilder">
+  <!-- LEFT: diagram + controls -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <svg id="scChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Curve Type</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="scBtnD" onclick="scSetCurve('demand')">Demand</button>
+        <button class="btn"             id="scBtnS" onclick="scSetCurve('supply')">Supply</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Price</div>
+      <div class="btn-row">
+        <button class="btn" id="scPUp" onclick="scShiftPrice( 1)">▲ Increase</button>
+        <button class="btn" id="scPDn" onclick="scShiftPrice(-1)">▼ Decrease</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Curve</div>
+      <div class="btn-row">
+        <button class="btn" id="scCL" onclick="scShiftCurve(-1)">◀ Left</button>
+        <button class="btn" id="scCR" onclick="scShiftCurve( 1)">Right ▶</button>
+      </div>
+    </div>
+    <button class="btn" onclick="scReset()" style="width:100%">↺ Reset Diagram</button>
+  </div>
+
+  <div class="resizer" onmousedown="startResize(event, 'scBuilder')"></div>
+
+  <!-- RIGHT: question form -->
+  <div class="form-panel">
+    <div class="form-cols">
+
+      <!-- Axis & Labels (1/4) -->
+      <div class="form-col-narrow">
+        <div class="card">
+          <div class="card-title">Axis &amp; Labels</div>
+          <div class="field"><label>Price unit</label><input type="number" id="scVUnit"    value="1"  min="0.01" step="0.01" oninput="scSyncStartFP(); scDraw()"></div>
+          <div class="field"><label>Qty unit</label>  <input type="number" id="scHUnit"    value="5"  min="1"    step="1"    oninput="scDraw()"></div>
+          <div class="field"><label>Start price</label><input type="number" id="scStartFP" value="5"  min="1"    max="9"     step="1"    oninput="scReset()"></div>
+          <div class="field"><label>Title</label>      <input type="text"   id="scTitle"   placeholder="e.g. Orange Market" oninput="scDraw()"></div>
+          <div class="field"><label>Y-axis</label>     <input type="text"   id="scYLbl"    value="Price ($)"                oninput="scDraw()"></div>
+          <div class="field"><label>X-axis</label>     <input type="text"   id="scXLbl"    value="Quantity"                 oninput="scDraw()"></div>
+          <div class="field"><label>Colour</label>     <input type="color"  id="scCol"     value="#185FA5"                  oninput="scDraw()"></div>
+          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="scShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="scDraw()"></div>
+        </div>
+      </div>
+
+      <!-- Question builder (3/4) -->
+      <div class="form-col-wide">
+        <div class="info-card">
+          <p>
+            <span class="step">1</span>Choose Demand or Supply, set units &amp; labels<br>
+            <span class="step">2</span><em>(Optional)</em> Shift curve to a <strong>starting position</strong> and set it<br>
+            <span class="step">3</span>Shift price &amp; curve to the <strong>correct answer position</strong> and capture<br>
+            <span class="step">4</span>Write your question &amp; answers, then add to quiz
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Starting Position <span style="font-size:11px;font-weight:400;color:#888">(optional)</span></div>
+          <p style="font-size:13px;color:#444;margin-bottom:10px;line-height:1.6">If the curve should <strong>start already shifted</strong> (e.g. D2 visible from the start), shift the curve there first, then click below.</p>
+          <button class="btn" onclick="scSetStart()">📍 Set as Starting Position</button>
+          <div class="cap-card" id="scStartCard" style="display:none;margin-top:10px">
+            <p id="scStartMsg"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Capture Answer</div>
+          <p style="font-size:13px;color:#444;margin-bottom:10px;line-height:1.6">Shift the price or curve to show the <strong>correct answer position</strong>, then capture. The diagram resets automatically.</p>
+          <button class="btn btn-capture" onclick="scCapture()">📸 Capture Answer &amp; Reset</button>
+          <div class="cap-card" id="scCapCard" style="display:none;margin-top:10px">
+            <p id="scCapMsg"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Question Text</div>
+          <textarea id="scQText" placeholder="Type your question here — e.g. If the price of oranges falls from $5 to $3 per kg, what happens to quantity demanded?"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Answer Options</div>
+          <p class="correct-hint">Select the radio button next to the correct answer</p>
+          <div class="arow"><input type="radio" name="scC" value="0"><span class="alabel">A</span><input type="text" id="scA0" placeholder="Answer A"></div>
+          <div class="arow"><input type="radio" name="scC" value="1"><span class="alabel">B</span><input type="text" id="scA1" placeholder="Answer B"></div>
+          <div class="arow"><input type="radio" name="scC" value="2"><span class="alabel">C</span><input type="text" id="scA2" placeholder="Answer C"></div>
+          <div class="arow"><input type="radio" name="scC" value="3"><span class="alabel">D</span><input type="text" id="scA3" placeholder="Answer D"></div>
+        </div>
+
+        <div class="add-bar">
+          <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-success" id="scAddBtn" onclick="scAddQ()">+ Add to Quiz</button>
+            <button class="btn" onclick="scPreview()">Preview this ↗</button>
+          </div>
+          <div class="msg" id="scMsg"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ PPF BUILDER ══ -->
+<div class="builder" id="ppfBuilder">
+  <!-- LEFT: diagram + controls -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <svg id="ppfChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Diagram Mode</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="ppfBtnCurved" onclick="ppfSetMode('curved')">Curved</button>
+        <button class="btn"             id="ppfBtnSched"  onclick="ppfSetMode('schedule')">Schedule</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group" id="ppfShiftControls">
+      <div class="diag-ctrl-label">Shift Curve</div>
+      <div class="btn-row">
+        <button class="btn" id="ppfIn"  onclick="ppfShiftCurve(-1)">◀ Inward</button>
+        <button class="btn" id="ppfOut" onclick="ppfShiftCurve( 1)">Outward ▶</button>
+      </div>
+    </div>
+    <button class="btn" onclick="ppfReset()" style="width:100%">↺ Reset Diagram</button>
+  </div>
+
+  <div class="resizer" onmousedown="startResize(event, 'ppfBuilder')"></div>
+
+  <!-- RIGHT: question form -->
+  <div class="form-panel">
+    <div class="form-cols">
+
+      <!-- Axis & Labels (1/4) -->
+      <div class="form-col-narrow">
+        <div class="card">
+          <div class="card-title">Axis &amp; Labels</div>
+          <div class="field"><label>Title</label>      <input type="text"   id="ppfTitle"   placeholder="e.g. Country X"   oninput="ppfDraw()"></div>
+          <div class="field"><label>X-axis</label>     <input type="text"   id="ppfXLbl"    value="Good A"                   oninput="ppfDraw()"></div>
+          <div class="field"><label>Y-axis</label>     <input type="text"   id="ppfYLbl"    value="Good B"                   oninput="ppfDraw()"></div>
+          <div class="field"><label>Colour</label>     <input type="color"  id="ppfCol"     value="#185FA5"                  oninput="ppfDraw()"></div>
+          <div class="field"><label>Faded PPF1</label> <input type="checkbox" id="ppfShowFaded" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="ppfDraw()"></div>
+        </div>
+      </div>
+
+      <!-- Question builder (3/4) -->
+      <div class="form-col-wide">
+
+        <div class="info-card">
+          <p id="ppfInfoCurved">
+            <span class="step">1</span>Set axis labels &amp; choose Curved mode<br>
+            <span class="step">2</span>Shift the PPF <strong>inward or outward</strong> to the correct answer<br>
+            <span class="step">3</span>Hit <strong>Capture Answer</strong> — diagram auto-resets<br>
+            <span class="step">4</span>Write your question &amp; answers, then add to quiz
+          </p>
+          <p id="ppfInfoSched" style="display:none">
+            <span class="step">1</span>Set axis labels, then enter your X max &amp; Y max if needed<br>
+            <span class="step">2</span>Enter up to <strong>8 production possibility points</strong> in the table<br>
+            <span class="step">3</span>Hit <strong>Capture Answer</strong> to lock in the schedule<br>
+            <span class="step">4</span>Write your question &amp; answers, then add to quiz
+          </p>
+        </div>
+
+        <!-- Schedule data entry (schedule mode only) -->
+        <div id="ppfSchedSection" style="display:none">
+          <div class="card">
+            <div class="card-title">Production Possibility Schedule</div>
+            <p style="font-size:12px;color:#444;margin-bottom:12px;line-height:1.6">Enter up to 8 coordinate pairs. Values are scaled to your X max / Y max settings.</p>
+            <div id="ppfSchedGrid" class="sched-grid"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Capture Answer</div>
+          <p style="font-size:13px;color:#444;margin-bottom:10px;line-height:1.6">Set the diagram to the <strong>correct answer position</strong>, then click capture. The diagram resets automatically.</p>
+          <button class="btn btn-capture" onclick="ppfCapture()">📸 Capture Answer &amp; Reset</button>
+          <div class="cap-card" id="ppfCapCard" style="display:none;margin-top:10px">
+            <p id="ppfCapMsg"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Question Text</div>
+          <textarea id="ppfQText" placeholder="Type your question here — e.g. An improvement in technology causes the PPF to shift outward. Which diagram shows the new PPF?"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Answer Options</div>
+          <p class="correct-hint">Select the radio button next to the correct answer</p>
+          <div class="arow"><input type="radio" name="ppfC" value="0"><span class="alabel">A</span><input type="text" id="ppfA0" placeholder="Answer A"></div>
+          <div class="arow"><input type="radio" name="ppfC" value="1"><span class="alabel">B</span><input type="text" id="ppfA1" placeholder="Answer B"></div>
+          <div class="arow"><input type="radio" name="ppfC" value="2"><span class="alabel">C</span><input type="text" id="ppfA2" placeholder="Answer C"></div>
+          <div class="arow"><input type="radio" name="ppfC" value="3"><span class="alabel">D</span><input type="text" id="ppfA3" placeholder="Answer D"></div>
+        </div>
+
+        <div class="add-bar">
+          <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-success" id="ppfAddBtn" onclick="ppfAddQ()">+ Add to Quiz</button>
+            <button class="btn" onclick="ppfPreview()">Preview this ↗</button>
+          </div>
+          <div class="msg" id="ppfMsg"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DATA TABLE BUILDER ══ -->
+<div class="builder" id="tableBuilder">
+  <!-- LEFT: live table preview -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <div id="tablePreview" class="table-preview">
+      <p class="hint" style="text-align:center;padding:32px 16px">Fill in the table to see a preview</p>
+    </div>
+  </div>
+
+  <div class="resizer" onmousedown="startResize(event, 'tableBuilder')"></div>
+
+  <!-- RIGHT: question form (single column layout) -->
+  <div class="form-panel">
+  <div style="display:flex;flex-direction:column;gap:14px">
+
+    <div class="info-card">
+      <p>
+        <span class="step">1</span>Add a title if needed, type column headers in the <strong>top shaded row</strong><br>
+        <span class="step">2</span>Fill in the data cells — the preview updates live<br>
+        <span class="step">3</span>Use <strong>+ Column</strong> / <strong>+ Row</strong> to grow the table as needed<br>
+        <span class="step">4</span>Write your question &amp; answers, then add to quiz
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Table Data</div>
+      <div class="field" style="margin-bottom:12px">
+        <label style="flex-shrink:0">Title</label>
+        <input type="text" id="tblTitle" placeholder="Table title (optional)" oninput="tblDraw()" style="flex:1">
+      </div>
+      <div id="tblDataGrid" class="tbl-data-grid"></div>
+      <div class="btn-row" style="margin-top:10px;flex-wrap:wrap;gap:6px">
+        <button class="btn btn-sm" id="tblAddColBtn" onclick="tblAddCol()">+ Column</button>
+        <button class="btn btn-sm" id="tblRemColBtn" onclick="tblRemoveCol()">− Column</button>
+        <button class="btn btn-sm" id="tblAddRowBtn" onclick="tblAddRow()">+ Row</button>
+        <button class="btn btn-sm" id="tblRemRowBtn" onclick="tblRemoveRow()">− Row</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Question Text</div>
+      <textarea id="tblQText" placeholder="Type your question here — e.g. Using the table, at what price is the quantity demanded equal to 300 units?"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Answer Options</div>
+      <p class="correct-hint">Select the radio button next to the correct answer</p>
+      <div class="arow"><input type="radio" name="tblC" value="0"><span class="alabel">A</span><input type="text" id="tblA0" placeholder="Answer A"></div>
+      <div class="arow"><input type="radio" name="tblC" value="1"><span class="alabel">B</span><input type="text" id="tblA1" placeholder="Answer B"></div>
+      <div class="arow"><input type="radio" name="tblC" value="2"><span class="alabel">C</span><input type="text" id="tblA2" placeholder="Answer C"></div>
+      <div class="arow"><input type="radio" name="tblC" value="3"><span class="alabel">D</span><input type="text" id="tblA3" placeholder="Answer D"></div>
+    </div>
+
+    <div class="add-bar">
+      <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+        <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
+        <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-success" id="tblAddBtn" onclick="tblAddQ()">+ Add to Quiz</button>
+        <button class="btn" onclick="tblPreview()">Preview this ↗</button>
+      </div>
+      <div class="msg" id="tblMsg"></div>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<!-- ══ PRICE MECHANISM BUILDER ══ -->
+<div class="builder" id="pmBuilder">
+
+  <!-- LEFT: diagram + curve controls -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <svg id="pmChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Demand</div>
+      <div class="btn-row">
+        <button class="btn" id="pmDL" onclick="pmShift('d',-1)">◀ Left</button>
+        <button class="btn" id="pmDR" onclick="pmShift('d', 1)">Right ▶</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Supply</div>
+      <div class="btn-row">
+        <button class="btn" id="pmSL" onclick="pmShift('s',-1)">◀ Left</button>
+        <button class="btn" id="pmSR" onclick="pmShift('s', 1)">Right ▶</button>
+      </div>
+    </div>
+    <button class="btn" onclick="pmReset()" style="width:100%">↺ Reset Curves</button>
+  </div>
+
+  <div class="resizer" onmousedown="startResize(event, 'pmBuilder')"></div>
+
+  <!-- RIGHT: question form -->
+  <div class="form-panel">
+    <div class="form-cols">
+
+      <!-- Axis & Labels (narrow column) -->
+      <div class="form-col-narrow">
+        <div class="card">
+          <div class="card-title">Axis &amp; Labels</div>
+          <div class="field"><label>Price unit</label><input type="number" id="pmVUnit" value="1"  min="0.01" step="0.01" oninput="pmDraw()"></div>
+          <div class="field"><label>Qty unit</label>  <input type="number" id="pmHUnit" value="5"  min="1"    step="1"    oninput="pmDraw()"></div>
+          <div class="field"><label>Title</label>      <input type="text"   id="pmTitle" placeholder="e.g. Wheat Market"  oninput="pmDraw()"></div>
+          <div class="field"><label>Y-axis</label>     <input type="text"   id="pmYLbl"  value="Price ($)"                oninput="pmDraw()"></div>
+          <div class="field"><label>X-axis</label>     <input type="text"   id="pmXLbl"  value="Quantity"                 oninput="pmDraw()"></div>
+          <div class="field"><label>D colour</label>   <input type="color"  id="pmDCol"  value="#185FA5"                  oninput="pmDraw()"></div>
+          <div class="field"><label>S colour</label>   <input type="color"  id="pmSCol"  value="#0F6E56"                  oninput="pmDraw()"></div>
+          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="pmShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="pmDraw()"></div>
+          <div class="field"><label>Animate price</label> <input type="checkbox" id="pmAnimatePrice" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" title="Checked: animate price to equilibrium. Unchecked: reveal surplus/shortage label only."></div>
+        </div>
+      </div>
+
+      <!-- Question builder (wide column) -->
+      <div class="form-col-wide">
+        <div class="info-card">
+          <p>
+            <span class="step">1</span>Set axis units and labels in the panel on the left<br>
+            <span class="step">2</span><em>(Optional)</em> Use the <strong>curve shift</strong> buttons to reposition S and D<br>
+            <span class="step">3</span>Drag the <strong>Starting Price</strong> slider — move it above equilibrium for a surplus or below for a shortage<br>
+            <span class="step">4</span>Write your question &amp; answers, then add to quiz. The quiz animation reveals the bracket and slowly adjusts to equilibrium.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Starting Price</div>
+          <p style="font-size:13px;color:#444;margin-bottom:12px;line-height:1.6">
+            Set the starting price <strong>above</strong> equilibrium to create a surplus, or <strong>below</strong> to create a shortage.
+            The bracket label is hidden from students — they must identify it from the diagram.
+          </p>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+            <label style="font-size:13px;font-weight:600;color:#444;white-space:nowrap">Price:</label>
+            <input type="range" id="pmPriceSlider" min="1" max="9" step="1" value="7"
+              style="flex:1;accent-color:#185FA5;cursor:pointer"
+              oninput="pmSetPrice(this.value)">
+            <span id="pmPriceVal" style="font-size:14px;font-weight:700;color:#185FA5;min-width:18px;text-align:right">7</span>
+          </div>
+          <div id="pmEqInfo" style="font-size:12px;line-height:1.5;padding:8px 10px;background:#f5f4f0;border-radius:6px;color:#888"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Question Text</div>
+          <textarea id="pmQText" placeholder="e.g. The diagram shows a market with a price above equilibrium. What is the outcome, and how does the market adjust?"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Answer Options</div>
+          <p class="correct-hint">Select the radio button next to the correct answer</p>
+          <div class="arow"><input type="radio" name="pmC" value="0"><span class="alabel">A</span><input type="text" id="pmA0" placeholder="Answer A"></div>
+          <div class="arow"><input type="radio" name="pmC" value="1"><span class="alabel">B</span><input type="text" id="pmA1" placeholder="Answer B"></div>
+          <div class="arow"><input type="radio" name="pmC" value="2"><span class="alabel">C</span><input type="text" id="pmA2" placeholder="Answer C"></div>
+          <div class="arow"><input type="radio" name="pmC" value="3"><span class="alabel">D</span><input type="text" id="pmA3" placeholder="Answer D"></div>
+        </div>
+
+        <div class="add-bar">
+          <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-success" id="pmAddBtn" onclick="pmAddQ()">+ Add to Quiz</button>
+            <button class="btn" onclick="pmPreview()">Preview this ↗</button>
+          </div>
+          <div class="msg" id="pmMsg"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAX / SUBSIDY BUILDER ══ -->
+<div class="builder" id="taxBuilder">
+  <!-- LEFT: diagram + controls -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <svg id="txChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Type</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="txTypeTax" onclick="txSetType('tax')">Tax</button>
+        <button class="btn"             id="txTypeSub" onclick="txSetType('subsidy')">Subsidy</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Demand slope</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="txElNormal"    onclick="txSetElasticity('normal')"    title="Normal slope — 1 rise : 1 run">Normal</button>
+        <button class="btn"             id="txElInelastic" onclick="txSetElasticity('inelastic')" title="Steep — 2 rise : 1 run">Inelastic</button>
+        <button class="btn"             id="txElElastic"   onclick="txSetElasticity('elastic')"   title="Flat — 1 rise : 2 run">Elastic</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Demand</div>
+      <div class="btn-row">
+        <button class="btn" id="txDL" onclick="txShift('d',-1)">◀ Left</button>
+        <button class="btn" id="txDR" onclick="txShift('d', 1)">Right ▶</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Shift Supply</div>
+      <div class="btn-row">
+        <button class="btn" id="txSL" onclick="txShift('s',-1)">◀ Left</button>
+        <button class="btn" id="txSR" onclick="txShift('s', 1)">Right ▶</button>
+      </div>
+    </div>
+    <button class="btn" onclick="txReset()" style="width:100%">↺ Reset Diagram</button>
+  </div>
+
+  <div class="resizer" onmousedown="startResize(event, 'taxBuilder')"></div>
+
+  <!-- RIGHT: question form -->
+  <div class="form-panel">
+    <div class="form-cols">
+
+      <!-- Axis & Labels -->
+      <div class="form-col-narrow">
+        <div class="card">
+          <div class="card-title">Axis &amp; Labels</div>
+          <div class="field"><label>Price unit</label><input type="number" id="txVUnit" value="1"  min="0.01" step="0.01" oninput="txDraw()"></div>
+          <div class="field"><label>Qty unit</label>  <input type="number" id="txHUnit" value="5"  min="1"    step="1"    oninput="txDraw()"></div>
+          <div class="field"><label>Title</label>      <input type="text"   id="txTitle" placeholder="e.g. Petrol Market" oninput="txDraw()"></div>
+          <div class="field"><label>Y-axis</label>     <input type="text"   id="txYLbl"  value="Price ($)"               oninput="txDraw()"></div>
+          <div class="field"><label>X-axis</label>     <input type="text"   id="txXLbl"  value="Quantity"                oninput="txDraw()"></div>
+          <div class="field"><label>D colour</label>   <input type="color"  id="txDCol"  value="#185FA5"                 oninput="txDraw()"></div>
+          <div class="field"><label>S colour</label>   <input type="color"  id="txSCol"  value="#0F6E56"                 oninput="txDraw()"></div>
+        </div>
+      </div>
+
+      <!-- Question builder -->
+      <div class="form-col-wide">
+        <div class="info-card">
+          <p>
+            <span class="step">1</span>Choose <strong>Tax</strong> or <strong>Subsidy</strong>, set axis labels<br>
+            <span class="step">2</span><em>(Optional)</em> Shift curves to a <strong>starting equilibrium</strong> and set it<br>
+            <span class="step">3</span>Shift supply <strong>left for a tax</strong> / <strong>right for a subsidy</strong> and capture<br>
+            <span class="step">4</span>Write your question &amp; answers. In the quiz, students click <strong>▶ Reveal</strong> to step through tax revenue, consumer cost, and producer impact.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Starting Position <span style="font-size:11px;font-weight:400;color:#888">(optional)</span></div>
+          <p style="font-size:13px;color:#444;margin-bottom:10px;line-height:1.6">If the market should start at a non-origin equilibrium, shift curves there first, then set the starting position.</p>
+          <button class="btn" onclick="txSetStart()">📍 Set as Starting Position</button>
+          <div class="cap-card" id="txStartCard" style="display:none;margin-top:10px">
+            <p id="txStartMsg"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Capture Answer</div>
+          <p style="font-size:13px;color:#444;margin-bottom:10px;line-height:1.6">Shift supply to the <strong>post-intervention position</strong>, then capture. The diagram resets automatically.</p>
+          <button class="btn btn-capture" onclick="txCapture()">📸 Capture Answer &amp; Reset</button>
+          <div class="cap-card" id="txCapCard" style="display:none;margin-top:10px">
+            <p id="txCapMsg"></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Question Text</div>
+          <textarea id="txQText" placeholder="e.g. The government imposes a per-unit tax on petrol. What happens to the price consumers pay?"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Answer Options</div>
+          <p class="correct-hint">Select the radio button next to the correct answer</p>
+          <div class="arow"><input type="radio" name="txC" value="0"><span class="alabel">A</span><input type="text" id="txA0" placeholder="Answer A"></div>
+          <div class="arow"><input type="radio" name="txC" value="1"><span class="alabel">B</span><input type="text" id="txA1" placeholder="Answer B"></div>
+          <div class="arow"><input type="radio" name="txC" value="2"><span class="alabel">C</span><input type="text" id="txA2" placeholder="Answer C"></div>
+          <div class="arow"><input type="radio" name="txC" value="3"><span class="alabel">D</span><input type="text" id="txA3" placeholder="Answer D"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Reveal Options <span style="font-size:11px;font-weight:400;color:#888">(choose what to show step by step)</span></div>
+          <p style="font-size:13px;color:#444;margin-bottom:12px;line-height:1.6">After the student answers correctly, click ▶ Reveal to step through these one at a time — in the order listed. Untick any you don't need.</p>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevSize" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
+              Size of tax / subsidy <span style="color:#C47D00;font-size:11px;font-weight:600;margin-left:4px">(bracket)</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevWedge" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
+              Tax revenue / Subsidy cost <span style="color:#C47D00;font-size:11px;font-weight:600;margin-left:4px">(full wedge rectangle)</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevConsumer" checked style="width:15px;height:15px;accent-color:#D85A30;cursor:pointer;flex-shrink:0">
+              Consumer cost / Consumer benefit <span style="color:#D85A30;font-size:11px;font-weight:600;margin-left:4px">(P₀ to Pc slice)</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevProdLoss" checked style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">
+              Loss of producer revenue / Producer benefit <span style="color:#0F6E56;font-size:11px;font-weight:600;margin-left:4px">(Ps to P₀ slice)</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevProdRev" style="width:15px;height:15px;accent-color:#1e7ab8;cursor:pointer;flex-shrink:0">
+              Producer revenue <span style="color:#1e7ab8;font-size:11px;font-weight:600;margin-left:4px">(Ps × Qn rectangle from x-axis)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="add-bar">
+          <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-success" id="txAddBtn" onclick="txAddQ()">+ Add to Quiz</button>
+            <button class="btn" onclick="txPreview()">Preview this ↗</button>
+          </div>
+          <div class="msg" id="txMsg"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ PLAIN TEXT BUILDER ══ -->
+<div class="builder" id="plainBuilder">
+  <div class="plain-form-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+
+    <div class="info-card" style="margin:12px 0 14px">
+      <p>
+        <span class="step">1</span>Write your question text below<br>
+        <span class="step">2</span>Fill in all four answer options<br>
+        <span class="step">3</span>Select the radio button next to the <strong>correct answer</strong><br>
+        <span class="step">4</span>Click <strong>Add to Quiz</strong>
+      </p>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Question Text</div>
+      <textarea id="plainQText" style="min-height:100px" placeholder="Type your question here — e.g. Which of the following is NOT a function of money?"></textarea>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Answer Options</div>
+      <p class="correct-hint">Select the radio button next to the correct answer</p>
+      <div class="arow"><input type="radio" name="plainC" value="0"><span class="alabel">A</span><input type="text" id="plainA0" placeholder="Answer A"></div>
+      <div class="arow"><input type="radio" name="plainC" value="1"><span class="alabel">B</span><input type="text" id="plainA1" placeholder="Answer B"></div>
+      <div class="arow"><input type="radio" name="plainC" value="2"><span class="alabel">C</span><input type="text" id="plainA2" placeholder="Answer C"></div>
+      <div class="arow"><input type="radio" name="plainC" value="3"><span class="alabel">D</span><input type="text" id="plainA3" placeholder="Answer D"></div>
+    </div>
+
+    <div class="add-bar">
+      <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+        <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
+        <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-success" id="plainAddBtn" onclick="plainAddQ()">+ Add to Quiz</button>
+        <button class="btn" onclick="plainPreview()">Preview this ↗</button>
+      </div>
+      <div class="msg" id="plainMsg"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══
+     Load order matters: utils first, then diagram modules, then quiz export, then app.
+     To add a new diagram type, add its <script> tag here alongside the others.
+-->
+<script src="js/utils.js"></script>
+<script src="js/diagrams/sd.js"></script>
+<script src="js/diagrams/sc.js"></script>
+<script src="js/diagrams/ppf.js"></script>
+<script src="js/diagrams/table.js"></script>
+<script src="js/diagrams/pm.js"></script>
+<script src="js/diagrams/tax.js"></script>
+<script src="js/diagrams/plain.js"></script>
+<script src="js/quiz-export.js?v=2"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HSC Economics Quiz</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Verdana',sans-serif;background:#f5f4f0;height:100vh;height:100dvh;overflow:hidden;color:#2c2c2a}
+#app{display:flex;height:100vh;height:100dvh}
+#diag-panel{flex:1.2;background:#fff;border-right:2px solid #d3d1c7;display:flex;align-items:center;justify-content:center;padding:32px;overflow:hidden}
+#diagWrap{width:100%}
+#diagWrap svg{width:100%;max-height:86dvh;display:block}
+#q-panel{flex:1;display:flex;flex-direction:column;padding:36px 32px;padding-bottom:max(36px,env(safe-area-inset-bottom));gap:18px;min-width:280px;overflow-y:auto}
+.qnum{font-size:11px;color:#888780;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.qtext{font-size:17px;line-height:1.75;font-weight:600;color:#2c2c2a}
+.abtns{display:flex;flex-direction:column;gap:10px}
+.abtn{font-family:'Verdana',sans-serif;font-size:17px;padding:16px 20px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;cursor:pointer;text-align:left;color:#2c2c2a;transition:all .2s;line-height:1.5}
+.abtn:hover{background:#f1efe8;border-color:#5f5e5a}
+.abtn.wrong{background:#fcebeb;border-color:#a32d2d;color:#a32d2d;pointer-events:none;font-weight:600}
+.abtn.correct{background:#eaf3de;border-color:#3b6d11;color:#3b6d11;font-weight:700;pointer-events:none}
+.abtn.used{pointer-events:none;opacity:0.55}
+.fb{font-size:13px;font-weight:600;min-height:20px}
+.fb.c{color:#3b6d11}.fb.w{color:#a32d2d}
+.nav{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:16px;border-top:1.5px solid #d3d1c7;flex-shrink:0}
+.nbtn{font-family:'Verdana',sans-serif;font-size:13px;font-weight:600;padding:10px 22px;border-radius:8px;cursor:pointer;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;transition:all .15s;white-space:nowrap}
+.nbtn:hover:not(:disabled){background:#f1efe8;border-color:#888780}
+.nbtn:disabled{opacity:0.3;cursor:not-allowed}
+.nbtn.pri{background:#185FA5;color:#fff;border-color:#185FA5}
+.nbtn.pri:hover:not(:disabled){background:#0c447c;border-color:#0c447c}
+#replayBtn{font-family:'Verdana',sans-serif;font-size:16px;font-weight:600;padding:10px 14px;border-radius:8px;cursor:pointer;border:1.5px solid #d3d1c7;background:#fff;color:#5f5e5a;transition:all .15s;white-space:nowrap}
+#replayBtn:hover{background:#f1efe8;border-color:#888780;color:#2c2c2a}
+#revealBtn{font-family:'Verdana',sans-serif;font-size:13px;font-weight:600;padding:10px 16px;border-radius:8px;cursor:pointer;border:1.5px solid #C47D00;background:#fff8ed;color:#C47D00;transition:all .15s;white-space:nowrap}
+#revealBtn:hover{background:#fef0cc;border-color:#9a5f00;color:#9a5f00}
+.prog{font-size:12px;color:#888780;flex:1;text-align:center;line-height:1.5}
+#score-screen{display:none;position:fixed;inset:0;background:rgba(245,244,240,0.97);align-items:center;justify-content:center;flex-direction:column;gap:24px}
+#score-screen.show{display:flex}
+.sbox{background:#fff;border:1.5px solid #d3d1c7;border-radius:16px;padding:52px 72px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
+.sbox h2{font-size:22px;font-weight:700;margin-bottom:6px}
+.snum{font-size:56px;font-weight:700;color:#185FA5;margin:16px 0 8px}
+.sbox p{font-size:14px;color:#5f5e5a}
+.rbtn{font-family:'Verdana',sans-serif;font-size:13px;font-weight:600;padding:12px 32px;background:#185FA5;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background .15s}
+.rbtn:hover{background:#0c447c}
+.quiz-tbl-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding:32px;width:100%}
+.quiz-tbl-title{font-size:20px;font-weight:700;color:#2c2c2a;text-align:center}
+.quiz-tbl{border-collapse:collapse;font-size:18px;font-family:'Verdana',sans-serif}
+.quiz-tbl th{background:#185FA5;color:#fff;padding:14px 28px;font-size:17px;font-weight:600;text-align:center}
+.quiz-tbl td{padding:13px 28px;border:1px solid #d3d1c7;text-align:center;color:#2c2c2a;background:#fff}
+.quiz-tbl tbody tr:nth-child(even) td{background:#f5f4f0}
+#app.plain-q #diag-panel{display:none}
+#app.plain-q #q-panel{max-width:700px;margin:0 auto;flex:none;width:100%}
+@media (max-width:680px) and (orientation:portrait){
+  #app{flex-direction:column}
+  #diag-panel{flex:none;height:42dvh;border-right:none;border-bottom:2px solid #d3d1c7;padding:10px;justify-content:center}
+  #diagWrap svg{max-height:40dvh}
+  #q-panel{flex:1;padding:10px 14px;padding-bottom:max(10px,env(safe-area-inset-bottom));gap:6px;min-width:0;overflow-y:auto}
+  .qtext{font-size:14px;line-height:1.5}
+  .abtn{font-size:14px;padding:10px 14px}
+  .abtns{gap:6px}
+  .fb{font-size:12px;min-height:14px}
+  .nav{padding-top:6px;gap:6px}
+  .nbtn{font-size:12px;padding:8px 16px}
+  #replayBtn{font-size:12px;padding:8px 10px}
+  .prog{font-size:11px}
+}
+@keyframes labelFadeIn{from{opacity:0}to{opacity:1}}
+.pm-label-reveal{animation:labelFadeIn 0.9s ease-in forwards}
+@media (max-height:500px){
+  #diag-panel{padding:8px;align-items:flex-start}
+  #diagWrap svg{max-height:96dvh}
+  #q-panel{padding:8px 12px 8px 12px;padding-bottom:max(8px,env(safe-area-inset-bottom));gap:4px}
+  .qnum{font-size:9px}
+  .qtext{font-size:12px;line-height:1.4}
+  .abtn{font-size:12px;padding:6px 10px}
+  .abtns{gap:3px}
+  .fb{font-size:10px;min-height:10px}
+  .nav{padding-top:5px;gap:5px}
+  .nbtn{font-size:11px;padding:7px 12px}
+  #replayBtn{font-size:11px;padding:7px 8px}
+  .prog{font-size:10px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="diag-panel"><div id="diagWrap"></div></div>
+  <div id="q-panel">
+    <div class="qnum" id="qnum"></div>
+    <div class="qtext" id="qtext"></div>
+    <div class="abtns" id="abtns"></div>
+    <div class="fb" id="fb"></div>
+    <div class="nav">
+      <button class="nbtn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button id="replayBtn" onclick="replayAnim()" title="Replay animation" style="display:none">↺</button>
+      <button id="revealBtn" onclick="reveal()" style="display:none">▶ Reveal</button>
+      <div class="prog" id="prog"></div>
+      <button class="nbtn pri" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+</div>
+<div id="score-screen">
+  <div class="sbox">
+    <h2>Quiz Complete! 🎉</h2>
+    <div class="snum" id="snum"></div>
+    <p id="smsg"></p>
+  </div>
+  <button class="rbtn" onclick="restart()">↺ Try Again</button>
+</div>
+<script>
+const GRID=9,QS=1,QE=9;
+const qs=[{"type":"tax","taxType":"tax","dElasticity":"normal","title":"Tobacco market","yLabel":"Price per packet ($)","xLabel":"Quantity","dColor":"#185fa5","sColor":"#0f6e56","vUnit":2,"hUnit":10,"startDS":0,"startSS":0,"ansDS":0,"ansSS":-2,"reveals":["size"],"questionText":"The diagram shows a tax imposed on tobacco. What is the size of the tobacco tax per packet?","answers":["$2","$4","$10","$12"],"correctIndex":1},{"type":"tax","taxType":"tax","dElasticity":"normal","title":"Tobacco market","yLabel":"Price per packet ($)","xLabel":"Quantity","dColor":"#185fa5","sColor":"#0f6e56","vUnit":2,"hUnit":10,"startDS":0,"startSS":0,"ansDS":0,"ansSS":-2,"reveals":["size","wedge"],"questionText":"Consider the same tax. What is the total government revenue raised from this tax?","answers":["$500","$480","$160","$80"],"correctIndex":2},{"type":"tax","taxType":"tax","dElasticity":"normal","title":"Tobacco market","yLabel":"Price per packet ($)","xLabel":"Quantity","dColor":"#185fa5","sColor":"#0f6e56","vUnit":2,"hUnit":10,"startDS":0,"startSS":0,"ansDS":0,"ansSS":-2,"reveals":["size","prodrev"],"questionText":"What is the producer revenue following the introduction of the tax?","answers":["$160","$200","$320","$480"],"correctIndex":2},{"type":"tax","taxType":"tax","dElasticity":"normal","title":"Tobacco market","yLabel":"Price per packet ($)","xLabel":"Quantity","dColor":"#185fa5","sColor":"#0f6e56","vUnit":2,"hUnit":10,"startDS":0,"startSS":0,"ansDS":0,"ansSS":-2,"reveals":["size","consumer"],"questionText":"How much of the tax revenue is paid by the consumer?","answers":["$80","$100","$160","$200"],"correctIndex":0},{"type":"tax","taxType":"tax","dElasticity":"normal","title":"Tobacco market","yLabel":"Price per packet ($)","xLabel":"Quantity","dColor":"#185fa5","sColor":"#0f6e56","vUnit":2,"hUnit":10,"startDS":0,"startSS":0,"ansDS":0,"ansSS":-2,"reveals":[],"questionText":"By how much has overall spending on tobacco reduced with the imposition of the tax?","answers":["$10","$20","$30","$40"],"correctIndex":1},{"type":"tax","taxType":"subsidy","dElasticity":"normal","title":"Market for solar panels","yLabel":"Price per panel ($)","xLabel":"Quantity (000s)","dColor":"#ff9500","sColor":"#9a9d02","vUnit":10,"hUnit":10,"startDS":0,"startSS":0,"ansDS":0,"ansSS":2,"reveals":[],"questionText":"A government decides to subsidise solar panels. Which of the following best describes the positive externality of solar panels?","answers":["The solar panel owner has lower electricity bills","The wider community benefits from reduced air pollution","The government spends money to subsidise the solar panel","Firms benefit from increased profits due to higher demand for solar panels"],"correctIndex":1},{"type":"tax","taxType":"subsidy","dElasticity":"normal","title":"Market for solar panels","yLabel":"Price per panel ($)","xLabel":"Quantity (000s)","dColor":"#ff9500","sColor":"#9a9d02","vUnit":10,"hUnit":10,"startDS":0,"startSS":0,"ansDS":0,"ansSS":2,"reveals":["size"],"questionText":"What is the size of the solar panel subsidy per panel?","answers":["$10","$20","$30","$40"],"correctIndex":1},{"type":"tax","taxType":"subsidy","dElasticity":"normal","title":"Market for solar panels","yLabel":"Price per panel ($)","xLabel":"Quantity (000s)","dColor":"#ff9500","sColor":"#9a9d02","vUnit":10,"hUnit":10,"startDS":0,"startSS":0,"ansDS":0,"ansSS":2,"reveals":["size","wedge"],"questionText":"What is the total government spending on the solar panel subsidy?","answers":["$120","$140","$240","$250"],"correctIndex":0},{"type":"tax","taxType":"subsidy","dElasticity":"normal","title":"Market for solar panels","yLabel":"Price per panel ($)","xLabel":"Quantity (000s)","dColor":"#ff9500","sColor":"#9a9d02","vUnit":10,"hUnit":10,"startDS":0,"startSS":0,"ansDS":0,"ansSS":2,"reveals":["size","wedge","prodrev"],"questionText":"What is the total producer revenue after the subsidy?","answers":["$2,400.000","$3,000,000","$3,600,000","$4,200,000"],"correctIndex":2}];
+let cur=0;
+const done=new Array(qs.length).fill(false);
+const curPos=qs.map(q=>{
+  if(q.type==='sd') return{dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
+  if(q.type==='sc') return{dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
+  if(q.type==='pm') return{dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
+  if(q.type==='tax') return{dA:q.startDS||0,sA:q.ansSS||0,fpA:-1};
+  return{dA:0,sA:0,fpA:q.startFP||5};
+});
+function fmt(n){return Math.round(n*100)/100;}
+// dm=demand slope multiplier (1=normal,2=inelastic,0.5=elastic).
+// dsc=demand shift coefficient per step (default 2, tax builder uses dm for 1-grid-square shifts).
+// ssc=supply shift coefficient per step (default 2, tax builder uses 1).
+function dPf(q,ds,dm=1,dsc=2){return 5*(1+dm)-dm*q+dsc*ds;}
+function sPf(q,ss,ssc=2){return q-ssc*ss;}
+function dQf(p,ds,dm=1,dsc=2){return(5*(1+dm)-p+dsc*ds)/dm;}
+function sQf(p,ss,ssc=2){return p+ssc*ss;}
+function getEq(ds,ss,dm=1,dsc=2,ssc=2){
+  const p=(5*(1+dm)+dsc*ds-dm*ssc*ss)/(1+dm);return{p,q:p+ssc*ss};
+}
+function gxF(q,pad,W){return pad.l+q*(W-pad.l-pad.r)/GRID;}
+function gyF(p,pad,H){return pad.t+(GRID-p)*(H-pad.t-pad.b)/GRID;}
+function clip(qA,pA,qB,pB,pad,W,H,pMin=0){
+  let t0=0,t1=1;const dq=qB-qA,dp=pB-pA;
+  if(dp!==0){const tL=(pMin-pA)/dp,tH=(GRID-pA)/dp;if(dp<0){t1=Math.min(t1,tL);t0=Math.max(t0,tH);}else{t0=Math.max(t0,tL);t1=Math.min(t1,tH);}}
+  else if(pA<pMin||pA>GRID)return null;
+  if(t0>=t1)return null;
+  return{x1:gxF(qA+t0*dq,pad,W),y1:gyF(pA+t0*dp,pad,H),x2:gxF(qA+t1*dq,pad,W),y2:gyF(pA+t1*dp,pad,H)};
+}
+function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStaticBracket=false){
+  if(q.type==='plain')return'';
+  if(q.type==='table'){
+    const xe=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    let t=`<div class="quiz-tbl-wrap">`;
+    if(q.title)t+=`<div class="quiz-tbl-title">${xe(q.title)}</div>`;
+    t+=`<table class="quiz-tbl"><thead><tr>`;
+    (q.headers||[]).forEach(h=>{t+=`<th>${xe(h)||'&nbsp;'}</th>`;});
+    t+=`</tr></thead><tbody>`;
+    (q.rows||[]).forEach(row=>{t+=`<tr>`;row.forEach(cell=>{t+=`<td>${xe(cell)||'&nbsp;'}</td>`;});t+=`</tr>`;});
+    t+=`</tbody></table></div>`;
+    return t;
+  }
+  const W=400,H=340,pad={l:44,r:38,t:26,b:34};
+  const gx=v=>gxF(v,pad,W),gy=v=>gyF(v,pad,H);
+  const vU=q.vUnit,hU=q.hUnit;const fs=12,fs2=10;
+  const vDisp=vU>=1000?vU/1000:vU;
+  const hDisp=hU>=1000?hU/1000:hU;
+  let s=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+  if(q.title) s+=`<text x="${W/2}" y="16" text-anchor="middle" font-size="${fs}" font-family="Verdana" font-weight="bold" fill="#2c2c2a">${q.title}</text>`;
+  if(q.type!=='ppf'||q.ppfType!=='schedule'){
+    for(let i=1;i<=GRID;i++) s+=`<line x1="${pad.l}" y1="${gy(i)}" x2="${W-pad.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+    for(let i=1;i<=GRID;i++) s+=`<line x1="${gx(i)}" y1="${pad.t}" x2="${gx(i)}" y2="${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+  }
+  s+=`<line x1="${pad.l}" y1="${H-pad.b+6}" x2="${pad.l}" y2="${pad.t-6}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>`;
+  s+=`<line x1="${pad.l-6}" y1="${H-pad.b}" x2="${W-pad.r+6}" y2="${H-pad.b}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>`;
+  if(q.type==='ppf'){
+    const cW_=W-pad.l-pad.r,cH_=H-pad.t-pad.b;
+    const PPF_BASE=5,PPF_STEP=1.5;
+    const col=q.color||'#185FA5';
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${q.xLabel||'Good A'}</text>`;
+    s+=`<text x="9" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666" transform="rotate(-90,9,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel||'Good B'}</text>`;
+    if(q.ppfType==='curved'){
+      s+=`<text x="${pad.l-4}" y="${H-pad.b+11}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+      if(Math.abs(dA)>0.05){
+        const r0=PPF_BASE;
+        const rx0=(r0*cW_/GRID).toFixed(1),ry0=(r0*cH_/GRID).toFixed(1);
+        s+=`<path d="M ${gx(0).toFixed(1)} ${gy(r0).toFixed(1)} A ${rx0} ${ry0} 0 0 1 ${gx(r0).toFixed(1)} ${gy(0).toFixed(1)}" stroke="${col}" fill="none" stroke-width="2" stroke-linecap="round" opacity="0.3"/>`;
+        const lx0=r0*0.72,ly0=Math.sqrt(Math.max(0,r0*r0-lx0*lx0));
+        s+=`<text x="${(gx(lx0)+5).toFixed(1)}" y="${gy(ly0).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" opacity="0.3" font-weight="bold">PPF1</text>`;
+      }
+      const r=PPF_BASE+dA*PPF_STEP;
+      if(r>0.3){
+        const rx=(r*cW_/GRID).toFixed(1),ry=(r*cH_/GRID).toFixed(1);
+        s+=`<path d="M ${gx(0).toFixed(1)} ${gy(r).toFixed(1)} A ${rx} ${ry} 0 0 1 ${gx(r).toFixed(1)} ${gy(0).toFixed(1)}" stroke="${col}" fill="none" stroke-width="2.5" stroke-linecap="round"/>`;
+        const lbl=Math.abs(dA)>0.05?'PPF2':'PPF1';
+        const lx=r*0.72,ly=Math.sqrt(Math.max(0,r*r-lx*lx));
+        s+=`<text x="${(gx(lx)+5).toFixed(1)}" y="${gy(ly).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" font-weight="bold">${lbl}</text>`;
+      }
+    } else {
+      const xM=q.xMax||9,yM=q.yMax||9;
+      (q.xTicks||[]).forEach(v=>{
+        const gxP=gx(v*9/xM);
+        s+=`<line x1="${gxP.toFixed(1)}" y1="${pad.t}" x2="${gxP.toFixed(1)}" y2="${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
+        s+=`<line x1="${gxP.toFixed(1)}" y1="${H-pad.b}" x2="${gxP.toFixed(1)}" y2="${H-pad.b+5}" stroke="#999" stroke-width="1"/>`;
+        s+=`<text x="${gxP.toFixed(1)}" y="${H-pad.b+15}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+      });
+      (q.yTicks||[]).forEach(v=>{
+        const gyP=gy(v*9/yM);
+        s+=`<line x1="${pad.l}" y1="${gyP.toFixed(1)}" x2="${W-pad.r}" y2="${gyP.toFixed(1)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
+        s+=`<line x1="${pad.l-5}" y1="${gyP.toFixed(1)}" x2="${pad.l}" y2="${gyP.toFixed(1)}" stroke="#999" stroke-width="1"/>`;
+        s+=`<text x="${pad.l-8}" y="${gyP.toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+      });
+      const pts=(q.schedulePoints||[]).filter(p=>p.x>=0&&p.x<=GRID&&p.y>=0&&p.y<=GRID).sort((a,b)=>a.x-b.x);
+      if(pts.length>=2){
+        const pd=pts.map((p,i)=>(i===0?'M':'L')+' '+gx(p.x).toFixed(1)+' '+gy(p.y).toFixed(1)).join(' ');
+        s+=`<path d="${pd}" stroke="${col}" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+        const last=pts[pts.length-1];
+        s+=`<text x="${(gx(last.x)+6).toFixed(1)}" y="${gy(last.y).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" font-weight="bold">PPF</text>`;
+      }
+      pts.forEach(p=>{s+=`<circle cx="${gx(p.x).toFixed(1)}" cy="${gy(p.y).toFixed(1)}" r="6" fill="${col}" stroke="white" stroke-width="2"/>`;});
+    }
+  } else if(q.type==='sd'){
+    const eq=getEq(dA,sA);
+    for(let i=1;i<=GRID;i++){
+      const eP=q.showEqLines!==false&&Math.abs(i-eq.p)<0.05;
+      const eQ=q.showEqLines!==false&&Math.abs(i-eq.q)<0.05;
+      if(!eP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+      if(!eQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+    }
+    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
+    s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
+    // Faded D1/S1 always at origin — visible whenever the active curve is shifted
+    const dSh=dA!==0,sSh=sA!==0;
+    if(dSh){
+      const cd=clip(QS,dPf(QS,0),QE,dPf(QE,0),pad,W,H,1);
+      if(cd) s+=`<line x1="${cd.x1}" y1="${cd.y1}" x2="${cd.x2}" y2="${cd.y2}" stroke="${q.dColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="${cd.x2+5}" y="${cd.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" opacity="0.3" font-weight="bold">D1</text>`;
+    }
+    if(sSh){
+      const cs=clip(QS,sPf(QS,0),QE,sPf(QE,0),pad,W,H,1);
+      if(cs) s+=`<line x1="${cs.x1}" y1="${cs.y1}" x2="${cs.x2}" y2="${cs.y2}" stroke="${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="${cs.x2+5}" y="${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" opacity="0.3" font-weight="bold">S1</text>`;
+    }
+    const dl=dA===0?'D1':'D2',sl=sA===0?'S1':'S2';
+    const eT=animT<0.5?2*animT*animT:-1+(4-2*animT)*animT;
+    const animDS=isAnimating&&shiftDirD!==0?(q.startDS||0)+(dA-(q.startDS||0))*eT:dA;
+    const animSS=isAnimating&&shiftDirS!==0?(q.startSS||0)+(sA-(q.startSS||0))*eT:sA;
+    // Full-price-range lines (P=GRID→P=1) with inline 2D x-clip to chart boundary
+    const sdXL=pad.l,sdXR=W-pad.r;
+    // Demand
+    const dAx1=gx(dQf(GRID,animDS)),dAy1=gy(GRID),dAx2=gx(dQf(1,animDS)),dAy2=gy(1);
+    const dAdx=dAx2-dAx1,dAdy=dAy2-dAy1;
+    let dAt0=0,dAt1=1;
+    if(Math.abs(dAdx)>0.01){const dAttL=(sdXL-dAx1)/dAdx,dAttR=(sdXR-dAx1)/dAdx;if(dAdx>0){dAt0=Math.max(dAt0,dAttL);dAt1=Math.min(dAt1,dAttR);}else{dAt0=Math.max(dAt0,dAttR);dAt1=Math.min(dAt1,dAttL);}}
+    if(dAt0<dAt1){
+      const dALbl=clip(QS,dPf(QS,animDS),QE,dPf(QE,animDS),pad,W,H,1);
+      s+=`<line x1="${(dAx1+dAt0*dAdx).toFixed(1)}" y1="${(dAy1+dAt0*dAdy).toFixed(1)}" x2="${(dAx1+dAt1*dAdx).toFixed(1)}" y2="${(dAy1+dAt1*dAdy).toFixed(1)}" stroke="${q.dColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(dALbl) s+=`<text x="${(dALbl.x2+5).toFixed(1)}" y="${dALbl.y2.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">${dl}</text>`;
+    }
+    // Supply
+    const sAx1=gx(sQf(1,animSS)),sAy1=gy(1),sAx2=gx(sQf(GRID,animSS)),sAy2=gy(GRID);
+    const sAdx=sAx2-sAx1,sAdy=sAy2-sAy1;
+    let sAt0=0,sAt1=1;
+    if(Math.abs(sAdx)>0.01){const sAttL=(sdXL-sAx1)/sAdx,sAttR=(sdXR-sAx1)/sAdx;if(sAdx>0){sAt0=Math.max(sAt0,sAttL);sAt1=Math.min(sAt1,sAttR);}else{sAt0=Math.max(sAt0,sAttR);sAt1=Math.min(sAt1,sAttL);}}
+    if(sAt0<sAt1){
+      const sALbl=clip(QS,sPf(QS,animSS),QE,sPf(QE,animSS),pad,W,H,1);
+      s+=`<line x1="${(sAx1+sAt0*sAdx).toFixed(1)}" y1="${(sAy1+sAt0*sAdy).toFixed(1)}" x2="${(sAx1+sAt1*sAdx).toFixed(1)}" y2="${(sAy1+sAt1*sAdy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(sALbl) s+=`<text x="${(sALbl.x2+5).toFixed(1)}" y="${Math.min(sALbl.y1,sALbl.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${sl}</text>`;
+    }
+    if(eq.q>=QS&&eq.q<=QE&&eq.p>=1&&eq.p<=GRID){
+      const ex=gx(eq.q),ey=gy(eq.p);
+      if(q.showEqLines!==false){
+        s+=`<line x1="${pad.l}" y1="${ey}" x2="${ex}" y2="${ey}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<line x1="${ex}" y1="${H-pad.b}" x2="${ex}" y2="${ey}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<circle cx="${ex}" cy="${ey}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>`;
+        if(!isAnimating){
+          s+=`<text x="${pad.l-4}" y="${ey}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq.p*vDisp)}</text>`;
+          s+=`<text x="${ex}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq.q*hDisp)}</text>`;
+        }
+      }
+    }
+  } else if(q.type==='pm'){
+    // ── Price Mechanism ──────────────────────────────────────────────────────
+    // fpA carries the animated current price; dA/sA are fixed curve positions.
+    const eq_=getEq(dA,sA);
+    const atEq_=Math.abs(fpA-eq_.p)<0.06;
+    const qd_=dQf(fpA,dA),qs_=sQf(fpA,sA);
+    const hasSurplus_=fpA>eq_.p+0.06;
+    const bracketCol_=hasSurplus_?'#D85A30':'#7B2FA8';
+    const lbl_=hasSurplus_?'SURPLUS':'SHORTAGE';
+    const sp_=q.startPrice||fpA,td_=Math.abs(sp_-eq_.p),cd_2=Math.abs(fpA-eq_.p);
+    const fade_=td_>0.01?Math.min(cd_2/td_,1):1;
+    // Axis tick labels — suppress values that clash with price/eq/Qd/Qs
+    for(let i=1;i<=GRID;i++){
+      const isCP_=!atEq_&&Math.abs(i-fpA)<0.25;
+      const isEP_=q.showEqLines!==false&&Math.abs(i-eq_.p)<0.15;
+      const isQd_=!atEq_&&Math.abs(i-qd_)<0.25;
+      const isQs_=!atEq_&&Math.abs(i-qs_)<0.25;
+      const isEQ_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.q)<0.15;
+      if(!isCP_&&!isEP_) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+      if(!isQd_&&!isQs_&&!isEQ_) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+    }
+    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
+    s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
+    // S & D curves
+    const cdP_=clip(QS,dPf(QS,dA),QE,dPf(QE,dA),pad,W,H,1);
+    const csP_=clip(QS,sPf(QS,sA),QE,sPf(QE,sA),pad,W,H,1);
+    if(cdP_) s+=`<line x1="${cdP_.x1}" y1="${cdP_.y1}" x2="${cdP_.x2}" y2="${cdP_.y2}" stroke="${q.dColor}" stroke-width="2.5" stroke-linecap="round"/><text x="${cdP_.x2+5}" y="${cdP_.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">D</text>`;
+    if(csP_) s+=`<line x1="${csP_.x1}" y1="${csP_.y1}" x2="${csP_.x2}" y2="${csP_.y2}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/><text x="${csP_.x2+5}" y="${Math.min(csP_.y1,csP_.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">S</text>`;
+    if(atEq_){
+      // At equilibrium — standard dot
+      if(eq_.q>=QS&&eq_.q<=QE&&eq_.p>=1&&eq_.p<=GRID){
+        const ex_=gx(eq_.q),ey_=gy(eq_.p);
+        if(q.showEqLines!==false){
+          s+=`<line x1="${pad.l}" y1="${ey_}" x2="${ex_}" y2="${ey_}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+          s+=`<line x1="${ex_}" y1="${H-pad.b}" x2="${ex_}" y2="${ey_}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+          s+=`<circle cx="${ex_}" cy="${ey_}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>`;
+          if(!isAnimating){
+            s+=`<text x="${pad.l-4}" y="${ey_}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq_.p*vDisp)}</text>`;
+            s+=`<text x="${ex_}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq_.q*hDisp)}</text>`;
+          }
+        }
+      }
+    } else {
+      const py_=gy(fpA);
+      const qdV_=Math.max(QS,Math.min(QE,qd_)),qsV_=Math.max(QS,Math.min(QE,qs_));
+      const xQd_=gx(qdV_),xQs_=gx(qsV_);
+      const xL_=Math.min(xQd_,xQs_),xR_=Math.max(xQd_,xQs_),xM_=(xL_+xR_)/2;
+      // Faint destination dot
+      if(eq_.q>=QS&&eq_.q<=QE&&eq_.p>=1&&eq_.p<=GRID)
+        s+=`<circle cx="${gx(eq_.q)}" cy="${gy(eq_.p)}" r="4" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.2"/>`;
+      // Dashed price line
+      s+=`<line x1="${pad.l}" y1="${py_}" x2="${W-pad.r}" y2="${py_}" stroke="#555" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.7"/>`;
+      // Vertical dotted lines from intersections
+      if(qd_>=QS&&qd_<=QE) s+=`<line x1="${xQd_}" y1="${py_}" x2="${xQd_}" y2="${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>`;
+      if(qs_>=QS&&qs_<=QE) s+=`<line x1="${xQs_}" y1="${py_}" x2="${xQs_}" y2="${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>`;
+      // Bracket + label — shown during animation OR when answer revealed (showStaticBracket)
+      const showBrk_=(isAnimating&&xR_-xL_>5&&fade_>0.02)||showStaticBracket;
+      if(showBrk_){
+        const arm_=hasSurplus_?-16:16,barY_=py_+arm_;
+        const tip_=hasSurplus_?py_+9:py_-9,lblY_=hasSurplus_?barY_-12:barY_+12;
+        if(showStaticBracket){
+          s+=`<g class="pm-label-reveal">`;
+          s+=`<line x1="${xL_}" y1="${py_}" x2="${xL_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5"/>`;
+          s+=`<line x1="${xR_}" y1="${py_}" x2="${xR_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5"/>`;
+          s+=`<line x1="${xL_}" y1="${barY_}" x2="${xR_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5"/>`;
+          s+=`<line x1="${xM_}" y1="${barY_}" x2="${xM_}" y2="${tip_}" stroke="${bracketCol_}" stroke-width="1.5" marker-end="url(#arr)"/>`;
+          s+=`<text x="${xM_}" y="${lblY_}" text-anchor="middle" font-size="${fs}" font-family="Verdana" font-weight="bold" fill="${bracketCol_}">${lbl_}</text>`;
+          s+=`</g>`;
+        } else {
+          const op_=fade_.toFixed(2);
+          s+=`<line x1="${xL_}" y1="${py_}" x2="${xL_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5" opacity="${op_}"/>`;
+          s+=`<line x1="${xR_}" y1="${py_}" x2="${xR_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5" opacity="${op_}"/>`;
+          s+=`<line x1="${xL_}" y1="${barY_}" x2="${xR_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5" opacity="${op_}"/>`;
+          s+=`<line x1="${xM_}" y1="${barY_}" x2="${xM_}" y2="${tip_}" stroke="${bracketCol_}" stroke-width="1.5" marker-end="url(#arr)" opacity="${op_}"/>`;
+          s+=`<text x="${xM_}" y="${lblY_}" text-anchor="middle" font-size="${fs}" font-family="Verdana" font-weight="bold" fill="${bracketCol_}" opacity="${op_}">${lbl_}</text>`;
+        }
+      }
+      // Y-axis price label
+      s+=`<text x="${pad.l-4}" y="${py_}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#444" font-weight="bold">${fmt(fpA*vDisp)}</text>`;
+      // X-axis Qd/Qs labels (static only)
+      if(!isAnimating){
+        if(qd_>=QS&&qd_<=QE) s+=`<text x="${xQd_}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(qdV_*hDisp)}</text>`;
+        if(qs_>=QS&&qs_<=QE) s+=`<text x="${xQs_}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(qsV_*hDisp)}</text>`;
+      }
+      // Intersection dots — grow to equilibrium-dot size during animation so they
+      // visually trace the expansion / contraction along each curve
+      const dotR_=isAnimating?7:4,dotSW_=isAnimating?'2':'1.5';
+      if(qd_>=QS&&qd_<=QE) s+=`<circle cx="${xQd_}" cy="${py_}" r="${dotR_}" fill="#D85A30" stroke="white" stroke-width="${dotSW_}"/>`;
+      if(qs_>=QS&&qs_<=QE) s+=`<circle cx="${xQs_}" cy="${py_}" r="${dotR_}" fill="#D85A30" stroke="white" stroke-width="${dotSW_}"/>`;
+    }
+  } else if(q.type==='tax'){
+    // Tax / Subsidy diagram — BOTH S1 (faded) and S2 always visible from question start.
+    // fpA = taxStep: -1=initial clean diagram, 0=price labels revealed (after correct answer),
+    //   1..N = reveal steps in order of q.reveals array (configurable per question).
+    const txStartSS=q.startSS||0;
+    const txStep=Math.round(fpA);
+    const txShowLbls=txStep>=0;
+    const txIsSub=q.taxType==='subsidy';
+    // Demand slope multiplier: inelastic=2 (2 rise:1 run), elastic=0.5 (1 rise:2 run), normal=1
+    // dsc=txDm, ssc=1 → every shift button moves the curve exactly 1 grid square
+    const txDm=q.dElasticity==='inelastic'?2:q.dElasticity==='elastic'?0.5:1;
+    const txEq0=getEq(dA,txStartSS,txDm,txDm,1);
+    const txEq1=getEq(dA,sA,txDm,txDm,1);
+    const txP0=txEq0.p,txQ0=txEq0.q;
+    const txPc=txEq1.p,txQn=txEq1.q;
+    const txPs=sPf(txQn,txStartSS,1);      // producer price = S1 price at Qn (ssc=1)
+    // Which reveals have been shown so far (Set of keys)
+    const txRevArr=(q.reveals&&q.reveals.length)?q.reveals:['size','wedge','consumer','prodloss'];
+    const txShown=txStep>0?new Set(txRevArr.slice(0,txStep)):new Set();
+    // Common rect coordinates used by multiple reveals
+    const txOnGrid=txQn>=QS&&txQn<=QE&&txPc>=1&&txPc<=GRID&&txPs>=1&&txPs<=GRID;
+    const trxL=pad.l,trxR=gx(txQn),trW=trxR-trxL,trMX=(trxL+trxR)/2;
+    const trpHigh=Math.max(txPc,txPs),trpLow=Math.min(txPc,txPs);
+    const tryT=gy(trpHigh),tryB=gy(trpLow),trH=tryB-tryT,trMY=(tryT+tryB)/2;
+    // Axis tick labels — suppress values near special markers when labels are shown
+    for(let i=1;i<=GRID;i++){
+      const txNP=txShowLbls&&(Math.abs(i-txPc)<0.2||Math.abs(i-txPs)<0.2||Math.abs(i-txP0)<0.2);
+      const txNQ=txShowLbls&&(Math.abs(i-txQn)<0.2||Math.abs(i-txQ0)<0.2);
+      if(!txNP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+      if(!txNQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+    }
+    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
+    s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
+    // S1 — always shown faded (original supply at txStartSS, ssc=1)
+    const ts1x1=gx(sQf(1,txStartSS,1)),ts1y1=gy(1),ts1x2=gx(sQf(GRID,txStartSS,1)),ts1y2=gy(GRID);
+    const ts1dx=ts1x2-ts1x1,ts1dy=ts1y2-ts1y1;let ts1t0=0,ts1t1=1;
+    if(Math.abs(ts1dx)>0.01){const ts1tL=(pad.l-ts1x1)/ts1dx,ts1tR=(W-pad.r-ts1x1)/ts1dx;if(ts1dx>0){ts1t0=Math.max(ts1t0,ts1tL);ts1t1=Math.min(ts1t1,ts1tR);}else{ts1t0=Math.max(ts1t0,ts1tR);ts1t1=Math.min(ts1t1,ts1tL);}}
+    if(ts1t0<ts1t1){
+      const ts1L=clip(QS,sPf(QS,txStartSS,1),QE,sPf(QE,txStartSS,1),pad,W,H,1);
+      s+=`<line x1="${(ts1x1+ts1t0*ts1dx).toFixed(1)}" y1="${(ts1y1+ts1t0*ts1dy).toFixed(1)}" x2="${(ts1x1+ts1t1*ts1dx).toFixed(1)}" y2="${(ts1y1+ts1t1*ts1dy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/>`;
+      if(ts1L)s+=`<text x="${(ts1L.x2+5).toFixed(1)}" y="${Math.min(ts1L.y1,ts1L.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" opacity="0.3" font-weight="bold">S1</text>`;
+    }
+    // Demand curve D (slope=txDm, shift coeff=txDm → 1 grid square per step)
+    const tdx1=gx(dQf(GRID,dA,txDm,txDm)),tdy1=gy(GRID),tdx2=gx(dQf(1,dA,txDm,txDm)),tdy2=gy(1);
+    const tddx=tdx2-tdx1,tddy=tdy2-tdy1;let tdt0=0,tdt1=1;
+    if(Math.abs(tddx)>0.01){const tdtL=(pad.l-tdx1)/tddx,tdtR=(W-pad.r-tdx1)/tddx;if(tddx>0){tdt0=Math.max(tdt0,tdtL);tdt1=Math.min(tdt1,tdtR);}else{tdt0=Math.max(tdt0,tdtR);tdt1=Math.min(tdt1,tdtL);}}
+    if(tdt0<tdt1){
+      const tdL=clip(QS,dPf(QS,dA,txDm,txDm),QE,dPf(QE,dA,txDm,txDm),pad,W,H,1);
+      s+=`<line x1="${(tdx1+tdt0*tddx).toFixed(1)}" y1="${(tdy1+tdt0*tddy).toFixed(1)}" x2="${(tdx1+tdt1*tddx).toFixed(1)}" y2="${(tdy1+tdt1*tddy).toFixed(1)}" stroke="${q.dColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(tdL)s+=`<text x="${(tdL.x2+5).toFixed(1)}" y="${tdL.y2.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">D</text>`;
+    }
+    // S2 — active supply curve (post-intervention, ssc=1)
+    const tsx1=gx(sQf(1,sA,1)),tsy1=gy(1),tsx2=gx(sQf(GRID,sA,1)),tsy2=gy(GRID);
+    const tsdx=tsx2-tsx1,tsdy=tsy2-tsy1;let tst0=0,tst1=1;
+    if(Math.abs(tsdx)>0.01){const tstL=(pad.l-tsx1)/tsdx,tstR=(W-pad.r-tsx1)/tsdx;if(tsdx>0){tst0=Math.max(tst0,tstL);tst1=Math.min(tst1,tstR);}else{tst0=Math.max(tst0,tstR);tst1=Math.min(tst1,tstL);}}
+    if(tst0<tst1){
+      const tsL=clip(QS,sPf(QS,sA,1),QE,sPf(QE,sA,1),pad,W,H,1);
+      s+=`<line x1="${(tsx1+tst0*tsdx).toFixed(1)}" y1="${(tsy1+tst0*tsdy).toFixed(1)}" x2="${(tsx1+tst1*tsdx).toFixed(1)}" y2="${(tsy1+tst1*tsdy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(tsL)s+=`<text x="${(tsL.x2+5).toFixed(1)}" y="${Math.min(tsL.y1,tsL.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">S2</text>`;
+    }
+    // Equilibrium dots — always visible (new active, original faded)
+    if(txQ0>=QS&&txQ0<=QE&&txP0>=1&&txP0<=GRID&&(Math.abs(txQ0-txQn)>0.1||Math.abs(txP0-txPc)>0.1)){
+      s+=`<circle cx="${gx(txQ0)}" cy="${gy(txP0)}" r="5" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.3"/>`;
+    }
+    if(txQn>=QS&&txQn<=QE&&txPc>=1&&txPc<=GRID){
+      s+=`<circle cx="${gx(txQn)}" cy="${gy(txPc)}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>`;
+    }
+    // Price/qty labels and dashed lines — only revealed after correct answer (txStep >= 0)
+    if(txShowLbls){
+      const tQnX=txQn>=QS&&txQn<=QE?gx(txQn):W-pad.r;
+      if(txPc>=1&&txPc<=GRID){
+        s+=`<line x1="${pad.l}" y1="${gy(txPc)}" x2="${tQnX.toFixed(1)}" y2="${gy(txPc)}" stroke="#D85A30" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<text x="${pad.l-4}" y="${gy(txPc)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(txPc*vDisp)}</text>`;
+      }
+      if(txPs>=1&&txPs<=GRID&&Math.abs(txPs-txPc)>0.1){
+        s+=`<line x1="${pad.l}" y1="${gy(txPs)}" x2="${tQnX.toFixed(1)}" y2="${gy(txPs)}" stroke="${q.sColor}" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<text x="${pad.l-4}" y="${gy(txPs)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${fmt(txPs*vDisp)}</text>`;
+      }
+      if(txP0>=1&&txP0<=GRID&&Math.abs(txP0-txPc)>0.15&&Math.abs(txP0-txPs)>0.15){
+        s+=`<text x="${pad.l-4}" y="${gy(txP0)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(txP0*vDisp)}</text>`;
+      }
+      if(txQn>=QS&&txQn<=QE){
+        s+=`<line x1="${gx(txQn)}" y1="${H-pad.b}" x2="${gx(txQn)}" y2="${(txPc>=1&&txPc<=GRID?gy(txPc):pad.t)}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<text x="${gx(txQn)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(txQn*hDisp)}</text>`;
+      }
+      if(txQ0>=QS&&txQ0<=QE&&Math.abs(txQ0-txQn)>0.15){
+        s+=`<text x="${gx(txQ0)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(txQ0*hDisp)}</text>`;
+      }
+      if(txQn>=QS&&txQn<=QE&&txPs>=1&&txPs<=GRID){
+        s+=`<circle cx="${gx(txQn)}" cy="${gy(txPs)}" r="5" fill="${q.sColor}" stroke="white" stroke-width="1.5"/>`;
+      }
+    }
+    // ── Configurable reveals — each is independent and drawn in q.reveals order ──────
+    // REVEAL: size — vertical bracket at Qn showing the size of the tax/subsidy
+    if(txShown.has('size')&&txOnGrid){
+      const txBrT=gy(trpHigh),txBrB=gy(trpLow),txBrH=txBrB-txBrT;
+      const txBrX=Math.min(gx(txQn)+20,W-6);
+      const txBrCol=txIsSub?'#7B2FA8':'#C47D00';
+      if(txBrH>4){
+        s+=`<line x1="${txBrX.toFixed(1)}" y1="${txBrT.toFixed(1)}" x2="${txBrX.toFixed(1)}" y2="${txBrB.toFixed(1)}" stroke="${txBrCol}" stroke-width="2"/>`;
+        s+=`<line x1="${(txBrX-5).toFixed(1)}" y1="${txBrT.toFixed(1)}" x2="${(txBrX+5).toFixed(1)}" y2="${txBrT.toFixed(1)}" stroke="${txBrCol}" stroke-width="2"/>`;
+        s+=`<line x1="${(txBrX-5).toFixed(1)}" y1="${txBrB.toFixed(1)}" x2="${(txBrX+5).toFixed(1)}" y2="${txBrB.toFixed(1)}" stroke="${txBrCol}" stroke-width="2"/>`;
+        s+=`<text x="${(txBrX+8).toFixed(1)}" y="${((txBrT+txBrB)/2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${txBrCol}" font-weight="bold">${txIsSub?'Subsidy/unit':'Tax/unit'}</text>`;
+      }
+    }
+    // REVEAL: prodrev — full producer revenue rectangle (Ps × Qn, from x-axis up to Ps)
+    if(txShown.has('prodrev')&&txOnGrid){
+      const prxW=trxR-trxL,pryT=gy(txPs),pryB=H-pad.b,pryH=pryB-pryT;
+      if(pryH>2&&prxW>2){
+        s+=`<rect x="${trxL.toFixed(1)}" y="${pryT.toFixed(1)}" width="${prxW.toFixed(1)}" height="${pryH.toFixed(1)}" fill="rgba(30,122,184,0.1)"/>`;
+        s+=`<rect x="${trxL.toFixed(1)}" y="${pryT.toFixed(1)}" width="${prxW.toFixed(1)}" height="${pryH.toFixed(1)}" fill="none" stroke="#1e7ab8" stroke-width="1.5"/>`;
+        if(pryH>18)s+=`<text x="${trMX.toFixed(1)}" y="${((pryT+pryB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="#1e7ab8" font-weight="bold">Producer Revenue</text>`;
+      }
+    }
+    // REVEAL: wedge — tax revenue / subsidy cost rectangle (full Ps-to-Pc band)
+    if(txShown.has('wedge')&&txOnGrid&&trH>2&&trW>2){
+      const trLabel=txIsSub?'Subsidy Cost':'Tax Revenue';
+      const trCol=txIsSub?'#7B2FA8':'#C47D00';
+      const trFill=txIsSub?'rgba(123,47,168,0.1)':'rgba(196,125,0,0.1)';
+      s+=`<rect x="${trxL.toFixed(1)}" y="${tryT.toFixed(1)}" width="${trW.toFixed(1)}" height="${trH.toFixed(1)}" fill="${trFill}"/>`;
+      s+=`<rect x="${trxL.toFixed(1)}" y="${tryT.toFixed(1)}" width="${trW.toFixed(1)}" height="${trH.toFixed(1)}" fill="none" stroke="${trCol}" stroke-width="1.5"/>`;
+      if(trH>18)s+=`<text x="${trMX.toFixed(1)}" y="${trMY.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${trCol}" font-weight="bold">${trLabel}</text>`;
+    }
+    // REVEAL: consumer — consumer cost/benefit slice (P0 to Pc band)
+    if(txShown.has('consumer')&&txOnGrid&&txP0>trpLow&&txP0<trpHigh&&trW>2){
+      const conT=gy(trpHigh),conB=gy(txP0),conH=conB-conT;
+      const conLbl=txIsSub?'Consumer Benefit':'Consumer Cost';
+      if(conH>2){
+        s+=`<rect x="${trxL.toFixed(1)}" y="${conT.toFixed(1)}" width="${trW.toFixed(1)}" height="${conH.toFixed(1)}" fill="rgba(216,90,48,0.22)"/>`;
+        s+=`<rect x="${trxL.toFixed(1)}" y="${conT.toFixed(1)}" width="${trW.toFixed(1)}" height="${conH.toFixed(1)}" fill="none" stroke="#D85A30" stroke-width="1" stroke-dasharray="4,3"/>`;
+        if(conH>14)s+=`<text x="${trMX.toFixed(1)}" y="${((conT+conB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="#D85A30" font-weight="bold">${conLbl}</text>`;
+      }
+    }
+    // REVEAL: prodloss — producer revenue loss/benefit slice (Ps to P0 band)
+    if(txShown.has('prodloss')&&txOnGrid&&txP0>trpLow&&txP0<trpHigh&&trW>2){
+      const proT=gy(txP0),proB=gy(trpLow),proH=proB-proT;
+      const proLbl=txIsSub?'Producer Benefit':'Producer Revenue Loss';
+      if(proH>2){
+        s+=`<rect x="${trxL.toFixed(1)}" y="${proT.toFixed(1)}" width="${trW.toFixed(1)}" height="${proH.toFixed(1)}" fill="rgba(15,110,86,0.22)"/>`;
+        s+=`<rect x="${trxL.toFixed(1)}" y="${proT.toFixed(1)}" width="${trW.toFixed(1)}" height="${proH.toFixed(1)}" fill="none" stroke="${q.sColor}" stroke-width="1" stroke-dasharray="4,3"/>`;
+        if(proH>14)s+=`<text x="${trMX.toFixed(1)}" y="${((proT+proB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${proLbl}</text>`;
+      }
+    }
+  } else {
+    const fp=fpA,qInt=q.curve==='demand'?dQf(fp,dA):sQf(fp,sA);
+    for(let i=1;i<=GRID;i++){
+      const isFP=q.showEqLines!==false&&Math.abs(i-fp)<0.05;
+      const isIQ=q.showEqLines!==false&&Math.abs(i-qInt)<0.05;
+      if(!isFP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+      if(!isIQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+    }
+    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
+    s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
+    // Faded D1/S1 always at origin — visible whenever the active curve is shifted
+    const scShift=q.curve==='demand'?dA:sA;
+    if(scShift!==0){
+      const c1=q.curve==='demand'?clip(QS,dPf(QS,0),QE,dPf(QE,0),pad,W,H,1):clip(QS,sPf(QS,0),QE,sPf(QE,0),pad,W,H,1);
+      if(c1){
+        const fadedLbl=q.curve==='demand'?'D1':'S1';
+        const ly=q.curve==='demand'?c1.y2:Math.min(c1.y1,c1.y2);
+        s+=`<line x1="${c1.x1}" y1="${c1.y1}" x2="${c1.x2}" y2="${c1.y2}" stroke="${q.color}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="${c1.x2+5}" y="${ly}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.color}" opacity="0.3" font-weight="bold">${fadedLbl}</text>`;
+      }
+    }
+    const sh=scShift!==0;
+    const lbl=sh?(q.curve==='demand'?'D2':'S2'):(q.curve==='demand'?'D1':'S1');
+    const eT=animT<0.5?2*animT*animT:-1+(4-2*animT)*animT;
+    const startSC=q.startCS||0;
+    const finalSC=q.curve==='demand'?dA:sA;
+    const animSC=isAnimating&&sh?startSC+(finalSC-startSC)*eT:finalSC;
+    // Full-price-range line with inline 2D x-clip — no SVG clip-path needed
+    const scIsD=q.curve==='demand';
+    const scAx1=scIsD?gx(dQf(GRID,animSC)):gx(sQf(1,animSC));
+    const scAy1=scIsD?gy(GRID):gy(1);
+    const scAx2=scIsD?gx(dQf(1,animSC)):gx(sQf(GRID,animSC));
+    const scAy2=scIsD?gy(1):gy(GRID);
+    const scAdx=scAx2-scAx1,scAdy=scAy2-scAy1;
+    let scAt0=0,scAt1=1;
+    if(Math.abs(scAdx)>0.01){const scTL=(pad.l-scAx1)/scAdx,scTR=(W-pad.r-scAx1)/scAdx;if(scAdx>0){scAt0=Math.max(scAt0,scTL);scAt1=Math.min(scAt1,scTR);}else{scAt0=Math.max(scAt0,scTR);scAt1=Math.min(scAt1,scTL);}}
+    if(scAt0<scAt1){
+      const scLbl=scIsD?clip(QS,dPf(QS,animSC),QE,dPf(QE,animSC),pad,W,H,1):clip(QS,sPf(QS,animSC),QE,sPf(QE,animSC),pad,W,H,1);
+      s+=`<line x1="${(scAx1+scAt0*scAdx).toFixed(1)}" y1="${(scAy1+scAt0*scAdy).toFixed(1)}" x2="${(scAx1+scAt1*scAdx).toFixed(1)}" y2="${(scAy1+scAt1*scAdy).toFixed(1)}" stroke="${q.color}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(scLbl){const scLy=scIsD?scLbl.y2:Math.min(scLbl.y1,scLbl.y2);s+=`<text x="${(scLbl.x2+5).toFixed(1)}" y="${scLy.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.color}" font-weight="bold">${lbl}</text>`;}
+    }
+    if(qInt>=QS&&qInt<=QE){
+      const ix=gx(qInt),py=gy(fp);
+      if(q.showEqLines!==false){
+        s+=`<line x1="${pad.l}" y1="${py}" x2="${ix}" y2="${py}" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="6,4"/>`;
+        s+=`<line x1="${ix}" y1="${py}" x2="${ix}" y2="${H-pad.b}" stroke="#D85A30" stroke-width="1" stroke-dasharray="4,3"/>`;
+        s+=`<circle cx="${ix}" cy="${py}" r="6" fill="#D85A30" stroke="white" stroke-width="2"/>`;
+        if(!isAnimating){
+          s+=`<text x="${pad.l-4}" y="${py}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(fp*vDisp)}</text>`;
+          s+=`<text x="${ix}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(qInt*hDisp)}</text>`;
+        }
+      }
+    }
+  }
+  return `<svg width="100%" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+}
+function showQ(i){
+  cur=i;
+  const q=qs[i];
+  const pos=curPos[i];
+  document.getElementById('qnum').textContent='Question '+(i+1)+' of '+qs.length;
+  document.getElementById('qtext').textContent=q.questionText;
+  document.getElementById('app').classList.toggle('plain-q',q.type==='plain');
+  const isStaticPM_=done[i]&&q.type==='pm'&&q.animatePrice===false;
+  const dA_=isStaticPM_?(q.dShift||0):pos.dA;
+  const sA_=isStaticPM_?(q.sShift||0):pos.sA;
+  const fpA_=isStaticPM_?(q.startPrice||5):pos.fpA;
+  document.getElementById('diagWrap').innerHTML=mkSVG(q,dA_,sA_,fpA_,false,0,0,0,isStaticPM_);
+  const rb=document.getElementById('replayBtn');
+  if(rb) rb.style.display=(q.type==='plain'||q.type==='table')?'none':'';
+  const rb2=document.getElementById('revealBtn');
+  const txRArr2=(q.reveals&&q.reveals.length)?q.reveals:['size','wedge','consumer','prodloss'];
+  if(rb2) rb2.style.display=(q.type==='tax'&&done[i]&&curPos[i].fpA>=0&&curPos[i].fpA<txRArr2.length)?'':'none';
+  const abtns=document.getElementById('abtns');
+  abtns.innerHTML=['A','B','C','D'].map((l,ai)=>{
+    let cls='abtn';
+    if(done[i]){cls+= ai===q.correctIndex?' correct':' used';}
+    return `<button class="${cls}" onclick="go(${i},${ai})">${l}. ${q.answers[ai]}</button>`;
+  }).join('');
+  const fb=document.getElementById('fb');
+  fb.textContent=done[i]?'✓ Correct!':'';
+  fb.className=done[i]?'fb c':'fb';
+  document.getElementById('prevBtn').disabled=(i===0);
+  const isLast=(i===qs.length-1);
+  document.getElementById('nextBtn').textContent=isLast?'See Score →':'Next →';
+  document.getElementById('prog').textContent=(i+1)+' of '+qs.length+(done[i]?' · ✓':'');
+}
+function go(qi,ai){
+  if(done[qi])return;
+  const q=qs[qi];
+  const btns=document.getElementById('abtns').querySelectorAll('.abtn');
+  const fb=document.getElementById('fb');
+  if(ai===q.correctIndex){
+    done[qi]=true;
+    btns.forEach((b,i)=>{b.classList.add(i===ai?'correct':'used');});
+    fb.textContent='✓ Correct!';fb.className='fb c';
+    document.getElementById('prog').textContent=(qi+1)+' of '+qs.length+' · ✓';
+    if(q.type==='pm'&&q.animatePrice===false){
+      // Fade in the surplus/shortage label — no price animation
+      document.getElementById('diagWrap').innerHTML=mkSVG(q,q.dShift||0,q.sShift||0,q.startPrice||5,false,0,0,0,true);
+    }else{
+      anim(qi);
+    }
+  } else {
+    btns[ai].classList.add('wrong');
+    fb.textContent='✗ Try again';fb.className='fb w';
+    setTimeout(()=>{btns[ai].classList.remove('wrong');fb.textContent='';fb.className='fb';},1400);
+  }
+}
+function anim(qi,animDur=700){
+  if(qi!==cur)return;
+  const q=qs[qi];
+  if(q.type==='plain'||q.type==='table')return;
+  const el=document.getElementById('diagWrap');
+  // ── Price Mechanism: animate price from startPrice → equilibrium ──────────
+  if(q.type==='pm'){
+    const eq_=getEq(q.dShift||0,q.sShift||0);
+    const dA_=q.dShift||0,sA_=q.sShift||0;
+    const fromP_=q.startPrice||5,toP_=eq_.p;
+    const start_=performance.now(),dur_=animDur>700?animDur*1.5:2600;
+    function stepPM(now){
+      if(qi!==cur)return;
+      const t=Math.min((now-start_)/dur_,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+      const priceA=fromP_+(toP_-fromP_)*e;
+      curPos[qi]={dA:dA_,sA:sA_,fpA:priceA};
+      el.innerHTML=mkSVG(q,dA_,sA_,priceA,t<1);
+      if(t<1)requestAnimationFrame(stepPM);
+      else curPos[qi]={dA:dA_,sA:sA_,fpA:toP_};
+    }
+    requestAnimationFrame(stepPM);
+    return;
+  }
+  if(q.type==='tax'){
+    // Both S1 and S2 visible from the start — no shift animation.
+    // "Answering" just reveals price labels (fpA: -1 → 0) and shows the Reveal button.
+    const txDAn=q.startDS||0,txSAn=q.ansSS||0;
+    curPos[qi]={dA:txDAn,sA:txSAn,fpA:0};
+    el.innerHTML=mkSVG(q,txDAn,txSAn,0,false);
+    const rb2=document.getElementById('revealBtn');
+    const txRArr3=(q.reveals&&q.reveals.length)?q.reveals:['size','wedge','consumer','prodloss'];
+    if(rb2&&qi===cur)rb2.style.display=txRArr3.length>0?'':'none';
+    return;
+  }
+  let tD,tS,fromD,fromS;
+  if(q.type==='sd'){
+    tD=q.ansDS||0;tS=q.ansSS||0;fromD=q.startDS||0;fromS=q.startSS||0;
+  } else if(q.type==='ppf'){
+    tD=q.ansShift||0;tS=0;fromD=0;fromS=0;
+  } else {
+    // sc: put shift in correct field based on curve type
+    if(q.curve==='demand'){tD=q.ansCS||0;tS=0;fromD=q.startCS||0;fromS=0;}
+    else{tD=0;tS=q.ansCS||0;fromD=0;fromS=q.startCS||0;}
+  }
+  const tFP=q.ansFP||(q.startFP||5),sFP=q.startFP||5;
+  const dirD=Math.sign(tD-fromD),dirS=Math.sign(tS-fromS);
+  const start=performance.now(),dur=animDur;
+  function step(now){
+    if(qi!==cur)return;
+    const t=Math.min((now-start)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    const dA=fromD+(tD-fromD)*e,sA=fromS+(tS-fromS)*e,fpA=sFP+(tFP-sFP)*e;
+    curPos[qi]={dA,sA,fpA};
+    el.innerHTML=mkSVG(q,dA,sA,fpA,t<1,dirD,dirS,t);
+    if(t<1)requestAnimationFrame(step);
+    else curPos[qi]={dA:tD,sA:tS,fpA:tFP};
+  }
+  requestAnimationFrame(step);
+}
+function replayAnim(){
+  const q=qs[cur];
+  if(q.type==='plain'||q.type==='table')return;
+  if(q.type==='sd') curPos[cur]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
+  else if(q.type==='sc') curPos[cur]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
+  else if(q.type==='pm') curPos[cur]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
+  else if(q.type==='tax'){curPos[cur]={dA:q.startDS||0,sA:q.ansSS||0,fpA:0};const rb2=document.getElementById('revealBtn');if(rb2)rb2.style.display=done[cur]?'':'none';}
+  else curPos[cur]={dA:0,sA:0,fpA:q.startFP||5};
+  if(done[cur]&&q.type==='pm'&&q.animatePrice===false){
+    // Label-reveal mode: just re-trigger the fade-in, no price animation
+    document.getElementById('diagWrap').innerHTML=mkSVG(q,q.dShift||0,q.sShift||0,q.startPrice||5,false,0,0,0,true);
+  }else{
+    document.getElementById('diagWrap').innerHTML=mkSVG(q,curPos[cur].dA,curPos[cur].sA,curPos[cur].fpA,false);
+    if(done[cur])anim(cur,3000);
+  }
+}
+function reveal(){
+  const q=qs[cur];
+  if(q.type!=='tax'||!done[cur])return;
+  const reveals=(q.reveals&&q.reveals.length)?q.reveals:['size','wedge','consumer','prodloss'];
+  const pos=curPos[cur];
+  if(pos.fpA>=reveals.length){document.getElementById('revealBtn').style.display='none';return;}
+  pos.fpA++;
+  document.getElementById('diagWrap').innerHTML=mkSVG(q,pos.dA,pos.sA,pos.fpA,false);
+  const rb2=document.getElementById('revealBtn');
+  if(rb2)rb2.style.display=pos.fpA>=reveals.length?'none':'';
+}
+function prev(){if(cur>0)showQ(cur-1);}
+function next(){
+  if(cur<qs.length-1)showQ(cur+1);
+  else showScore();
+}
+function showScore(){
+  const n=done.filter(Boolean).length;
+  document.getElementById('snum').textContent=n+' / '+qs.length;
+  const msgs=["Keep practising — you'll get there!","Good effort — nearly there!","Great work!","Excellent!","Perfect score!"];
+  document.getElementById('smsg').textContent=msgs[Math.min(Math.floor(n/qs.length*4),4)];
+  document.getElementById('score-screen').classList.add('show');
+}
+function restart(){
+  done.fill(false);
+  qs.forEach((q,i)=>{
+    if(q.type==='sd') curPos[i]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
+    else if(q.type==='sc') curPos[i]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
+    else if(q.type==='pm') curPos[i]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
+    else if(q.type==='tax') curPos[i]={dA:q.startDS||0,sA:q.ansSS||0,fpA:-1};
+    else curPos[i]={dA:0,sA:0,fpA:q.startFP||5};
+  });
+  document.getElementById('score-screen').classList.remove('show');
+  showQ(0);
+}
+showQ(0);
+</script>
+</body>
+</html>

@@ -195,3 +195,71 @@ function buildSVGInner(cfg) {
 
   return s;
 }
+
+// ── PRICE ELASTICITY OF DEMAND (PED) RENDERER ─────────────────────────────────
+// Self-contained, illustrative PED graph. Written with plain string concatenation
+// (no template literals) so the IDENTICAL source can be embedded inside the
+// exported quiz template in quiz-export.js without escaping.
+// q fields: title, yLbl, xLbl, startPrice, pricePct, ped, perfectElastic
+function pedInner(q){
+  var W=400,H=340,L=56,R=372,T=30,B=286;
+  var cx=(L+R)/2, yP1=232, yP2=92, GMAX=120;
+  var esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var f=function(n){return Math.round(n*100)/100;};
+  var P1=(isFinite(q.startPrice)&&q.startPrice>0)?q.startPrice:10;
+  var pct=(isFinite(q.pricePct)&&q.pricePct!==0)?q.pricePct:0.20;
+  var P2=Math.round(P1*(1+pct)*100)/100;
+  var Q1=100;
+  var title=q.title||'', yLbl=q.yLbl||'Price ($)', xLbl=q.xLbl||'Quantity';
+  var fs=12, fs2=10;
+  var s='';
+  if(title) s+='<text x="'+(W/2)+'" y="16" text-anchor="middle" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(title)+'</text>';
+  // axes
+  s+='<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
+  s+='<line x1="'+L+'" y1="'+B+'" x2="'+R+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
+  // axis titles
+  s+='<text x="'+(L-42)+'" y="'+((T+B)/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#888" text-anchor="middle" transform="rotate(-90 '+(L-42)+' '+((T+B)/2)+')">'+esc(yLbl)+'</text>';
+  s+='<text x="'+((L+R)/2)+'" y="'+(B+26)+'" font-size="'+fs2+'" font-family="Verdana" fill="#888" text-anchor="middle">'+esc(xLbl)+'</text>';
+
+  var color=q.color||(q.perfectElastic?'#0d9488':(q.ped===0?'#6b21a8':(q.ped<1?'#185FA5':(q.ped===1?'#15803d':'#EC3C78'))));
+
+  if(q.perfectElastic){
+    var yMid=Math.round((yP1+yP2)/2);
+    s+='<line x1="'+L+'" y1="'+yMid+'" x2="'+(R-8)+'" y2="'+yMid+'" stroke="#dfe4ee" stroke-width="1" stroke-dasharray="4 3"/>';
+    s+='<text x="'+(L-6)+'" y="'+(yMid+4)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="end">$'+f(P1)+'</text>';
+    s+='<line x1="'+(L+18)+'" y1="'+yMid+'" x2="'+(R-24)+'" y2="'+yMid+'" stroke="'+color+'" stroke-width="3"/>';
+    s+='<text x="'+(R-22)+'" y="'+(yMid-9)+'" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="'+color+'" text-anchor="end">D</text>';
+    return s;
+  }
+
+  var ped=(isFinite(q.ped)&&q.ped>=0)?q.ped:0.5;
+  var g=(Math.min(ped,2)/2)*GMAX;
+  var Q2=Math.round(Q1*(1-ped*pct)*100)/100;
+  // Points A (start) and B (after change). Higher price sits top-left (lower quantity),
+  // lower price bottom-right (higher quantity) — a downward-sloping demand line whether
+  // the price rises or falls.
+  var A={p:P1,qy:Q1,nm:'A'}, Bp={p:P2,qy:Q2,nm:'B'};
+  var hi=(A.p>=Bp.p)?A:Bp, lo=(A.p>=Bp.p)?Bp:A;
+  var hiX=cx-g, hiY=yP2, loX=cx+g, loY=yP1;   // yP2 top (high price), yP1 bottom (low price)
+  // price guide lines: top = higher price, bottom = lower price
+  var glines=[[yP1,'$'+f(lo.p)],[yP2,'$'+f(hi.p)]];
+  for(var i=0;i<glines.length;i++){
+    s+='<line x1="'+L+'" y1="'+glines[i][0]+'" x2="'+(R-8)+'" y2="'+glines[i][0]+'" stroke="#dfe4ee" stroke-width="1" stroke-dasharray="4 3"/>';
+    s+='<text x="'+(L-6)+'" y="'+(glines[i][0]+4)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="end">'+glines[i][1]+'</text>';
+  }
+  // demand line through both points, extended past each end
+  var dx=loX-hiX, dy=loY-hiY, len=Math.sqrt(dx*dx+dy*dy)||1; dx/=len; dy/=len; var ext=36;
+  s+='<line x1="'+(hiX-dx*ext)+'" y1="'+(hiY-dy*ext)+'" x2="'+(loX+dx*ext)+'" y2="'+(loY+dy*ext)+'" stroke="'+color+'" stroke-width="3"/>';
+  s+='<text x="'+(loX+dx*ext+3)+'" y="'+(loY+dy*ext+14)+'" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="'+color+'">D</text>';
+  // points: lo bottom-right, hi top-left
+  var pts=[[loX,loY,lo.nm,lo.qy,'start'],[hiX,hiY,hi.nm,hi.qy,'end']];
+  for(var j=0;j<pts.length;j++){
+    var px=pts[j][0], py=pts[j][1], nm=pts[j][2], qv=pts[j][3], anch=pts[j][4];
+    s+='<line x1="'+px+'" y1="'+py+'" x2="'+px+'" y2="'+B+'" stroke="#b6bfce" stroke-width="1" stroke-dasharray="4 3"/>';
+    s+='<text x="'+(px+(anch==='start'?3:-3))+'" y="'+(B+13)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="'+anch+'">'+f(qv)+'</text>';
+    s+='<circle cx="'+px+'" cy="'+py+'" r="5" fill="#fff" stroke="'+color+'" stroke-width="2.5"/>';
+    var lx=(anch==='start')?px+9:px-9;
+    s+='<text x="'+lx+'" y="'+(py-8)+'" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#0A0C56" text-anchor="'+(anch==='start'?'start':'end')+'">'+nm+'</text>';
+  }
+  return s;
+}

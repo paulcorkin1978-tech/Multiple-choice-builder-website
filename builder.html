@@ -41,6 +41,10 @@
         <h3>Tax &amp; Subsidy</h3>
         <p>Supply shifts left (tax) or right (subsidy) — reveals tax revenue, consumer cost &amp; producer impact rectangles step by step</p>
       </div>
+      <div class="menu-card" onclick="openBuilder('ped')">
+        <h3>Price Elasticity</h3>
+        <p>Price elasticity of demand — set the elasticity with a slider, static diagram for a multiple-choice question</p>
+      </div>
       <!-- NEW DIAGRAM TYPES: add a menu card here and a builder section below -->
     </div>
     <div id="menuQuizSection" style="display:none">
@@ -85,6 +89,7 @@
       <button class="btn" id="editType_table" onclick="editWithType('table')">Data Table</button>
       <button class="btn" id="editType_pm"    onclick="editWithType('pm')">Price Mechanism</button>
       <button class="btn" id="editType_tax"   onclick="editWithType('tax')">Tax &amp; Subsidy</button>
+      <button class="btn" id="editType_ped"   onclick="editWithType('ped')">Price Elasticity</button>
     </div>
     <button class="btn" style="width:100%;margin-top:12px" onclick="closeEditModal()">Cancel</button>
   </div>
@@ -733,6 +738,108 @@
   </div>
 </div>
 
+<!-- ══ PRICE ELASTICITY OF DEMAND BUILDER ══ -->
+<div class="builder" id="pedBuilder">
+  <!-- LEFT: diagram + controls -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <svg id="pedChart" width="100%" viewBox="0 0 400 340" style="display:block"></svg>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Elasticity (drag: 0 = perfectly inelastic → 2 = elastic → ∞ = perfectly elastic)</div>
+      <input type="range" id="pedSlider" min="0" max="2.1" step="0.1" value="0.5" oninput="pedDraw()" style="width:100%">
+      <div class="btn-row" style="margin-top:6px">
+        <button class="btn" onclick="pedNudge(-0.1)">– 0.1</button>
+        <button class="btn" onclick="pedNudge(0.1)">+ 0.1</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Reading (for your reference — not shown to students)</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-size:26px;font-weight:800;color:#0A0C56" id="pedVal">0.5</span>
+        <span id="pedCat" style="display:inline-block;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:700;color:#fff;background:#185FA5">Inelastic</span>
+      </div>
+      <div id="pedWork" style="font-size:12px;color:#444;margin-top:6px;line-height:1.5"></div>
+    </div>
+    <button class="btn" onclick="pedReset()" style="width:100%">↺ Reset Diagram</button>
+  </div>
+
+  <div class="resizer" onmousedown="startResize(event, 'pedBuilder')"></div>
+
+  <!-- RIGHT: question form -->
+  <div class="form-panel">
+    <div class="form-cols">
+
+      <!-- Diagram set-up -->
+      <div class="form-col-narrow">
+        <div class="card">
+          <div class="card-title">Diagram Set-up</div>
+          <div class="field"><label>Start price ($)</label><input type="number" id="pedStartPrice" value="10" min="1" step="1" oninput="pedDraw()"></div>
+          <div class="field"><label>Price change</label>
+            <select id="pedPriceChange" onchange="pedDraw()">
+              <optgroup label="Price rise">
+                <option value="0.05">+5%</option>
+                <option value="0.1">+10%</option>
+                <option value="0.15">+15%</option>
+                <option value="0.2" selected>+20%</option>
+                <option value="0.25">+25%</option>
+              </optgroup>
+              <optgroup label="Price fall">
+                <option value="-0.05">−5%</option>
+                <option value="-0.1">−10%</option>
+                <option value="-0.15">−15%</option>
+                <option value="-0.2">−20%</option>
+                <option value="-0.25">−25%</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="field"><label>Title</label>  <input type="text" id="pedTitle" placeholder="e.g. Demand for cinema tickets" oninput="pedDraw()"></div>
+          <div class="field"><label>Y-axis</label> <input type="text" id="pedYLbl"  value="Price ($)" oninput="pedDraw()"></div>
+          <div class="field"><label>X-axis</label> <input type="text" id="pedXLbl"  value="Quantity"  oninput="pedDraw()"></div>
+          <div class="field"><label>Curve colour</label><input type="color" id="pedCol" value="#185FA5" oninput="pedDraw()"></div>
+        </div>
+      </div>
+
+      <!-- Question builder -->
+      <div class="form-col-wide">
+        <div class="info-card">
+          <p>
+            <span class="step">1</span>Set the <strong>starting price</strong> and <strong>price change</strong>, then drag the <strong>elasticity slider</strong> to the scenario you want<br>
+            <span class="step">2</span>Set the <strong>title</strong> and <strong>axis labels</strong><br>
+            <span class="step">3</span>Write your <strong>question &amp; four answers</strong> and mark the correct one. The student sees the static diagram and answers.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Question Text</div>
+          <textarea id="pedQText" placeholder="e.g. Using the diagram, calculate the price elasticity of demand."></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Answer Options</div>
+          <p class="correct-hint">Select the radio button next to the correct answer</p>
+          <div class="arow"><input type="radio" name="pedC" value="0"><span class="alabel">A</span><input type="text" id="pedA0" placeholder="Answer A"></div>
+          <div class="arow"><input type="radio" name="pedC" value="1"><span class="alabel">B</span><input type="text" id="pedA1" placeholder="Answer B"></div>
+          <div class="arow"><input type="radio" name="pedC" value="2"><span class="alabel">C</span><input type="text" id="pedA2" placeholder="Answer C"></div>
+          <div class="arow"><input type="radio" name="pedC" value="3"><span class="alabel">D</span><input type="text" id="pedA3" placeholder="Answer D"></div>
+        </div>
+
+        <div class="add-bar">
+          <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-success" id="pedAddBtn" onclick="pedAddQ()">+ Add to Quiz</button>
+            <button class="btn" onclick="pedPreview()">Preview this ↗</button>
+          </div>
+          <div class="msg" id="pedMsg"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- ══ PLAIN TEXT BUILDER ══ -->
 <div class="builder" id="plainBuilder">
   <div class="plain-form-panel">
@@ -787,6 +894,7 @@
 <script src="js/diagrams/table.js"></script>
 <script src="js/diagrams/pm.js"></script>
 <script src="js/diagrams/tax.js"></script>
+<script src="js/diagrams/ped.js"></script>
 <script src="js/diagrams/plain.js"></script>
 <script src="js/quiz-export.js?v=2"></script>
 <script src="js/app.js"></script>

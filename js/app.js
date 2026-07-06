@@ -9,7 +9,7 @@ let editingIndex  = -1;   // -1 = adding new; ≥0 = editing that question index
 
 // ── TYPE LABEL HELPER ─────────────────────────────────────────────────────────
 function typeLabel(type) {
-  return { plain:'Text', sc:'SC', sd:'S&D', ppf:'PPF', table:'Table', pm:'Price Mech', tax:'Tax/Sub' }[type] || type;
+  return { plain:'Text', sc:'SC', sd:'S&D', ppf:'PPF', table:'Table', pm:'Price Mech', tax:'Tax/Sub', ped:'PED' }[type] || type;
 }
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
@@ -62,13 +62,18 @@ function openBuilder(type) {
     }
     txDraw();
     if (editingIndex >= 0) txLoad(quizQuestions[editingIndex]);
+  } else if (type === 'ped') {
+    document.getElementById('pedBuilder').classList.add('active');
+    if (editingIndex < 0) pedReset();
+    pedDraw();
+    if (editingIndex >= 0) pedLoad(quizQuestions[editingIndex]);
   } else if (type === 'plain') {
     document.getElementById('plainBuilder').classList.add('active');
     if (editingIndex >= 0) plainLoad(quizQuestions[editingIndex]);
   }
   // Update Add button labels and position row visibility for edit vs new mode
   const label = editingIndex >= 0 ? '✓ Update Question' : '+ Add to Quiz';
-  ['sdAddBtn','scAddBtn','ppfAddBtn','tblAddBtn','pmAddBtn','txAddBtn','plainAddBtn'].forEach(id => {
+  ['sdAddBtn','scAddBtn','ppfAddBtn','tblAddBtn','pmAddBtn','txAddBtn','pedAddBtn','plainAddBtn'].forEach(id => {
     const btn = document.getElementById(id);
     if (btn) btn.textContent = label;
   });
@@ -86,6 +91,7 @@ function goMenu() {
   document.getElementById('tableBuilder').classList.remove('active');
   document.getElementById('pmBuilder').classList.remove('active');
   document.getElementById('taxBuilder').classList.remove('active');
+  document.getElementById('pedBuilder').classList.remove('active');
   document.getElementById('plainBuilder').classList.remove('active');
   document.getElementById('menuScreen').style.display = '';
   updateMenu();
@@ -100,7 +106,7 @@ function editQ(i) {
     ? (q.questionText.length > 120 ? q.questionText.substring(0, 117) + '…' : q.questionText)
     : '(no question text)';
   // Highlight the current type button
-  ['plain','sc','sd','ppf','table','pm','tax'].forEach(t => {
+  ['plain','sc','sd','ppf','table','pm','tax','ped'].forEach(t => {
     const btn = document.getElementById('editType_' + t);
     if (btn) btn.classList.toggle('btn-primary', t === q.type);
   });

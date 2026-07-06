@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price Elasticity of Demand – Builder (prototype)</title>
+<style>
+  :root{
+    --navy:#0A0C56; --blue:#185FA5; --pink:#EC3C78;
+    --ink:#1c2333; --muted:#5b6472; --line:#d7dce4; --bg:#f6f8fc;
+    --inelastic:#185FA5; --unit:#15803d; --elastic:#EC3C78; --perfect:#6b21a8; --pelastic:#0d9488;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); padding:24px;
+  }
+  .wrap{max-width:760px; margin:0 auto;}
+  h1{font-size:20px; margin:0 0 2px; color:var(--navy);}
+  .sub{color:var(--muted); font-size:13px; margin:0 0 18px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 20px; box-shadow:0 1px 3px rgba(10,12,86,.05);}
+  .grid{display:grid; grid-template-columns:1fr; gap:18px;}
+  @media(min-width:680px){ .grid{grid-template-columns:1.15fr .85fr;} }
+  svg{width:100%; height:auto; display:block;}
+  .readout{display:flex; flex-direction:column; gap:14px;}
+  .ped-big{font-size:44px; font-weight:800; line-height:1; color:var(--navy);}
+  .chip{display:inline-block; align-self:flex-start; padding:5px 12px; border-radius:999px; font-size:13px; font-weight:700; color:#fff;}
+  .label{font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:2px;}
+  .sliderRow{margin-top:6px;}
+  input[type=range]{width:100%; accent-color:var(--pink); height:26px;}
+  .ticks{display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:-4px;}
+  .working{font-size:13px; line-height:1.7; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:10px 12px;}
+  .working b{color:var(--navy);}
+  .pts{font-size:13px; color:var(--muted);}
+  .pts b{color:var(--ink);}
+  .foot{font-size:12px; color:var(--muted); margin-top:16px; text-align:center;}
+  .stepBtns{display:flex; gap:8px; margin-top:8px;}
+  .stepBtns button{flex:1; padding:7px; border:1px solid var(--line); background:#fff; border-radius:8px; font-size:12px; font-weight:600; color:var(--navy); cursor:pointer;}
+  .stepBtns button:hover{border-color:var(--blue); color:var(--blue);}
+  .priceRow{margin-bottom:4px;}
+  input[type=number],select{padding:6px 8px; border:1px solid var(--line); border-radius:8px; font-size:14px; color:var(--ink); background:#fff;}
+  input[type=number]{width:90px;}
+  select{cursor:pointer;}
+  .fields{display:flex; flex-wrap:wrap; gap:10px 18px; padding-bottom:14px; margin-bottom:16px; border-bottom:1px solid var(--line);}
+  .field{display:flex; align-items:center; gap:8px;}
+  .field label{font-size:12px; font-weight:600; color:var(--navy); white-space:nowrap;}
+  .field input[type=text]{padding:6px 8px; border:1px solid var(--line); border-radius:8px; font-size:13px; color:var(--ink); min-width:150px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Price Elasticity of Demand</h1>
+  <p class="sub">Drag the slider to set the elasticity. The demand graph and the numbers update to match — always clean.</p>
+
+  <div class="card">
+    <div class="fields">
+      <div class="field"><label>Title</label><input type="text" id="pedTitle" placeholder="e.g. Demand for cinema tickets"></div>
+      <div class="field"><label>Y-axis</label><input type="text" id="pedYLbl" value="Price ($)"></div>
+      <div class="field"><label>X-axis</label><input type="text" id="pedXLbl" value="Quantity"></div>
+    </div>
+    <div class="grid">
+      <!-- GRAPH -->
+      <div>
+        <svg id="graph" viewBox="0 0 460 360" role="img" aria-label="Demand graph"></svg>
+      </div>
+
+      <!-- READOUT -->
+      <div class="readout">
+        <div>
+          <div class="label">Price elasticity of demand</div>
+          <div class="ped-big" id="pedVal">0.5</div>
+          <div class="chip" id="chip">Inelastic</div>
+        </div>
+
+        <div class="priceRow">
+          <div class="label">Starting price ($)</div>
+          <input type="number" id="startPrice" value="10" min="1" step="1">
+        </div>
+
+        <div class="priceRow">
+          <div class="label">Price change</div>
+          <select id="priceChange">
+            <option value="0.05">+5%</option>
+            <option value="0.10">+10%</option>
+            <option value="0.15">+15%</option>
+            <option value="0.20" selected>+20%</option>
+            <option value="0.25">+25%</option>
+          </select>
+        </div>
+
+        <div class="sliderRow">
+          <div class="label">Elasticity slider</div>
+          <input type="range" id="slider" min="0" max="2.1" step="0.1" value="0.5">
+          <div class="ticks"><span>0.0<br>perfectly<br>inelastic</span><span>1.0<br>unit</span><span>2.0<br>elastic</span><span>∞<br>perfectly<br>elastic</span></div>
+          <div class="stepBtns">
+            <button onclick="nudge(-0.1)">– 0.1</button>
+            <button onclick="nudge(0.1)">+ 0.1</button>
+          </div>
+        </div>
+
+        <div class="working" id="working"></div>
+        <div class="pts" id="pts"></div>
+      </div>
+    </div>
+    <div class="foot">Start quantity fixed at 100 units · set the starting price and price change on the right · graph is illustrative.</div>
+  </div>
+</div>
+
+<script>
+// ---- fixed reference assumptions (keep numbers clean) ----
+const Q1 = 100;               // original quantity
+let PCT_DP = 0.20;            // price rise %, updated live from the selector
+let P1 = 10, P2 = P1 * (1 + PCT_DP);   // prices, updated live from the input box
+const fmt = n => Number(n.toFixed(2)); // trims float noise for display
+
+// ---- plot geometry ----
+const L=55, R=430, T=25, B=310;      // plot box
+const QMAX=110, PMAX=15;
+const x = q => L + (q/QMAX)*(R-L);
+const y = p => B - (p/PMAX)*(B-T);
+
+// escape user text so it can't break the SVG markup
+const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+// read the Title / Y-axis / X-axis fields (same method as the other builders)
+function labels(){
+  return {
+    title: document.getElementById('pedTitle').value.trim(),
+    yLbl:  document.getElementById('pedYLbl').value.trim() || 'Price ($)',
+    xLbl:  document.getElementById('pedXLbl').value.trim() || 'Quantity'
+  };
+}
+
+// shared graph frame: title + axes + axis labels
+function drawFrame(){
+  const {title, yLbl, xLbl} = labels();
+  let s = '';
+  if (title) s += `<text x="${(L+R)/2}" y="16" font-size="14" font-weight="700" fill="var(--navy)" text-anchor="middle">${esc(title)}</text>`;
+  s += `<line x1="${L}" y1="${T}" x2="${L}" y2="${B}" stroke="#333" stroke-width="1.5"/>`;
+  s += `<line x1="${L}" y1="${B}" x2="${R}" y2="${B}" stroke="#333" stroke-width="1.5"/>`;
+  s += `<text x="${L-40}" y="${(T+B)/2}" font-size="12" fill="#333" transform="rotate(-90 ${L-40} ${(T+B)/2})" text-anchor="middle">${esc(yLbl)}</text>`;
+  s += `<text x="${(L+R)/2}" y="${B+38}" font-size="12" fill="#333" text-anchor="middle">${esc(xLbl)}</text>`;
+  return s;
+}
+
+function category(ped){
+  if (ped === 0)   return ['Perfectly inelastic','var(--perfect)'];
+  if (ped < 1)     return ['Inelastic','var(--inelastic)'];
+  if (ped === 1)   return ['Unit elastic','var(--unit)'];
+  return ['Elastic','var(--elastic)'];
+}
+
+function render(val){
+  // read the starting price and price-change % from the controls each time
+  const sp = parseFloat(document.getElementById('startPrice').value);
+  P1 = (isFinite(sp) && sp > 0) ? sp : 10;
+  const pc = parseFloat(document.getElementById('priceChange').value);
+  PCT_DP = (isFinite(pc) && pc > 0) ? pc : 0.20;
+  P2 = Math.round(P1 * (1 + PCT_DP) * 100) / 100;
+
+  const chip = document.getElementById('chip');
+
+  // ---- special case: the notch past 2.0 = perfectly elastic (∞) ----
+  if (val > 2.05){
+    document.getElementById('pedVal').textContent = '∞';
+    chip.textContent = 'Perfectly elastic';
+    chip.style.background = 'var(--pelastic)';
+    document.getElementById('working').innerHTML =
+      `<b>Working</b><br>At $${fmt(P1)} buyers will take any quantity.<br>`+
+      `The tiniest price rise sends quantity to zero.<br>PED = %ΔQ ÷ %ΔP = <b>∞</b>`;
+    document.getElementById('pts').innerHTML =
+      `Demand is horizontal at <b>$${fmt(P1)}</b>.`;
+    drawGraphPE('var(--pelastic)');
+    return;
+  }
+
+  // ---- normal case: 0.0 – 2.0 ----
+  const ped = Math.round(val*10)/10;
+  const pctDQ = ped * PCT_DP;                            // fractional fall in Q
+  const Q2 = Math.round(Q1 * (1 - pctDQ) * 100) / 100;  // clean quantity
+  const [catName, catColor] = category(ped);
+
+  document.getElementById('pedVal').textContent = ped.toFixed(1);
+  chip.textContent = catName;
+  chip.style.background = catColor;
+
+  const pctP = fmt(PCT_DP*100), pctQ = fmt(pctDQ*100);
+  document.getElementById('working').innerHTML =
+    `<b>Working</b><br>`+
+    `%Δ Price = +${pctP}%<br>`+
+    `%Δ Quantity = −${pctQ}%<br>`+
+    `PED = %ΔQ ÷ %ΔP = ${pctQ} ÷ ${pctP} = <b>${ped.toFixed(1)}</b>`;
+
+  document.getElementById('pts').innerHTML =
+    `Point A: <b>$${fmt(P1)} , ${Q1} units</b><br>Point B: <b>$${fmt(P2)} , ${fmt(Q2)} units</b>`;
+
+  drawGraph(ped, Q2, catColor);
+}
+
+// The graph is illustrative: the demand line is always CENTRED. Price levels sit
+// at fixed heights; only the axis numbers change. The horizontal gap between the
+// two points grows with elasticity (0 = centred vertical line = perfectly inelastic).
+function drawGraph(ped, Q2, color){
+  const svg = document.getElementById('graph');
+  const cx = (L + R) / 2;          // horizontal centre of plot
+  const yP1 = 250, yP2 = 95;       // fixed screen heights for low/high price
+  const GMAX = 118;                // half-gap driven by the slider, not the price change
+  const g = (Math.min(ped, 2) / 2) * GMAX;   // ped 0->0px (vertical), 2->118px (flat)
+
+  // A = ($10, Q1) lower-right ;  B = ($12, Q2) upper-left
+  const ax = cx + g, ay = yP1;
+  const bx = cx - g, by = yP2;
+
+  let s = drawFrame();
+
+  // fixed-height price guide lines + $ labels (these pass through the points)
+  for (const [yy, lab] of [[yP1, '$'+fmt(P1)], [yP2, '$'+fmt(P2)]]){
+    s += `<line x1="${L}" y1="${yy}" x2="${R-8}" y2="${yy}" stroke="#dfe4ee" stroke-width="1" stroke-dasharray="4 3"/>`;
+    s += `<text x="${L-6}" y="${yy+4}" font-size="11" fill="#333" text-anchor="end">${lab}</text>`;
+  }
+
+  // demand line, extended a little past each point
+  let dx = ax - bx, dy = ay - by; const len = Math.hypot(dx, dy) || 1; dx/=len; dy/=len;
+  const ext = 34;
+  s += `<line x1="${bx-dx*ext}" y1="${by-dy*ext}" x2="${ax+dx*ext}" y2="${ay+dy*ext}" stroke="${color}" stroke-width="3"/>`;
+  s += `<text x="${ax+dx*ext+3}" y="${ay+dy*ext+14}" font-size="13" font-weight="700" fill="${color}">D</text>`;
+
+  // points, vertical drops to quantity axis, floating quantity labels
+  const pts = [ [ax, ay, 'A', Q1, 'start'], [bx, by, 'B', Q2, 'end'] ];
+  for (const [px, py, name, qv, anch] of pts){
+    s += `<line x1="${px}" y1="${py}" x2="${px}" y2="${B}" stroke="#b6bfce" stroke-width="1" stroke-dasharray="4 3"/>`;
+    s += `<text x="${px + (anch==='start'?3:-3)}" y="${B+15}" font-size="11" fill="#333" text-anchor="${anch}">${fmt(qv)}</text>`;
+    s += `<circle cx="${px}" cy="${py}" r="5" fill="#fff" stroke="${color}" stroke-width="2.5"/>`;
+    const lx = name==='A' ? px+9 : px-9;
+    s += `<text x="${lx}" y="${py-8}" font-size="12" font-weight="700" fill="var(--navy)" text-anchor="${name==='A'?'start':'end'}">${name}</text>`;
+  }
+
+  svg.innerHTML = s;
+}
+
+// perfectly elastic: a centred horizontal demand line at the starting price
+function drawGraphPE(color){
+  const svg = document.getElementById('graph');
+  const yMid = Math.round((250 + 95) / 2);   // ~172, mid height
+  let s = drawFrame();
+  // single price guide line at the demand height
+  s += `<line x1="${L}" y1="${yMid}" x2="${R-8}" y2="${yMid}" stroke="#dfe4ee" stroke-width="1" stroke-dasharray="4 3"/>`;
+  s += `<text x="${L-6}" y="${yMid+4}" font-size="11" fill="#333" text-anchor="end">$${fmt(P1)}</text>`;
+  // horizontal demand line
+  s += `<line x1="${L+20}" y1="${yMid}" x2="${R-24}" y2="${yMid}" stroke="${color}" stroke-width="3"/>`;
+  s += `<text x="${R-22}" y="${yMid-9}" font-size="13" font-weight="700" fill="${color}" text-anchor="end">D</text>`;
+  s += `<text x="${(L+R)/2}" y="${yMid+22}" font-size="11" fill="var(--muted)" text-anchor="middle">any quantity demanded at this price</text>`;
+  svg.innerHTML = s;
+}
+
+function nudge(d){
+  const sl = document.getElementById('slider');
+  let v = Math.round((parseFloat(sl.value)+d)*10)/10;
+  v = Math.max(0, Math.min(2.1, v));
+  sl.value = v; render(v);
+}
+
+document.getElementById('slider').addEventListener('input', e => render(parseFloat(e.target.value)));
+document.getElementById('startPrice').addEventListener('input', () => render(parseFloat(document.getElementById('slider').value)));
+document.getElementById('priceChange').addEventListener('change', () => render(parseFloat(document.getElementById('slider').value)));
+['pedTitle','pedYLbl','pedXLbl'].forEach(id =>
+  document.getElementById(id).addEventListener('input', () => render(parseFloat(document.getElementById('slider').value))));
+render(0.5);
+</script>
+</body>
+</html>

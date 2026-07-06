@@ -176,4 +176,22 @@ Question,A,B,C,D,Correct
 - **quiz-bank-demand.json Q6**: Diagram title shows "Demand for iPads" — should be "Demand for cinema tickets". Fix in builder.
 - **quiz-bank-demand.json Q3/Q5**: Curve colours near-invisible (`#050505`, `#cfcece`). Worth updating.
 - **quiz-bank-demand.json Q15**: Answer D has typo "An decrease" (should be "A decrease").
--
+- **MC supply.csv Q15**: Answer options are placeholders — need filling in. Q6, Q11, Q15 need diagram setup in builder.
+- **Q8, Q9 in supply CSV**: Table data is embedded in question text — needs table-type question setup in builder.
+
+---
+
+## Diagram Colour Tips
+
+Avoid near-white or near-black colours — they disappear against the SVG background. Good choices: bright primaries, pastels with contrast. The colour picker in the builder gives a live preview.
+
+---
+
+## HSC Economics Notes
+
+- **Movement along curve** = contraction/expansion (caused by price change)
+- **Shift of curve** = increase/decrease in demand/supply (caused by non-price factors)
+- Price mechanism: shortage → competition among buyers → price bid up → contraction in demand + expansion in supply → equilibrium restored
+- Substitute goods: price of substitute ↑ → demand for good ↑ (increase/shift right)
+- Complementary goods: price of complement ↑ → demand for good ↓ (decrease/shift left)
+- Joint products (e.g. petrol/diesel): supply of one affects supply of the other

@@ -4,6 +4,28 @@ A browser-based tool for building, previewing, and exporting self-contained HSC 
 
 ---
 
+## How to Save My Work (backups)
+
+This project uses **git** to keep a history of every saved version, so you can always roll back if something breaks. Your work also lives in OneDrive, but git is the proper safety net.
+
+**After you've made changes you want to keep**, open a terminal in this folder and run these three commands:
+
+```
+git add -A
+git commit -m "short note about what changed"
+git push origin main
+```
+
+- `git add -A` — gathers up every file you changed.
+- `git commit -m "..."` — saves a snapshot to your local history. Replace the text in quotes with a quick note, e.g. `"Fixed demand quiz colours"`.
+- `git push origin main` — uploads the snapshot to your GitHub backup. The first time, GitHub may ask you to sign in.
+
+**Don't want to use the terminal?** GitHub Desktop or the Source Control tab in VS Code do the same thing with buttons: you type a summary, click **Commit**, then click **Push**.
+
+**Rule of thumb:** commit whenever you finish a chunk of work you'd be annoyed to lose. Small, frequent saves are better than one giant one.
+
+---
+
 ## Project Structure
 
 ```
@@ -154,22 +176,4 @@ Question,A,B,C,D,Correct
 - **quiz-bank-demand.json Q6**: Diagram title shows "Demand for iPads" — should be "Demand for cinema tickets". Fix in builder.
 - **quiz-bank-demand.json Q3/Q5**: Curve colours near-invisible (`#050505`, `#cfcece`). Worth updating.
 - **quiz-bank-demand.json Q15**: Answer D has typo "An decrease" (should be "A decrease").
-- **MC supply.csv Q15**: Answer options are placeholders — need filling in. Q6, Q11, Q15 need diagram setup in builder.
-- **Q8, Q9 in supply CSV**: Table data is embedded in question text — needs table-type question setup in builder.
-
----
-
-## Diagram Colour Tips
-
-Avoid near-white or near-black colours — they disappear against the SVG background. Good choices: bright primaries, pastels with contrast. The colour picker in the builder gives a live preview.
-
----
-
-## HSC Economics Notes
-
-- **Movement along curve** = contraction/expansion (caused by price change)
-- **Shift of curve** = increase/decrease in demand/supply (caused by non-price factors)
-- Price mechanism: shortage → competition among buyers → price bid up → contraction in demand + expansion in supply → equilibrium restored
-- Substitute goods: price of substitute ↑ → demand for good ↑ (increase/shift right)
-- Complementary goods: price of complement ↑ → demand for good ↓ (decrease/shift left)
-- Joint products (e.g. petrol/diesel): supply of one affects supply of the other
+-

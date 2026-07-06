@@ -1,0 +1,247 @@
+[
+  {
+    "type": "tax",
+    "taxType": "tax",
+    "dElasticity": "normal",
+    "title": "Tobacco market",
+    "yLabel": "Price per packet ($)",
+    "xLabel": "Quantity",
+    "dColor": "#185fa5",
+    "sColor": "#0f6e56",
+    "vUnit": 2,
+    "hUnit": 10,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": -2,
+    "reveals": [
+      "size"
+    ],
+    "questionText": "The diagram shows a tax imposed on tobacco. What is the size of the tobacco tax per packet?",
+    "answers": [
+      "$2",
+      "$4",
+      "$10",
+      "$12"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "tax",
+    "taxType": "tax",
+    "dElasticity": "normal",
+    "title": "Tobacco market",
+    "yLabel": "Price per packet ($)",
+    "xLabel": "Quantity",
+    "dColor": "#185fa5",
+    "sColor": "#0f6e56",
+    "vUnit": 2,
+    "hUnit": 10,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": -2,
+    "reveals": [
+      "size",
+      "wedge"
+    ],
+    "questionText": "Consider the same tax. What is the total government revenue raised from this tax?",
+    "answers": [
+      "$500",
+      "$480",
+      "$160",
+      "$80"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "tax",
+    "taxType": "tax",
+    "dElasticity": "normal",
+    "title": "Tobacco market",
+    "yLabel": "Price per packet ($)",
+    "xLabel": "Quantity",
+    "dColor": "#185fa5",
+    "sColor": "#0f6e56",
+    "vUnit": 2,
+    "hUnit": 10,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": -2,
+    "reveals": [
+      "size",
+      "prodrev"
+    ],
+    "questionText": "What is the producer revenue following the introduction of the tax?",
+    "answers": [
+      "$160",
+      "$200",
+      "$320",
+      "$480"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "tax",
+    "taxType": "tax",
+    "dElasticity": "normal",
+    "title": "Tobacco market",
+    "yLabel": "Price per packet ($)",
+    "xLabel": "Quantity",
+    "dColor": "#185fa5",
+    "sColor": "#0f6e56",
+    "vUnit": 2,
+    "hUnit": 10,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": -2,
+    "reveals": [
+      "size",
+      "consumer"
+    ],
+    "questionText": "How much of the tax revenue is paid by the consumer?",
+    "answers": [
+      "$80",
+      "$100",
+      "$160",
+      "$200"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "tax",
+    "taxType": "tax",
+    "dElasticity": "normal",
+    "title": "Tobacco market",
+    "yLabel": "Price per packet ($)",
+    "xLabel": "Quantity",
+    "dColor": "#185fa5",
+    "sColor": "#0f6e56",
+    "vUnit": 2,
+    "hUnit": 10,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": -2,
+    "reveals": [],
+    "questionText": "By how much has overall spending on tobacco reduced with the imposition of the tax?",
+    "answers": [
+      "$10",
+      "$20",
+      "$30",
+      "$40"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "tax",
+    "taxType": "subsidy",
+    "dElasticity": "normal",
+    "title": "Market for solar panels",
+    "yLabel": "Price per panel ($)",
+    "xLabel": "Quantity (000s)",
+    "dColor": "#ff9500",
+    "sColor": "#9a9d02",
+    "vUnit": 10,
+    "hUnit": 10,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": 2,
+    "reveals": [],
+    "questionText": "A government decides to subsidise solar panels. Which of the following best describes the positive externality of solar panels?",
+    "answers": [
+      "The solar panel owner has lower electricity bills",
+      "The wider community benefits from reduced air pollution",
+      "The government spends money to subsidise the solar panel",
+      "Firms benefit from increased profits due to higher demand for solar panels"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "tax",
+    "taxType": "subsidy",
+    "dElasticity": "normal",
+    "title": "Market for solar panels",
+    "yLabel": "Price per panel ($)",
+    "xLabel": "Quantity (000s)",
+    "dColor": "#ff9500",
+    "sColor": "#9a9d02",
+    "vUnit": 10,
+    "hUnit": 10,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": 2,
+    "reveals": [
+      "size"
+    ],
+    "questionText": "What is the size of the solar panel subsidy per panel?",
+    "answers": [
+      "$10",
+      "$20",
+      "$30",
+      "$40"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "tax",
+    "taxType": "subsidy",
+    "dElasticity": "normal",
+    "title": "Market for solar panels",
+    "yLabel": "Price per panel ($)",
+    "xLabel": "Quantity (000s)",
+    "dColor": "#ff9500",
+    "sColor": "#9a9d02",
+    "vUnit": 10,
+    "hUnit": 10,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": 2,
+    "reveals": [
+      "size",
+      "wedge"
+    ],
+    "questionText": "What is the total government spending on the solar panel subsidy?",
+    "answers": [
+      "$120",
+      "$140",
+      "$240",
+      "$250"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "tax",
+    "taxType": "subsidy",
+    "dElasticity": "normal",
+    "title": "Market for solar panels",
+    "yLabel": "Price per panel ($)",
+    "xLabel": "Quantity (000s)",
+    "dColor": "#ff9500",
+    "sColor": "#9a9d02",
+    "vUnit": 10,
+    "hUnit": 10,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": 2,
+    "reveals": [
+      "size",
+      "wedge",
+      "prodrev"
+    ],
+    "questionText": "What is the total producer revenue after the subsidy?",
+    "answers": [
+      "$2,400.000",
+      "$3,000,000",
+      "$3,600,000",
+      "$4,200,000"
+    ],
+    "correctIndex": 2
+  }
+]

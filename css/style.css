@@ -1,0 +1,155 @@
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Verdana',sans-serif;font-size:13px;background:#f5f4f0;color:#2c2c2a}
+
+/* ── MENU ── */
+.menu{display:flex;flex-direction:column;align-items:center;gap:20px;padding:40px 20px;min-height:100vh;justify-content:center}
+.menu h2{font-size:22px;font-weight:600;color:#2c2c2a}
+.menu-cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.menu-card{background:#fff;border:1.5px solid #d3d1c7;border-radius:12px;padding:28px 32px;cursor:pointer;transition:all .2s;text-align:center;width:210px}
+.menu-card:hover{border-color:#5f5e5a;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+.menu-card h3{font-size:16px;font-weight:600;margin-bottom:8px;color:#2c2c2a}
+.menu-card p{font-size:12px;color:#5f5e5a;line-height:1.6}
+.menu-info{font-size:13px;color:#5f5e5a}
+.menu-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* ── BUILDER LAYOUT ── */
+.builder{display:none}
+.builder.active{display:flex;min-height:100vh}
+.diag-panel{background:#fff;padding:16px;display:flex;flex-direction:column;gap:12px;width:340px;min-width:180px;max-width:65vw;flex-shrink:0;overflow-y:auto}
+.resizer{width:5px;background:#d3d1c7;cursor:col-resize;flex-shrink:0;transition:background .15s}
+.resizer:hover,.resizer.dragging{background:#888780}
+.form-panel{background:#f5f4f0;padding:20px;overflow-y:auto;flex:1;min-width:220px}
+
+/* ── CARDS ── */
+.card{background:#fff;border:1.5px solid #d3d1c7;border-radius:10px;padding:16px}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888780;margin-bottom:12px}
+.info-card{background:#e6f1fb;border:1.5px solid #b5d4f4;border-radius:10px;padding:14px}
+.info-card p{font-size:12px;color:#0c447c;line-height:1.7}
+.step{display:inline-block;background:#185FA5;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;text-align:center;line-height:18px;margin-right:6px}
+.cap-card{background:#eaf3de;border:1.5px solid #3b6d11;border-radius:10px;padding:14px;display:none}
+.cap-card p{font-size:12px;color:#27500a;font-weight:500}
+
+/* ── FORM COLUMNS ── */
+.form-cols{display:flex;gap:14px;align-items:flex-start}
+.form-col-narrow{flex:1;display:flex;flex-direction:column;gap:14px}
+.form-col-wide{flex:3;display:flex;flex-direction:column;gap:14px}
+
+/* ── FORM ELEMENTS ── */
+.field{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.field label{font-size:13px;color:#444441;min-width:80px;flex-shrink:0;font-weight:500}
+.field input[type=text],
+.field input[type=number]{flex:1;font-size:13px;font-family:'Verdana',sans-serif;padding:8px 10px;border:1.5px solid #d3d1c7;border-radius:6px;background:#fff;color:#2c2c2a;outline:none}
+.field input[type=text]:focus,
+.field input[type=number]:focus{border-color:#185FA5}
+.field input[type=color]{width:40px;height:32px;padding:2px;border:1.5px solid #d3d1c7;border-radius:6px;cursor:pointer}
+textarea{width:100%;font-size:13px;font-family:'Verdana',sans-serif;padding:10px 12px;border:1.5px solid #d3d1c7;border-radius:6px;background:#fff;color:#2c2c2a;resize:vertical;min-height:80px;outline:none;line-height:1.6}
+textarea:focus{border-color:#185FA5}
+textarea::placeholder{color:#b4b2a9}
+
+/* ── ANSWER ROWS ── */
+.arow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.arow input[type=radio]{width:16px;height:16px;accent-color:#0F6E56;flex-shrink:0;cursor:pointer}
+.arow .alabel{font-size:13px;font-weight:600;color:#444441;width:20px;flex-shrink:0}
+.arow input[type=text]{flex:1;font-size:13px;font-family:'Verdana',sans-serif;padding:8px 10px;border:1.5px solid #d3d1c7;border-radius:6px;background:#fff;color:#2c2c2a;outline:none}
+.arow input[type=text]:focus{border-color:#0F6E56}
+.correct-hint{font-size:11px;color:#5f5e5a;margin-bottom:10px}
+
+/* ── BUTTONS ── */
+.btn{font-family:'Verdana',sans-serif;font-size:12px;font-weight:600;padding:8px 14px;border-radius:6px;cursor:pointer;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;transition:all .15s}
+.btn:hover{background:#f1efe8;border-color:#888780}
+.btn:active{transform:scale(0.97)}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.btn-primary{background:#185FA5;color:#fff;border-color:#185FA5}
+.btn-primary:hover{background:#0c447c;border-color:#0c447c}
+.btn-success{background:#3b6d11;color:#fff;border-color:#3b6d11}
+.btn-success:hover{background:#27500a;border-color:#27500a}
+.btn-capture{background:#f5f4f0;color:#2c2c2a;border:2px solid #2c2c2a;width:100%;font-size:13px;padding:10px;margin-top:4px}
+.btn-capture:hover{background:#2c2c2a;color:#fff}
+.btn-back{background:none;border:none;color:#888780;font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline}
+.btn-back:hover{color:#2c2c2a}
+.btn-danger{background:#fcebeb;color:#a32d2d;border-color:#f09595;font-size:11px;padding:3px 8px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── MENU QUIZ BOX ── */
+.menu-quiz{background:#fff;border:1.5px solid #d3d1c7;border-radius:10px;padding:16px;width:100%;max-width:580px}
+.menu-quiz-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888780;margin-bottom:10px}
+.menu-qlist{display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto}
+
+/* ── ADD BAR (bottom of each builder) ── */
+.add-bar{display:flex;flex-direction:column;gap:6px;padding-top:4px}
+
+/* ── DIAGRAM CONTROLS ── */
+.diag-ctrl-group{background:#f5f4f0;border:1.5px solid #d3d1c7;border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.diag-ctrl-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#888780;margin-bottom:8px}
+
+/* ── QUIZ LIST ── */
+.qlist{max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.qitem{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#fff;border:1px solid #d3d1c7;border-radius:6px;font-size:12px}
+.qitem span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2c2c2a}
+.hint{font-size:11px;color:#888780}
+.msg{font-size:12px;color:#888780;min-height:16px;margin-top:4px}
+.sep{border:none;border-top:1px solid #d3d1c7;margin:4px 0}
+
+/* ── TABLE PREVIEW (left panel in table builder) ── */
+.table-preview{padding:16px;overflow-x:auto;flex:1;display:flex;flex-direction:column}
+.tbl-preview-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+.tbl-preview-title{font-size:13px;font-weight:600;color:#2c2c2a;text-align:center}
+.tbl-preview-table{border-collapse:collapse;width:100%;font-size:12px;font-family:'Verdana',sans-serif}
+.tbl-preview-table th{background:#185FA5;color:#fff;padding:8px 12px;text-align:center;font-size:11px;font-weight:600}
+.tbl-preview-table td{padding:6px 12px;text-align:center;border:1px solid #d3d1c7;color:#2c2c2a}
+.tbl-preview-table tr:nth-child(even) td{background:#f5f4f0}
+
+/* ── TABLE DATA ENTRY GRID ── */
+.tbl-data-grid{display:grid;gap:5px 7px}
+.tbl-hdr-inp{font-weight:700 !important;background:#e6f1fb !important;border-color:#b5d4f4 !important}
+
+/* ── PLAIN BUILDER (full-width, centred) ── */
+#plainBuilder{justify-content:center}
+.plain-form-panel{max-width:620px;width:100%;padding:28px 20px;display:flex;flex-direction:column;overflow-y:auto}
+
+/* ── SCHEDULE GRID (PPF data-point entry) ── */
+.sched-grid{display:grid;grid-template-columns:24px 1fr 1fr;gap:5px 8px;align-items:center}
+.sched-hdr{font-size:11px;font-weight:700;color:#888780;padding-bottom:2px}
+.sched-num{font-size:11px;color:#888780;text-align:center}
+.sched-inp{font-size:12px;font-family:'Verdana',sans-serif;padding:5px 7px;border:1.5px solid #d3d1c7;border-radius:5px;width:100%;outline:none;background:#fff;color:#2c2c2a}
+.sched-inp:focus{border-color:#185FA5}
+
+/* ── EDIT MODAL ── */
+.modal-card{position:relative;background:#fff;border-radius:14px;padding:28px;width:440px;max-width:92vw;z-index:1;box-shadow:0 8px 36px rgba(0,0,0,0.22)}
+.modal-title{font-size:15px;font-weight:700;color:#2c2c2a;margin-bottom:8px}
+.modal-qtext{font-size:12px;color:#5f5e5a;margin-bottom:16px;line-height:1.6;font-style:italic;background:#f5f4f0;border-radius:6px;padding:9px 11px;border:1px solid #d3d1c7}
+.modal-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#888780;margin-bottom:8px}
+.modal-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modal-type-grid .btn{padding:10px 12px;font-size:12px;text-align:center;width:100%}
+
+/* ── QITEM EDIT BUTTONS ── */
+.qitem-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#2c2c2a;display:flex;align-items:center;gap:5px}
+.qitem-btns{display:flex;gap:5px;flex-shrink:0}
+.btn-sm{padding:3px 8px !important;font-size:11px !important}
+.btn-edit{background:#fff7e6 !important;color:#8a5000 !important;border-color:#f0c070 !important}
+.btn-edit:hover{background:#f0c070 !important}
+.qtype-tag{font-size:10px;font-weight:700;color:#888780;background:#f5f4f0;border:1px solid #d3d1c7;border-radius:4px;padding:1px 5px;flex-shrink:0;font-style:normal}
+
+/* ── IMPORT AREA ── */
+.import-hint{font-size:11px;color:#888780;text-align:center;margin-top:-8px}
+.import-hint a{color:#185FA5}
+
+/* ── QUIZ PAGE (student view) ── */
+.quiz-body{font-family:'Verdana',sans-serif;background:#f5f4f0;padding:24px;color:#2c2c2a}
+.quiz-h1{font-size:20px;font-weight:600;text-align:center;margin-bottom:28px}
+.quiz-wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.qcard{background:#fff;border-radius:12px;border:1px solid #d3d1c7;padding:24px;display:flex;gap:24px;align-items:flex-start}
+.qdiag{flex-shrink:0;width:400px}
+.qright{flex:1;display:flex;flex-direction:column;gap:12px}
+.qnum{font-size:11px;color:#888780;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.qtext{font-size:15px;line-height:1.7;font-weight:600}
+.abtns{display:flex;flex-direction:column;gap:8px}
+.abtn{font-family:'Verdana',sans-serif;font-size:13px;padding:11px 15px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;cursor:pointer;text-align:left;color:#2c2c2a;transition:all .2s;line-height:1.4}
+.abtn:hover{background:#f1efe8;border-color:#888780}
+.abtn.wrong{background:#fcebeb;border-color:#a32d2d;color:#a32d2d;pointer-events:none}
+.abtn.correct{background:#eaf3de;border-color:#3b6d11;color:#3b6d11;font-weight:600;pointer-events:none}
+.fb{font-size:13px;font-weight:600;min-height:20px}
+.fb.c{color:#3b6d11}
+.fb.w{color:#a32d2d}
+.score-card{background:#fff;border-radius:12px;border:1px solid #d3d1c7;padding:28px;text-align:center;font-size:20px;font-weight:600;display:none;max-width:900px;margin:0 auto}

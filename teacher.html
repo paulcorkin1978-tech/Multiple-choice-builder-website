@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Portal – Theory2Econ</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f0f0ec;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ─────────────────────────────── */
+  header {
+    background: #0A0C56;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo-box {
+    background: white;
+    border-radius: 10px;
+    padding: 7px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-box svg {
+    width: 180px;
+    height: 44px;
+    display: block;
+  }
+
+  .back-link {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.18s;
+  }
+
+  .back-link:hover { color: #EC3C78; }
+
+  /* ── Page title ──────────────────────────── */
+  .page-title {
+    text-align: center;
+    padding: 48px 24px 28px;
+  }
+
+  .page-title h1 {
+    color: #0A0C56;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -0.4px;
+  }
+
+  .page-title h1 span { color: #EC3C78; }
+
+  .page-title p {
+    color: #666;
+    font-size: 1rem;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── Quiz grid ───────────────────────────── */
+  .quiz-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    padding: 16px 40px 72px;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 28px 24px;
+    width: 300px;
+    box-shadow: 0 4px 20px rgba(10,12,86,0.09);
+    border: 2.5px solid transparent;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .quiz-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 36px rgba(10,12,86,0.15);
+    border-color: #EC3C78;
+  }
+
+  .quiz-tag {
+    display: inline-block;
+    background: #EC3C78;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 50px;
+    margin-bottom: 14px;
+    align-self: flex-start;
+  }
+
+  .quiz-card h2 {
+    color: #0A0C56;
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .quiz-card p {
+    color: #777;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 22px;
+    flex: 1;
+  }
+
+  .quiz-btn {
+    display: block;
+    text-align: center;
+    padding: 11px 0;
+    background: #0A0C56;
+    color: white;
+    border-radius: 50px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.18s ease, transform 0.18s ease;
+  }
+
+  .quiz-btn:hover {
+    background: #EC3C78;
+    transform: scale(1.03);
+  }
+
+  /* ── Empty state ─────────────────────────── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: #aaa;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  /* ── Footer ──────────────────────────────── */
+  footer {
+    margin-top: auto;
+    background: #0A0C56;
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.85rem;
+  }
+
+  footer strong { color: #EC3C78; }
+
+  @media (max-width: 600px) {
+    .quiz-grid { padding: 16px 20px 56px; }
+    .page-title { padding: 36px 20px 20px; }
+    .page-title h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ────────────────────────────────── -->
+<header>
+  <div class="header-inner">
+    <div class="logo-box">
+      <svg viewBox="380 910 1290 300" xmlns="http://www.w3.org/2000/svg" aria-label="Theory2Econ">
+        <rect x="0" y="0" width="2048" height="2048" fill="white"/>
+        <path fill="rgb(236,60,120)" d="M 1123.16 920.317 C 1124.58 920.162 1126 920.042 1127.43 919.955 C 1183.74 916.293 1204.51 961.837 1192.7 1010.52 C 1184.72 1043.42 1161.83 1065.92 1139.74 1089.87 L 1197.22 1090.12 L 1197.17 1135.97 L 1069.81 1135.91 L 1069.72 1098.22 C 1094.07 1077.54 1122.83 1050.6 1138.95 1022.78 C 1147 1008.74 1152.22 991.687 1148.11 975.545 C 1144.02 959.415 1123.24 956.962 1117.27 973.012 C 1112.6 985.597 1115.96 1003.58 1121.24 1015.74 L 1121.82 1017.04 C 1109.82 1026.3 1098.07 1035.25 1086.56 1045.12 C 1061.7 998.875 1057.66 931.015 1123.16 920.317 z"/>
+        <path fill="rgb(236,60,120)" d="M 1214.15 928.248 C 1248.97 927.372 1286.36 928.029 1321.38 928.013 C 1321.09 943.279 1321.08 958.549 1321.33 973.815 C 1301.61 974.259 1280.79 973.941 1260.99 973.956 L 1261.1 1008.03 L 1310.03 1008.05 L 1310.01 1052.25 C 1294.01 1051.81 1277.02 1052.06 1260.95 1052.03 L 1261.04 1089.97 C 1282.16 1090.07 1303.27 1090.05 1324.39 1089.88 L 1323.9 1135.99 C 1287.9 1135.32 1250.09 1135.93 1213.95 1135.96 C 1215.3 1068.11 1214.04 996.476 1214.15 928.248 z"/>
+        <path fill="rgb(10,12,86)" d="M 946.172 984.218 C 960.44 984.569 974.714 984.595 988.983 984.295 L 988.671 1052.77 C 988.638 1062.59 983.523 1108.4 1004.31 1093.29 C 1009.34 1089.63 1007.5 1056.41 1007.45 1049.53 C 1007.24 1027.84 1007.16 1006.14 1007.2 984.452 L 1049.97 984.497 L 1049.85 1076.22 C 1049.9 1098.79 1052.05 1141.44 1046.15 1161.53 C 1038.6 1180.4 1026.55 1192.8 1005.41 1195.86 C 980.322 1199.49 962.975 1191.64 943.03 1177.16 C 948.435 1168.12 953.53 1155.13 957.775 1145.21 C 968.513 1152.39 990.001 1164.48 1002.01 1153.64 C 1009.24 1147.12 1008.39 1136.21 1008.46 1127.23 C 975.986 1146.64 950.058 1128.83 946.858 1093.2 C 945.597 1079.15 946.098 1064.77 946.101 1050.67 L 946.172 984.218 z"/>
+        <path fill="rgb(10,12,86)" d="M 559.118 919.317 L 559.336 919.511 C 560.86 922.762 560.029 983.308 560.012 991.059 C 583.313 973.927 613.777 980.719 619.272 1010.86 C 622.234 1027.11 621.161 1045.52 621.168 1062.12 L 621.178 1135.96 L 578.551 1136.02 C 577.84 1101.59 578.432 1065.24 578.435 1030.66 C 577.962 1028.22 577.65 1025.66 576.079 1023.64 C 574.782 1021.98 573.065 1021.05 570.92 1020.9 C 568.052 1020.69 564.92 1021.2 562.98 1023.54 C 557.37 1030.31 559.96 1120.69 559.977 1135.97 L 517.978 1135.98 L 517.987 1000.16 C 517.987 983.657 518.988 945.35 517.278 930.983 C 530.525 927.776 545.538 922.943 559.118 919.317 z"/>
+        <path fill="rgb(236,60,120)" d="M 1473.53 982.213 C 1486.67 981.397 1498.65 981.676 1509.94 989.872 C 1545.28 1015.54 1543.71 1084.46 1522.43 1118.26 C 1514.8 1130.38 1501.98 1137.13 1488.49 1139.58 C 1476.06 1140.41 1461.88 1139.53 1451.72 1131.77 C 1416.4 1104.82 1417.31 1036.21 1440.41 1001.88 C 1448.31 990.126 1460.6 984.487 1473.53 982.213 z"/>
+        <path fill="rgb(255,255,255)" d="M 1478.98 1019.91 C 1496.75 1022.67 1493.51 1050.21 1494.02 1064.04 C 1494.44 1075.69 1492.16 1094.78 1483.48 1103.12 C 1471.91 1101.41 1468.77 1091.61 1468.36 1080.68 C 1467.76 1064.72 1463.64 1029.41 1478.98 1019.91 z"/>
+        <path fill="rgb(10,12,86)" d="M 799.461 981.335 C 852.404 979.658 862.284 1043.11 855.189 1083.15 C 850.018 1112.34 837.178 1135.56 805.257 1140.51 C 793.758 1140.28 780.842 1138.57 771.654 1131.08 C 737.362 1103.14 738.559 1033.04 763.649 999.575 C 772.838 987.317 785.335 982.966 799.461 981.335 z"/>
+        <path fill="rgb(255,255,255)" d="M 798.45 1019.87 C 801.189 1019.99 804.574 1019.94 806.612 1021.89 C 814.966 1029.84 814.604 1053.39 814.308 1064.04 C 813.941 1077.22 813.895 1093.52 804.254 1102.92 C 786.167 1100.83 789.01 1072.22 788.699 1058.65 C 788.435 1047.15 789.794 1028.27 798.45 1019.87 z"/>
+        <path fill="rgb(10,12,86)" d="M 393.635 928.096 L 507.997 928.049 C 507.832 943.031 507.866 958.014 508.098 972.995 C 496.449 972.894 484.799 973.004 473.154 973.323 C 473.595 1015.38 473.72 1057.44 473.53 1099.5 C 473.406 1111.63 473.523 1123.76 473.882 1135.89 L 426.965 1135.93 L 426.881 973.092 C 415.931 972.933 404.506 973.122 393.515 973.164 C 393.688 958.142 393.728 943.118 393.635 928.096 z"/>
+        <path fill="rgb(236,60,120)" d="M 1600.05 982.278 C 1602.02 982.114 1603.99 981.993 1605.96 981.916 C 1659.85 979.938 1654.12 1030.14 1654.04 1066.71 L 1654.2 1136.05 C 1640.36 1135.83 1626.52 1135.8 1612.68 1135.94 C 1612.26 1104.38 1612.41 1072.76 1612.41 1041.21 C 1612.41 1032.59 1612.71 1027.89 1606.68 1021.97 C 1588.48 1021.75 1593.74 1051.04 1593.74 1064.46 L 1593.71 1135.94 L 1551.93 1135.83 L 1551.81 1070.84 C 1551.73 1032.12 1550.76 990.543 1600.05 982.278 z"/>
+        <path fill="rgb(10,12,86)" d="M 688.817 981.353 C 732.451 980.218 747.655 1026.42 726.591 1059.23 C 716.864 1074.38 695.15 1078.76 678.334 1081.04 C 684.275 1110.78 704.394 1106.74 725.71 1093.73 C 729.567 1101.9 737.465 1117.08 739.697 1124.98 C 692.15 1153.37 645.933 1144.82 636.401 1083.04 C 632.225 1055.97 634.749 1023.38 650.944 1000.45 C 660.045 987.568 673.843 983.108 688.817 981.353 z"/>
+        <path fill="rgb(255,255,255)" d="M 686.126 1012.88 C 704.662 1011.42 701.561 1037.81 689.325 1047.07 C 685.596 1048.25 683.058 1049.47 679.221 1048.93 C 674.043 1042.47 680.931 1019.47 686.126 1012.88 z"/>
+        <path fill="rgb(236,60,120)" d="M 1378.51 982.229 C 1395.47 980.589 1410.05 983.54 1424.38 993.129 C 1419.12 1004.56 1414.98 1017.52 1410.32 1029.43 C 1380.21 1004.05 1370.33 1040.19 1371.92 1065.52 C 1373.5 1090.89 1381.81 1112.44 1411.17 1094.01 C 1415.79 1104.36 1419.13 1113.96 1424.24 1124.5 C 1424.41 1126.65 1424.41 1125.61 1423.4 1127.88 C 1415.74 1133.43 1404.64 1137.25 1395.58 1138.97 C 1323.27 1152.72 1314.47 1044.38 1344.53 1002.32 C 1353.73 989.444 1363.82 984.779 1378.51 982.229 z"/>
+        <path fill="rgb(10,12,86)" d="M 919.183 982.31 C 923.248 981.997 930.752 982.481 935.069 982.63 L 935.464 1021.7 C 934.495 1021.68 933.527 1021.67 932.559 1021.66 C 922.612 1021.61 914.752 1023.09 913.126 1034.93 C 911.44 1047.21 912.155 1060.41 912.186 1072.85 L 912.253 1135.97 L 885.75 1136.02 L 870.042 1135.99 L 869.901 1074.96 C 869.84 1035.1 867.473 989.62 919.183 982.31 z"/>
+      </svg>
+    </div>
+  </div>
+  <a class="back-link" href="index.html">← Back to Home</a>
+
+</header>
+
+<!-- ── Page title ────────────────────────────── -->
+<main>
+  <section class="page-title">
+    <h1>Teacher <span>Resource Hub</span></h1>
+    <p>Access your teaching tools below — build quizzes, manage question banks and create resources for your students.</p>
+  </section>
+
+  <!-- ── Quiz cards ─────────────────────────── -->
+  <div class="quiz-grid">
+
+    <div class="quiz-card">
+      <span class="quiz-tag">Tool</span>
+      <h2>Quiz Builder</h2>
+      <p>Create interactive economics quizzes with supply &amp; demand diagrams, PPF, price mechanism, data tables and more. Export as a standalone HTML file for students.</p>
+      <a class="quiz-btn" href="builder.html">Open Builder →</a>
+    </div>
+
+    <!-- Add more teacher tools here as you build them -->
+
+  </div>
+</main>
+
+<!-- ── Footer ────────────────────────────────── -->
+<footer>
+  <p>© 2025 <strong>Theory2Econ</strong> · Helping HSC students master Economics</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+[
+  {
+    "type": "pm",
+    "title": "Market for oranges",
+    "yLabel": "Price ($kg)",
+    "xLabel": "Quantity kg",
+    "dColor": "#f37520",
+    "sColor": "#ed7932",
+    "vUnit": 0.5,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 7,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "Consider the market for oranges. What disequilibrium condition would occur if the price of oranges were $3.5kg?",
+    "answers": [
+      "A surplus of 20kg",
+      "A surplus of 10kg",
+      "A shortage of 10kg",
+      "A shortage of 20kg"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "pm",
+    "title": "Market for rental houses",
+    "yLabel": "Rent per week ($)",
+    "xLabel": "Quantity of houses (000s)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 100,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 2,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "Consider the market for rental housing. At a rental price of $200 per week, which of the following statements is true?",
+    "answers": [
+      "There is a shortage of rental houses. The market is only willing to supply 10,000 houses at this rent level",
+      "There is shortage of rental houses. The market is willing to supply 30,000 houses at this rent level",
+      "There is a surplus of rental houses. The market is willing to supply 10,000 houses at this rent level",
+      "There is a surplus of rental houses. The market is willing to supply 30,000 houses at this rent level"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "pm",
+    "title": "Market for rental houses",
+    "yLabel": "Rent per week ($)",
+    "xLabel": "Quantity of houses (000s)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 100,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 2,
+    "showEqLines": false,
+    "animatePrice": true,
+    "questionText": "At a rental price of $200 per week, what will likely begin the process of the price mechanism operating to restore equilibrium",
+    "answers": [
+      "Competition for limited housing will cause tenants to bid up the price of rent causing an expansion in supply",
+      "Competition for limited housing will cause tenants to bid up the price of rent causing a contraction in demand",
+      "Competition for limited housing will cause tenants give up looking for housing",
+      "Competition for limited housing will cause landlords to lower their rental prices"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "pm",
+    "title": "Market for rental houses",
+    "yLabel": "Rent per week ($)",
+    "xLabel": "Quantity of houses (000s)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 100,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 2,
+    "showEqLines": false,
+    "animatePrice": true,
+    "questionText": "What triggers the expansion in supply from this disequilibrium?",
+    "answers": [
+      "More landlords offer rental houses to assist with the disequilibrium",
+      "Landlords see that tenants are willing to pay more an so revise down their rental prices",
+      "Fewer landlords offer rental houses to assist with the disequilibrium",
+      "Landlords see that tenants are willing to pay more an so revise up their rental prices"
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "pm",
+    "title": "Labour Market",
+    "yLabel": "hourly wage ($)",
+    "xLabel": "Quantity of labour (000s)",
+    "dColor": "#f90101",
+    "sColor": "#000000",
+    "vUnit": 4,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 6,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "Consider the labour market shown. If the government were to introduce a minimum wage of $24 per hour, what disequilibrium would occur?",
+    "answers": [
+      "The demand for workers is greater than the supply of workers leading to a shortage of 10,000 workers",
+      "The supply of workers is greater than the demand for workers leading to a shortage of 10,000 workers",
+      "The demand for workers is greater than the supply of workers leading to a surplus of 10,000 workers",
+      "The supply of workers is greater than the demand for workers leading to a surplus of 10,000 workers"
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "pm",
+    "title": "market for strawberries",
+    "yLabel": "price ($kg)",
+    "xLabel": "Quantity (kg)",
+    "dColor": "#f90101",
+    "sColor": "#fd6b1c",
+    "vUnit": 0.5,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 7,
+    "showEqLines": false,
+    "animatePrice": true,
+    "questionText": "Consider the market for strawberries. At a price of $3.50 per kg, what triggers the price mechanism to begin?",
+    "answers": [
+      "Strawberry producers have excess demand and so need to lower prices to clear their stock",
+      "Strawberry producers have excess supply and so need to lower prices to clear their stock",
+      "Strawberry producers have excess demand and so need to raise prices to clear their stock",
+      "Strawberry producers have excess supply and so need to raise prices to clear their stock"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "plain",
+    "questionText": "Which of the following best describes how the price mechanism leads to market clearing?",
+    "answers": [
+      "government intervention in the market will ensure that there is no shortage or surplus and that the market clears",
+      "Market forces and government intervention both ensure that there is no shortage or surplus and that the market clears",
+      "Market forces of supply and demand ensure that there is no shortage or surplus and that the market clears",
+      "the price mechanism will always reduce prices to ensure that equilibrium is reached and the market clears"
+    ],
+    "correctIndex": 2
+  }
+]

@@ -1,0 +1,15 @@
+# OS / system junk
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Editor / temp files
+*.tmp
+*.bak
+*~
+.vscode/
+.idea/
+
+# OneDrive / Office lock files
+~$*

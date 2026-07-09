@@ -18,7 +18,7 @@ function scSetCurve(c) {
   scCurve = c;
   document.getElementById('scBtnD').className = 'btn' + (c === 'demand' ? ' btn-primary' : '');
   document.getElementById('scBtnS').className = 'btn' + (c === 'supply' ? ' btn-primary' : '');
-  document.getElementById('scCol').value = c === 'demand' ? '#185FA5' : '#0F6E56';
+  document.getElementById('scCol').value = '#000000';
   scDraw();
 }
 

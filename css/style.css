@@ -16,7 +16,15 @@ body{font-family:'Verdana',sans-serif;font-size:13px;background:#f5f4f0;color:#2
 /* ── BUILDER LAYOUT ── */
 .builder{display:none}
 .builder.active{display:flex;min-height:100vh}
-.diag-panel{background:#fff;padding:16px;display:flex;flex-direction:column;gap:12px;width:340px;min-width:180px;max-width:65vw;flex-shrink:0;overflow-y:auto}
+/* Grid so the diagram spans full width but the control groups pair up two-per-row,
+   which keeps the Reset button on screen even with a large diagram. */
+.diag-panel{background:#fff;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start;width:33vw;min-width:180px;max-width:65vw;flex-shrink:0;overflow-y:auto}
+.diag-panel > .btn-back,
+.diag-panel > svg,
+.diag-panel > .table-preview,
+.diag-panel > .btn{grid-column:1 / -1}
+.diag-panel > .diag-ctrl-group{margin-bottom:0}
+@media (max-width:1100px){.diag-panel{grid-template-columns:1fr}}
 .resizer{width:5px;background:#d3d1c7;cursor:col-resize;flex-shrink:0;transition:background .15s}
 .resizer:hover,.resizer.dragging{background:#888780}
 .form-panel{background:#f5f4f0;padding:20px;overflow-y:auto;flex:1;min-width:220px}
@@ -130,6 +138,14 @@ textarea::placeholder{color:#b4b2a9}
 .btn-edit{background:#fff7e6 !important;color:#8a5000 !important;border-color:#f0c070 !important}
 .btn-edit:hover{background:#f0c070 !important}
 .qtype-tag{font-size:10px;font-weight:700;color:#888780;background:#f5f4f0;border:1px solid #d3d1c7;border-radius:4px;padding:1px 5px;flex-shrink:0;font-style:normal}
+
+/* ── DICTATION MIC (added to each Question Text header by js/dictate.js) ── */
+.mic-btn{font-family:'Verdana',sans-serif;font-size:12px;line-height:1;padding:5px 9px;border:1.5px solid #d3d1c7;background:#fff;border-radius:6px;cursor:pointer;color:#2c2c2a;transition:all .15s;flex-shrink:0;text-transform:none;letter-spacing:normal}
+.mic-btn:hover:not(:disabled){background:#f1efe8;border-color:#888780}
+.mic-btn.rec{background:#fcebeb;border-color:#a32d2d;color:#a32d2d;font-weight:700}
+.mic-btn:disabled{opacity:.4;cursor:not-allowed}
+/* The box currently receiving dictated speech */
+.dictating{border-color:#a32d2d !important;box-shadow:0 0 0 3px rgba(163,45,45,0.12)}
 
 /* ── IMPORT AREA ── */
 .import-hint{font-size:11px;color:#888780;text-align:center;margin-top:-8px}

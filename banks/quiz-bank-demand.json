@@ -28,7 +28,7 @@
     "title": "Demand for lemonade",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#fbff00",
+    "color": "#C47D00",
     "vUnit": 0.5,
     "hUnit": 10,
     "startFP": 4,
@@ -258,7 +258,7 @@
     "title": "Demand for scooters",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#bdf71d",
+    "color": "#6A8F00",
     "vUnit": 15,
     "hUnit": 40,
     "startFP": 5,
@@ -266,7 +266,7 @@
     "showEqLines": true,
     "ansFP": 7,
     "ansCS": 0,
-    "questionText": "Given the demand curve for scooters, What would causes a contraction in demand of 80 scooters?",
+    "questionText": "Given the demand curve for scooters, what would cause a contraction in demand of 80 scooters?",
     "answers": [
       "A price decrease to $60",
       "A price decrease to $45",
@@ -292,7 +292,7 @@
     "title": "Demand for Snickers bars",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#bdf71d",
+    "color": "#6A8F00",
     "vUnit": 0.5,
     "hUnit": 25,
     "startFP": 4,
@@ -341,10 +341,10 @@
     ],
     "questionText": "What two factors could cause a decrease in demand?",
     "answers": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
+      "Row A",
+      "Row B",
+      "Row C",
+      "Row D"
     ],
     "correctIndex": 1
   }

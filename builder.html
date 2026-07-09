@@ -144,8 +144,8 @@
           <div class="field"><label>Title</label>      <input type="text"   id="sdTitle" placeholder="e.g. Wheat Market"  oninput="sdDraw()"></div>
           <div class="field"><label>Y-axis</label>     <input type="text"   id="sdYLbl"  value="Price ($)"                oninput="sdDraw()"></div>
           <div class="field"><label>X-axis</label>     <input type="text"   id="sdXLbl"  value="Quantity"                 oninput="sdDraw()"></div>
-          <div class="field"><label>D colour</label>   <input type="color"  id="sdDCol"  value="#185FA5"                  oninput="sdDraw()"></div>
-          <div class="field"><label>S colour</label>   <input type="color"  id="sdSCol"  value="#0F6E56"                  oninput="sdDraw()"></div>
+          <div class="field"><label>D colour</label>   <input type="color"  id="sdDCol"  value="#000000"                  oninput="sdDraw()"></div>
+          <div class="field"><label>S colour</label>   <input type="color"  id="sdSCol"  value="#000000"                  oninput="sdDraw()"></div>
           <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="sdShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="sdDraw()"></div>
         </div>
       </div>
@@ -256,7 +256,7 @@
           <div class="field"><label>Title</label>      <input type="text"   id="scTitle"   placeholder="e.g. Orange Market" oninput="scDraw()"></div>
           <div class="field"><label>Y-axis</label>     <input type="text"   id="scYLbl"    value="Price ($)"                oninput="scDraw()"></div>
           <div class="field"><label>X-axis</label>     <input type="text"   id="scXLbl"    value="Quantity"                 oninput="scDraw()"></div>
-          <div class="field"><label>Colour</label>     <input type="color"  id="scCol"     value="#185FA5"                  oninput="scDraw()"></div>
+          <div class="field"><label>Colour</label>     <input type="color"  id="scCol"     value="#000000"                  oninput="scDraw()"></div>
           <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="scShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="scDraw()"></div>
         </div>
       </div>
@@ -357,7 +357,7 @@
           <div class="field"><label>Title</label>      <input type="text"   id="ppfTitle"   placeholder="e.g. Country X"   oninput="ppfDraw()"></div>
           <div class="field"><label>X-axis</label>     <input type="text"   id="ppfXLbl"    value="Good A"                   oninput="ppfDraw()"></div>
           <div class="field"><label>Y-axis</label>     <input type="text"   id="ppfYLbl"    value="Good B"                   oninput="ppfDraw()"></div>
-          <div class="field"><label>Colour</label>     <input type="color"  id="ppfCol"     value="#185FA5"                  oninput="ppfDraw()"></div>
+          <div class="field"><label>Colour</label>     <input type="color"  id="ppfCol"     value="#000000"                  oninput="ppfDraw()"></div>
           <div class="field"><label>Faded PPF1</label> <input type="checkbox" id="ppfShowFaded" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="ppfDraw()"></div>
         </div>
       </div>
@@ -538,8 +538,8 @@
           <div class="field"><label>Title</label>      <input type="text"   id="pmTitle" placeholder="e.g. Wheat Market"  oninput="pmDraw()"></div>
           <div class="field"><label>Y-axis</label>     <input type="text"   id="pmYLbl"  value="Price ($)"                oninput="pmDraw()"></div>
           <div class="field"><label>X-axis</label>     <input type="text"   id="pmXLbl"  value="Quantity"                 oninput="pmDraw()"></div>
-          <div class="field"><label>D colour</label>   <input type="color"  id="pmDCol"  value="#185FA5"                  oninput="pmDraw()"></div>
-          <div class="field"><label>S colour</label>   <input type="color"  id="pmSCol"  value="#0F6E56"                  oninput="pmDraw()"></div>
+          <div class="field"><label>D colour</label>   <input type="color"  id="pmDCol"  value="#000000"                  oninput="pmDraw()"></div>
+          <div class="field"><label>S colour</label>   <input type="color"  id="pmSCol"  value="#000000"                  oninput="pmDraw()"></div>
           <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="pmShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="pmDraw()"></div>
           <div class="field"><label>Animate price</label> <input type="checkbox" id="pmAnimatePrice" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" title="Checked: animate price to equilibrium. Unchecked: reveal surplus/shortage label only."></div>
         </div>
@@ -656,9 +656,36 @@
           <div class="field"><label>Title</label>      <input type="text"   id="txTitle" placeholder="e.g. Petrol Market" oninput="txDraw()"></div>
           <div class="field"><label>Y-axis</label>     <input type="text"   id="txYLbl"  value="Price ($)"               oninput="txDraw()"></div>
           <div class="field"><label>X-axis</label>     <input type="text"   id="txXLbl"  value="Quantity"                oninput="txDraw()"></div>
-          <div class="field"><label>D colour</label>   <input type="color"  id="txDCol"  value="#185FA5"                 oninput="txDraw()"></div>
-          <div class="field"><label>S colour</label>   <input type="color"  id="txSCol"  value="#0F6E56"                 oninput="txDraw()"></div>
+          <div class="field"><label>D colour</label>   <input type="color"  id="txDCol"  value="#000000"                 oninput="txDraw()"></div>
+          <div class="field"><label>S colour</label>   <input type="color"  id="txSCol"  value="#000000"                 oninput="txDraw()"></div>
           <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="txShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="txDraw()"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Reveal Options <span style="font-size:11px;font-weight:400;color:#888">(step by step)</span></div>
+          <p style="font-size:12px;color:#5f5e5a;margin-bottom:10px;line-height:1.55">After a correct answer, ▶ Reveal steps through these in order. Untick any you don't need.</p>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevSize" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
+              Size of tax / subsidy
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevWedge" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
+              Tax revenue / Subsidy cost
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevConsumer" checked style="width:15px;height:15px;accent-color:#D85A30;cursor:pointer;flex-shrink:0">
+              Consumer cost / benefit
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevProdLoss" checked style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">
+              Producer revenue loss / benefit
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevProdRev" style="width:15px;height:15px;accent-color:#1e7ab8;cursor:pointer;flex-shrink:0">
+              Producer revenue
+            </label>
+          </div>
         </div>
       </div>
 
@@ -705,32 +732,6 @@
           <div class="arow"><input type="radio" name="txC" value="3"><span class="alabel">D</span><input type="text" id="txA3" placeholder="Answer D"></div>
         </div>
 
-        <div class="card">
-          <div class="card-title">Reveal Options <span style="font-size:11px;font-weight:400;color:#888">(choose what to show step by step)</span></div>
-          <p style="font-size:13px;color:#444;margin-bottom:12px;line-height:1.6">After the student answers correctly, click ▶ Reveal to step through these one at a time — in the order listed. Untick any you don't need.</p>
-          <div style="display:flex;flex-direction:column;gap:9px">
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
-              <input type="checkbox" id="txRevSize" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
-              Size of tax / subsidy <span style="color:#C47D00;font-size:11px;font-weight:600;margin-left:4px">(bracket)</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
-              <input type="checkbox" id="txRevWedge" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
-              Tax revenue / Subsidy cost <span style="color:#C47D00;font-size:11px;font-weight:600;margin-left:4px">(full wedge rectangle)</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
-              <input type="checkbox" id="txRevConsumer" checked style="width:15px;height:15px;accent-color:#D85A30;cursor:pointer;flex-shrink:0">
-              Consumer cost / Consumer benefit <span style="color:#D85A30;font-size:11px;font-weight:600;margin-left:4px">(P₀ to Pc slice)</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
-              <input type="checkbox" id="txRevProdLoss" checked style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">
-              Loss of producer revenue / Producer benefit <span style="color:#0F6E56;font-size:11px;font-weight:600;margin-left:4px">(Ps to P₀ slice)</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
-              <input type="checkbox" id="txRevProdRev" style="width:15px;height:15px;accent-color:#1e7ab8;cursor:pointer;flex-shrink:0">
-              Producer revenue <span style="color:#1e7ab8;font-size:11px;font-weight:600;margin-left:4px">(Ps × Qn rectangle from x-axis)</span>
-            </label>
-          </div>
-        </div>
 
         <div class="add-bar">
           <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
@@ -806,7 +807,7 @@
           <div class="field"><label>Title</label>  <input type="text" id="pedTitle" placeholder="e.g. Demand for cinema tickets" oninput="pedDraw()"></div>
           <div class="field"><label>Y-axis</label> <input type="text" id="pedYLbl"  value="Price ($)" oninput="pedDraw()"></div>
           <div class="field"><label>X-axis</label> <input type="text" id="pedXLbl"  value="Quantity"  oninput="pedDraw()"></div>
-          <div class="field"><label>Curve colour</label><input type="color" id="pedCol" value="#185FA5" oninput="pedDraw()"></div>
+          <div class="field"><label>Curve colour</label><input type="color" id="pedCol" value="#000000" oninput="pedDraw()"></div>
         </div>
       </div>
 
@@ -888,9 +889,21 @@
           <div class="field"><label>Title</label>  <input type="text" id="surTitle" placeholder="e.g. Market for sugar" oninput="surDraw()"></div>
           <div class="field"><label>Y-axis</label> <input type="text" id="surYLbl" value="Price ($)" oninput="surDraw()"></div>
           <div class="field"><label>X-axis</label> <input type="text" id="surXLbl" value="Quantity"  oninput="surDraw()"></div>
-          <div class="field"><label>D colour</label><input type="color" id="surDCol" value="#185FA5" oninput="surDraw()"></div>
-          <div class="field"><label>S colour</label><input type="color" id="surSCol" value="#0F6E56" oninput="surDraw()"></div>
+          <div class="field"><label>D colour</label><input type="color" id="surDCol" value="#000000" oninput="surDraw()"></div>
+          <div class="field"><label>S colour</label><input type="color" id="surSCol" value="#000000" oninput="surDraw()"></div>
           <div class="field"><label>Area letters</label><input type="checkbox" id="surLetters" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="surDraw()"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Reveal Areas <span style="font-size:11px;font-weight:400;color:#888">(one at a time, in this order)</span></div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevCS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Consumer surplus</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevPS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Producer surplus</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossCS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Loss of consumer surplus</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossPS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Loss of producer surplus</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevDWL" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#d82d2d;cursor:pointer;flex-shrink:0">Deadweight loss</label>
+            <label id="surRevTAXwrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevTAX" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">Tax revenue</label>
+          </div>
         </div>
       </div>
 
@@ -900,21 +913,9 @@
           <p>
             <span class="step">1</span>Pick a <strong>distortion</strong> (or leave at equilibrium) and set its size with the slider<br>
             <span class="step">2</span>Set <strong>title, axis labels</strong> and colours. Tick <strong>Area letters</strong> for "identify the area" questions<br>
-            <span class="step">3</span>Choose which <strong>areas reveal</strong> below — in the quiz, students click <strong>▶ Reveal</strong> to shade them one at a time after answering<br>
+            <span class="step">3</span>Tick which <strong>areas reveal</strong> (left panel) — they shade in as soon as the student answers correctly<br>
             <span class="step">4</span>Write your question &amp; four answers and mark the correct one
           </p>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Reveal Areas <span style="font-size:11px;font-weight:400;color:#888">(shaded one at a time, in this order)</span></div>
-          <div style="display:flex;flex-direction:column;gap:9px">
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevCS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer">Consumer surplus <span style="color:#185FA5;font-size:11px;font-weight:600">(blue)</span></label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevPS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer">Producer surplus <span style="color:#0F6E56;font-size:11px;font-weight:600">(green)</span></label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossCS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer">Loss of consumer surplus <span style="color:#185FA5;font-size:11px;font-weight:600">(blue hatch — tax / floor)</span></label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossPS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer">Loss of producer surplus <span style="color:#0F6E56;font-size:11px;font-weight:600">(green hatch — tax / ceiling)</span></label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevDWL" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#d82d2d;cursor:pointer">Deadweight loss <span style="color:#d82d2d;font-size:11px;font-weight:600">(red — distortions only)</span></label>
-            <label id="surRevTAXwrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevTAX" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer">Tax revenue <span style="color:#C47D00;font-size:11px;font-weight:600">(amber — tax only)</span></label>
-          </div>
         </div>
 
         <div class="card">
@@ -1007,6 +1008,8 @@
 <script src="js/diagrams/plain.js"></script>
 <script src="js/quiz-export.js?v=2"></script>
 <script src="js/app.js"></script>
+<script src="js/dictate.js"></script>
+<script src="js/autocap.js"></script>
 
 </body>
 </html>

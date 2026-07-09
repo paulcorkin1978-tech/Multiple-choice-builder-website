@@ -83,7 +83,7 @@ function pedReset() {
   document.getElementById('pedTitle').value = '';
   document.getElementById('pedYLbl').value = 'Price ($)';
   document.getElementById('pedXLbl').value = 'Quantity';
-  document.getElementById('pedCol').value = '#185FA5';
+  document.getElementById('pedCol').value = '#000000';
   pedClearAnswers();
   pedDraw();
 }

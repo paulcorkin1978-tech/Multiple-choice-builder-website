@@ -132,9 +132,9 @@ function ppfBuildSVG(shiftA, isAnimating) {
     if (showFaded && Math.abs(shiftA) > 0.05) {
       const r0  = ppfR(0);
       const rx0 = r0 * cW / GRID, ry0 = r0 * cH / GRID;
-      s += `<path d="M ${gx(0).toFixed(1)} ${gy(r0).toFixed(1)} A ${rx0.toFixed(1)} ${ry0.toFixed(1)} 0 0 1 ${gx(r0).toFixed(1)} ${gy(0).toFixed(1)}" stroke="${col}" fill="none" stroke-width="2" stroke-linecap="round" opacity="0.3"/>`;
+      s += `<path d="M ${gx(0).toFixed(1)} ${gy(r0).toFixed(1)} A ${rx0.toFixed(1)} ${ry0.toFixed(1)} 0 0 1 ${gx(r0).toFixed(1)} ${gy(0).toFixed(1)}" stroke="${col}" fill="none" stroke-width="2" stroke-linecap="round" opacity="1"/>`;
       const lx0 = r0 * 0.72, ly0 = Math.sqrt(Math.max(0, r0*r0 - lx0*lx0));
-      s += `<text x="${(gx(lx0)+5).toFixed(1)}" y="${gy(ly0).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" opacity="0.3" font-weight="bold">PPF1</text>`;
+      s += `<text x="${(gx(lx0)+5).toFixed(1)}" y="${gy(ly0).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" opacity="1" font-weight="bold">PPF1</text>`;
     }
 
     // ── Active curve ──

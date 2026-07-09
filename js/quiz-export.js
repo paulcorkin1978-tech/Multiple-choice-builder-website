@@ -14,41 +14,46 @@ function buildQuizHTML(questions, testMode) {
 <title>HSC Economics Quiz</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Verdana',sans-serif;background:#f5f4f0;height:100vh;height:100dvh;overflow:hidden;color:#2c2c2a}
-#app{display:flex;height:100vh;height:100dvh}
-#diag-panel{flex:1.2;background:#fff;border-right:2px solid #d3d1c7;display:flex;align-items:center;justify-content:center;padding:32px;overflow:hidden}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#fafaf8;height:100vh;height:100dvh;overflow:hidden;color:#33343c;display:flex;flex-direction:column}
+#topbar{background:#0A0C56;padding:9px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#brand{color:#fff;font-size:13px;letter-spacing:.4px}
+#brand b{color:#EC3C78;font-weight:600}
+#progline{height:3px;background:#1b1e63;flex-shrink:0}
+#progfill{height:3px;background:#EC3C78;width:0%;transition:width .3s}
+#app{display:flex;flex:1;min-height:0}
+#diag-panel{flex:1.2;background:#fff;border-right:1px solid #ecebe4;display:flex;align-items:center;justify-content:center;padding:32px;overflow:hidden}
 #diagWrap{width:100%}
 #diagWrap svg{width:100%;max-height:86dvh;display:block}
 #q-panel{flex:1;display:flex;flex-direction:column;padding:36px 32px;padding-bottom:max(36px,env(safe-area-inset-bottom));gap:18px;min-width:280px;overflow-y:auto}
-.qnum{font-size:11px;color:#888780;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
-.qtext{font-size:17px;line-height:1.75;font-weight:600;color:#2c2c2a}
+.qnum{font-size:12px;color:#9a9a92;letter-spacing:.02em;font-weight:400}
+.qtext{font-size:19px;line-height:1.6;font-weight:600;color:#2f3038}
 .abtns{display:flex;flex-direction:column;gap:10px}
-.abtn{font-family:'Verdana',sans-serif;font-size:17px;padding:16px 20px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;cursor:pointer;text-align:left;color:#2c2c2a;transition:all .2s;line-height:1.5}
-.abtn:hover{background:#f1efe8;border-color:#5f5e5a}
-.abtn.wrong{background:#fcebeb;border-color:#a32d2d;color:#a32d2d;pointer-events:none;font-weight:600}
-.abtn.correct{background:#eaf3de;border-color:#3b6d11;color:#3b6d11;font-weight:700;pointer-events:none}
-.abtn.used{pointer-events:none;opacity:0.55}
-.fb{font-size:13px;font-weight:600;min-height:20px}
-.fb.c{color:#3b6d11}.fb.w{color:#a32d2d}
-.nav{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:16px;border-top:1.5px solid #d3d1c7;flex-shrink:0}
-.nbtn{font-family:'Verdana',sans-serif;font-size:13px;font-weight:600;padding:10px 22px;border-radius:8px;cursor:pointer;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;transition:all .15s;white-space:nowrap}
-.nbtn:hover:not(:disabled){background:#f1efe8;border-color:#888780}
+.abtn{font-family:inherit;font-size:18px;padding:15px 19px;border:1px solid #e0e0da;border-radius:10px;background:#fff;cursor:pointer;text-align:left;color:#3a3a44;transition:all .15s;line-height:1.5}
+.abtn:hover{border-color:#c3c2b9;background:#fdfdfb}
+.abtn.wrong{background:#fdecec;border-color:#a32d2d;color:#a32d2d;pointer-events:none;font-weight:600}
+.abtn.correct{background:#eef5f1;border-color:#0F6E56;color:#0F6E56;font-weight:600;pointer-events:none}
+.abtn.used{pointer-events:none;opacity:0.5}
+.fb{font-size:14px;font-weight:600;min-height:20px}
+.fb.c{color:#0F6E56}.fb.w{color:#a32d2d}
+.nav{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:16px;border-top:1px solid #ecebe4;flex-shrink:0}
+.nbtn{font-family:inherit;font-size:14px;font-weight:500;padding:10px 22px;border-radius:8px;cursor:pointer;border:1px solid #e0e0da;background:transparent;color:#5c5c66;transition:all .15s;white-space:nowrap}
+.nbtn:hover:not(:disabled){background:#f4f3ef;border-color:#c3c2b9}
 .nbtn:disabled{opacity:0.3;cursor:not-allowed}
-.nbtn.pri{background:#185FA5;color:#fff;border-color:#185FA5}
-.nbtn.pri:hover:not(:disabled){background:#0c447c;border-color:#0c447c}
+.nbtn.pri{background:#0A0C56;color:#fff;border-color:#0A0C56;font-weight:600}
+.nbtn.pri:hover:not(:disabled){background:#151875;border-color:#151875}
 #replayBtn{font-family:'Verdana',sans-serif;font-size:16px;font-weight:600;padding:10px 14px;border-radius:8px;cursor:pointer;border:1.5px solid #d3d1c7;background:#fff;color:#5f5e5a;transition:all .15s;white-space:nowrap}
 #replayBtn:hover{background:#f1efe8;border-color:#888780;color:#2c2c2a}
 #revealBtn{font-family:'Verdana',sans-serif;font-size:13px;font-weight:600;padding:10px 16px;border-radius:8px;cursor:pointer;border:1.5px solid #C47D00;background:#fff8ed;color:#C47D00;transition:all .15s;white-space:nowrap}
 #revealBtn:hover{background:#fef0cc;border-color:#9a5f00;color:#9a5f00}
 .prog{font-size:12px;color:#888780;flex:1;text-align:center;line-height:1.5}
-#score-screen{display:none;position:fixed;inset:0;background:rgba(245,244,240,0.97);align-items:center;justify-content:center;flex-direction:column;gap:24px}
+#score-screen{display:none;position:fixed;inset:0;background:rgba(250,250,248,0.97);align-items:center;justify-content:center;flex-direction:column;gap:24px}
 #score-screen.show{display:flex}
 .sbox{background:#fff;border:1.5px solid #d3d1c7;border-radius:16px;padding:52px 72px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
 .sbox h2{font-size:22px;font-weight:700;margin-bottom:6px}
-.snum{font-size:56px;font-weight:700;color:#185FA5;margin:16px 0 8px}
+.snum{font-size:56px;font-weight:700;color:#0A0C56;margin:16px 0 8px}
 .sbox p{font-size:14px;color:#5f5e5a}
-.rbtn{font-family:'Verdana',sans-serif;font-size:13px;font-weight:600;padding:12px 32px;background:#185FA5;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background .15s}
-.rbtn:hover{background:#0c447c}
+.rbtn{font-family:inherit;font-size:13px;font-weight:600;padding:12px 32px;background:#0A0C56;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background .15s}
+.rbtn:hover{background:#151875}
 .quiz-tbl-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding:32px;width:100%}
 .quiz-tbl-title{font-size:20px;font-weight:700;color:#2c2c2a;text-align:center}
 .quiz-tbl{border-collapse:collapse;font-size:18px;font-family:'Verdana',sans-serif}
@@ -89,13 +94,13 @@ body{font-family:'Verdana',sans-serif;background:#f5f4f0;height:100vh;height:100
   .prog{font-size:10px}
 }
 /* ── Screen: print controls + hidden worksheet ── */
-#printbar{position:fixed;top:8px;right:10px;z-index:50;display:flex;gap:6px}
-#printbar button{font-family:'Verdana',sans-serif;font-size:11px;font-weight:600;padding:6px 10px;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;border-radius:6px;cursor:pointer}
-#printbar button:hover{background:#f1efe8;border-color:#888780}
+#printbar{display:flex;gap:6px}
+#printbar button{font-family:inherit;font-size:11px;font-weight:500;padding:5px 11px;border:1px solid rgba(255,255,255,.28);background:transparent;color:rgba(255,255,255,.85);border-radius:6px;cursor:pointer;transition:all .15s}
+#printbar button:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.5);color:#fff}
 #worksheet{display:none}
 /* ── Print / Save-as-PDF worksheet (≈3 questions per page) ── */
 @media print{
-  #app,#score-screen,#printbar{display:none !important}
+  #app,#score-screen,#printbar,#topbar,#progline{display:none !important}
   #worksheet{display:block !important}
   html,body{background:#fff !important;height:auto !important;overflow:visible !important}
   .ws-head{font-size:15pt;font-weight:700;text-align:center;margin:0 0 14pt}
@@ -112,6 +117,14 @@ body{font-family:'Verdana',sans-serif;background:#f5f4f0;height:100vh;height:100
 </style>
 </head>
 <body>
+<div id="topbar">
+  <span id="brand">theory<b>2</b>econ</span>
+  <div id="printbar">
+    <button onclick="printWS(false)" title="Save the quiz as a student worksheet PDF">Student PDF</button>
+    <button onclick="printWS(true)" title="Save with answers marked (teacher copy)">Teacher PDF</button>
+  </div>
+</div>
+<div id="progline"><div id="progfill"></div></div>
 <div id="app">
   <div id="diag-panel"><div id="diagWrap"></div></div>
   <div id="q-panel">
@@ -127,10 +140,6 @@ body{font-family:'Verdana',sans-serif;background:#f5f4f0;height:100vh;height:100
       <button class="nbtn pri" id="nextBtn" onclick="next()">Next →</button>
     </div>
   </div>
-</div>
-<div id="printbar">
-  <button onclick="printWS(false)" title="Save the quiz as a student worksheet PDF">&#9113; Student PDF</button>
-  <button onclick="printWS(true)" title="Save with answers marked (teacher copy)">&#9113; Teacher PDF</button>
 </div>
 <div id="worksheet"></div>
 <div id="score-screen">
@@ -338,9 +347,9 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       if(Math.abs(dA)>0.05){
         const r0=PPF_BASE;
         const rx0=(r0*cW_/GRID).toFixed(1),ry0=(r0*cH_/GRID).toFixed(1);
-        s+=\`<path d="M \${gx(0).toFixed(1)} \${gy(r0).toFixed(1)} A \${rx0} \${ry0} 0 0 1 \${gx(r0).toFixed(1)} \${gy(0).toFixed(1)}" stroke="\${col}" fill="none" stroke-width="2" stroke-linecap="round" opacity="0.3"/>\`;
+        s+=\`<path d="M \${gx(0).toFixed(1)} \${gy(r0).toFixed(1)} A \${rx0} \${ry0} 0 0 1 \${gx(r0).toFixed(1)} \${gy(0).toFixed(1)}" stroke="\${col}" fill="none" stroke-width="2" stroke-linecap="round" opacity="1"/>\`;
         const lx0=r0*0.72,ly0=Math.sqrt(Math.max(0,r0*r0-lx0*lx0));
-        s+=\`<text x="\${(gx(lx0)+5).toFixed(1)}" y="\${gy(ly0).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${col}" opacity="0.3" font-weight="bold">PPF1</text>\`;
+        s+=\`<text x="\${(gx(lx0)+5).toFixed(1)}" y="\${gy(ly0).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${col}" opacity="1" font-weight="bold">PPF1</text>\`;
       }
       const r=PPF_BASE+dA*PPF_STEP;
       if(r>0.3){
@@ -388,11 +397,11 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const dSh=dA!==0,sSh=sA!==0;
     if(dSh){
       const cd=clip(QS,dPf(QS,0),QE,dPf(QE,0),pad,W,H,1);
-      if(cd) s+=\`<line x1="\${cd.x1}" y1="\${cd.y1}" x2="\${cd.x2}" y2="\${cd.y2}" stroke="\${q.dColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="\${cd.x2+5}" y="\${cd.y2}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" opacity="0.3" font-weight="bold">D1</text>\`;
+      if(cd) s+=\`<line x1="\${cd.x1}" y1="\${cd.y1}" x2="\${cd.x2}" y2="\${cd.y2}" stroke="\${q.dColor}" stroke-width="2" stroke-linecap="round" opacity="1"/><text x="\${cd.x2+5}" y="\${cd.y2}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" opacity="1" font-weight="bold">D1</text>\`;
     }
     if(sSh){
       const cs=clip(QS,sPf(QS,0),QE,sPf(QE,0),pad,W,H,1);
-      if(cs) s+=\`<line x1="\${cs.x1}" y1="\${cs.y1}" x2="\${cs.x2}" y2="\${cs.y2}" stroke="\${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="\${cs.x2+5}" y="\${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" opacity="0.3" font-weight="bold">S1</text>\`;
+      if(cs) s+=\`<line x1="\${cs.x1}" y1="\${cs.y1}" x2="\${cs.x2}" y2="\${cs.y2}" stroke="\${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="1"/><text x="\${cs.x2+5}" y="\${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" opacity="1" font-weight="bold">S1</text>\`;
     }
     const dl=dA===0?'D1':'D2',sl=sA===0?'S1':'S2';
     const eT=animT<0.5?2*animT*animT:-1+(4-2*animT)*animT;
@@ -565,8 +574,8 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     if(Math.abs(ts1dx)>0.01){const ts1tL=(pad.l-ts1x1)/ts1dx,ts1tR=(W-pad.r-ts1x1)/ts1dx;if(ts1dx>0){ts1t0=Math.max(ts1t0,ts1tL);ts1t1=Math.min(ts1t1,ts1tR);}else{ts1t0=Math.max(ts1t0,ts1tR);ts1t1=Math.min(ts1t1,ts1tL);}}
     if(ts1t0<ts1t1){
       const ts1L=clip(QS,sPf(QS,txStartSS,txSsc),QE,sPf(QE,txStartSS,txSsc),pad,W,H,1);
-      s+=\`<line x1="\${(ts1x1+ts1t0*ts1dx).toFixed(1)}" y1="\${(ts1y1+ts1t0*ts1dy).toFixed(1)}" x2="\${(ts1x1+ts1t1*ts1dx).toFixed(1)}" y2="\${(ts1y1+ts1t1*ts1dy).toFixed(1)}" stroke="\${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/>\`;
-      if(ts1L)s+=\`<text x="\${(ts1L.x2+5).toFixed(1)}" y="\${Math.min(ts1L.y1,ts1L.y2).toFixed(1)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" opacity="0.3" font-weight="bold">S1</text>\`;
+      s+=\`<line x1="\${(ts1x1+ts1t0*ts1dx).toFixed(1)}" y1="\${(ts1y1+ts1t0*ts1dy).toFixed(1)}" x2="\${(ts1x1+ts1t1*ts1dx).toFixed(1)}" y2="\${(ts1y1+ts1t1*ts1dy).toFixed(1)}" stroke="\${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="1"/>\`;
+      if(ts1L)s+=\`<text x="\${(ts1L.x2+5).toFixed(1)}" y="\${Math.min(ts1L.y1,ts1L.y2).toFixed(1)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" opacity="1" font-weight="bold">S1</text>\`;
     }
     // Demand curve D (slope=txDm, shift coeff=txDm → 1 grid square per step)
     const tdx1=gx(dQf(GRID,dA,txDm,txDm)),tdy1=gy(GRID),tdx2=gx(dQf(1,dA,txDm,txDm)),tdy2=gy(1);
@@ -590,7 +599,7 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const txShowEqLines=q.showEqLines!==false;
     if(txShowEqLines){
       if(txQ0>=QS&&txQ0<=QE&&txP0>=1&&txP0<=GRID&&(Math.abs(txQ0-txQn)>0.1||Math.abs(txP0-txPc)>0.1)){
-        s+=\`<circle cx="\${gx(txQ0)}" cy="\${gy(txP0)}" r="5" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.3"/>\`;
+        s+=\`<circle cx="\${gx(txQ0)}" cy="\${gy(txP0)}" r="5" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.30"/>\`;
       }
       if(txQn>=QS&&txQn<=QE&&txPc>=1&&txPc<=GRID){
         s+=\`<circle cx="\${gx(txQn)}" cy="\${gy(txPc)}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>\`;
@@ -692,7 +701,7 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       if(c1){
         const fadedLbl=q.curve==='demand'?'D1':'S1';
         const ly=q.curve==='demand'?c1.y2:Math.min(c1.y1,c1.y2);
-        s+=\`<line x1="\${c1.x1}" y1="\${c1.y1}" x2="\${c1.x2}" y2="\${c1.y2}" stroke="\${q.color}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="\${c1.x2+5}" y="\${ly}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.color}" opacity="0.3" font-weight="bold">\${fadedLbl}</text>\`;
+        s+=\`<line x1="\${c1.x1}" y1="\${c1.y1}" x2="\${c1.x2}" y2="\${c1.y2}" stroke="\${q.color}" stroke-width="2" stroke-linecap="round" opacity="1"/><text x="\${c1.x2+5}" y="\${ly}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.color}" opacity="1" font-weight="bold">\${fadedLbl}</text>\`;
       }
     }
     const sh=scShift!==0;
@@ -801,6 +810,8 @@ function showQ(i){
   document.getElementById('nextBtn').textContent=isLast?'See Score →':'Next →';
   const mark=TESTMODE?(picked[i]!==null?(done[i]?' · ✓':' · ✗'):''):(done[i]?' · ✓':'');
   document.getElementById('prog').textContent=(i+1)+' of '+qs.length+mark;
+  const pf=document.getElementById('progfill');
+  if(pf) pf.style.width=(((i+1)/qs.length)*100).toFixed(1)+'%';
 }
 function go(qi,ai){
   const q=qs[qi];

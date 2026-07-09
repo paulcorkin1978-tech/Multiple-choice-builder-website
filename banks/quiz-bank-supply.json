@@ -200,7 +200,7 @@
     "title": "Supply of bananas",
     "yLabel": "Price ($kg)",
     "xLabel": "Quantity",
-    "color": "#f3eb12",
+    "color": "#B8860B",
     "vUnit": 1,
     "hUnit": 40,
     "startFP": 3,

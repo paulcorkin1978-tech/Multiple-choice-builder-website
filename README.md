@@ -30,20 +30,42 @@ git push origin main
 
 ```
 Multiple-choice builder website/
+├── index.html                # Landing page (student / teacher portals)
+├── student.html              # Student portal — links to quizzes/
+├── teacher.html              # Teacher portal — links to builder.html
 ├── builder.html              # Main quiz builder UI
-├── quiz.html                 # Quiz player (loads exported JSON)
+├── css/style.css
 ├── js/
-│   ├── quiz-export.js        # Core: SVG diagram renderer + quiz player logic
+│   ├── utils.js              # Shared constants + SVG renderers (buildSVGInner, pedInner, surInner)
+│   ├── app.js                # Navigation, quiz list, save/load, import, download
+│   ├── quiz-export.js        # Builds the self-contained exported quiz (player + diagrams)
 │   └── diagrams/
-│       ├── sc.js             # Single-curve (demand/supply shift) builder
-│       ├── sd.js             # Supply & demand (price mechanism) builder
-│       ├── pm.js             # Price mechanism builder
-│       ├── table.js          # Table question builder
-│       └── plain.js          # Plain text question builder
-├── quiz-bank-demand.json     # Saved demand question bank
-├── MC supply.csv             # Supply questions (import-ready CSV)
+│       ├── sc.js             # Single curve (demand or supply shift)
+│       ├── sd.js             # Supply & demand
+│       ├── pm.js             # Price mechanism (surplus / shortage)
+│       ├── ppf.js            # Production possibility frontier
+│       ├── tax.js            # Tax & subsidy
+│       ├── ped.js            # Price elasticity of demand
+│       ├── sur.js            # Consumer/producer surplus & deadweight loss
+│       ├── table.js          # Table question
+│       └── plain.js          # Plain text question
+├── banks/                    # Saved question banks (.json) — load via "Load Question Bank"
+├── quizzes/                  # Exported, self-contained quiz HTML files
 └── README.md
 ```
+
+### Export modes
+
+Downloading a quiz produces one of two versions, set by the **Student self-study mode**
+checkbox on the builder menu:
+
+- **unticked (classroom)** — wrong answers can be retried until correct; everyone finishes on 100%.
+  Good for projecting at the front of a room. → `hsc-economics-quiz.html`
+- **ticked (self-study)** — the first answer is locked in, the correct answer is shown, and the
+  score reflects what the student actually got right. → `hsc-economics-quiz-selfstudy.html`
+
+Every exported quiz also has **Student PDF** and **Teacher PDF** buttons that print a
+worksheet (≈3 questions per page); the teacher copy marks the correct answers.
 
 ---
 
@@ -173,17 +195,34 @@ Question,A,B,C,D,Correct
 
 ## Known Issues / Pending Items
 
-- **quiz-bank-demand.json Q6**: Diagram title shows "Demand for iPads" — should be "Demand for cinema tickets". Fix in builder.
-- **quiz-bank-demand.json Q3/Q5**: Curve colours near-invisible (`#050505`, `#cfcece`). Worth updating.
-- **quiz-bank-demand.json Q15**: Answer D has typo "An decrease" (should be "A decrease").
-- **MC supply.csv Q15**: Answer options are placeholders — need filling in. Q6, Q11, Q15 need diagram setup in builder.
-- **Q8, Q9 in supply CSV**: Table data is embedded in question text — needs table-type question setup in builder.
+All question banks were audited and are currently clean: valid JSON, no blank or duplicate
+answers, every correct-answer index in range, and all lettered surplus answers verified
+against the diagram geometry.
+
+Resolved (kept here so the history is clear):
+
+- ~~quiz-bank-demand.json Q6 title said "Demand for iPads"~~ — now correctly "Demand for cinema tickets".
+- ~~quiz-bank-demand.json Q15 answer typo "An decrease"~~ — no longer present; the placeholder
+  option labels ("Option A"…) were replaced with "Row A"…"Row D". Correct answer is Row B
+  (substitute's price falls **and** complement's price rises → demand decreases).
+- ~~Pale curve colours~~ — demand Q2, Q12, Q14 and supply Q10 were bright yellows that
+  disappeared on white; replaced with darker, readable equivalents.
+
+Still outstanding:
+
+- **MC supply.csv**: Q15 answer options are placeholders. Q6, Q11, Q15 need diagram setup in the builder.
+- **MC supply.csv Q8, Q9**: Table data is embedded in question text — needs table-type question setup.
+- **landing.html** duplicates `index.html` — decide which is the real front page.
 
 ---
 
 ## Diagram Colour Tips
 
-Avoid near-white or near-black colours — they disappear against the SVG background. Good choices: bright primaries, pastels with contrast. The colour picker in the builder gives a live preview.
+Curves are drawn on a **white** background, so the rule is: avoid **light** colours.
+Bright yellows and pale greens (`#fbff00`, `#bdf71d`, `#f3eb12`) effectively vanish.
+Dark colours — including black — read perfectly well, which is why the surplus banks use
+black demand and supply curves. Aim for a colour with low luminance; the builder's colour
+picker gives a live preview.
 
 ---
 

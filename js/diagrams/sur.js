@@ -62,8 +62,8 @@ function surReset() {
   document.getElementById('surTitle').value = '';
   document.getElementById('surYLbl').value = 'Price ($)';
   document.getElementById('surXLbl').value = 'Quantity';
-  document.getElementById('surDCol').value = '#185FA5';
-  document.getElementById('surSCol').value = '#0F6E56';
+  document.getElementById('surDCol').value = '#000000';
+  document.getElementById('surSCol').value = '#000000';
   document.getElementById('surLetters').checked = false;
   ['surRevCS','surRevPS','surRevDWL','surRevTAX'].forEach(function(id){ document.getElementById(id).checked = true; });
   ['surRevLossCS','surRevLossPS'].forEach(function(id){ document.getElementById(id).checked = false; });

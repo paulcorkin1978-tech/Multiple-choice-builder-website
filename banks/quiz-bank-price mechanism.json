@@ -59,7 +59,7 @@
     "startPrice": 2,
     "showEqLines": false,
     "animatePrice": true,
-    "questionText": "At a rental price of $200 per week, what will likely begin the process of the price mechanism operating to restore equilibrium",
+    "questionText": "At a rental price of $200 per week, what will likely begin the process of the price mechanism operating to restore equilibrium?",
     "answers": [
       "Competition for limited housing will cause tenants to bid up the price of rent causing an expansion in supply",
       "Competition for limited housing will cause tenants to bid up the price of rent causing a contraction in demand",

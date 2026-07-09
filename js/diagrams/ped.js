@@ -120,8 +120,13 @@ function pedLoad(q) {
 function pedPreview() {
   const q = pedGet();
   q.questionText = document.getElementById('pedQText').value || '(preview)';
-  q.answers = [0, 1, 2, 3].map(i => document.getElementById('ped' + 'A' + i).value || ('Option ' + (i + 1)));
+  const raw = [0, 1, 2, 3].map(i => document.getElementById('ped' + 'A' + i).value);
   const r = document.querySelector('input[name="pedC"]:checked');
-  q.correctIndex = r ? parseInt(r.value) : 0;
+  const chosen = r ? parseInt(r.value) : 0;
+  const filled = []; let nc = -1;
+  raw.forEach((a, i) => { if (a && a.trim()) { if (i === chosen) nc = filled.length; filled.push(a.trim()); } });
+  if (filled.length < 2) { filled.splice(0, filled.length, 'Option A', 'Option B'); nc = 0; }
+  q.answers = filled;
+  q.correctIndex = nc < 0 ? 0 : nc;
   window.open(URL.createObjectURL(new Blob([buildQuizHTML([q])], { type: 'text/html' })), '_blank');
 }

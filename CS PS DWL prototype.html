@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consumer / Producer Surplus & Deadweight Loss – prototype</title>
+<style>
+  :root{
+    --navy:#0A0C56; --blue:#185FA5; --green:#0F6E56; --red:#d82d2d; --amber:#C47D00;
+    --ink:#1c2333; --muted:#5b6472; --line:#d7dce4; --bg:#f6f8fc;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);padding:22px}
+  .wrap{max-width:900px;margin:0 auto}
+  h1{font-size:19px;margin:0 0 2px;color:var(--navy)}
+  .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 1px 3px rgba(10,12,86,.05)}
+  .grid{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:760px){.grid{grid-template-columns:1.25fr .75fr}}
+  svg{width:100%;height:auto;display:block}
+  .label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 6px}
+  .btn-row{display:flex;flex-wrap:wrap;gap:6px}
+  .mbtn{font-size:12px;font-weight:600;padding:7px 11px;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:8px;cursor:pointer}
+  .mbtn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  input[type=range]{width:100%;accent-color:var(--blue)}
+  .section{margin-top:16px}
+  .chk{display:flex;align-items:center;gap:8px;font-size:13px;padding:3px 0;cursor:pointer}
+  .sw{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid #999}
+  table{border-collapse:collapse;font-size:13px;width:100%;margin-top:6px}
+  td{padding:4px 6px;border-bottom:1px solid var(--line)}
+  td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--navy)}
+  .foot{font-size:12px;color:var(--muted);margin-top:14px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Consumer &amp; Producer Surplus / Deadweight Loss</h1>
+  <p class="sub">Demand P = 100 − Q, Supply P = Q (equilibrium 50, 50). Pick a distortion, then toggle the shaded areas. Curves run to the axes so the areas can be calculated.</p>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <svg id="chart" viewBox="0 0 470 400" role="img" aria-label="Surplus diagram"></svg>
+      </div>
+      <div>
+        <div class="label">Distortion</div>
+        <div class="btn-row" id="modeRow">
+          <button class="mbtn on" data-m="eq">Equilibrium</button>
+          <button class="mbtn" data-m="qty">Restricted quantity</button>
+          <button class="mbtn" data-m="tax">Tax</button>
+          <button class="mbtn" data-m="price">Price control</button>
+        </div>
+
+        <div class="section" id="paramWrap">
+          <div class="label" id="paramLabel">Parameter</div>
+          <input type="range" id="param" min="5" max="49" step="1" value="40">
+          <div id="paramVal" style="font-size:13px;color:var(--ink);font-weight:600"></div>
+        </div>
+
+        <div class="section">
+          <div class="label">Show areas (in the quiz these reveal one at a time)</div>
+          <label class="chk"><input type="checkbox" id="cCS" checked><span class="sw" style="background:rgba(24,95,165,.4)"></span> Consumer surplus</label>
+          <label class="chk"><input type="checkbox" id="cPS" checked><span class="sw" style="background:rgba(15,110,86,.4)"></span> Producer surplus</label>
+          <label class="chk"><input type="checkbox" id="cDWL" checked><span class="sw" style="background:rgba(216,45,45,.45)"></span> Deadweight loss</label>
+          <label class="chk" id="cTaxWrap"><input type="checkbox" id="cTax" checked><span class="sw" style="background:rgba(196,125,0,.4)"></span> Tax revenue</label>
+        </div>
+
+        <div class="section">
+          <div class="label">Area labels (A, B, C …)</div>
+          <label class="chk"><input type="checkbox" id="cLetters" checked> Show auto letters (elemental areas)</label>
+          <div class="btn-row" style="margin-top:6px">
+            <button class="mbtn" id="addLblBtn">＋ Add label by hand</button>
+            <button class="mbtn" id="clrLblBtn">Clear manual</button>
+          </div>
+          <div id="lblHint" style="font-size:11px;color:var(--muted);margin-top:4px"></div>
+        </div>
+
+        <div class="section">
+          <div class="label">Areas (for your reference)</div>
+          <table id="areaTbl"></table>
+        </div>
+      </div>
+    </div>
+    <div class="foot">Prototype — geometry &amp; colours to confirm before building the tab. Total surplus stays 2500; every distortion has a deadweight loss.</div>
+  </div>
+</div>
+
+<script>
+// ── model ──
+var Dmax=100, Qeq=50, Peq=50;
+var dem=function(Q){return Dmax-Q;}, sup=function(Q){return Q;};
+// ── plot geometry ──
+var L=64,R=436,T=30,B=340,QMAX=100,PMAX=100;
+var X=function(Q){return L+(Q/QMAX)*(R-L);};
+var Y=function(P){return B-(P/PMAX)*(B-T);};
+var poly=function(pts){return pts.map(function(p){return X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1);}).join(' ');};
+var shoelace=function(pts){var a=0;for(var i=0;i<pts.length;i++){var j=(i+1)%pts.length;a+=pts[i][0]*pts[j][1]-pts[j][0]*pts[i][1];}return Math.abs(a/2);};
+
+var mode='eq', param=40;
+var showLetters=true, addMode=false, manualLabels=[];
+
+function compute(){
+  var Qt,Pc,Ps,taxrev=0,kind='';
+  if(mode==='eq'){Qt=Qeq;Pc=Peq;Ps=Peq;}
+  else if(mode==='qty'){Qt=param;Pc=dem(Qt);Ps=Pc;kind='Restricted quantity';}
+  else if(mode==='tax'){Qt=(Dmax-param)/2;Pc=dem(Qt);Ps=sup(Qt);taxrev=(Pc-Ps)*Qt;kind='Tax';}
+  else if(mode==='price'){
+    if(param>=Peq){Qt=Dmax-param;Pc=param;Ps=param;kind='Price floor';}   // above eq
+    else{Qt=param;Pc=param;Ps=param;kind='Price ceiling';}                 // below eq
+  }
+  var CS=shoelace([[0,Pc],[0,Dmax],[Qt,dem(Qt)],[Qt,Pc]]);
+  var PS=shoelace([[0,Ps],[0,0],[Qt,sup(Qt)],[Qt,Ps]]);
+  var DWL=(Qt<Qeq)?shoelace([[Qt,dem(Qt)],[Qt,sup(Qt)],[Qeq,Peq]]):0;
+  return {Qt:Qt,Pc:Pc,Ps:Ps,CS:CS,PS:PS,DWL:DWL,taxrev:taxrev,kind:kind};
+}
+
+// centroid = average of vertices (exact for triangles/rectangles, close for trapezoids)
+function centroid(pts){var x=0,y=0;for(var i=0;i<pts.length;i++){x+=pts[i][0];y+=pts[i][1];}return [x/pts.length,y/pts.length];}
+
+// The elemental areas the diagram splits into, using the pre-tax price line P*(=50).
+function regionsFor(c){
+  var Dm=Dmax, Pst=Peq, Qe=Qeq, Qt=c.Qt;
+  if(mode==='eq') return [ [[0,Dm],[0,Pst],[Qe,Pst]], [[0,Pst],[Qe,Pst],[0,0]] ]; // A=CS, B=PS
+  if(mode==='tax') return [
+    [[0,Dm],[0,c.Pc],[Qt,c.Pc]],                 // A  CS after tax
+    [[0,c.Pc],[Qt,c.Pc],[Qt,Pst],[0,Pst]],       // B  tax paid by consumers
+    [[0,Pst],[Qt,Pst],[Qt,c.Ps],[0,c.Ps]],       // C  tax paid by producers
+    [[Qt,c.Pc],[Qe,Pst],[Qt,Pst]],               // D  DWL (consumer side)
+    [[Qt,Pst],[Qe,Pst],[Qt,c.Ps]],               // E  DWL (producer side)
+    [[0,c.Ps],[Qt,c.Ps],[0,0]]                    // F  PS after tax
+  ];
+  if(mode==='qty' || (mode==='price' && c.kind==='Price floor')){
+    var pr=c.Pc; // single raised price
+    return [
+      [[0,Dm],[0,pr],[Qt,pr]],                    // A  CS after
+      [[0,pr],[Qt,pr],[Qt,Pst],[0,Pst]],          // B  transfer CS -> PS
+      [[0,Pst],[Qt,Pst],[Qt,sup(Qt)],[0,0]],      // C  producers' base surplus
+      [[Qt,pr],[Qe,Pst],[Qt,Pst]],                // D  DWL (consumer side)
+      [[Qt,Pst],[Qe,Pst],[Qt,sup(Qt)]]            // E  DWL (producer side)
+    ];
+  }
+  if(mode==='price' && c.kind==='Price ceiling'){
+    var prc=c.Pc; // lowered price
+    return [
+      [[0,Dm],[0,Pst],[Qt,Pst],[Qt,dem(Qt)]],     // A  consumers' base surplus
+      [[0,Pst],[Qt,Pst],[Qt,prc],[0,prc]],        // B  transfer PS -> CS
+      [[0,prc],[Qt,prc],[0,0]],                   // C  PS after
+      [[Qt,dem(Qt)],[Qe,Pst],[Qt,Pst]],           // D  DWL (consumer side)
+      [[Qt,Pst],[Qe,Pst],[Qt,prc]]                // E  DWL (producer side)
+    ];
+  }
+  return [];
+}
+
+function draw(){
+  var c=compute();
+  var s='';
+  // area shading (draw first, under the curves)
+  if(document.getElementById('cCS').checked)
+    s+='<polygon points="'+poly([[0,c.Pc],[0,Dmax],[c.Qt,dem(c.Qt)],[c.Qt,c.Pc]])+'" fill="rgba(24,95,165,.32)"/>';
+  if(document.getElementById('cPS').checked)
+    s+='<polygon points="'+poly([[0,c.Ps],[0,0],[c.Qt,sup(c.Qt)],[c.Qt,c.Ps]])+'" fill="rgba(15,110,86,.32)"/>';
+  if(mode==='tax'&&document.getElementById('cTax').checked)
+    s+='<polygon points="'+poly([[0,c.Pc],[c.Qt,c.Pc],[c.Qt,c.Ps],[0,c.Ps]])+'" fill="rgba(196,125,0,.34)"/>';
+  if(c.DWL>0&&document.getElementById('cDWL').checked)
+    s+='<polygon points="'+poly([[c.Qt,dem(c.Qt)],[c.Qt,sup(c.Qt)],[Qeq,Peq]])+'" fill="rgba(216,45,45,.4)"/>';
+
+  // axes
+  s+='<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
+  s+='<line x1="'+L+'" y1="'+B+'" x2="'+R+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
+  s+='<text x="'+(L-46)+'" y="'+((T+B)/2)+'" font-size="12" fill="#555" text-anchor="middle" transform="rotate(-90 '+(L-46)+' '+((T+B)/2)+')">Price ($)</text>';
+  s+='<text x="'+((L+R)/2)+'" y="'+(B+34)+'" font-size="12" fill="#555" text-anchor="middle">Quantity</text>';
+
+  // curves (touch the axes)
+  s+='<line x1="'+X(0)+'" y1="'+Y(Dmax)+'" x2="'+X(Dmax)+'" y2="'+Y(0)+'" stroke="#185FA5" stroke-width="2.5"/>';
+  s+='<text x="'+(X(Dmax)-4)+'" y="'+(Y(0)-6)+'" font-size="12" font-weight="700" fill="#185FA5" text-anchor="end">D</text>';
+  s+='<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(PMAX)+'" y2="'+Y(PMAX)+'" stroke="#0F6E56" stroke-width="2.5"/>';
+  s+='<text x="'+(X(PMAX)-4)+'" y="'+(Y(PMAX)+14)+'" font-size="12" font-weight="700" fill="#0F6E56" text-anchor="end">S</text>';
+
+  // vertical quantity guide at the traded quantity (distorted modes only)
+  if(mode!=='eq'){
+    s+='<line x1="'+X(c.Qt)+'" y1="'+B+'" x2="'+X(c.Qt)+'" y2="'+Y(Math.max(dem(c.Qt),c.Pc,c.Ps))+'" stroke="#888" stroke-width="1" stroke-dasharray="5 3"/>';
+    s+='<text x="'+X(c.Qt)+'" y="'+(B+13)+'" font-size="10" fill="#555" text-anchor="middle">'+c.Qt+'</text>';
+  }
+
+  // S + tax: supply shifted up by the tax amount (tax mode only)
+  if(mode==='tax'){
+    var t=param;
+    s+='<line x1="'+X(0)+'" y1="'+Y(t)+'" x2="'+X(100-t)+'" y2="'+Y(100)+'" stroke="#0F6E56" stroke-width="2" stroke-dasharray="6 4" opacity="0.85"/>';
+    s+='<text x="'+(X(100-t)+3)+'" y="'+(Y(100)+11)+'" font-size="10" font-weight="700" fill="#0F6E56">S+tax</text>';
+    // tax wedge arrow between Ps and Pc at Qt
+    s+='<text x="'+(X(c.Qt)+7)+'" y="'+((Y(c.Pc)+Y(c.Ps))/2+3)+'" font-size="10" font-weight="700" fill="#C47D00">tax='+t+'</text>';
+  }
+
+  // price markers: dashed line to the axis + dot on the curve + bold label
+  function pmark(Q,P,label,col){
+    s+='<line x1="'+L+'" y1="'+Y(P)+'" x2="'+X(Q)+'" y2="'+Y(P)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="5 3"/>';
+    s+='<circle cx="'+X(Q)+'" cy="'+Y(P)+'" r="4.5" fill="#fff" stroke="'+col+'" stroke-width="2"/>';
+    s+='<text x="'+(L-6)+'" y="'+(Y(P)+4)+'" font-size="10" font-weight="700" fill="'+col+'" text-anchor="end">'+label+'</text>';
+  }
+  if(mode==='tax'){ pmark(c.Qt,c.Pc,'Pc '+c.Pc,'#185FA5'); pmark(c.Qt,c.Ps,'Ps '+c.Ps,'#0F6E56'); }
+  else if(mode==='qty'){ pmark(c.Qt,c.Pc,'P '+c.Pc,'#b23a00'); }
+  else if(mode==='price'){ pmark(c.Qt,c.Pc,(c.kind==='Price floor'?'Floor ':'Ceiling ')+c.Pc,'#b23a00'); }
+
+  // equilibrium reference — price and quantity, always shown so surplus can be measured
+  s+='<line x1="'+L+'" y1="'+Y(Peq)+'" x2="'+X(Qeq)+'" y2="'+Y(Peq)+'" stroke="#0A0C56" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+  s+='<line x1="'+X(Qeq)+'" y1="'+B+'" x2="'+X(Qeq)+'" y2="'+Y(Peq)+'" stroke="#0A0C56" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+  s+='<circle cx="'+X(Qeq)+'" cy="'+Y(Peq)+'" r="4" fill="#fff" stroke="#0A0C56" stroke-width="2"/>';
+  s+='<text x="'+(X(Qeq)+6)+'" y="'+(Y(Peq)-5)+'" font-size="10" font-weight="700" fill="#0A0C56">E</text>';
+  s+='<text x="'+(L-6)+'" y="'+(Y(Peq)+4)+'" font-size="10" font-weight="700" fill="#0A0C56" text-anchor="end">'+(mode==='eq'?'Pe ':'P* ')+Peq+'</text>';
+  s+='<text x="'+X(Qeq)+'" y="'+(B+13)+'" font-size="10" font-weight="700" fill="#0A0C56" text-anchor="middle">'+Qeq+'</text>';
+
+  // area letters (auto elemental regions + any manual ones), lettered A, B, C…
+  var centers=[];
+  if(showLetters) regionsFor(c).forEach(function(pl){ centers.push(centroid(pl)); });
+  manualLabels.forEach(function(m){ centers.push(m); });
+  centers.forEach(function(ct,i){
+    var cxp=X(ct[0]), cyp=Y(ct[1]);
+    s+='<circle cx="'+cxp+'" cy="'+cyp+'" r="8.5" fill="#fff" stroke="#0A0C56" stroke-width="1"/>';
+    s+='<text x="'+cxp+'" y="'+(cyp+3.5)+'" font-size="11" font-weight="700" fill="#0A0C56" text-anchor="middle">'+String.fromCharCode(65+i)+'</text>';
+  });
+
+  document.getElementById('chart').innerHTML=s;
+
+  // area table
+  var rows='<tr><td>Equilibrium (P, Q)</td><td class="n">'+Peq+', '+Qeq+'</td></tr>';
+  rows+='<tr><td>Traded quantity</td><td class="n">'+c.Qt+'</td></tr>';
+  if(document.getElementById('cCS').checked) rows+='<tr><td>Consumer surplus</td><td class="n">'+c.CS+'</td></tr>';
+  if(document.getElementById('cPS').checked) rows+='<tr><td>Producer surplus</td><td class="n">'+c.PS+'</td></tr>';
+  if(mode==='tax'&&document.getElementById('cTax').checked) rows+='<tr><td>Tax revenue</td><td class="n">'+c.taxrev+'</td></tr>';
+  if(c.DWL>0&&document.getElementById('cDWL').checked) rows+='<tr><td>Deadweight loss</td><td class="n">'+c.DWL+'</td></tr>';
+  rows+='<tr><td>Total surplus</td><td class="n">'+(c.CS+c.PS+c.DWL+c.taxrev)+'</td></tr>';
+  document.getElementById('areaTbl').innerHTML=rows;
+}
+
+function setMode(m){
+  mode=m;
+  [].forEach.call(document.querySelectorAll('#modeRow .mbtn'),function(b){b.classList.toggle('on',b.dataset.m===m);});
+  var pw=document.getElementById('paramWrap'), sl=document.getElementById('param'), lbl=document.getElementById('paramLabel');
+  document.getElementById('cTaxWrap').style.display=(m==='tax')?'':'none';
+  if(m==='eq'){ pw.style.display='none'; }
+  else{
+    pw.style.display='';
+    if(m==='qty'){ lbl.textContent='Restricted quantity (Q)'; sl.min=5; sl.max=49; sl.step=1; sl.value=40; }
+    else if(m==='tax'){ lbl.textContent='Tax per unit ($)'; sl.min=4; sl.max=90; sl.step=2; sl.value=20; }
+    else if(m==='price'){ lbl.textContent='Controlled price ($) — above 50 = floor, below = ceiling'; sl.min=5; sl.max=95; sl.step=5; sl.value=60; }
+    param=parseFloat(sl.value);
+  }
+  updateParamVal();
+  draw();
+}
+function updateParamVal(){
+  var v=document.getElementById('paramVal');
+  if(mode==='eq'){ v.textContent=''; return; }
+  var c=compute();
+  v.textContent=c.kind+'  ·  value '+param;
+}
+
+document.getElementById('modeRow').addEventListener('click',function(e){ if(e.target.dataset.m) setMode(e.target.dataset.m); });
+document.getElementById('param').addEventListener('input',function(e){ param=parseFloat(e.target.value); updateParamVal(); draw(); });
+['cCS','cPS','cDWL','cTax'].forEach(function(id){ document.getElementById(id).addEventListener('change',draw); });
+
+// ── labels ──
+document.getElementById('cLetters').addEventListener('change',function(e){ showLetters=e.target.checked; draw(); });
+document.getElementById('clrLblBtn').addEventListener('click',function(){ manualLabels=[]; draw(); });
+document.getElementById('addLblBtn').addEventListener('click',function(){
+  addMode=!addMode;
+  this.classList.toggle('on',addMode);
+  document.getElementById('chart').style.cursor=addMode?'crosshair':'';
+  document.getElementById('lblHint').textContent=addMode?'Click anywhere on the diagram to drop the next letter.':'';
+});
+document.getElementById('chart').addEventListener('click',function(e){
+  if(!addMode) return;
+  var r=this.getBoundingClientRect();
+  var vx=(e.clientX-r.left)/r.width*470, vy=(e.clientY-r.top)/r.height*400;
+  var Q=(vx-L)/(R-L)*QMAX, P=(B-vy)/(B-T)*PMAX;
+  manualLabels.push([Q,P]);
+  draw();
+});
+
+setMode('eq');
+</script>
+</body>
+</html>

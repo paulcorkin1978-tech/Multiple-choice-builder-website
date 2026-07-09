@@ -9,7 +9,7 @@ let editingIndex  = -1;   // -1 = adding new; ≥0 = editing that question index
 
 // ── TYPE LABEL HELPER ─────────────────────────────────────────────────────────
 function typeLabel(type) {
-  return { plain:'Text', sc:'SC', sd:'S&D', ppf:'PPF', table:'Table', pm:'Price Mech', tax:'Tax/Sub', ped:'PED' }[type] || type;
+  return { plain:'Text', sc:'SC', sd:'S&D', ppf:'PPF', table:'Table', pm:'Price Mech', tax:'Tax/Sub', ped:'PED', sur:'Surplus' }[type] || type;
 }
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
@@ -67,13 +67,17 @@ function openBuilder(type) {
     if (editingIndex < 0) pedReset();
     pedDraw();
     if (editingIndex >= 0) pedLoad(quizQuestions[editingIndex]);
+  } else if (type === 'sur') {
+    document.getElementById('surBuilder').classList.add('active');
+    if (editingIndex < 0) surReset();
+    else { surSetMode('eq'); surLoad(quizQuestions[editingIndex]); }
   } else if (type === 'plain') {
     document.getElementById('plainBuilder').classList.add('active');
     if (editingIndex >= 0) plainLoad(quizQuestions[editingIndex]);
   }
   // Update Add button labels and position row visibility for edit vs new mode
   const label = editingIndex >= 0 ? '✓ Update Question' : '+ Add to Quiz';
-  ['sdAddBtn','scAddBtn','ppfAddBtn','tblAddBtn','pmAddBtn','txAddBtn','pedAddBtn','plainAddBtn'].forEach(id => {
+  ['sdAddBtn','scAddBtn','ppfAddBtn','tblAddBtn','pmAddBtn','txAddBtn','pedAddBtn','surAddBtn','plainAddBtn'].forEach(id => {
     const btn = document.getElementById(id);
     if (btn) btn.textContent = label;
   });
@@ -92,6 +96,7 @@ function goMenu() {
   document.getElementById('pmBuilder').classList.remove('active');
   document.getElementById('taxBuilder').classList.remove('active');
   document.getElementById('pedBuilder').classList.remove('active');
+  document.getElementById('surBuilder').classList.remove('active');
   document.getElementById('plainBuilder').classList.remove('active');
   document.getElementById('menuScreen').style.display = '';
   updateMenu();
@@ -106,7 +111,7 @@ function editQ(i) {
     ? (q.questionText.length > 120 ? q.questionText.substring(0, 117) + '…' : q.questionText)
     : '(no question text)';
   // Highlight the current type button
-  ['plain','sc','sd','ppf','table','pm','tax','ped'].forEach(t => {
+  ['plain','sc','sd','ppf','table','pm','tax','ped','sur'].forEach(t => {
     const btn = document.getElementById('editType_' + t);
     if (btn) btn.classList.toggle('btn-primary', t === q.type);
   });
@@ -279,9 +284,22 @@ function insertAtPosition(q) {
 function addToQuiz(q, msgId, resetFn) {
   const msg = document.getElementById(msgId);
   // ── Common validation (same for every diagram type) ──
-  if (!q.questionText.trim())         { msg.textContent = '⚠ Please enter a question.'; return false; }
-  if (q.correctIndex < 0)             { msg.textContent = '⚠ Please select the correct answer.'; return false; }
-  if (q.answers.some(a => !a.trim())) { msg.textContent = '⚠ Please fill in all four answers.'; return false; }
+  if (!q.questionText.trim()) { msg.textContent = '⚠ Please enter a question.'; return false; }
+  if (q.correctIndex < 0)     { msg.textContent = '⚠ Please select the correct answer.'; return false; }
+  // Keep only answers that have text — blank boxes are dropped, so a question can
+  // have 2, 3 or 4 choices. Remap the correct answer to its new position.
+  const filledAns = [];
+  let newCorrect = -1;
+  q.answers.forEach((a, i) => {
+    if (a && a.trim()) {
+      if (i === q.correctIndex) newCorrect = filledAns.length;
+      filledAns.push(a.trim());
+    }
+  });
+  if (filledAns.length < 2) { msg.textContent = '⚠ Please fill in at least two answers.'; return false; }
+  if (newCorrect < 0)       { msg.textContent = '⚠ The correct answer is blank — tick a filled option.'; return false; }
+  q.answers = filledAns;
+  q.correctIndex = newCorrect;
 
   if (editingIndex >= 0) {
     // ── Editing existing question ──
@@ -330,18 +348,26 @@ function startResize(e, builderId) {
 }
 
 // ── PREVIEW / DOWNLOAD ────────────────────────────────────────────────────────
+// True when the "Student self-study mode" box is ticked on the menu.
+function isTestMode() {
+  const c = document.getElementById('testModeChk');
+  return !!(c && c.checked);
+}
+
 function previewQuiz() {
   if (!quizQuestions.length) return;
-  window.open(URL.createObjectURL(new Blob([buildQuizHTML(quizQuestions)], {type:'text/html'})), '_blank');
+  window.open(URL.createObjectURL(new Blob([buildQuizHTML(quizQuestions, isTestMode())], {type:'text/html'})), '_blank');
 }
 
 async function downloadQuiz() {
   if (!quizQuestions.length) return;
-  const html = buildQuizHTML(quizQuestions);
+  const testMode = isTestMode();
+  const html = buildQuizHTML(quizQuestions, testMode);
+  const fname = testMode ? 'hsc-economics-quiz-selfstudy.html' : 'hsc-economics-quiz.html';
   if (window.showSaveFilePicker) {
     try {
       const handle = await window.showSaveFilePicker({
-        suggestedName: 'hsc-economics-quiz.html',
+        suggestedName: fname,
         types: [{ description: 'HTML Quiz File', accept: { 'text/html': ['.html'] } }]
       });
       const writable = await handle.createWritable();
@@ -355,7 +381,7 @@ async function downloadQuiz() {
   }
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-  a.download = 'hsc-economics-quiz.html';
+  a.download = fname;
   a.click();
 }
 

@@ -1,12 +1,4 @@
-// ── QUIZ EXPORT ───────────────────────────────────────────────────────────────
-// Generates a fully self-contained standalone HTML file for the student quiz.
-// All rendering logic is embedded in the output so the file works without
-// any external dependencies (students just open the HTML file).
-
-// testMode = true  -> self-study: first answer is locked in and scored honestly
-// testMode = false -> classroom: retry until correct (everyone finishes on 100%)
-function buildQuizHTML(questions, testMode) {
-  return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -143,12 +135,9 @@ body{font-family:'Verdana',sans-serif;background:#f5f4f0;height:100vh;height:100
 </div>
 <script>
 const GRID=9,QS=1,QE=9;
-const qs=${JSON.stringify(questions)};
-const TESTMODE=${testMode ? 'true' : 'false'};
+const qs=[{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"eq","param":0,"showLetters":true,"reveals":["PS","TAX"],"questionText":"Consider the market for cars, which letter represents producer surplus?","answers":["A","B"],"correctIndex":1},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"eq","param":0,"showLetters":true,"reveals":["CS","TAX"],"questionText":"What letter represents consumer surplus?","answers":["A","B"],"correctIndex":0},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"price","param":65,"showLetters":true,"reveals":["CS","TAX"],"questionText":"Suppose that the price of cars is at a disequilibrium price of $52,000. Which letters now represent the consumer surplus?","answers":["A","A + B","A + B + D","C"],"correctIndex":0},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"price","param":65,"showLetters":true,"reveals":["PS","TAX"],"questionText":"Which letters represent the new amount of producer surplus","answers":["A","B + C","B + C + D","B + C + D + E"],"correctIndex":1},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"price","param":65,"showLetters":true,"reveals":["DWL","TAX"],"questionText":"Which letters represent the deadweight loss","answers":["D","E","D + E","B"],"correctIndex":2},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"tax","param":30,"showLetters":true,"reveals":[],"questionText":"Suppose that the government impose a tax on Cars due to negative externalities. From the diagram shown what is the per unit size of the tax?","answers":["$24,000","$28,000","$40,000","$52,000"],"correctIndex":0},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"tax","param":30,"showLetters":true,"reveals":["CS"],"questionText":"Which letter(s) now represent consumer surplus?","answers":["A","B + C","D + E","F"],"correctIndex":0},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"tax","param":30,"showLetters":true,"reveals":["PS"],"questionText":"Which letter(s) now represent producer surplus?","answers":["A","B + C","D + E","F"],"correctIndex":3},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"tax","param":30,"showLetters":true,"reveals":["TAX"],"questionText":"Which letters represent tax revenue for the government?","answers":["A","B + C","D + E","F"],"correctIndex":1},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"tax","param":30,"showLetters":true,"reveals":["DWL"],"questionText":"Which letters represent the deadweight loss?","answers":["A","B + C","D + E","F"],"correctIndex":2},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"qty","param":25,"showLetters":true,"reveals":["CS"],"questionText":"Suppose the government imposes a quota limiting the number of cars that can be sold to 25,000. Which letter(s) represent the new consumer surplus?","answers":["A","A + B + D","B + C","D + E"],"correctIndex":0},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"qty","param":25,"showLetters":true,"reveals":["PS"],"questionText":"Which letters represent the new level of producer surplus?","answers":["A","A + B + D","B + C","D + E"],"correctIndex":2},{"type":"sur","vUnit":40,"hUnit":50,"title":"Market for cars","yLbl":"Price ($000s)","xLbl":"Quantity (000s)","dCol":"#000000","sCol":"#000000","mode":"qty","param":25,"showLetters":true,"reveals":["DWL"],"questionText":"What letters represent the deadweight loss?","answers":["A","A + B + D","B + C","D + E"],"correctIndex":3}];
 let cur=0;
 const done=new Array(qs.length).fill(false);
-const picked=new Array(qs.length).fill(null);
-function attempted(i){return TESTMODE?picked[i]!==null:done[i];}
 const curPos=qs.map(q=>{
   if(q.type==='sd') return{dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
   if(q.type==='sc') return{dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
@@ -157,7 +146,7 @@ const curPos=qs.map(q=>{
   if(q.type==='sur') return{dA:0,sA:0,fpA:0};
   return{dA:0,sA:0,fpA:q.startFP||5};
 });
-function surEff(q){var mode=q.mode||'eq';function lossOK(k){if(k==='LOSSCS')return mode==='tax'||mode==='qty'||(mode==='price'&&q.param>=50);if(k==='LOSSPS')return mode==='tax'||(mode==='price'&&q.param<50);return true;}var out=[];(q.reveals||[]).forEach(function(k){if(k==='DWL'&&mode==='eq')return;if(k==='TAX'&&mode!=='tax')return;if((k==='LOSSCS'||k==='LOSSPS')&&!lossOK(k))return;out.push(k);});return out;}
+function surEff(q){var out=[];(q.reveals||[]).forEach(function(k){if(k==='DWL'&&(q.mode||'eq')==='eq')return;if(k==='TAX'&&q.mode!=='tax')return;out.push(k);});return out;}
 function fmt(n){return Math.round(n*100)/100;}
 // dm=demand slope multiplier (1=normal,2=inelastic,0.5=elastic).
 // dsc=demand shift coefficient per step (default 2, tax builder uses dm for 1-grid-square shifts).
@@ -267,15 +256,11 @@ function surInner(q,nRev){
   var poly=function(pts){return pts.map(function(p){return X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1);}).join(' ');};
   var s='';
   if(q.title) s+='<text x="'+(W/2)+'" y="15" text-anchor="middle" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(q.title)+'</text>';
-  s+='<defs><pattern id="surhcs" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(24,95,165,0.13)"/><line x1="0" y1="0" x2="0" y2="7" stroke="#185FA5" stroke-width="2.2"/></pattern><pattern id="surhps" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(15,110,86,0.13)"/><line x1="0" y1="0" x2="0" y2="7" stroke="#0F6E56" stroke-width="2.2"/></pattern></defs>';
-  var elem=surRegions(mode,Qt,Pc,Ps);
   var areaPoly={ CS:[[0,Pc],[0,Dmax],[Qt,dem(Qt)],[Qt,Pc]], PS:[[0,Ps],[0,0],[Qt,sup(Qt)],[Qt,Ps]], DWL:[[Qt,dem(Qt)],[Qt,sup(Qt)],[Qeq,Peq]], TAX:[[0,Pc],[Qt,Pc],[Qt,Ps],[0,Ps]] };
   var areaFill={CS:'rgba(24,95,165,.32)',PS:'rgba(15,110,86,.32)',DWL:'rgba(216,45,45,.4)',TAX:'rgba(196,125,0,.34)'};
-  var lossIdx=function(key){ if(mode==='tax') return key==='LOSSCS'?[1,3]:(key==='LOSSPS'?[2,4]:[]); if(mode==='qty') return key==='LOSSCS'?[1,3]:[]; if(mode==='price') return (kind==='Price floor')?(key==='LOSSCS'?[1,3]:[]):(key==='LOSSPS'?[1,4]:[]); return []; };
-  var lossFill={LOSSCS:'url(#surhcs)',LOSSPS:'url(#surhps)'};
   var effReveals=[];
-  for(var ei=0;ei<reveals.length;ei++){ var kk=reveals[ei]; if(kk==='DWL' && !(Qt<Qeq)) continue; if(kk==='TAX' && mode!=='tax') continue; if((kk==='LOSSCS'||kk==='LOSSPS') && lossIdx(kk).length===0) continue; effReveals.push(kk); }
-  for(var r=0;r<Math.min(nRev,effReveals.length);r++){ var key=effReveals[r]; if(areaPoly[key]){ s+='<polygon class="sur-fade" points="'+poly(areaPoly[key])+'" fill="'+areaFill[key]+'"/>'; } else if(lossFill[key]){ var li=lossIdx(key); for(var mi=0;mi<li.length;mi++){ s+='<polygon class="sur-fade" points="'+poly(elem[li[mi]])+'" fill="'+lossFill[key]+'" stroke="'+(key==='LOSSCS'?'#185FA5':'#0F6E56')+'" stroke-width="1.2" stroke-opacity="0.7"/>'; } } }
+  for(var ei=0;ei<reveals.length;ei++){ var kk=reveals[ei]; if(kk==='DWL' && !(Qt<Qeq)) continue; if(kk==='TAX' && mode!=='tax') continue; effReveals.push(kk); }
+  for(var r=0;r<Math.min(nRev,effReveals.length);r++){ var key=effReveals[r]; if(areaPoly[key]) s+='<polygon class="sur-fade" points="'+poly(areaPoly[key])+'" fill="'+areaFill[key]+'"/>'; }
   s+='<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
   s+='<line x1="'+L+'" y1="'+B+'" x2="'+R+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
   s+='<text x="'+(L-38)+'" y="'+((T+B)/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle" transform="rotate(-90 '+(L-38)+' '+((T+B)/2)+')">'+esc(q.yLbl||'Price ($)')+'</text>';
@@ -305,13 +290,13 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
   if(q.type==='sur')return '<svg width="100%" viewBox="0 0 400 340">'+surInner(q,fpA)+'</svg>';
   if(q.type==='table'){
     const xe=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    let t=\`<div class="quiz-tbl-wrap">\`;
-    if(q.title)t+=\`<div class="quiz-tbl-title">\${xe(q.title)}</div>\`;
-    t+=\`<table class="quiz-tbl"><thead><tr>\`;
-    (q.headers||[]).forEach(h=>{t+=\`<th>\${xe(h)||'&nbsp;'}</th>\`;});
-    t+=\`</tr></thead><tbody>\`;
-    (q.rows||[]).forEach(row=>{t+=\`<tr>\`;row.forEach(cell=>{t+=\`<td>\${xe(cell)||'&nbsp;'}</td>\`;});t+=\`</tr>\`;});
-    t+=\`</tbody></table></div>\`;
+    let t=`<div class="quiz-tbl-wrap">`;
+    if(q.title)t+=`<div class="quiz-tbl-title">${xe(q.title)}</div>`;
+    t+=`<table class="quiz-tbl"><thead><tr>`;
+    (q.headers||[]).forEach(h=>{t+=`<th>${xe(h)||'&nbsp;'}</th>`;});
+    t+=`</tr></thead><tbody>`;
+    (q.rows||[]).forEach(row=>{t+=`<tr>`;row.forEach(cell=>{t+=`<td>${xe(cell)||'&nbsp;'}</td>`;});t+=`</tr>`;});
+    t+=`</tbody></table></div>`;
     return t;
   }
   const W=400,H=340,pad={l:44,r:38,t:26,b:34};
@@ -319,80 +304,80 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
   const vU=q.vUnit,hU=q.hUnit;const fs=12,fs2=10;
   const vDisp=vU>=1000?vU/1000:vU;
   const hDisp=hU>=1000?hU/1000:hU;
-  let s=\`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>\`;
-  if(q.title) s+=\`<text x="\${W/2}" y="16" text-anchor="middle" font-size="\${fs}" font-family="Verdana" font-weight="bold" fill="#2c2c2a">\${q.title}</text>\`;
+  let s=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+  if(q.title) s+=`<text x="${W/2}" y="16" text-anchor="middle" font-size="${fs}" font-family="Verdana" font-weight="bold" fill="#2c2c2a">${q.title}</text>`;
   if(q.type!=='ppf'||q.ppfType!=='schedule'){
-    for(let i=1;i<=GRID;i++) s+=\`<line x1="\${pad.l}" y1="\${gy(i)}" x2="\${W-pad.r}" y2="\${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>\`;
-    for(let i=1;i<=GRID;i++) s+=\`<line x1="\${gx(i)}" y1="\${pad.t}" x2="\${gx(i)}" y2="\${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>\`;
+    for(let i=1;i<=GRID;i++) s+=`<line x1="${pad.l}" y1="${gy(i)}" x2="${W-pad.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+    for(let i=1;i<=GRID;i++) s+=`<line x1="${gx(i)}" y1="${pad.t}" x2="${gx(i)}" y2="${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
   }
-  s+=\`<line x1="\${pad.l}" y1="\${H-pad.b+6}" x2="\${pad.l}" y2="\${pad.t-6}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>\`;
-  s+=\`<line x1="\${pad.l-6}" y1="\${H-pad.b}" x2="\${W-pad.r+6}" y2="\${H-pad.b}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>\`;
+  s+=`<line x1="${pad.l}" y1="${H-pad.b+6}" x2="${pad.l}" y2="${pad.t-6}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>`;
+  s+=`<line x1="${pad.l-6}" y1="${H-pad.b}" x2="${W-pad.r+6}" y2="${H-pad.b}" stroke="#444" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>`;
   if(q.type==='ppf'){
     const cW_=W-pad.l-pad.r,cH_=H-pad.t-pad.b;
     const PPF_BASE=5,PPF_STEP=1.5;
     const col=q.color||'#185FA5';
-    s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#666">\${q.xLabel||'Good A'}</text>\`;
-    s+=\`<text x="9" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#666" transform="rotate(-90,9,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel||'Good B'}</text>\`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${q.xLabel||'Good A'}</text>`;
+    s+=`<text x="9" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666" transform="rotate(-90,9,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel||'Good B'}</text>`;
     if(q.ppfType==='curved'){
-      s+=\`<text x="\${pad.l-4}" y="\${H-pad.b+11}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
+      s+=`<text x="${pad.l-4}" y="${H-pad.b+11}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
       if(Math.abs(dA)>0.05){
         const r0=PPF_BASE;
         const rx0=(r0*cW_/GRID).toFixed(1),ry0=(r0*cH_/GRID).toFixed(1);
-        s+=\`<path d="M \${gx(0).toFixed(1)} \${gy(r0).toFixed(1)} A \${rx0} \${ry0} 0 0 1 \${gx(r0).toFixed(1)} \${gy(0).toFixed(1)}" stroke="\${col}" fill="none" stroke-width="2" stroke-linecap="round" opacity="0.3"/>\`;
+        s+=`<path d="M ${gx(0).toFixed(1)} ${gy(r0).toFixed(1)} A ${rx0} ${ry0} 0 0 1 ${gx(r0).toFixed(1)} ${gy(0).toFixed(1)}" stroke="${col}" fill="none" stroke-width="2" stroke-linecap="round" opacity="0.3"/>`;
         const lx0=r0*0.72,ly0=Math.sqrt(Math.max(0,r0*r0-lx0*lx0));
-        s+=\`<text x="\${(gx(lx0)+5).toFixed(1)}" y="\${gy(ly0).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${col}" opacity="0.3" font-weight="bold">PPF1</text>\`;
+        s+=`<text x="${(gx(lx0)+5).toFixed(1)}" y="${gy(ly0).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" opacity="0.3" font-weight="bold">PPF1</text>`;
       }
       const r=PPF_BASE+dA*PPF_STEP;
       if(r>0.3){
         const rx=(r*cW_/GRID).toFixed(1),ry=(r*cH_/GRID).toFixed(1);
-        s+=\`<path d="M \${gx(0).toFixed(1)} \${gy(r).toFixed(1)} A \${rx} \${ry} 0 0 1 \${gx(r).toFixed(1)} \${gy(0).toFixed(1)}" stroke="\${col}" fill="none" stroke-width="2.5" stroke-linecap="round"/>\`;
+        s+=`<path d="M ${gx(0).toFixed(1)} ${gy(r).toFixed(1)} A ${rx} ${ry} 0 0 1 ${gx(r).toFixed(1)} ${gy(0).toFixed(1)}" stroke="${col}" fill="none" stroke-width="2.5" stroke-linecap="round"/>`;
         const lbl=Math.abs(dA)>0.05?'PPF2':'PPF1';
         const lx=r*0.72,ly=Math.sqrt(Math.max(0,r*r-lx*lx));
-        s+=\`<text x="\${(gx(lx)+5).toFixed(1)}" y="\${gy(ly).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${col}" font-weight="bold">\${lbl}</text>\`;
+        s+=`<text x="${(gx(lx)+5).toFixed(1)}" y="${gy(ly).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" font-weight="bold">${lbl}</text>`;
       }
     } else {
       const xM=q.xMax||9,yM=q.yMax||9;
       (q.xTicks||[]).forEach(v=>{
         const gxP=gx(v*9/xM);
-        s+=\`<line x1="\${gxP.toFixed(1)}" y1="\${pad.t}" x2="\${gxP.toFixed(1)}" y2="\${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>\`;
-        s+=\`<line x1="\${gxP.toFixed(1)}" y1="\${H-pad.b}" x2="\${gxP.toFixed(1)}" y2="\${H-pad.b+5}" stroke="#999" stroke-width="1"/>\`;
-        s+=\`<text x="\${gxP.toFixed(1)}" y="\${H-pad.b+15}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#666">\${v}</text>\`;
+        s+=`<line x1="${gxP.toFixed(1)}" y1="${pad.t}" x2="${gxP.toFixed(1)}" y2="${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
+        s+=`<line x1="${gxP.toFixed(1)}" y1="${H-pad.b}" x2="${gxP.toFixed(1)}" y2="${H-pad.b+5}" stroke="#999" stroke-width="1"/>`;
+        s+=`<text x="${gxP.toFixed(1)}" y="${H-pad.b+15}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
       });
       (q.yTicks||[]).forEach(v=>{
         const gyP=gy(v*9/yM);
-        s+=\`<line x1="\${pad.l}" y1="\${gyP.toFixed(1)}" x2="\${W-pad.r}" y2="\${gyP.toFixed(1)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>\`;
-        s+=\`<line x1="\${pad.l-5}" y1="\${gyP.toFixed(1)}" x2="\${pad.l}" y2="\${gyP.toFixed(1)}" stroke="#999" stroke-width="1"/>\`;
-        s+=\`<text x="\${pad.l-8}" y="\${gyP.toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#666">\${v}</text>\`;
+        s+=`<line x1="${pad.l}" y1="${gyP.toFixed(1)}" x2="${W-pad.r}" y2="${gyP.toFixed(1)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
+        s+=`<line x1="${pad.l-5}" y1="${gyP.toFixed(1)}" x2="${pad.l}" y2="${gyP.toFixed(1)}" stroke="#999" stroke-width="1"/>`;
+        s+=`<text x="${pad.l-8}" y="${gyP.toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
       });
       const pts=(q.schedulePoints||[]).filter(p=>p.x>=0&&p.x<=GRID&&p.y>=0&&p.y<=GRID).sort((a,b)=>a.x-b.x);
       if(pts.length>=2){
         const pd=pts.map((p,i)=>(i===0?'M':'L')+' '+gx(p.x).toFixed(1)+' '+gy(p.y).toFixed(1)).join(' ');
-        s+=\`<path d="\${pd}" stroke="\${col}" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>\`;
+        s+=`<path d="${pd}" stroke="${col}" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
         const last=pts[pts.length-1];
-        s+=\`<text x="\${(gx(last.x)+6).toFixed(1)}" y="\${gy(last.y).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${col}" font-weight="bold">PPF</text>\`;
+        s+=`<text x="${(gx(last.x)+6).toFixed(1)}" y="${gy(last.y).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" font-weight="bold">PPF</text>`;
       }
-      pts.forEach(p=>{s+=\`<circle cx="\${gx(p.x).toFixed(1)}" cy="\${gy(p.y).toFixed(1)}" r="6" fill="\${col}" stroke="white" stroke-width="2"/>\`;});
+      pts.forEach(p=>{s+=`<circle cx="${gx(p.x).toFixed(1)}" cy="${gy(p.y).toFixed(1)}" r="6" fill="${col}" stroke="white" stroke-width="2"/>`;});
     }
   } else if(q.type==='sd'){
     const eq=getEq(dA,sA);
     for(let i=1;i<=GRID;i++){
       const eP=q.showEqLines!==false&&Math.abs(i-eq.p)<0.05;
       const eQ=q.showEqLines!==false&&Math.abs(i-eq.q)<0.05;
-      if(!eP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
-      if(!eQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+      if(!eP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+      if(!eQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
     }
-    s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
-    s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>\`;
-    s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
+    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
+    s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
     // Faded D1/S1 always at origin — visible whenever the active curve is shifted
     const dSh=dA!==0,sSh=sA!==0;
     if(dSh){
       const cd=clip(QS,dPf(QS,0),QE,dPf(QE,0),pad,W,H,1);
-      if(cd) s+=\`<line x1="\${cd.x1}" y1="\${cd.y1}" x2="\${cd.x2}" y2="\${cd.y2}" stroke="\${q.dColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="\${cd.x2+5}" y="\${cd.y2}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" opacity="0.3" font-weight="bold">D1</text>\`;
+      if(cd) s+=`<line x1="${cd.x1}" y1="${cd.y1}" x2="${cd.x2}" y2="${cd.y2}" stroke="${q.dColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="${cd.x2+5}" y="${cd.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" opacity="0.3" font-weight="bold">D1</text>`;
     }
     if(sSh){
       const cs=clip(QS,sPf(QS,0),QE,sPf(QE,0),pad,W,H,1);
-      if(cs) s+=\`<line x1="\${cs.x1}" y1="\${cs.y1}" x2="\${cs.x2}" y2="\${cs.y2}" stroke="\${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="\${cs.x2+5}" y="\${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" opacity="0.3" font-weight="bold">S1</text>\`;
+      if(cs) s+=`<line x1="${cs.x1}" y1="${cs.y1}" x2="${cs.x2}" y2="${cs.y2}" stroke="${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="${cs.x2+5}" y="${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" opacity="0.3" font-weight="bold">S1</text>`;
     }
     const dl=dA===0?'D1':'D2',sl=sA===0?'S1':'S2';
     const eT=animT<0.5?2*animT*animT:-1+(4-2*animT)*animT;
@@ -407,8 +392,8 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     if(Math.abs(dAdx)>0.01){const dAttL=(sdXL-dAx1)/dAdx,dAttR=(sdXR-dAx1)/dAdx;if(dAdx>0){dAt0=Math.max(dAt0,dAttL);dAt1=Math.min(dAt1,dAttR);}else{dAt0=Math.max(dAt0,dAttR);dAt1=Math.min(dAt1,dAttL);}}
     if(dAt0<dAt1){
       const dALbl=clip(QS,dPf(QS,animDS),QE,dPf(QE,animDS),pad,W,H,1);
-      s+=\`<line x1="\${(dAx1+dAt0*dAdx).toFixed(1)}" y1="\${(dAy1+dAt0*dAdy).toFixed(1)}" x2="\${(dAx1+dAt1*dAdx).toFixed(1)}" y2="\${(dAy1+dAt1*dAdy).toFixed(1)}" stroke="\${q.dColor}" stroke-width="2.5" stroke-linecap="round"/>\`;
-      if(dALbl) s+=\`<text x="\${(dALbl.x2+5).toFixed(1)}" y="\${dALbl.y2.toFixed(1)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" font-weight="bold">\${dl}</text>\`;
+      s+=`<line x1="${(dAx1+dAt0*dAdx).toFixed(1)}" y1="${(dAy1+dAt0*dAdy).toFixed(1)}" x2="${(dAx1+dAt1*dAdx).toFixed(1)}" y2="${(dAy1+dAt1*dAdy).toFixed(1)}" stroke="${q.dColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(dALbl) s+=`<text x="${(dALbl.x2+5).toFixed(1)}" y="${dALbl.y2.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">${dl}</text>`;
     }
     // Supply
     const sAx1=gx(sQf(1,animSS)),sAy1=gy(1),sAx2=gx(sQf(GRID,animSS)),sAy2=gy(GRID);
@@ -417,18 +402,18 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     if(Math.abs(sAdx)>0.01){const sAttL=(sdXL-sAx1)/sAdx,sAttR=(sdXR-sAx1)/sAdx;if(sAdx>0){sAt0=Math.max(sAt0,sAttL);sAt1=Math.min(sAt1,sAttR);}else{sAt0=Math.max(sAt0,sAttR);sAt1=Math.min(sAt1,sAttL);}}
     if(sAt0<sAt1){
       const sALbl=clip(QS,sPf(QS,animSS),QE,sPf(QE,animSS),pad,W,H,1);
-      s+=\`<line x1="\${(sAx1+sAt0*sAdx).toFixed(1)}" y1="\${(sAy1+sAt0*sAdy).toFixed(1)}" x2="\${(sAx1+sAt1*sAdx).toFixed(1)}" y2="\${(sAy1+sAt1*sAdy).toFixed(1)}" stroke="\${q.sColor}" stroke-width="2.5" stroke-linecap="round"/>\`;
-      if(sALbl) s+=\`<text x="\${(sALbl.x2+5).toFixed(1)}" y="\${Math.min(sALbl.y1,sALbl.y2).toFixed(1)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" font-weight="bold">\${sl}</text>\`;
+      s+=`<line x1="${(sAx1+sAt0*sAdx).toFixed(1)}" y1="${(sAy1+sAt0*sAdy).toFixed(1)}" x2="${(sAx1+sAt1*sAdx).toFixed(1)}" y2="${(sAy1+sAt1*sAdy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(sALbl) s+=`<text x="${(sALbl.x2+5).toFixed(1)}" y="${Math.min(sALbl.y1,sALbl.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${sl}</text>`;
     }
     if(eq.q>=QS&&eq.q<=QE&&eq.p>=1&&eq.p<=GRID){
       const ex=gx(eq.q),ey=gy(eq.p);
       if(q.showEqLines!==false){
-        s+=\`<line x1="\${pad.l}" y1="\${ey}" x2="\${ex}" y2="\${ey}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>\`;
-        s+=\`<line x1="\${ex}" y1="\${H-pad.b}" x2="\${ex}" y2="\${ey}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>\`;
-        s+=\`<circle cx="\${ex}" cy="\${ey}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>\`;
+        s+=`<line x1="${pad.l}" y1="${ey}" x2="${ex}" y2="${ey}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<line x1="${ex}" y1="${H-pad.b}" x2="${ex}" y2="${ey}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<circle cx="${ex}" cy="${ey}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>`;
         if(!isAnimating){
-          s+=\`<text x="\${pad.l-4}" y="\${ey}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(eq.p*vDisp)}</text>\`;
-          s+=\`<text x="\${ex}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(eq.q*hDisp)}</text>\`;
+          s+=`<text x="${pad.l-4}" y="${ey}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq.p*vDisp)}</text>`;
+          s+=`<text x="${ex}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq.q*hDisp)}</text>`;
         }
       }
     }
@@ -450,28 +435,28 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       const isQd_=!atEq_&&Math.abs(i-qd_)<0.25;
       const isQs_=!atEq_&&Math.abs(i-qs_)<0.25;
       const isEQ_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.q)<0.15;
-      if(!isCP_&&!isEP_) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
-      if(!isQd_&&!isQs_&&!isEQ_) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+      if(!isCP_&&!isEP_) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+      if(!isQd_&&!isQs_&&!isEQ_) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
     }
-    s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
-    s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>\`;
-    s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
+    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
+    s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
     // S & D curves
     const cdP_=clip(QS,dPf(QS,dA),QE,dPf(QE,dA),pad,W,H,1);
     const csP_=clip(QS,sPf(QS,sA),QE,sPf(QE,sA),pad,W,H,1);
-    if(cdP_) s+=\`<line x1="\${cdP_.x1}" y1="\${cdP_.y1}" x2="\${cdP_.x2}" y2="\${cdP_.y2}" stroke="\${q.dColor}" stroke-width="2.5" stroke-linecap="round"/><text x="\${cdP_.x2+5}" y="\${cdP_.y2}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" font-weight="bold">D</text>\`;
-    if(csP_) s+=\`<line x1="\${csP_.x1}" y1="\${csP_.y1}" x2="\${csP_.x2}" y2="\${csP_.y2}" stroke="\${q.sColor}" stroke-width="2.5" stroke-linecap="round"/><text x="\${csP_.x2+5}" y="\${Math.min(csP_.y1,csP_.y2)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" font-weight="bold">S</text>\`;
+    if(cdP_) s+=`<line x1="${cdP_.x1}" y1="${cdP_.y1}" x2="${cdP_.x2}" y2="${cdP_.y2}" stroke="${q.dColor}" stroke-width="2.5" stroke-linecap="round"/><text x="${cdP_.x2+5}" y="${cdP_.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">D</text>`;
+    if(csP_) s+=`<line x1="${csP_.x1}" y1="${csP_.y1}" x2="${csP_.x2}" y2="${csP_.y2}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/><text x="${csP_.x2+5}" y="${Math.min(csP_.y1,csP_.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">S</text>`;
     if(atEq_){
       // At equilibrium — standard dot
       if(eq_.q>=QS&&eq_.q<=QE&&eq_.p>=1&&eq_.p<=GRID){
         const ex_=gx(eq_.q),ey_=gy(eq_.p);
         if(q.showEqLines!==false){
-          s+=\`<line x1="\${pad.l}" y1="\${ey_}" x2="\${ex_}" y2="\${ey_}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>\`;
-          s+=\`<line x1="\${ex_}" y1="\${H-pad.b}" x2="\${ex_}" y2="\${ey_}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>\`;
-          s+=\`<circle cx="\${ex_}" cy="\${ey_}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>\`;
+          s+=`<line x1="${pad.l}" y1="${ey_}" x2="${ex_}" y2="${ey_}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+          s+=`<line x1="${ex_}" y1="${H-pad.b}" x2="${ex_}" y2="${ey_}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+          s+=`<circle cx="${ex_}" cy="${ey_}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>`;
           if(!isAnimating){
-            s+=\`<text x="\${pad.l-4}" y="\${ey_}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(eq_.p*vDisp)}</text>\`;
-            s+=\`<text x="\${ex_}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(eq_.q*hDisp)}</text>\`;
+            s+=`<text x="${pad.l-4}" y="${ey_}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq_.p*vDisp)}</text>`;
+            s+=`<text x="${ex_}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(eq_.q*hDisp)}</text>`;
           }
         }
       }
@@ -482,46 +467,46 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       const xL_=Math.min(xQd_,xQs_),xR_=Math.max(xQd_,xQs_),xM_=(xL_+xR_)/2;
       // Faint destination dot
       if(eq_.q>=QS&&eq_.q<=QE&&eq_.p>=1&&eq_.p<=GRID)
-        s+=\`<circle cx="\${gx(eq_.q)}" cy="\${gy(eq_.p)}" r="4" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.2"/>\`;
+        s+=`<circle cx="${gx(eq_.q)}" cy="${gy(eq_.p)}" r="4" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.2"/>`;
       // Dashed price line
-      s+=\`<line x1="\${pad.l}" y1="\${py_}" x2="\${W-pad.r}" y2="\${py_}" stroke="#555" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.7"/>\`;
+      s+=`<line x1="${pad.l}" y1="${py_}" x2="${W-pad.r}" y2="${py_}" stroke="#555" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.7"/>`;
       // Vertical dotted lines from intersections
-      if(qd_>=QS&&qd_<=QE) s+=\`<line x1="\${xQd_}" y1="\${py_}" x2="\${xQd_}" y2="\${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>\`;
-      if(qs_>=QS&&qs_<=QE) s+=\`<line x1="\${xQs_}" y1="\${py_}" x2="\${xQs_}" y2="\${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>\`;
+      if(qd_>=QS&&qd_<=QE) s+=`<line x1="${xQd_}" y1="${py_}" x2="${xQd_}" y2="${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>`;
+      if(qs_>=QS&&qs_<=QE) s+=`<line x1="${xQs_}" y1="${py_}" x2="${xQs_}" y2="${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>`;
       // Bracket + label — shown during animation OR when answer revealed (showStaticBracket)
       const showBrk_=(isAnimating&&xR_-xL_>5&&fade_>0.02)||showStaticBracket;
       if(showBrk_){
         const arm_=hasSurplus_?-16:16,barY_=py_+arm_;
         const tip_=hasSurplus_?py_+9:py_-9,lblY_=hasSurplus_?barY_-12:barY_+12;
         if(showStaticBracket){
-          s+=\`<g class="pm-label-reveal">\`;
-          s+=\`<line x1="\${xL_}" y1="\${py_}" x2="\${xL_}" y2="\${barY_}" stroke="\${bracketCol_}" stroke-width="1.5"/>\`;
-          s+=\`<line x1="\${xR_}" y1="\${py_}" x2="\${xR_}" y2="\${barY_}" stroke="\${bracketCol_}" stroke-width="1.5"/>\`;
-          s+=\`<line x1="\${xL_}" y1="\${barY_}" x2="\${xR_}" y2="\${barY_}" stroke="\${bracketCol_}" stroke-width="1.5"/>\`;
-          s+=\`<line x1="\${xM_}" y1="\${barY_}" x2="\${xM_}" y2="\${tip_}" stroke="\${bracketCol_}" stroke-width="1.5" marker-end="url(#arr)"/>\`;
-          s+=\`<text x="\${xM_}" y="\${lblY_}" text-anchor="middle" font-size="\${fs}" font-family="Verdana" font-weight="bold" fill="\${bracketCol_}">\${lbl_}</text>\`;
-          s+=\`</g>\`;
+          s+=`<g class="pm-label-reveal">`;
+          s+=`<line x1="${xL_}" y1="${py_}" x2="${xL_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5"/>`;
+          s+=`<line x1="${xR_}" y1="${py_}" x2="${xR_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5"/>`;
+          s+=`<line x1="${xL_}" y1="${barY_}" x2="${xR_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5"/>`;
+          s+=`<line x1="${xM_}" y1="${barY_}" x2="${xM_}" y2="${tip_}" stroke="${bracketCol_}" stroke-width="1.5" marker-end="url(#arr)"/>`;
+          s+=`<text x="${xM_}" y="${lblY_}" text-anchor="middle" font-size="${fs}" font-family="Verdana" font-weight="bold" fill="${bracketCol_}">${lbl_}</text>`;
+          s+=`</g>`;
         } else {
           const op_=fade_.toFixed(2);
-          s+=\`<line x1="\${xL_}" y1="\${py_}" x2="\${xL_}" y2="\${barY_}" stroke="\${bracketCol_}" stroke-width="1.5" opacity="\${op_}"/>\`;
-          s+=\`<line x1="\${xR_}" y1="\${py_}" x2="\${xR_}" y2="\${barY_}" stroke="\${bracketCol_}" stroke-width="1.5" opacity="\${op_}"/>\`;
-          s+=\`<line x1="\${xL_}" y1="\${barY_}" x2="\${xR_}" y2="\${barY_}" stroke="\${bracketCol_}" stroke-width="1.5" opacity="\${op_}"/>\`;
-          s+=\`<line x1="\${xM_}" y1="\${barY_}" x2="\${xM_}" y2="\${tip_}" stroke="\${bracketCol_}" stroke-width="1.5" marker-end="url(#arr)" opacity="\${op_}"/>\`;
-          s+=\`<text x="\${xM_}" y="\${lblY_}" text-anchor="middle" font-size="\${fs}" font-family="Verdana" font-weight="bold" fill="\${bracketCol_}" opacity="\${op_}">\${lbl_}</text>\`;
+          s+=`<line x1="${xL_}" y1="${py_}" x2="${xL_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5" opacity="${op_}"/>`;
+          s+=`<line x1="${xR_}" y1="${py_}" x2="${xR_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5" opacity="${op_}"/>`;
+          s+=`<line x1="${xL_}" y1="${barY_}" x2="${xR_}" y2="${barY_}" stroke="${bracketCol_}" stroke-width="1.5" opacity="${op_}"/>`;
+          s+=`<line x1="${xM_}" y1="${barY_}" x2="${xM_}" y2="${tip_}" stroke="${bracketCol_}" stroke-width="1.5" marker-end="url(#arr)" opacity="${op_}"/>`;
+          s+=`<text x="${xM_}" y="${lblY_}" text-anchor="middle" font-size="${fs}" font-family="Verdana" font-weight="bold" fill="${bracketCol_}" opacity="${op_}">${lbl_}</text>`;
         }
       }
       // Y-axis price label
-      s+=\`<text x="\${pad.l-4}" y="\${py_}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#444" font-weight="bold">\${fmt(fpA*vDisp)}</text>\`;
+      s+=`<text x="${pad.l-4}" y="${py_}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#444" font-weight="bold">${fmt(fpA*vDisp)}</text>`;
       // X-axis Qd/Qs labels (static only)
       if(!isAnimating){
-        if(qd_>=QS&&qd_<=QE) s+=\`<text x="\${xQd_}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(qdV_*hDisp)}</text>\`;
-        if(qs_>=QS&&qs_<=QE) s+=\`<text x="\${xQs_}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(qsV_*hDisp)}</text>\`;
+        if(qd_>=QS&&qd_<=QE) s+=`<text x="${xQd_}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(qdV_*hDisp)}</text>`;
+        if(qs_>=QS&&qs_<=QE) s+=`<text x="${xQs_}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(qsV_*hDisp)}</text>`;
       }
       // Intersection dots — grow to equilibrium-dot size during animation so they
       // visually trace the expansion / contraction along each curve
       const dotR_=isAnimating?7:4,dotSW_=isAnimating?'2':'1.5';
-      if(qd_>=QS&&qd_<=QE) s+=\`<circle cx="\${xQd_}" cy="\${py_}" r="\${dotR_}" fill="#D85A30" stroke="white" stroke-width="\${dotSW_}"/>\`;
-      if(qs_>=QS&&qs_<=QE) s+=\`<circle cx="\${xQs_}" cy="\${py_}" r="\${dotR_}" fill="#D85A30" stroke="white" stroke-width="\${dotSW_}"/>\`;
+      if(qd_>=QS&&qd_<=QE) s+=`<circle cx="${xQd_}" cy="${py_}" r="${dotR_}" fill="#D85A30" stroke="white" stroke-width="${dotSW_}"/>`;
+      if(qs_>=QS&&qs_<=QE) s+=`<circle cx="${xQs_}" cy="${py_}" r="${dotR_}" fill="#D85A30" stroke="white" stroke-width="${dotSW_}"/>`;
     }
   } else if(q.type==='tax'){
     // Tax / Subsidy diagram — BOTH S1 (faded) and S2 always visible from question start.
@@ -553,20 +538,20 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     for(let i=1;i<=GRID;i++){
       const txNP=txShowLbls&&(Math.abs(i-txPc)<0.4||Math.abs(i-txPs)<0.4||Math.abs(i-txP0)<0.4);
       const txNQ=txShowLbls&&(Math.abs(i-txQn)<0.4||Math.abs(i-txQ0)<0.4);
-      if(!txNP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
-      if(!txNQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+      if(!txNP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+      if(!txNQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
     }
-    s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
-    s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>\`;
-    s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
+    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
+    s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
     // S1 — always shown faded (original supply at txStartSS, ssc=1)
     const ts1x1=gx(sQf(1,txStartSS,txSsc)),ts1y1=gy(1),ts1x2=gx(sQf(GRID,txStartSS,txSsc)),ts1y2=gy(GRID);
     const ts1dx=ts1x2-ts1x1,ts1dy=ts1y2-ts1y1;let ts1t0=0,ts1t1=1;
     if(Math.abs(ts1dx)>0.01){const ts1tL=(pad.l-ts1x1)/ts1dx,ts1tR=(W-pad.r-ts1x1)/ts1dx;if(ts1dx>0){ts1t0=Math.max(ts1t0,ts1tL);ts1t1=Math.min(ts1t1,ts1tR);}else{ts1t0=Math.max(ts1t0,ts1tR);ts1t1=Math.min(ts1t1,ts1tL);}}
     if(ts1t0<ts1t1){
       const ts1L=clip(QS,sPf(QS,txStartSS,txSsc),QE,sPf(QE,txStartSS,txSsc),pad,W,H,1);
-      s+=\`<line x1="\${(ts1x1+ts1t0*ts1dx).toFixed(1)}" y1="\${(ts1y1+ts1t0*ts1dy).toFixed(1)}" x2="\${(ts1x1+ts1t1*ts1dx).toFixed(1)}" y2="\${(ts1y1+ts1t1*ts1dy).toFixed(1)}" stroke="\${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/>\`;
-      if(ts1L)s+=\`<text x="\${(ts1L.x2+5).toFixed(1)}" y="\${Math.min(ts1L.y1,ts1L.y2).toFixed(1)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" opacity="0.3" font-weight="bold">S1</text>\`;
+      s+=`<line x1="${(ts1x1+ts1t0*ts1dx).toFixed(1)}" y1="${(ts1y1+ts1t0*ts1dy).toFixed(1)}" x2="${(ts1x1+ts1t1*ts1dx).toFixed(1)}" y2="${(ts1y1+ts1t1*ts1dy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="0.3"/>`;
+      if(ts1L)s+=`<text x="${(ts1L.x2+5).toFixed(1)}" y="${Math.min(ts1L.y1,ts1L.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" opacity="0.3" font-weight="bold">S1</text>`;
     }
     // Demand curve D (slope=txDm, shift coeff=txDm → 1 grid square per step)
     const tdx1=gx(dQf(GRID,dA,txDm,txDm)),tdy1=gy(GRID),tdx2=gx(dQf(1,dA,txDm,txDm)),tdy2=gy(1);
@@ -574,8 +559,8 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     if(Math.abs(tddx)>0.01){const tdtL=(pad.l-tdx1)/tddx,tdtR=(W-pad.r-tdx1)/tddx;if(tddx>0){tdt0=Math.max(tdt0,tdtL);tdt1=Math.min(tdt1,tdtR);}else{tdt0=Math.max(tdt0,tdtR);tdt1=Math.min(tdt1,tdtL);}}
     if(tdt0<tdt1){
       const tdL=clip(QS,dPf(QS,dA,txDm,txDm),QE,dPf(QE,dA,txDm,txDm),pad,W,H,1);
-      s+=\`<line x1="\${(tdx1+tdt0*tddx).toFixed(1)}" y1="\${(tdy1+tdt0*tddy).toFixed(1)}" x2="\${(tdx1+tdt1*tddx).toFixed(1)}" y2="\${(tdy1+tdt1*tddy).toFixed(1)}" stroke="\${q.dColor}" stroke-width="2.5" stroke-linecap="round"/>\`;
-      if(tdL)s+=\`<text x="\${(tdL.x2+5).toFixed(1)}" y="\${tdL.y2.toFixed(1)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" font-weight="bold">D</text>\`;
+      s+=`<line x1="${(tdx1+tdt0*tddx).toFixed(1)}" y1="${(tdy1+tdt0*tddy).toFixed(1)}" x2="${(tdx1+tdt1*tddx).toFixed(1)}" y2="${(tdy1+tdt1*tddy).toFixed(1)}" stroke="${q.dColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(tdL)s+=`<text x="${(tdL.x2+5).toFixed(1)}" y="${tdL.y2.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">D</text>`;
     }
     // S2 — active supply curve (post-intervention, ssc=1)
     const tsx1=gx(sQf(1,sA,txSsc)),tsy1=gy(1),tsx2=gx(sQf(GRID,sA,txSsc)),tsy2=gy(GRID);
@@ -583,17 +568,17 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     if(Math.abs(tsdx)>0.01){const tstL=(pad.l-tsx1)/tsdx,tstR=(W-pad.r-tsx1)/tsdx;if(tsdx>0){tst0=Math.max(tst0,tstL);tst1=Math.min(tst1,tstR);}else{tst0=Math.max(tst0,tstR);tst1=Math.min(tst1,tstL);}}
     if(tst0<tst1){
       const tsL=clip(QS,sPf(QS,sA,txSsc),QE,sPf(QE,sA,txSsc),pad,W,H,1);
-      s+=\`<line x1="\${(tsx1+tst0*tsdx).toFixed(1)}" y1="\${(tsy1+tst0*tsdy).toFixed(1)}" x2="\${(tsx1+tst1*tsdx).toFixed(1)}" y2="\${(tsy1+tst1*tsdy).toFixed(1)}" stroke="\${q.sColor}" stroke-width="2.5" stroke-linecap="round"/>\`;
-      if(tsL)s+=\`<text x="\${(tsL.x2+5).toFixed(1)}" y="\${Math.min(tsL.y1,tsL.y2).toFixed(1)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" font-weight="bold">S2</text>\`;
+      s+=`<line x1="${(tsx1+tst0*tsdx).toFixed(1)}" y1="${(tsy1+tst0*tsdy).toFixed(1)}" x2="${(tsx1+tst1*tsdx).toFixed(1)}" y2="${(tsy1+tst1*tsdy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(tsL)s+=`<text x="${(tsL.x2+5).toFixed(1)}" y="${Math.min(tsL.y1,tsL.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">S2</text>`;
     }
     // Equilibrium dots and dashed lines — conditional on showEqLines setting
     const txShowEqLines=q.showEqLines!==false;
     if(txShowEqLines){
       if(txQ0>=QS&&txQ0<=QE&&txP0>=1&&txP0<=GRID&&(Math.abs(txQ0-txQn)>0.1||Math.abs(txP0-txPc)>0.1)){
-        s+=\`<circle cx="\${gx(txQ0)}" cy="\${gy(txP0)}" r="5" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.3"/>\`;
+        s+=`<circle cx="${gx(txQ0)}" cy="${gy(txP0)}" r="5" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.3"/>`;
       }
       if(txQn>=QS&&txQn<=QE&&txPc>=1&&txPc<=GRID){
-        s+=\`<circle cx="\${gx(txQn)}" cy="\${gy(txPc)}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>\`;
+        s+=`<circle cx="${gx(txQn)}" cy="${gy(txPc)}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>`;
       }
     }
     // Price/qty labels and dashed lines — only revealed after correct answer (txStep >= 0)
@@ -602,25 +587,25 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       // This is correct textbook convention and also avoids non-integer display issues.
       const tQnX=txQn>=QS&&txQn<=QE?gx(txQn):W-pad.r;
       if(txPc>=1&&txPc<=GRID){
-        s+=\`<line x1="\${pad.l}" y1="\${gy(txPc)}" x2="\${tQnX.toFixed(1)}" y2="\${gy(txPc)}" stroke="#D85A30" stroke-width="1" stroke-dasharray="6,4"/>\`;
-        s+=\`<text x="\${pad.l-4}" y="\${gy(txPc)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">Pc</text>\`;
+        s+=`<line x1="${pad.l}" y1="${gy(txPc)}" x2="${tQnX.toFixed(1)}" y2="${gy(txPc)}" stroke="#D85A30" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<text x="${pad.l-4}" y="${gy(txPc)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">Pc</text>`;
       }
       if(txPs>=1&&txPs<=GRID&&Math.abs(txPs-txPc)>0.1){
-        s+=\`<line x1="\${pad.l}" y1="\${gy(txPs)}" x2="\${tQnX.toFixed(1)}" y2="\${gy(txPs)}" stroke="\${q.sColor}" stroke-width="1" stroke-dasharray="6,4"/>\`;
-        s+=\`<text x="\${pad.l-4}" y="\${gy(txPs)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="\${q.sColor}" font-weight="bold">Ps</text>\`;
+        s+=`<line x1="${pad.l}" y1="${gy(txPs)}" x2="${tQnX.toFixed(1)}" y2="${gy(txPs)}" stroke="${q.sColor}" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<text x="${pad.l-4}" y="${gy(txPs)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">Ps</text>`;
       }
       if(txP0>=1&&txP0<=GRID&&Math.abs(txP0-txPc)>0.15&&Math.abs(txP0-txPs)>0.15){
-        s+=\`<text x="\${pad.l-4}" y="\${gy(txP0)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">P0</text>\`;
+        s+=`<text x="${pad.l-4}" y="${gy(txP0)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">P0</text>`;
       }
       if(txQn>=QS&&txQn<=QE){
-        s+=\`<line x1="\${gx(txQn)}" y1="\${H-pad.b}" x2="\${gx(txQn)}" y2="\${(txPc>=1&&txPc<=GRID?gy(txPc):pad.t)}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>\`;
-        s+=\`<text x="\${gx(txQn)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">Qn</text>\`;
+        s+=`<line x1="${gx(txQn)}" y1="${H-pad.b}" x2="${gx(txQn)}" y2="${(txPc>=1&&txPc<=GRID?gy(txPc):pad.t)}" stroke="#888" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<text x="${gx(txQn)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">Qn</text>`;
       }
       if(txQ0>=QS&&txQ0<=QE&&Math.abs(txQ0-txQn)>0.15){
-        s+=\`<text x="\${gx(txQ0)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">Q0</text>\`;
+        s+=`<text x="${gx(txQ0)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">Q0</text>`;
       }
       if(txQn>=QS&&txQn<=QE&&txPs>=1&&txPs<=GRID){
-        s+=\`<circle cx="\${gx(txQn)}" cy="\${gy(txPs)}" r="5" fill="\${q.sColor}" stroke="white" stroke-width="1.5"/>\`;
+        s+=`<circle cx="${gx(txQn)}" cy="${gy(txPs)}" r="5" fill="${q.sColor}" stroke="white" stroke-width="1.5"/>`;
       }
     }
     // ── Configurable reveals — each is independent and drawn in q.reveals order ──────
@@ -630,19 +615,19 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       const txBrX=Math.min(gx(txQn)+20,W-6);
       const txBrCol=txIsSub?'#7B2FA8':'#C47D00';
       if(txBrH>4){
-        s+=\`<line x1="\${txBrX.toFixed(1)}" y1="\${txBrT.toFixed(1)}" x2="\${txBrX.toFixed(1)}" y2="\${txBrB.toFixed(1)}" stroke="\${txBrCol}" stroke-width="2"/>\`;
-        s+=\`<line x1="\${(txBrX-5).toFixed(1)}" y1="\${txBrT.toFixed(1)}" x2="\${(txBrX+5).toFixed(1)}" y2="\${txBrT.toFixed(1)}" stroke="\${txBrCol}" stroke-width="2"/>\`;
-        s+=\`<line x1="\${(txBrX-5).toFixed(1)}" y1="\${txBrB.toFixed(1)}" x2="\${(txBrX+5).toFixed(1)}" y2="\${txBrB.toFixed(1)}" stroke="\${txBrCol}" stroke-width="2"/>\`;
-        s+=\`<text x="\${(txBrX+8).toFixed(1)}" y="\${((txBrT+txBrB)/2).toFixed(1)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${txBrCol}" font-weight="bold">\${txIsSub?'Subsidy/unit':'Tax/unit'}</text>\`;
+        s+=`<line x1="${txBrX.toFixed(1)}" y1="${txBrT.toFixed(1)}" x2="${txBrX.toFixed(1)}" y2="${txBrB.toFixed(1)}" stroke="${txBrCol}" stroke-width="2"/>`;
+        s+=`<line x1="${(txBrX-5).toFixed(1)}" y1="${txBrT.toFixed(1)}" x2="${(txBrX+5).toFixed(1)}" y2="${txBrT.toFixed(1)}" stroke="${txBrCol}" stroke-width="2"/>`;
+        s+=`<line x1="${(txBrX-5).toFixed(1)}" y1="${txBrB.toFixed(1)}" x2="${(txBrX+5).toFixed(1)}" y2="${txBrB.toFixed(1)}" stroke="${txBrCol}" stroke-width="2"/>`;
+        s+=`<text x="${(txBrX+8).toFixed(1)}" y="${((txBrT+txBrB)/2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${txBrCol}" font-weight="bold">${txIsSub?'Subsidy/unit':'Tax/unit'}</text>`;
       }
     }
     // REVEAL: prodrev — full producer revenue rectangle (Ps × Qn, from x-axis up to Ps)
     if(txShown.has('prodrev')&&txOnGrid){
       const prxW=trxR-trxL,pryT=gy(txPs),pryB=H-pad.b,pryH=pryB-pryT;
       if(pryH>2&&prxW>2){
-        s+=\`<rect x="\${trxL.toFixed(1)}" y="\${pryT.toFixed(1)}" width="\${prxW.toFixed(1)}" height="\${pryH.toFixed(1)}" fill="rgba(30,122,184,0.1)"/>\`;
-        s+=\`<rect x="\${trxL.toFixed(1)}" y="\${pryT.toFixed(1)}" width="\${prxW.toFixed(1)}" height="\${pryH.toFixed(1)}" fill="none" stroke="#1e7ab8" stroke-width="1.5"/>\`;
-        if(pryH>18)s+=\`<text x="\${trMX.toFixed(1)}" y="\${((pryT+pryB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="#1e7ab8" font-weight="bold">Producer Revenue</text>\`;
+        s+=`<rect x="${trxL.toFixed(1)}" y="${pryT.toFixed(1)}" width="${prxW.toFixed(1)}" height="${pryH.toFixed(1)}" fill="rgba(30,122,184,0.1)"/>`;
+        s+=`<rect x="${trxL.toFixed(1)}" y="${pryT.toFixed(1)}" width="${prxW.toFixed(1)}" height="${pryH.toFixed(1)}" fill="none" stroke="#1e7ab8" stroke-width="1.5"/>`;
+        if(pryH>18)s+=`<text x="${trMX.toFixed(1)}" y="${((pryT+pryB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="#1e7ab8" font-weight="bold">Producer Revenue</text>`;
       }
     }
     // REVEAL: wedge — tax revenue / subsidy cost rectangle (full Ps-to-Pc band)
@@ -650,18 +635,18 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       const trLabel=txIsSub?'Subsidy Cost':'Tax Revenue';
       const trCol=txIsSub?'#7B2FA8':'#C47D00';
       const trFill=txIsSub?'rgba(123,47,168,0.1)':'rgba(196,125,0,0.1)';
-      s+=\`<rect x="\${trxL.toFixed(1)}" y="\${tryT.toFixed(1)}" width="\${trW.toFixed(1)}" height="\${trH.toFixed(1)}" fill="\${trFill}"/>\`;
-      s+=\`<rect x="\${trxL.toFixed(1)}" y="\${tryT.toFixed(1)}" width="\${trW.toFixed(1)}" height="\${trH.toFixed(1)}" fill="none" stroke="\${trCol}" stroke-width="1.5"/>\`;
-      if(trH>18)s+=\`<text x="\${trMX.toFixed(1)}" y="\${trMY.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${trCol}" font-weight="bold">\${trLabel}</text>\`;
+      s+=`<rect x="${trxL.toFixed(1)}" y="${tryT.toFixed(1)}" width="${trW.toFixed(1)}" height="${trH.toFixed(1)}" fill="${trFill}"/>`;
+      s+=`<rect x="${trxL.toFixed(1)}" y="${tryT.toFixed(1)}" width="${trW.toFixed(1)}" height="${trH.toFixed(1)}" fill="none" stroke="${trCol}" stroke-width="1.5"/>`;
+      if(trH>18)s+=`<text x="${trMX.toFixed(1)}" y="${trMY.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${trCol}" font-weight="bold">${trLabel}</text>`;
     }
     // REVEAL: consumer — consumer cost/benefit slice (P0 to Pc band)
     if(txShown.has('consumer')&&txOnGrid&&txP0>trpLow&&txP0<trpHigh&&trW>2){
       const conT=gy(trpHigh),conB=gy(txP0),conH=conB-conT;
       const conLbl=txIsSub?'Consumer Benefit':'Consumer Cost';
       if(conH>2){
-        s+=\`<rect x="\${trxL.toFixed(1)}" y="\${conT.toFixed(1)}" width="\${trW.toFixed(1)}" height="\${conH.toFixed(1)}" fill="rgba(216,90,48,0.22)"/>\`;
-        s+=\`<rect x="\${trxL.toFixed(1)}" y="\${conT.toFixed(1)}" width="\${trW.toFixed(1)}" height="\${conH.toFixed(1)}" fill="none" stroke="#D85A30" stroke-width="1" stroke-dasharray="4,3"/>\`;
-        if(conH>14)s+=\`<text x="\${trMX.toFixed(1)}" y="\${((conT+conB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${conLbl}</text>\`;
+        s+=`<rect x="${trxL.toFixed(1)}" y="${conT.toFixed(1)}" width="${trW.toFixed(1)}" height="${conH.toFixed(1)}" fill="rgba(216,90,48,0.22)"/>`;
+        s+=`<rect x="${trxL.toFixed(1)}" y="${conT.toFixed(1)}" width="${trW.toFixed(1)}" height="${conH.toFixed(1)}" fill="none" stroke="#D85A30" stroke-width="1" stroke-dasharray="4,3"/>`;
+        if(conH>14)s+=`<text x="${trMX.toFixed(1)}" y="${((conT+conB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="#D85A30" font-weight="bold">${conLbl}</text>`;
       }
     }
     // REVEAL: prodloss — producer revenue loss/benefit slice (Ps to P0 band)
@@ -669,9 +654,9 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       const proT=gy(txP0),proB=gy(trpLow),proH=proB-proT;
       const proLbl=txIsSub?'Producer Benefit':'Producer Revenue Loss';
       if(proH>2){
-        s+=\`<rect x="\${trxL.toFixed(1)}" y="\${proT.toFixed(1)}" width="\${trW.toFixed(1)}" height="\${proH.toFixed(1)}" fill="rgba(15,110,86,0.22)"/>\`;
-        s+=\`<rect x="\${trxL.toFixed(1)}" y="\${proT.toFixed(1)}" width="\${trW.toFixed(1)}" height="\${proH.toFixed(1)}" fill="none" stroke="\${q.sColor}" stroke-width="1" stroke-dasharray="4,3"/>\`;
-        if(proH>14)s+=\`<text x="\${trMX.toFixed(1)}" y="\${((proT+proB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" font-weight="bold">\${proLbl}</text>\`;
+        s+=`<rect x="${trxL.toFixed(1)}" y="${proT.toFixed(1)}" width="${trW.toFixed(1)}" height="${proH.toFixed(1)}" fill="rgba(15,110,86,0.22)"/>`;
+        s+=`<rect x="${trxL.toFixed(1)}" y="${proT.toFixed(1)}" width="${trW.toFixed(1)}" height="${proH.toFixed(1)}" fill="none" stroke="${q.sColor}" stroke-width="1" stroke-dasharray="4,3"/>`;
+        if(proH>14)s+=`<text x="${trMX.toFixed(1)}" y="${((proT+proB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${proLbl}</text>`;
       }
     }
   } else {
@@ -679,12 +664,12 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     for(let i=1;i<=GRID;i++){
       const isFP=q.showEqLines!==false&&Math.abs(i-fp)<0.05;
       const isIQ=q.showEqLines!==false&&Math.abs(i-qInt)<0.05;
-      if(!isFP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
-      if(!isIQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+      if(!isFP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+      if(!isIQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
     }
-    s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
-    s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>\`;
-    s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
+    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
+    s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
     // Faded D1/S1 always at origin — visible whenever the active curve is shifted
     const scShift=q.curve==='demand'?dA:sA;
     if(scShift!==0){
@@ -692,7 +677,7 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       if(c1){
         const fadedLbl=q.curve==='demand'?'D1':'S1';
         const ly=q.curve==='demand'?c1.y2:Math.min(c1.y1,c1.y2);
-        s+=\`<line x1="\${c1.x1}" y1="\${c1.y1}" x2="\${c1.x2}" y2="\${c1.y2}" stroke="\${q.color}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="\${c1.x2+5}" y="\${ly}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.color}" opacity="0.3" font-weight="bold">\${fadedLbl}</text>\`;
+        s+=`<line x1="${c1.x1}" y1="${c1.y1}" x2="${c1.x2}" y2="${c1.y2}" stroke="${q.color}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><text x="${c1.x2+5}" y="${ly}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.color}" opacity="0.3" font-weight="bold">${fadedLbl}</text>`;
       }
     }
     const sh=scShift!==0;
@@ -712,23 +697,23 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     if(Math.abs(scAdx)>0.01){const scTL=(pad.l-scAx1)/scAdx,scTR=(W-pad.r-scAx1)/scAdx;if(scAdx>0){scAt0=Math.max(scAt0,scTL);scAt1=Math.min(scAt1,scTR);}else{scAt0=Math.max(scAt0,scTR);scAt1=Math.min(scAt1,scTL);}}
     if(scAt0<scAt1){
       const scLbl=scIsD?clip(QS,dPf(QS,animSC),QE,dPf(QE,animSC),pad,W,H,1):clip(QS,sPf(QS,animSC),QE,sPf(QE,animSC),pad,W,H,1);
-      s+=\`<line x1="\${(scAx1+scAt0*scAdx).toFixed(1)}" y1="\${(scAy1+scAt0*scAdy).toFixed(1)}" x2="\${(scAx1+scAt1*scAdx).toFixed(1)}" y2="\${(scAy1+scAt1*scAdy).toFixed(1)}" stroke="\${q.color}" stroke-width="2.5" stroke-linecap="round"/>\`;
-      if(scLbl){const scLy=scIsD?scLbl.y2:Math.min(scLbl.y1,scLbl.y2);s+=\`<text x="\${(scLbl.x2+5).toFixed(1)}" y="\${scLy.toFixed(1)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.color}" font-weight="bold">\${lbl}</text>\`;}
+      s+=`<line x1="${(scAx1+scAt0*scAdx).toFixed(1)}" y1="${(scAy1+scAt0*scAdy).toFixed(1)}" x2="${(scAx1+scAt1*scAdx).toFixed(1)}" y2="${(scAy1+scAt1*scAdy).toFixed(1)}" stroke="${q.color}" stroke-width="2.5" stroke-linecap="round"/>`;
+      if(scLbl){const scLy=scIsD?scLbl.y2:Math.min(scLbl.y1,scLbl.y2);s+=`<text x="${(scLbl.x2+5).toFixed(1)}" y="${scLy.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.color}" font-weight="bold">${lbl}</text>`;}
     }
     if(qInt>=QS&&qInt<=QE){
       const ix=gx(qInt),py=gy(fp);
       if(q.showEqLines!==false){
-        s+=\`<line x1="\${pad.l}" y1="\${py}" x2="\${ix}" y2="\${py}" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="6,4"/>\`;
-        s+=\`<line x1="\${ix}" y1="\${py}" x2="\${ix}" y2="\${H-pad.b}" stroke="#D85A30" stroke-width="1" stroke-dasharray="4,3"/>\`;
-        s+=\`<circle cx="\${ix}" cy="\${py}" r="6" fill="#D85A30" stroke="white" stroke-width="2"/>\`;
+        s+=`<line x1="${pad.l}" y1="${py}" x2="${ix}" y2="${py}" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="6,4"/>`;
+        s+=`<line x1="${ix}" y1="${py}" x2="${ix}" y2="${H-pad.b}" stroke="#D85A30" stroke-width="1" stroke-dasharray="4,3"/>`;
+        s+=`<circle cx="${ix}" cy="${py}" r="6" fill="#D85A30" stroke="white" stroke-width="2"/>`;
         if(!isAnimating){
-          s+=\`<text x="\${pad.l-4}" y="\${py}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(fp*vDisp)}</text>\`;
-          s+=\`<text x="\${ix}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">\${fmt(qInt*hDisp)}</text>\`;
+          s+=`<text x="${pad.l-4}" y="${py}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(fp*vDisp)}</text>`;
+          s+=`<text x="${ix}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">${fmt(qInt*hDisp)}</text>`;
         }
       }
     }
   }
-  return \`<svg width="100%" viewBox="0 0 \${W} \${H}">\${s}</svg>\`;
+  return `<svg width="100%" viewBox="0 0 ${W} ${H}">${s}</svg>`;
 }
 // ── Printable worksheet (student = questions only, teacher = answers marked) ──
 function wsPos(q){
@@ -777,49 +762,27 @@ function showQ(i){
   if(rb) rb.style.display=(q.type==='plain'||q.type==='table'||q.type==='ped'||q.type==='sur')?'none':'';
   const rb2=document.getElementById('revealBtn');
   const txRArr2=(q.reveals&&q.reveals.length)?q.reveals:['size','wedge','consumer','prodloss'];
-  let showRev2=(q.type==='tax'&&attempted(i)&&curPos[i].fpA>=0&&curPos[i].fpA<txRArr2.length);
+  let showRev2=(q.type==='tax'&&done[i]&&curPos[i].fpA>=0&&curPos[i].fpA<txRArr2.length);
+  if(q.type==='sur'&&done[i]&&curPos[i].fpA<surEff(q).length) showRev2=true;
   if(rb2) rb2.style.display=showRev2?'':'none';
   const abtns=document.getElementById('abtns');
   abtns.innerHTML=q.answers.map((ans,ai)=>{
     const l=String.fromCharCode(65+ai);
     let cls='abtn';
-    if(TESTMODE){
-      if(picked[i]!==null) cls+= ai===q.correctIndex?' correct':(ai===picked[i]?' wrong':' used');
-    } else if(done[i]){ cls+= ai===q.correctIndex?' correct':' used'; }
-    return \`<button class="\${cls}" onclick="go(\${i},\${ai})">\${l}. \${ans}</button>\`;
+    if(done[i]){cls+= ai===q.correctIndex?' correct':' used';}
+    return `<button class="${cls}" onclick="go(${i},${ai})">${l}. ${ans}</button>`;
   }).join('');
   const fb=document.getElementById('fb');
-  if(TESTMODE&&picked[i]!==null){
-    if(done[i]){fb.textContent='✓ Correct!';fb.className='fb c';}
-    else{fb.textContent='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.';fb.className='fb w';}
-  } else {
-    fb.textContent=done[i]?'✓ Correct!':'';
-    fb.className=done[i]?'fb c':'fb';
-  }
+  fb.textContent=done[i]?'✓ Correct!':'';
+  fb.className=done[i]?'fb c':'fb';
   document.getElementById('prevBtn').disabled=(i===0);
   const isLast=(i===qs.length-1);
   document.getElementById('nextBtn').textContent=isLast?'See Score →':'Next →';
-  const mark=TESTMODE?(picked[i]!==null?(done[i]?' · ✓':' · ✗'):''):(done[i]?' · ✓':'');
-  document.getElementById('prog').textContent=(i+1)+' of '+qs.length+mark;
+  document.getElementById('prog').textContent=(i+1)+' of '+qs.length+(done[i]?' · ✓':'');
 }
 function go(qi,ai){
-  const q=qs[qi];
-  if(TESTMODE){
-    if(picked[qi]!==null)return;            // locked once answered
-    picked[qi]=ai;
-    done[qi]=(ai===q.correctIndex);
-    const btns2=document.getElementById('abtns').querySelectorAll('.abtn');
-    btns2.forEach((b,i)=>{ b.classList.add(i===q.correctIndex?'correct':(i===ai?'wrong':'used')); });
-    const fb2=document.getElementById('fb');
-    if(done[qi]){fb2.textContent='✓ Correct!';fb2.className='fb c';}
-    else{fb2.textContent='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.';fb2.className='fb w';}
-    document.getElementById('prog').textContent=(qi+1)+' of '+qs.length+(done[qi]?' · ✓':' · ✗');
-    if(q.type==='pm'&&q.animatePrice===false){
-      document.getElementById('diagWrap').innerHTML=mkSVG(q,q.dShift||0,q.sShift||0,q.startPrice||5,false,0,0,0,true);
-    }else{ anim(qi); }
-    return;
-  }
   if(done[qi])return;
+  const q=qs[qi];
   const btns=document.getElementById('abtns').querySelectorAll('.abtn');
   const fb=document.getElementById('fb');
   if(ai===q.correctIndex){
@@ -874,10 +837,11 @@ function anim(qi,animDur=700){
     return;
   }
   if(q.type==='sur'){
-    // Reveal all chosen areas immediately when the correct answer is chosen (no button).
-    const nAll=surEff(q).length;
-    curPos[qi]={dA:0,sA:0,fpA:nAll};
-    el.innerHTML=mkSVG(q,0,0,nAll,false);
+    // No shift animation — answering just enables the stepped area reveal.
+    curPos[qi]={dA:0,sA:0,fpA:0};
+    el.innerHTML=mkSVG(q,0,0,0,false);
+    const rbS=document.getElementById('revealBtn');
+    if(rbS&&qi===cur)rbS.style.display=surEff(q).length>0?'':'none';
     return;
   }
   let tD,tS,fromD,fromS;
@@ -910,19 +874,19 @@ function replayAnim(){
   if(q.type==='sd') curPos[cur]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
   else if(q.type==='sc') curPos[cur]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
   else if(q.type==='pm') curPos[cur]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
-  else if(q.type==='tax'){curPos[cur]={dA:q.startDS||0,sA:q.ansSS||0,fpA:0};const rb2=document.getElementById('revealBtn');if(rb2)rb2.style.display=attempted(cur)?'':'none';}
+  else if(q.type==='tax'){curPos[cur]={dA:q.startDS||0,sA:q.ansSS||0,fpA:0};const rb2=document.getElementById('revealBtn');if(rb2)rb2.style.display=done[cur]?'':'none';}
   else curPos[cur]={dA:0,sA:0,fpA:q.startFP||5};
-  if(attempted(cur)&&q.type==='pm'&&q.animatePrice===false){
+  if(done[cur]&&q.type==='pm'&&q.animatePrice===false){
     // Label-reveal mode: just re-trigger the fade-in, no price animation
     document.getElementById('diagWrap').innerHTML=mkSVG(q,q.dShift||0,q.sShift||0,q.startPrice||5,false,0,0,0,true);
   }else{
     document.getElementById('diagWrap').innerHTML=mkSVG(q,curPos[cur].dA,curPos[cur].sA,curPos[cur].fpA,false);
-    if(attempted(cur))anim(cur,3000);
+    if(done[cur])anim(cur,3000);
   }
 }
 function reveal(){
   const q=qs[cur];
-  if(!attempted(cur))return;
+  if(!done[cur])return;
   const pos=curPos[cur];
   if(q.type==='sur'){
     const eff=surEff(q);
@@ -955,7 +919,6 @@ function showScore(){
 }
 function restart(){
   done.fill(false);
-  picked.fill(null);
   qs.forEach((q,i)=>{
     if(q.type==='sd') curPos[i]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
     else if(q.type==='sc') curPos[i]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
@@ -968,7 +931,6 @@ function restart(){
   showQ(0);
 }
 showQ(0);
-<\/script>
+</script>
 </body>
-</html>`;
-}
+</html>

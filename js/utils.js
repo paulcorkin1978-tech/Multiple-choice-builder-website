@@ -263,3 +263,89 @@ function pedInner(q){
   }
   return s;
 }
+
+// ── CONSUMER / PRODUCER SURPLUS & DEADWEIGHT LOSS RENDERER ────────────────────
+// Plain concatenation (no template literals) so the identical source can be
+// embedded inside quiz-export.js. Fixed model: demand P=100-Q, supply P=Q, eq(50,50).
+// q fields: title, yLbl, xLbl, dCol, sCol, mode ('eq'|'qty'|'tax'|'price'), param,
+//           showLetters (bool), reveals (ordered array of 'CS','PS','DWL','TAX').
+// nRev = how many of q.reveals to shade (for stepped reveal). Defaults to all.
+function surCentroid(pts){var x=0,y=0;for(var i=0;i<pts.length;i++){x+=pts[i][0];y+=pts[i][1];}return [x/pts.length,y/pts.length];}
+function surRegions(mode,Qt,Pc,Ps){
+  var Dm=100,Pst=50,Qe=50;
+  var dm=function(Q){return Dm-Q;}, sp=function(Q){return Q;};
+  if(mode==='eq') return [ [[0,Dm],[0,Pst],[Qe,Pst]], [[0,Pst],[Qe,Pst],[0,0]] ];
+  if(mode==='tax') return [
+    [[0,Dm],[0,Pc],[Qt,Pc]], [[0,Pc],[Qt,Pc],[Qt,Pst],[0,Pst]], [[0,Pst],[Qt,Pst],[Qt,Ps],[0,Ps]],
+    [[Qt,Pc],[Qe,Pst],[Qt,Pst]], [[Qt,Pst],[Qe,Pst],[Qt,Ps]], [[0,Ps],[Qt,Ps],[0,0]] ];
+  if(Pc>Pst) return [ // restricted quantity or price floor (producers capture)
+    [[0,Dm],[0,Pc],[Qt,Pc]], [[0,Pc],[Qt,Pc],[Qt,Pst],[0,Pst]], [[0,Pst],[Qt,Pst],[Qt,sp(Qt)],[0,0]],
+    [[Qt,Pc],[Qe,Pst],[Qt,Pst]], [[Qt,Pst],[Qe,Pst],[Qt,sp(Qt)]] ];
+  return [ // price ceiling (consumers capture)
+    [[0,Dm],[0,Pst],[Qt,Pst],[Qt,dm(Qt)]], [[0,Pst],[Qt,Pst],[Qt,Pc],[0,Pc]], [[0,Pc],[Qt,Pc],[0,0]],
+    [[Qt,dm(Qt)],[Qe,Pst],[Qt,Pst]], [[Qt,Pst],[Qe,Pst],[Qt,Pc]] ];
+}
+function surInner(q,nRev){
+  var W=400,H=340,L=52,R=372,T=28,B=292,QMAX=100,PMAX=100;
+  var X=function(Q){return L+(Q/QMAX)*(R-L);}, Y=function(P){return B-(P/PMAX)*(B-T);};
+  var esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var Dmax=100,Qeq=50,Peq=50, dem=function(Q){return Dmax-Q;}, sup=function(Q){return Q;};
+  var mode=q.mode||'eq', param=(q.param==null?20:q.param);
+  var dCol=q.dCol||'#185FA5', sCol=q.sCol||'#0F6E56';
+  var reveals=q.reveals||[], showLetters=!!q.showLetters;
+  if(nRev==null) nRev=reveals.length;
+  var fs=12, fs2=10;
+  // Price/Qty units scale the DISPLAYED axis numbers (same system as other builders).
+  // Base grid position 5 = internal 50; displayed value = (internal/10) * unit.
+  var vU=(q.vUnit==null?50:q.vUnit), hU=(q.hUnit==null?50:q.hUnit); // actual equilibrium price / quantity
+  var fmtn=function(n){return Math.round(n*100)/100;};
+  var pdisp=function(P){return fmtn(P*vU/50);}, qdisp=function(Q){return fmtn(Q*hU/50);};
+  // compute traded quantity + prices
+  var Qt,Pc,Ps,kind='';
+  if(mode==='eq'){Qt=Qeq;Pc=Peq;Ps=Peq;}
+  else if(mode==='qty'){Qt=param;Pc=dem(Qt);Ps=Pc;kind='Restricted quantity';}
+  else if(mode==='tax'){Qt=(Dmax-param)/2;Pc=dem(Qt);Ps=sup(Qt);kind='Tax';}
+  else if(mode==='price'){ if(param>=Peq){Qt=Dmax-param;Pc=param;Ps=param;kind='Price floor';} else {Qt=param;Pc=param;Ps=param;kind='Price ceiling';} }
+  var poly=function(pts){return pts.map(function(p){return X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1);}).join(' ');};
+  var s='';
+  if(q.title) s+='<text x="'+(W/2)+'" y="15" text-anchor="middle" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(q.title)+'</text>';
+  // shaded areas (first nRev of the reveal list)
+  s+='<defs><pattern id="surhcs" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(24,95,165,0.13)"/><line x1="0" y1="0" x2="0" y2="7" stroke="#185FA5" stroke-width="2.2"/></pattern><pattern id="surhps" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(15,110,86,0.13)"/><line x1="0" y1="0" x2="0" y2="7" stroke="#0F6E56" stroke-width="2.2"/></pattern></defs>';
+  var elem=surRegions(mode,Qt,Pc,Ps);
+  var areaPoly={ CS:[[0,Pc],[0,Dmax],[Qt,dem(Qt)],[Qt,Pc]], PS:[[0,Ps],[0,0],[Qt,sup(Qt)],[Qt,Ps]], DWL:[[Qt,dem(Qt)],[Qt,sup(Qt)],[Qeq,Peq]], TAX:[[0,Pc],[Qt,Pc],[Qt,Ps],[0,Ps]] };
+  var areaFill={CS:'rgba(24,95,165,.32)',PS:'rgba(15,110,86,.32)',DWL:'rgba(216,45,45,.4)',TAX:'rgba(196,125,0,.34)'};
+  var lossIdx=function(key){ if(mode==='tax') return key==='LOSSCS'?[1,3]:(key==='LOSSPS'?[2,4]:[]); if(mode==='qty') return key==='LOSSCS'?[1,3]:[]; if(mode==='price') return (kind==='Price floor')?(key==='LOSSCS'?[1,3]:[]):(key==='LOSSPS'?[1,4]:[]); return []; };
+  var lossFill={LOSSCS:'url(#surhcs)',LOSSPS:'url(#surhps)'};
+  var effReveals=[];
+  for(var ei=0;ei<reveals.length;ei++){ var kk=reveals[ei]; if(kk==='DWL' && !(Qt<Qeq)) continue; if(kk==='TAX' && mode!=='tax') continue; if((kk==='LOSSCS'||kk==='LOSSPS') && lossIdx(kk).length===0) continue; effReveals.push(kk); }
+  for(var r=0;r<Math.min(nRev,effReveals.length);r++){ var key=effReveals[r]; if(areaPoly[key]){ s+='<polygon class="sur-fade" points="'+poly(areaPoly[key])+'" fill="'+areaFill[key]+'"/>'; } else if(lossFill[key]){ var li=lossIdx(key); for(var mi=0;mi<li.length;mi++){ s+='<polygon class="sur-fade" points="'+poly(elem[li[mi]])+'" fill="'+lossFill[key]+'" stroke="'+(key==='LOSSCS'?'#185FA5':'#0F6E56')+'" stroke-width="1.2" stroke-opacity="0.7"/>'; } } }
+  // axes + labels
+  s+='<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
+  s+='<line x1="'+L+'" y1="'+B+'" x2="'+R+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
+  s+='<text x="'+(L-38)+'" y="'+((T+B)/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle" transform="rotate(-90 '+(L-38)+' '+((T+B)/2)+')">'+esc(q.yLbl||'Price ($)')+'</text>';
+  s+='<text x="'+((L+R)/2)+'" y="'+(B+30)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle">'+esc(q.xLbl||'Quantity')+'</text>';
+  // curves (touch axes)
+  s+='<line x1="'+X(0)+'" y1="'+Y(Dmax)+'" x2="'+X(Dmax)+'" y2="'+Y(0)+'" stroke="'+dCol+'" stroke-width="2.5"/>';
+  s+='<text x="'+(X(Dmax)+6)+'" y="'+(Y(0)-3)+'" font-size="'+fs2+'" font-family="Verdana" font-weight="700" fill="'+dCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke" text-anchor="start">D</text>';
+  s+='<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(PMAX)+'" y2="'+Y(PMAX)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
+  s+='<text x="'+(X(PMAX)+6)+'" y="'+(Y(PMAX)+11)+'" font-size="'+fs2+'" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke" text-anchor="start">S</text>';
+  // S + tax line
+  if(mode==='tax'){ var tt=param; s+='<line x1="'+X(0)+'" y1="'+Y(tt)+'" x2="'+X(100-tt)+'" y2="'+Y(100)+'" stroke="'+sCol+'" stroke-width="1.8" stroke-dasharray="6 4" opacity="0.85"/>'; s+='<text x="'+(X(100-tt)+2)+'" y="'+(Y(100)+10)+'" font-size="9" font-family="Verdana" font-weight="700" fill="'+sCol+'">S+tax</text>'; }
+  // traded-quantity guide (distorted)
+  if(mode!=='eq'){ s+='<line x1="'+X(Qt)+'" y1="'+B+'" x2="'+X(Qt)+'" y2="'+Y(Math.max(dem(Qt),Pc,Ps))+'" stroke="#888" stroke-width="1" stroke-dasharray="5 3"/>'; s+='<text x="'+X(Qt)+'" y="'+(B+12)+'" font-size="9" font-family="Verdana" fill="#555" text-anchor="middle">'+qdisp(Qt)+'</text>'; }
+  // price markers
+  var pmark=function(P,label,col){ s+='<line x1="'+L+'" y1="'+Y(P)+'" x2="'+X(Qt)+'" y2="'+Y(P)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="5 3"/>'; s+='<circle cx="'+X(Qt)+'" cy="'+Y(P)+'" r="4" fill="#fff" stroke="'+col+'" stroke-width="2"/>'; s+='<text x="'+(L-5)+'" y="'+(Y(P)+3.5)+'" font-size="9" font-family="Verdana" font-weight="700" fill="'+col+'" text-anchor="end">'+label+'</text>'; };
+  if(mode==='tax'){ pmark(Pc,'Pc '+pdisp(Pc),dCol); pmark(Ps,'Ps '+pdisp(Ps),sCol); }
+  else if(mode==='qty'){ pmark(Pc,'P '+pdisp(Pc),'#b23a00'); }
+  else if(mode==='price'){ pmark(Pc,(kind==='Price floor'?'Pf ':'Pc ')+pdisp(Pc),'#b23a00'); }
+  // equilibrium reference (always)
+  s+='<line x1="'+L+'" y1="'+Y(Peq)+'" x2="'+X(Qeq)+'" y2="'+Y(Peq)+'" stroke="#0A0C56" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+  s+='<line x1="'+X(Qeq)+'" y1="'+B+'" x2="'+X(Qeq)+'" y2="'+Y(Peq)+'" stroke="#0A0C56" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+  s+='<circle cx="'+X(Qeq)+'" cy="'+Y(Peq)+'" r="4" fill="#fff" stroke="#0A0C56" stroke-width="2"/>';
+  s+='<text x="'+(X(Qeq)+7)+'" y="'+(Y(Peq)-7)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#0A0C56" stroke="#fff" stroke-width="2.5" paint-order="stroke">E</text>';
+  s+='<text x="'+(L-5)+'" y="'+(Y(Peq)+3.5)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#0A0C56" text-anchor="end">'+(mode==='eq'?'Pe ':'P* ')+pdisp(Peq)+'</text>';
+  s+='<text x="'+X(Qeq)+'" y="'+(B+12)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#0A0C56" text-anchor="middle">'+qdisp(Qeq)+'</text>';
+  // elemental area letters
+  if(showLetters){ var regs=surRegions(mode,Qt,Pc,Ps); for(var i=0;i<regs.length;i++){ var ct=surCentroid(regs[i]); var cxp=X(ct[0]),cyp=Y(ct[1]); s+='<circle cx="'+cxp+'" cy="'+cyp+'" r="8" fill="#fff" stroke="#0A0C56" stroke-width="1"/>'; s+='<text x="'+cxp+'" y="'+(cyp+3)+'" font-size="10" font-family="Verdana" font-weight="700" fill="#0A0C56" text-anchor="middle">'+String.fromCharCode(65+i)+'</text>'; } }
+  return s;
+}

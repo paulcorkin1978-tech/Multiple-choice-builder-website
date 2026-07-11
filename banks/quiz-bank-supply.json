@@ -3,9 +3,9 @@
     "type": "sc",
     "curve": "supply",
     "title": "Supply of coffee",
-    "yLabel": "Price ($kg)",
+    "yLabel": "Price ($/kg)",
     "xLabel": "Quantity",
-    "color": "#a06e03",
+    "color": "#000000",
     "vUnit": 2,
     "hUnit": 20,
     "startFP": 3,
@@ -16,11 +16,68 @@
     "questionText": "Suppose that the price of coffee increases from $6 per kg to $8 per kg. What should happen to supply?",
     "answers": [
       "There will be an increase in supply",
-      "There will be a decrease in supply",
       "There will be an expansion in supply",
+      "There will be a decrease in supply",
       "There will be a contraction in supply"
     ],
+    "correctIndex": 1
+  },
+  {
+    "type": "sc",
+    "curve": "supply",
+    "title": "Supply of wheat",
+    "yLabel": "Price ($/kg)",
+    "xLabel": "Quantity (tonnes)",
+    "color": "#000000",
+    "vUnit": 1,
+    "hUnit": 25,
+    "startFP": 3,
+    "startCS": 0,
+    "showEqLines": true,
+    "ansFP": 5,
+    "ansCS": 0,
+    "questionText": "Consider the supply of wheat. Suppose the price of wheat rises from $3 to $5 per kg. What happens to the supply of wheat?",
+    "answers": [
+      "There will be an increase in supply, from 75 to 125 tonnes",
+      "There will be a contraction in supply, from 125 to 75 tonnes",
+      "There will be an expansion in supply, from 75 to 125 tonnes",
+      "There will be a decrease in supply, from 125 to 75 tonnes"
+    ],
     "correctIndex": 2
+  },
+  {
+    "type": "sc",
+    "curve": "supply",
+    "title": "Supply of wheat",
+    "yLabel": "Price ($/kg)",
+    "xLabel": "Quantity (tonnes)",
+    "color": "#000000",
+    "vUnit": 1,
+    "hUnit": 25,
+    "startFP": 3,
+    "startCS": 1,
+    "showEqLines": true,
+    "ansFP": 3,
+    "ansCS": 1,
+    "questionText": "Wheat and rice are related goods that can be substituted in production. The price of rice falls on global markets, shifting the supply of wheat from S1 to S2. At a price of $3 per kg, what has happened to the supply of wheat?",
+    "answers": [
+      "An increase in supply, from 75 to 125 tonnes",
+      "An expansion in supply, from 75 to 125 tonnes",
+      "A decrease in supply, from 125 to 75 tonnes",
+      "A contraction in supply, from 125 to 75 tonnes"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "plain",
+    "questionText": "Which of the following would cause a movement along the supply curve for wheat, rather than a shift of the whole curve?",
+    "answers": [
+      "A fall in the price of the fertiliser used to grow wheat",
+      "An improvement in harvesting technology",
+      "A government subsidy paid to wheat farmers",
+      "A rise in the price of wheat"
+    ],
+    "correctIndex": 3
   },
   {
     "type": "sc",
@@ -28,7 +85,7 @@
     "title": "Supply of manufactured goods",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#9886f3",
+    "color": "#000000",
     "vUnit": 10,
     "hUnit": 30,
     "startFP": 3,
@@ -38,31 +95,8 @@
     "ansCS": -1,
     "questionText": "An increase in the minimum wage for a manufacturing firm raises the cost of labour for the firm. How would this likely impact the supply of the manufactured good?",
     "answers": [
-      "There will be an increase in supply",
       "There will be a decrease in supply",
-      "There will be an expansion in supply",
-      "There will be a contraction in supply"
-    ],
-    "correctIndex": 1
-  },
-  {
-    "type": "sc",
-    "curve": "supply",
-    "title": "Supply of wheat",
-    "yLabel": "Price ($kg)",
-    "xLabel": "Quantity",
-    "color": "#0d8005",
-    "vUnit": 1,
-    "hUnit": 25,
-    "startFP": 3,
-    "startCS": 0,
-    "showEqLines": false,
-    "ansFP": 3,
-    "ansCS": 1,
-    "questionText": "Suppose that wheat and rice are related goods that can be substituted in production. If the price of rice was to decrease on global markets, how would this impact the supply of wheat?",
-    "answers": [
       "There will be an increase in supply",
-      "There will be a decrease in supply",
       "There will be an expansion in supply",
       "There will be a contraction in supply"
     ],
@@ -72,24 +106,35 @@
     "type": "sc",
     "curve": "supply",
     "title": "Supply of oil",
-    "yLabel": "Price ($ barrel)",
+    "yLabel": "Price ($ per barrel)",
     "xLabel": "Quantity",
-    "color": "#959994",
+    "color": "#000000",
     "vUnit": 20,
     "hUnit": 40,
     "startFP": 3,
     "startCS": 0,
     "showEqLines": false,
     "ansFP": 3,
-    "ansCS": 1,
+    "ansCS": 2,
     "questionText": "Suppose that new fracking technology opens up new oil reserves. How would this likely impact the supply of oil?",
     "answers": [
-      "There will be an increase in supply",
       "There will be a decrease in supply",
+      "There will be an expansion in supply",
+      "There will be an increase in supply",
+      "There will be a contraction in supply"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "plain",
+    "questionText": "In the quest to reduce global CO2 emissions, more firms enter the mining sector to extract lithium for battery production. How would this affect the supply of lithium on global markets?",
+    "answers": [
+      "There will be a decrease in supply",
+      "There will be an increase in supply",
       "There will be an expansion in supply",
       "There will be a contraction in supply"
     ],
-    "correctIndex": 0
+    "correctIndex": 1
   },
   {
     "type": "plain",
@@ -103,151 +148,24 @@
     "correctIndex": 3
   },
   {
-    "type": "sc",
-    "curve": "supply",
-    "title": "Supply of tea",
-    "yLabel": "Price ($kg)",
-    "xLabel": "Quantity",
-    "color": "#0f6e56",
-    "vUnit": 1,
-    "hUnit": 40,
-    "startFP": 3,
-    "startCS": -1,
-    "showEqLines": false,
-    "ansFP": 3,
-    "ansCS": -1,
-    "questionText": "Which of the following factors could explain the shift in the supply of tea from S1 to S2?",
-    "answers": [
-      "Selective breeding resulting in disease resistant tea plants",
-      "An increase in land rents on tea plantations",
-      "A decrease in the price of tea",
-      "An increase in the number of tea plantations"
-    ],
-    "correctIndex": 1
-  },
-  {
     "type": "plain",
     "questionText": "Suppose that an economy decides to subsidise its agricultural sector by giving payments to farmers who produce beef. How would this likely affect the supply of beef?",
     "answers": [
-      "There will be an increase in supply",
       "There will be a decrease in supply",
-      "There will be an expansion in supply",
-      "There will be a contraction in supply"
-    ],
-    "correctIndex": 0
-  },
-  {
-    "type": "table",
-    "title": "",
-    "headers": [
-      "Time",
-      "Coal ($ / tonne)",
-      "Gas ($ / GJ)"
-    ],
-    "rows": [
-      [
-        "Today",
-        "150",
-        "15"
-      ],
-      [
-        "Five years' time",
-        "150",
-        "10"
-      ]
-    ],
-    "questionText": "Study the table below showing the expected real price of coal and gas. In five years' time, what would likely happen to the supply of coal?",
-    "answers": [
+      "There will be a contraction in supply",
       "There will be an increase in supply",
-      "There will be a decrease in supply",
-      "There will be an expansion in supply",
-      "There will be a contraction in supply"
+      "There will be an expansion in supply"
     ],
-    "correctIndex": 0
-  },
-  {
-    "type": "table",
-    "title": "",
-    "headers": [
-      "Time",
-      "Coal ($ / tonne)",
-      "Gas ($ / GJ)"
-    ],
-    "rows": [
-      [
-        "Today",
-        "150",
-        "15"
-      ],
-      [
-        "Five years' time",
-        "165",
-        "16.5"
-      ]
-    ],
-    "questionText": "Consider the same energy sources, but this time both are expected to increase in price by 10% over the next 5 years. Ceteris paribus, what would likely happen to the supply of gas?",
-    "answers": [
-      "There will be an increase in supply",
-      "There will be a decrease in supply",
-      "There will be an expansion in supply",
-      "There will be no change in supply"
-    ],
-    "correctIndex": 3
-  },
-  {
-    "type": "sc",
-    "curve": "supply",
-    "title": "Supply of bananas",
-    "yLabel": "Price ($kg)",
-    "xLabel": "Quantity",
-    "color": "#B8860B",
-    "vUnit": 1,
-    "hUnit": 40,
-    "startFP": 3,
-    "startCS": 0,
-    "showEqLines": false,
-    "ansFP": 3,
-    "ansCS": -1,
-    "questionText": "Suppose that a tropical cyclone damages the banana crop of an economy. What is the likely impact on supply?",
-    "answers": [
-      "There will be an increase in supply",
-      "There will be a decrease in supply",
-      "There will be an expansion in supply",
-      "There will be a contraction in supply"
-    ],
-    "correctIndex": 1
-  },
-  {
-    "type": "sc",
-    "curve": "supply",
-    "title": "Supply of petrol cars",
-    "yLabel": "Price ($000s)",
-    "xLabel": "Quantity",
-    "color": "#121212",
-    "vUnit": 5000,
-    "hUnit": 25,
-    "startFP": 3,
-    "startCS": -1,
-    "showEqLines": false,
-    "ansFP": 3,
-    "ansCS": -1,
-    "questionText": "What could explain the change in the supply of petrol cars from S1 to S2?",
-    "answers": [
-      "Increased use of robotics in the production of petrol cars",
-      "Introduction of a tax on petrol cars",
-      "An increase in the number of petrol car manufacturing firms",
-      "A reduction in public transport costs"
-    ],
-    "correctIndex": 1
+    "correctIndex": 2
   },
   {
     "type": "plain",
-    "questionText": "In the quest to reduce global CO2 emissions, more firms enter the mining sector to extract lithium for battery production. How would this affect the supply of lithium on global markets?",
+    "questionText": "Which of the following changes would increase the supply of a good?",
     "answers": [
-      "There will be an increase in supply",
-      "There will be a decrease in supply",
-      "There will be an expansion in supply",
-      "There will be a contraction in supply"
+      "An improvement in production technology",
+      "A decrease in the productivity of labour",
+      "A rise in the price of raw materials",
+      "A reduction in the size of the workforce"
     ],
     "correctIndex": 0
   },
@@ -259,32 +177,175 @@
       "Cigarette tax (as % of retail price)"
     ],
     "rows": [
-      [
-        "1",
-        "70"
-      ],
-      [
-        "2",
-        "80"
-      ]
+      ["1", "70"],
+      ["2", "80"]
     ],
     "questionText": "Consider the table below which shows changes to the tax placed on cigarettes. How would this likely impact the supply of cigarettes in year 2?",
     "answers": [
       "There will be an increase in supply",
+      "There will be an expansion in supply",
+      "There will be a contraction in supply",
+      "There will be a decrease in supply"
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "sc",
+    "curve": "supply",
+    "title": "Supply of bananas",
+    "yLabel": "Price ($/kg)",
+    "xLabel": "Quantity",
+    "color": "#000000",
+    "vUnit": 1,
+    "hUnit": 40,
+    "startFP": 3,
+    "startCS": 0,
+    "showEqLines": false,
+    "ansFP": 3,
+    "ansCS": -1,
+    "questionText": "Suppose that a tropical cyclone damages the banana crop of an economy. What is the likely impact on supply?",
+    "answers": [
       "There will be a decrease in supply",
+      "There will be an increase in supply",
       "There will be an expansion in supply",
       "There will be a contraction in supply"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "sc",
+    "curve": "supply",
+    "title": "Supply of solar panels",
+    "yLabel": "Price ($)",
+    "xLabel": "Quantity (panels)",
+    "color": "#000000",
+    "vUnit": 200,
+    "hUnit": 50,
+    "startFP": 3,
+    "startCS": 1,
+    "showEqLines": true,
+    "ansFP": 3,
+    "ansCS": 1,
+    "questionText": "An improvement in manufacturing technology shifts the supply of solar panels from S1 to S2. At a price of $600, by how much has the supply of solar panels increased?",
+    "answers": [
+      "By 50 panels",
+      "By 100 panels",
+      "By 150 panels",
+      "By 200 panels"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "sc",
+    "curve": "supply",
+    "title": "Supply of steel",
+    "yLabel": "Price ($ per tonne)",
+    "xLabel": "Quantity (tonnes)",
+    "color": "#000000",
+    "vUnit": 100,
+    "hUnit": 30,
+    "startFP": 6,
+    "startCS": -2,
+    "showEqLines": true,
+    "ansFP": 6,
+    "ansCS": -2,
+    "questionText": "A sharp rise in the cost of iron ore shifts the supply of steel from S1 to S2. At a price of $600 per tonne, by how much has the supply of steel decreased?",
+    "answers": [
+      "By 60 tonnes",
+      "By 90 tonnes",
+      "By 150 tonnes",
+      "By 120 tonnes"
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "sc",
+    "curve": "supply",
+    "title": "Supply of milk",
+    "yLabel": "Price ($ per litre)",
+    "xLabel": "Quantity (litres)",
+    "color": "#000000",
+    "vUnit": 0.5,
+    "hUnit": 40,
+    "startFP": 4,
+    "startCS": 2,
+    "showEqLines": true,
+    "ansFP": 4,
+    "ansCS": 2,
+    "questionText": "A government subsidy shifts the supply of milk from S1 to S2. At a price of $2 per litre, what quantity is now supplied, and how should the change be described?",
+    "answers": [
+      "160 litres, an increase of 160",
+      "320 litres, an increase of 160",
+      "320 litres, an expansion of 160",
+      "160 litres, an expansion of 160"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "sc",
+    "curve": "supply",
+    "title": "Supply of tea",
+    "yLabel": "Price ($/kg)",
+    "xLabel": "Quantity",
+    "color": "#000000",
+    "vUnit": 1,
+    "hUnit": 40,
+    "startFP": 3,
+    "startCS": -1,
+    "showEqLines": false,
+    "ansFP": 3,
+    "ansCS": -1,
+    "questionText": "Which of the following factors could explain the shift in the supply of tea from S1 to S2?",
+    "answers": [
+      "An increase in land rents on tea plantations",
+      "Selective breeding resulting in disease resistant tea plants",
+      "A decrease in the price of tea",
+      "An increase in the number of tea plantations"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "sc",
+    "curve": "supply",
+    "title": "Supply of petrol cars",
+    "yLabel": "Price ($000s)",
+    "xLabel": "Quantity",
+    "color": "#000000",
+    "vUnit": 5000,
+    "hUnit": 25,
+    "startFP": 3,
+    "startCS": 2,
+    "showEqLines": false,
+    "ansFP": 3,
+    "ansCS": 2,
+    "questionText": "What could explain the change in the supply of petrol cars from S1 to S2?",
+    "answers": [
+      "The introduction of a tax on petrol cars",
+      "A rise in the wages of car factory workers",
+      "Increased use of robotics in the production of petrol cars",
+      "An increase in consumer demand for petrol cars"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "plain",
+    "questionText": "Smartphones and tablets are substitutes in production: a contract manufacturer can assemble either on the same line, using the same workers and many of the same components. A surge in demand pushes the price of smartphones up sharply, while the price of tablets is unchanged. What happens to the supply of tablets?",
+    "answers": [
+      "A contraction in supply, as producers move along the tablet supply curve",
+      "A decrease in supply, as the tablet supply curve shifts to the left",
+      "An increase in supply, as the tablet supply curve shifts to the right",
+      "No change in supply, because the price of tablets has not changed"
     ],
     "correctIndex": 1
   },
   {
     "type": "plain",
-    "questionText": "Which of the following changes in the factors of production would increase supply?",
+    "questionText": "Finished tablets can be held in warehouses and released at any time. Manufacturers now expect the price of tablets to fall sharply next quarter, when a new model launches. What is the most likely effect on the supply of tablets this quarter?",
     "answers": [
-      "A decrease in the productivity of labour",
-      "A rise in the price of raw materials",
-      "An improvement in new technology",
-      "A reduction in the size of the workforce"
+      "A decrease in supply, as manufacturers hold stock back to sell next quarter",
+      "An expansion in supply, as producers move along the tablet supply curve",
+      "An increase in supply, as manufacturers release stock ahead of the price fall",
+      "No change in supply, because the price of tablets has not actually fallen yet"
     ],
     "correctIndex": 2
   },
@@ -294,7 +355,7 @@
     "title": "Supply of mobile phones",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#f50511",
+    "color": "#000000",
     "vUnit": 200,
     "hUnit": 40,
     "startFP": 5,
@@ -304,11 +365,11 @@
     "ansCS": 0,
     "questionText": "Suppose that the price of mobile phones fell by 20%. Given the curve shown, what would be the result in the supply of mobile phones?",
     "answers": [
-      "A decrease in supply 40 mobile phones",
-      "An increase in supply 40 mobile phones",
-      "A contraction in supply 40 mobile phones",
-      "An expansion in supply of 40 mobile phones"
+      "A decrease in supply of 40 mobile phones",
+      "An expansion in supply of 40 mobile phones",
+      "An increase in supply of 40 mobile phones",
+      "A contraction in supply of 40 mobile phones"
     ],
-    "correctIndex": 2
+    "correctIndex": 3
   }
 ]

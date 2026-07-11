@@ -38,8 +38,8 @@
         <p>Starting price above or below equilibrium — surplus / shortage bracket animates to equilibrium</p>
       </div>
       <div class="menu-card" onclick="openBuilder('tax')">
-        <h3>Tax &amp; Subsidy</h3>
-        <p>Supply shifts left (tax) or right (subsidy) — reveals tax revenue, consumer cost &amp; producer impact rectangles step by step</p>
+        <h3>Tax, Subsidy &amp; Externalities</h3>
+        <p>Tax and subsidy wedges, or negative and positive externalities with MPC/MSC and MPB/MSB — reveals revenue, deadweight loss and the socially optimal quantity step by step</p>
       </div>
       <div class="menu-card" onclick="openBuilder('ped')">
         <h3>Price Elasticity</h3>
@@ -615,6 +615,10 @@
         <button class="btn btn-primary" id="txTypeTax" onclick="txSetType('tax')">Tax</button>
         <button class="btn"             id="txTypeSub" onclick="txSetType('subsidy')">Subsidy</button>
       </div>
+      <div class="btn-row" style="margin-top:6px">
+        <button class="btn" id="txTypeNegExt" onclick="txSetType('negext')" title="MPC → MSC. Shift supply LEFT: the market overproduces.">− Externality</button>
+        <button class="btn" id="txTypePosExt" onclick="txSetType('posext')" title="MPB → MSB. Shift demand RIGHT: the market underproduces.">+ Externality</button>
+      </div>
     </div>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">Demand slope</div>
@@ -664,7 +668,29 @@
         <div class="card">
           <div class="card-title">Reveal Options <span style="font-size:11px;font-weight:400;color:#888">(step by step)</span></div>
           <p style="font-size:12px;color:#5f5e5a;margin-bottom:10px;line-height:1.55">After a correct answer, ▶ Reveal steps through these in order. Untick any you don't need.</p>
-          <div style="display:flex;flex-direction:column;gap:9px">
+
+          <!-- Externality reveals — shown only for the two externality types -->
+          <div id="txRevExtSet" style="display:none;flex-direction:column;gap:9px">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevDWL" checked style="width:15px;height:15px;accent-color:#C0392B;cursor:pointer;flex-shrink:0">
+              Deadweight loss triangle
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevOptQ" checked style="width:15px;height:15px;accent-color:#1e7ab8;cursor:pointer;flex-shrink:0">
+              Socially optimal P and Q
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevExtW" checked style="width:15px;height:15px;accent-color:#7B2FA8;cursor:pointer;flex-shrink:0">
+              External cost / benefit
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+              <input type="checkbox" id="txRevCorr" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
+              Corrective tax / subsidy
+            </label>
+          </div>
+
+          <!-- Tax &amp; subsidy reveals -->
+          <div id="txRevTaxSet" style="display:flex;flex-direction:column;gap:9px">
             <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
               <input type="checkbox" id="txRevSize" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
               Size of tax / subsidy
@@ -866,10 +892,20 @@
         <button class="btn"             data-m="tax"   onclick="surSetMode('tax')">Tax</button>
         <button class="btn"             data-m="price" onclick="surSetMode('price')">Price control</button>
       </div>
+      <div class="btn-row" style="margin-top:6px">
+        <button class="btn" data-m="negext" onclick="surSetMode('negext')" title="MSC above MPC — the market overproduces">− Externality</button>
+        <button class="btn" data-m="posext" onclick="surSetMode('posext')" title="MSB above MPB — the market underproduces">+ Externality</button>
+      </div>
     </div>
     <div class="diag-ctrl-group" id="surParamWrap" style="display:none">
       <div class="diag-ctrl-label" id="surParamLabel">Parameter</div>
       <input type="range" id="surParam" min="5" max="49" step="1" value="40" oninput="surDraw()" style="width:100%">
+    </div>
+    <div class="diag-ctrl-group" id="surPolicyWrap" style="display:none">
+      <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+        <input type="checkbox" id="surPolicy" onchange="surTogglePolicy()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
+        Show the corrective tax / subsidy
+      </label>
     </div>
     <button class="btn" onclick="surSetMode(surMode)" style="width:100%">↺ Reset Diagram</button>
   </div>
@@ -899,9 +935,13 @@
           <div style="display:flex;flex-direction:column;gap:9px">
             <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevCS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Consumer surplus</label>
             <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevPS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Producer surplus</label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossCS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Loss of consumer surplus</label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossPS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Loss of producer surplus</label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevDWL" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#d82d2d;cursor:pointer;flex-shrink:0">Deadweight loss</label>
+            <div id="surLossWrap" style="display:flex;flex-direction:column;gap:9px">
+              <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossCS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Loss of consumer surplus</label>
+              <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossPS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Loss of producer surplus</label>
+            </div>
+            <label id="surExtWrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevEXT" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#7B2FA8;cursor:pointer;flex-shrink:0"><span id="surRevEXTlabel">External benefit</span></label>
+            <label id="surRevDWLwrap" style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevDWL" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#d82d2d;cursor:pointer;flex-shrink:0">Deadweight loss</label>
+            <label id="surRevPOLwrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevPOL" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0"><span id="surRevPOLlabel">Subsidy cost</span></label>
             <label id="surRevTAXwrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevTAX" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">Tax revenue</label>
           </div>
         </div>

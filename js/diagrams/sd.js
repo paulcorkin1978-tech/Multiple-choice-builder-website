@@ -24,6 +24,7 @@ function sdDraw(isAnimating = false) {
     sCol:   document.getElementById('sdSCol').value,
     dA: sdDA, sA: sdSA, fpA: 5,
     startDS: sdStartDS, startSS: sdStartSS, showFaded: true, isAnimating,
+    tgtD: sdDS, tgtS: sdSS,     // where the shift is heading — sizes the comet tail
     showEqLines: document.getElementById('sdShowEq').checked
   });
   document.getElementById('sdDL').disabled = sdDS <= -2;

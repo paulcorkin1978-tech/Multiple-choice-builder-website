@@ -118,7 +118,9 @@ function buildPMSVGInner(cfg) {
   // ── Axis tick labels (suppress clashing values) ───────────────────────────
   for (let i = 1; i <= GRID; i++) {
     const isCP  = !atEq && Math.abs(i - currentPrice) < 0.25;
-    const isEP  = showEqLines && Math.abs(i - eq.p)   < 0.15;
+    // Only hide the equilibrium tick when the eq label is actually drawn over it
+    // (i.e. at equilibrium). Off equilibrium, the eq price must stay readable.
+    const isEP  = showEqLines && atEq && Math.abs(i - eq.p) < 0.15;
     const isQd  = !atEq && Math.abs(i - qd) < 0.25;
     const isQs  = !atEq && Math.abs(i - qs) < 0.25;
     const isEQ  = showEqLines && atEq && Math.abs(i - eq.q) < 0.15;
@@ -130,10 +132,22 @@ function buildPMSVGInner(cfg) {
   s += `<text x="${fs2}" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,${fs2},${pad.t+(H-pad.t-pad.b)/2})">${yLbl}</text>`;
 
   // ── S & D curves ──────────────────────────────────────────────────────────
+  // When a curve has been shifted, draw its ORIGINAL position too. Otherwise a
+  // question that says "supply increased" shows a lone supply curve with nothing
+  // to have increased from.
+  if (dA !== 0) {
+    const d1 = clipLine(QS, dPf(QS, 0), QE, dPf(QE, 0), pad, W, H, 1);
+    if (d1) s += `<line x1="${d1.x1}" y1="${d1.y1}" x2="${d1.x2}" y2="${d1.y2}" stroke="${dCol}" stroke-width="2" stroke-linecap="round"/><text x="${d1.x2+4}" y="${d1.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${dCol}" font-weight="bold">D1</text>`;
+  }
+  if (sA !== 0) {
+    const s1 = clipLine(QS, sPf(QS, 0), QE, sPf(QE, 0), pad, W, H);
+    if (s1) s += `<line x1="${s1.x1}" y1="${s1.y1}" x2="${s1.x2}" y2="${s1.y2}" stroke="${sCol}" stroke-width="2" stroke-linecap="round"/><text x="${s1.x2+4}" y="${Math.min(s1.y1,s1.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${sCol}" font-weight="bold">S1</text>`;
+  }
+  const dLbl = dA !== 0 ? 'D2' : 'D', sLbl = sA !== 0 ? 'S2' : 'S';
   const cd = clipLine(QS, dPf(QS, dA), QE, dPf(QE, dA), pad, W, H, 1);
   const cs = clipLine(QS, sPf(QS, sA), QE, sPf(QE, sA), pad, W, H);
-  if (cd) s += `<line x1="${cd.x1}" y1="${cd.y1}" x2="${cd.x2}" y2="${cd.y2}" stroke="${dCol}" stroke-width="2.5" stroke-linecap="round"/><text x="${cd.x2+4}" y="${cd.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${dCol}" font-weight="bold">D</text>`;
-  if (cs) s += `<line x1="${cs.x1}" y1="${cs.y1}" x2="${cs.x2}" y2="${cs.y2}" stroke="${sCol}" stroke-width="2.5" stroke-linecap="round"/><text x="${cs.x2+4}" y="${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${sCol}" font-weight="bold">S</text>`;
+  if (cd) s += `<line x1="${cd.x1}" y1="${cd.y1}" x2="${cd.x2}" y2="${cd.y2}" stroke="${dCol}" stroke-width="2.5" stroke-linecap="round"/><text x="${cd.x2+4}" y="${cd.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${dCol}" font-weight="bold">${dLbl}</text>`;
+  if (cs) s += `<line x1="${cs.x1}" y1="${cs.y1}" x2="${cs.x2}" y2="${cs.y2}" stroke="${sCol}" stroke-width="2.5" stroke-linecap="round"/><text x="${cs.x2+4}" y="${Math.min(cs.y1,cs.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${sCol}" font-weight="bold">${sLbl}</text>`;
 
   if (atEq) {
     // ── At equilibrium — standard eq dot + dashed lines ────────────────────

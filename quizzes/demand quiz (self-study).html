@@ -8,8 +8,8 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#fafaf8;height:100vh;height:100dvh;overflow:hidden;color:#33343c;display:flex;flex-direction:column}
 #topbar{background:#0A0C56;padding:9px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-#brand{color:#fff;font-size:13px;letter-spacing:.4px}
-#brand b{color:#EC3C78;font-weight:600}
+#brand{display:flex;align-items:center}
+#brand svg{height:19px;width:auto;display:block}
 #progline{height:3px;background:#1b1e63;flex-shrink:0}
 #progfill{height:3px;background:#EC3C78;width:0%;transition:width .3s}
 #app{display:flex;flex:1;min-height:0}
@@ -44,13 +44,13 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#fafaf
 .sbox h2{font-size:22px;font-weight:700;margin-bottom:6px}
 .snum{font-size:56px;font-weight:700;color:#0A0C56;margin:16px 0 8px}
 .sbox p{font-size:14px;color:#5f5e5a}
-.rbtn{font-family:'Verdana',sans-serif;font-size:13px;font-weight:600;padding:12px 32px;background:#185FA5;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background .15s}
-.rbtn:hover{background:#0c447c}
+.rbtn{font-family:inherit;font-size:13px;font-weight:600;padding:12px 32px;background:#0A0C56;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background .15s}
+.rbtn:hover{background:#151875}
 .quiz-tbl-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding:32px;width:100%}
 .quiz-tbl-title{font-size:20px;font-weight:700;color:#2c2c2a;text-align:center}
-.quiz-tbl{border-collapse:collapse;font-size:18px;font-family:'Verdana',sans-serif}
-.quiz-tbl th{background:#185FA5;color:#fff;padding:14px 28px;font-size:17px;font-weight:600;text-align:center}
-.quiz-tbl td{padding:13px 28px;border:1px solid #d3d1c7;text-align:center;color:#2c2c2a;background:#fff}
+.quiz-tbl{border-collapse:collapse;font-size:18px;font-family:'Verdana',sans-serif;border:2px solid #EC3C78}
+.quiz-tbl th{background:#0A0C56;color:#fff;padding:14px 28px;font-size:17px;font-weight:600;text-align:center}
+.quiz-tbl td{padding:13px 28px;border:1px solid rgba(236,60,120,0.30);text-align:center;color:#2c2c2a;background:#fff}
 .quiz-tbl tbody tr:nth-child(even) td{background:#f5f4f0}
 #app.plain-q #diag-panel{display:none}
 #app.plain-q #q-panel{max-width:700px;margin:0 auto;flex:none;width:100%}
@@ -110,7 +110,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#fafaf
 </head>
 <body>
 <div id="topbar">
-  <span id="brand">theory<b>2</b>econ</span>
+  <span id="brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="402 912 1262 294" role="img" aria-label="theory2econ"><path fill="#EC3C78" d="M 1129.64 919.411 C 1186.13 915.336 1206.42 969.523 1191.24 1016.01 C 1181.22 1046.66 1161.08 1066.57 1139.86 1089.76 C 1158.36 1090.34 1178.48 1090 1197.1 1090.04 L 1197.63 1136.17 C 1154.99 1135.9 1112.35 1135.85 1069.71 1136.01 C 1069.61 1126.72 1067.9 1102.29 1072.1 1096.35 C 1096.95 1073.7 1122.41 1051.16 1139.46 1021.7 C 1147.74 1007.38 1158.03 971.833 1138.34 962.848 C 1134.78 961.234 1130.72 961.138 1127.1 962.582 C 1108.2 970.005 1116.02 1002.61 1121.41 1016.89 C 1112.27 1025.7 1098.06 1034.31 1087.06 1045.07 C 1057.96 997.221 1060.67 925.436 1129.64 919.411 z"/><path fill="#ffffff" d="M 946.258 983.997 C 960.299 984.325 974.859 984.139 988.945 984.13 C 989.24 1018.23 987.999 1052.44 989.041 1086.52 C 989.448 1099.83 1006.2 1096.75 1006.62 1089.4 C 1008.63 1054.56 1006.54 1019.38 1007.37 984.391 L 1050.05 984.204 L 1050.04 1073.92 C 1050.07 1097.65 1052.2 1142.83 1045.7 1163.35 C 1037.97 1180.99 1025.88 1192.61 1006.01 1195.65 C 980.812 1199.5 962.71 1191.42 942.59 1176.93 L 943.24 1175.89 C 948.717 1167.28 953.333 1154.95 957.943 1145.21 C 968.863 1152.27 989.719 1164.68 1001.92 1153.62 C 1009.22 1147.02 1008.38 1136.12 1008.47 1127.04 C 973.921 1148.58 947.706 1124.58 946.471 1088.55 C 946.027 1075.57 946.072 1062.76 946.061 1049.78 C 945.977 1027.85 946.042 1005.93 946.258 983.997 z"/><path fill="#ffffff" d="M 547.836 920.178 L 549.874 920.055 C 551.805 923.041 551.006 982.718 550.996 990.511 C 576.384 974.583 603.082 978.531 610.967 1010.02 C 614.57 1024.41 613.258 1046.53 613.257 1061.63 L 613.28 1136.16 C 599.187 1135.89 585.091 1135.86 570.998 1136.05 L 570.916 1032.1 C 567.388 1015.82 553.099 1018.32 552.168 1032.18 C 551.423 1043.28 551.829 1055.54 551.827 1066.78 L 551.815 1135.98 C 537.524 1135.82 523.231 1135.81 508.94 1135.95 L 508.114 929.412 C 521.892 926.518 534.241 923.772 547.836 920.178 z"/><path fill="#ffffff" d="M 795.511 981.299 C 831.646 980.072 849.942 1005.22 854.249 1038.43 C 859.462 1078.61 852.734 1134.07 803.053 1140.48 C 734.526 1144.74 728.36 1042.8 758.766 1001.86 C 768.256 989.084 780.041 983.379 795.511 981.299 z"/><path fill="#0A0C56" d="M 797.064 1018.79 C 817.587 1023.72 811.301 1063.02 811.278 1079.11 C 811.266 1087.59 807.947 1097.66 801.157 1103.17 C 797.811 1102.7 794.216 1102.31 792.347 1099.18 C 782.299 1082.36 782.034 1031.74 797.064 1018.79 z"/><path fill="#EC3C78" d="M 1480.5 981.404 C 1518.92 980.729 1534.44 1013.74 1536.77 1047.01 C 1539.4 1084.56 1530.48 1137.73 1483.1 1140.1 C 1470.94 1140.12 1457.9 1137.75 1448.62 1129.18 C 1416.16 1099.19 1416.83 1031.65 1443.23 998.215 C 1452.39 986.62 1466.85 982.434 1480.5 981.404 z"/><path fill="#0A0C56" d="M 1477.45 1019.88 C 1489.81 1019.97 1492.47 1030.92 1493.14 1041.59 C 1494.22 1058.74 1495.93 1088.27 1484.41 1102.36 C 1483.43 1102.46 1482.45 1102.53 1481.46 1102.58 C 1467.48 1103.12 1467.55 1073.19 1467.69 1063.83 C 1467.9 1049.92 1466.52 1030.04 1477.45 1019.88 z"/><path fill="#EC3C78" d="M 1599.07 982.255 C 1660.14 977.668 1654.24 1023.92 1654.22 1067.07 L 1654.51 1136.31 C 1640.78 1135.93 1626.32 1136.09 1612.54 1136.02 C 1612.27 1113.82 1612.17 1091.62 1612.22 1069.42 C 1612.25 1058.17 1614.44 1031.27 1608.05 1023.15 C 1598.03 1019.81 1594.76 1026.11 1594.19 1035.12 C 1593.46 1046.56 1593.82 1058.31 1593.84 1069.79 L 1594.02 1136.11 L 1551.97 1136.08 L 1551.96 1071.5 C 1551.95 1032.41 1550.12 992.012 1599.07 982.255 z"/><path fill="#ffffff" d="M 678.878 981.32 C 726.795 976.542 745.748 1025.48 720.509 1061.57 C 711.197 1074.89 688.058 1079.54 672.214 1080.63 C 678.639 1110.82 700.298 1107.28 721.95 1093.97 L 735.373 1124.54 C 726.612 1132.34 713.97 1136.76 702.612 1139.26 C 663.814 1147.81 634.29 1122.87 628.833 1084.57 C 623.016 1043.74 628.441 989.238 678.878 981.32 z"/><path fill="#0A0C56" d="M 679.553 1013.94 C 682.066 1013.83 683.539 1013.92 686.017 1014.03 C 699.32 1020.99 694.908 1040.4 682.611 1047.64 C 679.28 1048.74 674.592 1049.81 671.099 1050.73 C 670.855 1037.68 670.678 1024.06 679.553 1013.94 z"/><path fill="#EC3C78" d="M 1265.72 981.315 C 1309.85 978.222 1329.57 1024.72 1306.56 1058.8 C 1296.13 1074.25 1274.02 1078.55 1256.55 1081.19 C 1264.13 1110.15 1284.02 1107.69 1305.9 1094.39 C 1310.68 1104.71 1315.14 1114.17 1319.21 1124.81 C 1311.45 1132.94 1294.1 1138.31 1283.27 1140.06 C 1242.05 1146.7 1218.38 1116.45 1213.79 1078.96 C 1208.82 1038.43 1216.43 987.445 1265.72 981.315 z"/><path fill="#0A0C56" d="M 1265.24 1013.48 C 1284.63 1014.86 1280.5 1039.19 1266.06 1048.59 C 1262.77 1049.75 1258.33 1050.95 1254.9 1051.98 C 1255.32 1037.13 1254.96 1024.93 1265.24 1013.48 z"/><path fill="#ffffff" d="M 425.916 938.842 L 467.821 938.898 C 468.012 953.74 467.754 969.079 467.694 983.961 L 492.036 983.974 C 491.982 996.444 492.105 1008.91 492.404 1021.38 C 484.893 1021.87 475.478 1021.65 467.819 1021.68 C 467.689 1042.95 466.821 1065.09 468.117 1086.24 C 469.147 1103.04 478.451 1102.26 490.55 1098.45 C 491.279 1110.33 492.864 1121.02 494.714 1132.69 C 489.218 1137.33 471.162 1140.17 463.902 1140.01 C 424.678 1139.19 425.522 1101.11 425.752 1072.33 C 425.888 1055.21 425.764 1038.21 425.814 1021.39 L 408.026 1021.1 L 408.252 983.989 L 425.338 983.695 C 425.978 968.948 425.854 953.649 425.916 938.842 z"/><path fill="#EC3C78" d="M 1386.74 981.414 C 1401.73 981.791 1411.26 985.217 1423.96 992.642 C 1419.26 1003.9 1414.82 1017.43 1410.38 1029.1 C 1403.8 1023.43 1392.98 1018.39 1384.43 1022.9 C 1371.87 1029.93 1371.94 1047.91 1371.64 1060.47 C 1371.01 1087.72 1379.77 1112.04 1411.02 1094.55 C 1413.86 1101.03 1423.62 1121.78 1423.45 1127.67 L 1421.61 1129.31 C 1399.66 1141.89 1372.01 1146.61 1351.55 1128.82 C 1316.06 1097.97 1317.43 1008.03 1363.39 986.485 C 1371.1 982.871 1378.52 981.963 1386.74 981.414 z"/><path fill="#ffffff" d="M 916.971 982.263 C 923.779 981.803 928.306 982.166 935.105 982.616 L 935.549 1021.63 C 925.948 1021.32 915.27 1021.51 913.236 1033.76 C 911.052 1046.91 912.022 1061.6 912.116 1075.03 L 912.455 1136.04 L 890.253 1136.07 L 869.753 1136.09 L 869.857 1071.02 C 869.912 1031.83 867.813 991.635 916.971 982.263 z"/></svg></span>
   <div id="printbar">
     <button onclick="printWS(false)" title="Save the quiz as a student worksheet PDF">Student PDF</button>
     <button onclick="printWS(true)" title="Save with answers marked (teacher copy)">Teacher PDF</button>
@@ -144,7 +144,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#fafaf
 </div>
 <script>
 const GRID=9,QS=1,QE=9;
-const qs=[{"type":"sc","curve":"demand","title":"Demand for apples","yLabel":"Price ($kg)","xLabel":"Quantity","color":"#00ff11","vUnit":1,"hUnit":5,"startFP":5,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":0,"questionText":"Consider the demand for apples. Suppose that the price of apples falls to $4 per kg. What will happen to the demand for apples?","answers":["There will be a contraction in demand","There will be an expansion in demand","There will be an increase in demand","There will be a decrease in demand"],"correctIndex":1},{"type":"sc","curve":"demand","title":"Demand for lemonade","yLabel":"Price ($)","xLabel":"Quantity","color":"#C47D00","vUnit":0.5,"hUnit":10,"startFP":4,"startCS":0,"showEqLines":true,"ansFP":6,"ansCS":0,"questionText":"Consider the demand for lemonade. Suppose that the price of lemonade increased from $2 per can to $3 per can. What would happen to the demand for lemonade?","answers":["There will be a decrease in demand from 60 cans to 40 cans","There will be an increase in demand from 40 cans to 60 cans","There will be a contraction in demand from 60 cans to 40 cans","There will be an expansion in demand from 40 cans to 60 cans"],"correctIndex":2},{"type":"sc","curve":"demand","title":"Demand for cars","yLabel":"Price (thousands $)","xLabel":"Quantity","color":"#050505","vUnit":5000,"hUnit":100,"startFP":5,"startCS":0,"showEqLines":false,"ansFP":5,"ansCS":1,"questionText":"Consider the demand curve for cars. Suppose that due to strong economic growth there is an increase in income levels amongst the population. What would happen to the demand for cars?","answers":["There would be an increase in demand for cars","There would be a decrease in demand for cars","There would be an expansion in the demand for cars","There would be a contraction in the demand for cars"],"correctIndex":0},{"type":"sc","curve":"demand","title":"Demand for iPads","yLabel":"Price ($)","xLabel":"Quantity","color":"#858585","vUnit":100,"hUnit":30,"startFP":5,"startCS":0,"showEqLines":true,"ansFP":5,"ansCS":-1,"questionText":"Consider the demand for curve for iPads. Suppose Apple announces that the price of iPads will be reduced by 20% in one month’s time. What will happen to the demand for iPads today?","answers":["There will be an increase in demand for iPads","There will be a decrease in demand for iPads","There will be an expansion in demand for iPads","There will be a contraction in demand for iPads"],"correctIndex":1},{"type":"sc","curve":"demand","title":"Demand for iPads","yLabel":"Price ($)","xLabel":"Quantity","color":"#525252","vUnit":100,"hUnit":30,"startFP":5,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":0,"questionText":"Consider the same demand curve for iPads. One month has passed and the price of iPads falls by 10%. What happens to the demand for iPads?","answers":["There will be an increase in demand for iPads","There will be a decrease in demand for iPads","There will be an expansion in demand for iPads","There will be a contraction in demand for iPads"],"correctIndex":2},{"type":"sc","curve":"demand","title":"Demand for cinema tickets","yLabel":"Price ($)","xLabel":"Quantity","color":"#b047f5","vUnit":3,"hUnit":20,"startFP":5,"startCS":0,"showEqLines":false,"ansFP":5,"ansCS":-1,"questionText":"A recession causes rising unemployment and a 5% reduction in the average income of workers in an economy. How would this affect the demand for cinema tickets?","answers":["There will be a decrease in demand for cinema tickets by 5%","There will be an unknown decrease in demand for cinema tickets","There will be an increase in the demand for cinema tickets by 5%","There will be an unknown increase in demand for cinema tickets"],"correctIndex":1},{"type":"sc","curve":"demand","title":"Demand for the children's toy","yLabel":"Price ($)","xLabel":"Quantity","color":"#fb04b9","vUnit":8,"hUnit":25,"startFP":6,"startCS":0,"showEqLines":true,"ansFP":6,"ansCS":1,"questionText":"A viral marketing campaign on social media for a children’s toy makes it the ‘must have’ Christmas present. How will this affect demand for the toy?","answers":["There will be an increase in demand for the toy","There will be a decrease in demand for the toy","There will be an expansion in demand for the toy","There will be a contraction in demand for the toy"],"correctIndex":0},{"type":"table","title":"","headers":["Year","Price of Good A $","Price of Good B $"],"rows":[["1","100","100"],["2","100","95"]],"questionText":"Consider the data table below showing price changes for two substitute goods. Given the data, what is likely to happen to the demand for Good A in year 2?","answers":["There will be an increase in demand for Good A","There will be a decrease in demand for Good A","There will be a contraction in demand for Good A","There will be no change in demand for Good A"],"correctIndex":1},{"type":"table","title":"","headers":["Year","Price of Good A $","Price of Good B $"],"rows":[["1","100","100"],["2","100","95"]],"questionText":"Consider the same data table below showing price changes for two substitute goods. Given the data, what is likely to happen to the demand for Good B in year 2?","answers":["There will be an increase in demand for Good B","There will be a decrease in demand for Good B","There will be an expansion in demand for Good B","There will be a contraction in demand for Good B"],"correctIndex":2},{"type":"sc","curve":"demand","title":"Demand for Coca-Cola","yLabel":"Price ($)","xLabel":"Quantity","color":"#fb1d04","vUnit":0.5,"hUnit":25,"startFP":4,"startCS":1,"showEqLines":true,"ansFP":4,"ansCS":1,"questionText":"Consider the demand curves shown for Coca-Cola. What could explain the shift from D1 to D2?","answers":["There has been an increase in the price of Coca-Cola","There has been a decrease in the price of Coca-Cola","There has been an increase in the price of Pepsi","There has been a decrease in the price of Pepsi"],"correctIndex":2},{"type":"plain","questionText":"Suppose that the price of Nintendo Switch games reduce. What would be the likely impact on the demand for Nintendo Switch consoles?","answers":["No change in demand","An increase in demand","An expansion in demand","A decrease in demand"],"correctIndex":1},{"type":"sc","curve":"demand","title":"Demand for scooters","yLabel":"Price ($)","xLabel":"Quantity","color":"#6A8F00","vUnit":15,"hUnit":40,"startFP":5,"startCS":0,"showEqLines":true,"ansFP":7,"ansCS":0,"questionText":"Given the demand curve for scooters, what would cause a contraction in demand of 80 scooters?","answers":["A price decrease to $60","A price decrease to $45","A price increase to $90","A price increase to $105"],"correctIndex":3},{"type":"plain","questionText":"Increased immigration leads to an increase in the demand in the hospitality industry. What factor affecting demand best explains this shift?","answers":["Price changes","Changes in tastes and preferences","Change in the number of consumers","Changes in the price of substitutes"],"correctIndex":2},{"type":"sc","curve":"demand","title":"Demand for Snickers bars","yLabel":"Price ($)","xLabel":"Quantity","color":"#6A8F00","vUnit":0.5,"hUnit":25,"startFP":4,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":-1,"questionText":"What statement would most likely be correct if the price of Mars bars was to reduce?","answers":["There would be a decrease in demand for Snickers bars at $2 only","There would be a decrease in the demand for Snickers bars below $2","There would be a decrease in demand for Snickers bars at all price levels","There would be a contraction in demand for Snickers bars"],"correctIndex":2},{"type":"table","title":"","headers":["Answer","Factor 1","Factor 2"],"rows":[["A","An increase in the price of a substitute","An increase in the price of a complementary good"],["B","A decrease in the price of a substitute","An increase in the price of a complementary good"],["C","An increase in the price of a substitute","A decrease in the price of a complementary good"],["D","A decrease in the price of a substitute","A decrease in the price of a complementary good"]],"questionText":"What two factors could cause a decrease in demand?","answers":["Row A","Row B","Row C","Row D"],"correctIndex":1}];
+const qs=[{"type":"sc","curve":"demand","title":"Demand for apples","yLabel":"Price ($kg)","xLabel":"Quantity","color":"#000000","vUnit":1,"hUnit":5,"startFP":5,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":0,"questionText":"Consider the demand for apples. Suppose that the price of apples falls to $4 per kg. What will happen to the demand for apples?","answers":["There will be a contraction in demand","There will be an expansion in demand","There will be an increase in demand","There will be a decrease in demand"],"correctIndex":1},{"type":"sc","curve":"demand","title":"Demand for lemonade","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":0.5,"hUnit":10,"startFP":4,"startCS":0,"showEqLines":true,"ansFP":6,"ansCS":0,"questionText":"Consider the demand for lemonade. Suppose that the price of lemonade increased from $2 per can to $3 per can. What would happen to the demand for lemonade?","answers":["There will be a decrease in demand from 60 cans to 40 cans","There will be an increase in demand from 40 cans to 60 cans","There will be a contraction in demand from 60 cans to 40 cans","There will be an expansion in demand from 40 cans to 60 cans"],"correctIndex":2},{"type":"plain","questionText":"Which of the following would cause a movement along the demand curve for coffee, rather than a shift of the whole curve?","answers":["A fall in the price of coffee","A rise in the incomes of coffee drinkers","A fall in the price of tea, a substitute for coffee","A health report praising the benefits of drinking coffee"],"correctIndex":0},{"type":"sc","curve":"demand","title":"Demand for cars","yLabel":"Price (thousands $)","xLabel":"Quantity","color":"#000000","vUnit":5000,"hUnit":100,"startFP":5,"startCS":0,"showEqLines":false,"ansFP":5,"ansCS":2,"questionText":"Consider the demand curve for cars. Suppose that due to strong economic growth there is an increase in income levels amongst the population. What would happen to the demand for cars?","answers":["There would be a decrease in demand for cars","There would be an expansion in the demand for cars","There would be a contraction in the demand for cars","There would be an increase in demand for cars"],"correctIndex":3},{"type":"sc","curve":"demand","title":"Demand for the children's toy","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":8,"hUnit":25,"startFP":6,"startCS":0,"showEqLines":false,"ansFP":6,"ansCS":1,"questionText":"A viral marketing campaign on social media for a children’s toy makes it the ‘must have’ Christmas present. How will this affect demand for the toy?","answers":["There will be an increase in demand for the toy","There will be a decrease in demand for the toy","There will be an expansion in demand for the toy","There will be a contraction in demand for the toy"],"correctIndex":0},{"type":"plain","questionText":"Increased immigration leads to an increase in demand for hospitality services. What factor affecting demand best explains this shift?","answers":["Price changes","Changes in tastes and preferences","Change in the number of consumers","Changes in the price of substitutes"],"correctIndex":2},{"type":"sc","curve":"demand","color":"#000000","yLabel":"Price ($)","xLabel":"Quantity (games)","startCS":0,"ansCS":0,"showEqLines":true,"title":"Demand for Switch games","vUnit":10,"hUnit":20,"startFP":6,"ansFP":4,"questionText":"Consider the demand curve for Nintendo Switch games. Suppose the price of Switch games falls from $60 to $40. What happens to the demand for Switch games?","answers":["There will be an increase in demand from 80 to 120 games","There will be a contraction in demand from 120 to 80 games","There will be a decrease in demand from 120 to 80 games","There will be an expansion in demand from 80 to 120 games"],"correctIndex":3},{"type":"plain","questionText":"Suppose that the price of Nintendo Switch games reduce. What would be the likely impact on the demand for Nintendo Switch consoles?","answers":["No change in demand","An increase in demand","An expansion in demand","A decrease in demand"],"correctIndex":1},{"type":"table","title":"","headers":["Year","Price of Good A $","Price of Good B $"],"rows":[["1","100","100"],["2","100","95"]],"questionText":"Consider the data table below showing price changes for two substitute goods. Given the data, what is likely to happen to the demand for Good A in year 2?","answers":["There will be an increase in demand for Good A","There will be a contraction in demand for Good A","There will be no change in demand for Good A","There will be a decrease in demand for Good A"],"correctIndex":3},{"type":"table","title":"","headers":["Year","Price of Good A $","Price of Good B $"],"rows":[["1","100","100"],["2","100","95"]],"questionText":"Consider the same data table below showing price changes for two substitute goods. Given the data, what is likely to happen to the demand for Good B in year 2?","answers":["There will be an increase in demand for Good B","There will be a decrease in demand for Good B","There will be an expansion in demand for Good B","There will be a contraction in demand for Good B"],"correctIndex":2},{"type":"sc","curve":"demand","title":"Demand for Snickers bars","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":0.5,"hUnit":25,"startFP":4,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":-2,"questionText":"What statement would most likely be correct if the price of Mars bars was to reduce?","answers":["There would be a decrease in demand for Snickers bars at all price levels","There would be a decrease in demand for Snickers bars at $2 only","There would be a decrease in the demand for Snickers bars below $2","There would be a contraction in demand for Snickers bars"],"correctIndex":0},{"type":"sc","curve":"demand","color":"#000000","yLabel":"Price ($)","xLabel":"Quantity (cups per day)","startCS":1,"ansCS":1,"showEqLines":true,"title":"Demand for coffee","vUnit":1,"hUnit":50,"startFP":5,"ansFP":5,"questionText":"A health report praises the benefits of coffee, shifting demand from D1 to D2. At a price of $5, by how much has the demand for coffee increased?","answers":["By 50 cups per day","By 150 cups per day","By 100 cups per day","By 200 cups per day"],"correctIndex":2},{"type":"sc","curve":"demand","color":"#000000","yLabel":"Price ($/kg)","xLabel":"Quantity (kg)","startCS":-2,"ansCS":-2,"showEqLines":true,"title":"Demand for beef","vUnit":2,"hUnit":20,"startFP":3,"ansFP":3,"questionText":"Following a health scare, the demand for beef shifts from D1 to D2. At a price of $6 per kg, by how much has the demand for beef decreased?","answers":["By 80 kg","By 40 kg","By 60 kg","By 100 kg"],"correctIndex":0},{"type":"sc","curve":"demand","title":"Demand for Coca-Cola","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":0.5,"hUnit":25,"startFP":4,"startCS":1,"showEqLines":false,"ansFP":4,"ansCS":1,"questionText":"Consider the demand curves shown for Coca-Cola. What could explain the shift from D1 to D2?","answers":["There has been an increase in the price of Coca-Cola","There has been a decrease in the price of Coca-Cola","There has been a decrease in the price of Pepsi","There has been an increase in the price of Pepsi"],"correctIndex":3},{"type":"sc","curve":"demand","title":"Demand for iPads","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":100,"hUnit":30,"startFP":5,"startCS":0,"showEqLines":false,"ansFP":5,"ansCS":-2,"questionText":"Consider the demand curve for iPads. Suppose Apple announces that the price of iPads will be reduced by 20% in one month’s time. What will happen to the demand for iPads today?","answers":["There will be an increase in demand for iPads","There will be a decrease in demand for iPads","There will be an expansion in demand for iPads","There will be a contraction in demand for iPads"],"correctIndex":1},{"type":"sc","curve":"demand","title":"Demand for iPads","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":100,"hUnit":30,"startFP":5,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":0,"questionText":"Consider the same demand curve for iPads. One month has passed and the price of iPads falls by 20%. What happens to the demand for iPads?","answers":["There will be an increase in demand for iPads","There will be a decrease in demand for iPads","There will be an expansion in demand for iPads","There will be a contraction in demand for iPads"],"correctIndex":2},{"type":"sc","curve":"demand","title":"Demand for cinema tickets","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":3,"hUnit":20,"startFP":5,"startCS":0,"showEqLines":false,"ansFP":5,"ansCS":-1,"questionText":"A recession causes rising unemployment and a 5% reduction in the average income of workers in an economy. How would this affect the demand for cinema tickets?","answers":["There will be a decrease in demand for cinema tickets by 5%","There will be an unknown decrease in demand for cinema tickets","There will be an increase in the demand for cinema tickets by 5%","There will be an unknown increase in demand for cinema tickets"],"correctIndex":1},{"type":"table","title":"","headers":["Answer","Factor 1","Factor 2"],"rows":[["A","A decrease in the price of a substitute","An increase in the price of a complementary good"],["B","An increase in the price of a substitute","An increase in the price of a complementary good"],["C","An increase in the price of a substitute","A decrease in the price of a complementary good"],["D","A decrease in the price of a substitute","A decrease in the price of a complementary good"]],"questionText":"What two factors could cause a decrease in demand?","answers":["Row A","Row B","Row C","Row D"],"correctIndex":0},{"type":"sc","curve":"demand","color":"#000000","yLabel":"Price ($/month)","xLabel":"Quantity (subscriptions)","startCS":2,"ansCS":2,"showEqLines":true,"title":"Demand for streaming subscriptions","vUnit":2,"hUnit":30,"startFP":5,"ansFP":5,"questionText":"A rise in household incomes shifts the demand for streaming subscriptions from D1 to D2. At a price of $10 per month, what quantity is now demanded, and how should the change be described?","answers":["150 subscriptions, an increase of 120","270 subscriptions, an increase of 120","270 subscriptions, an expansion of 120","150 subscriptions, an expansion of 120"],"correctIndex":1},{"type":"sc","curve":"demand","title":"Demand for scooters","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":15,"hUnit":40,"startFP":5,"startCS":0,"showEqLines":true,"ansFP":7,"ansCS":0,"questionText":"Given the demand curve for scooters, what would cause a contraction in demand of 80 scooters?","answers":["A price decrease to $60","A price decrease to $45","A price increase to $90","A price increase to $105"],"correctIndex":3}];
 const TESTMODE=true;
 let cur=0;
 const done=new Array(qs.length).fill(false);
@@ -154,11 +154,28 @@ const curPos=qs.map(q=>{
   if(q.type==='sd') return{dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
   if(q.type==='sc') return{dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
   if(q.type==='pm') return{dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
-  if(q.type==='tax') return{dA:q.startDS||0,sA:q.ansSS||0,fpA:-1};
+  if(q.type==='tax') return Object.assign(txPos(q),{fpA:-1});
   if(q.type==='sur') return{dA:0,sA:0,fpA:0};
   return{dA:0,sA:0,fpA:q.startFP||5};
 });
-function surEff(q){var mode=q.mode||'eq';function lossOK(k){if(k==='LOSSCS')return mode==='tax'||mode==='qty'||(mode==='price'&&q.param>=50);if(k==='LOSSPS')return mode==='tax'||(mode==='price'&&q.param<50);return true;}var out=[];(q.reveals||[]).forEach(function(k){if(k==='DWL'&&mode==='eq')return;if(k==='TAX'&&mode!=='tax')return;if((k==='LOSSCS'||k==='LOSSPS')&&!lossOK(k))return;out.push(k);});return out;}
+// ── tax / subsidy / externality helpers (mirrored from utils.js) ──────────────
+function txIsExt(t){ return t==='negext'||t==='posext'; }
+function txLabels(t){
+  if(t==='negext') return {d1:'MSB', d2:'MSB', s1:'MPC', s2:'MSC'};
+  if(t==='posext') return {d1:'MPB', d2:'MSB', s1:'MSC', s2:'MSC'};
+  return {d1:'D1', d2:'D2', s1:'S1', s2:'S2'};
+}
+function txDefRev(q){
+  return txIsExt(q&&q.taxType) ? ['dwl','optq','extwedge','corrective']
+                               : ['size','wedge','consumer','prodloss'];
+}
+function txRev(q){ return (q.reveals&&q.reveals.length)?q.reveals:txDefRev(q); }
+function txPos(q){
+  return (q.taxType==='posext')
+    ? {dA:(q.ansDS||0),   sA:(q.startSS||0)}
+    : {dA:(q.startDS||0), sA:(q.ansSS||0)};
+}
+function surEff(q){var mode=q.mode||'eq';var ext=surIsExt(mode),policy=(ext&&!!q.showPolicy);function lossOK(k){if(k==='LOSSCS')return mode==='tax'||mode==='qty'||(mode==='price'&&q.param>=50);if(k==='LOSSPS')return mode==='tax'||(mode==='price'&&q.param<50);return true;}var out=[];(q.reveals||[]).forEach(function(k){if(ext){if(k==='DWL'&&policy)return;if(k==='POL'&&!policy)return;if(k==='TAX'||k==='LOSSCS'||k==='LOSSPS')return;out.push(k);return;}if(k==='DWL'&&mode==='eq')return;if(k==='TAX'&&mode!=='tax')return;if((k==='LOSSCS'||k==='LOSSPS')&&!lossOK(k))return;out.push(k);});return out;}
 function fmt(n){return Math.round(n*100)/100;}
 // dm=demand slope multiplier (1=normal,2=inelastic,0.5=elastic).
 // dsc=demand shift coefficient per step (default 2, tax builder uses dm for 1-grid-square shifts).
@@ -181,7 +198,7 @@ function clip(qA,pA,qB,pB,pad,W,H,pMin=0){
 }
 // PED renderer — kept identical to pedInner() in utils.js (plain concatenation, no template literals)
 function pedInner(q){
-  var W=400,H=340,L=56,R=372,T=30,B=286;
+  var W=400,H=340,L=56,R=372,T=44,B=286;
   var cx=(L+R)/2, yP1=232, yP2=92, GMAX=120;
   var esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
   var f=function(n){return Math.round(n*100)/100;};
@@ -192,9 +209,10 @@ function pedInner(q){
   var title=q.title||'', yLbl=q.yLbl||'Price ($)', xLbl=q.xLbl||'Quantity';
   var fs=12, fs2=10;
   var s='';
-  if(title) s+='<text x="'+(W/2)+'" y="16" text-anchor="middle" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(title)+'</text>';
-  s+='<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
-  s+='<line x1="'+L+'" y1="'+B+'" x2="'+R+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
+  if(title) s+='<text x="'+(W/2)+'" y="22" text-anchor="middle" font-size="13" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(title)+'</text>';
+  s+='<defs><marker id="pedarr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
+  s+='<line x1="'+L+'" y1="'+(B+6)+'" x2="'+L+'" y2="'+(T-6)+'" stroke="#444" stroke-width="1.5" marker-end="url(#pedarr)" opacity="0.8"/>';
+  s+='<line x1="'+(L-6)+'" y1="'+B+'" x2="'+(R+6)+'" y2="'+B+'" stroke="#444" stroke-width="1.5" marker-end="url(#pedarr)" opacity="0.8"/>';
   s+='<text x="'+(L-42)+'" y="'+((T+B)/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#888" text-anchor="middle" transform="rotate(-90 '+(L-42)+' '+((T+B)/2)+')">'+esc(yLbl)+'</text>';
   s+='<text x="'+((L+R)/2)+'" y="'+(B+26)+'" font-size="'+fs2+'" font-family="Verdana" fill="#888" text-anchor="middle">'+esc(xLbl)+'</text>';
   var color=q.color||(q.perfectElastic?'#0d9488':(q.ped===0?'#6b21a8':(q.ped<1?'#185FA5':(q.ped===1?'#15803d':'#EC3C78'))));
@@ -219,20 +237,46 @@ function pedInner(q){
   }
   var dx=loX-hiX, dy=loY-hiY, len=Math.sqrt(dx*dx+dy*dy)||1; dx/=len; dy/=len; var ext=36;
   s+='<line x1="'+(hiX-dx*ext)+'" y1="'+(hiY-dy*ext)+'" x2="'+(loX+dx*ext)+'" y2="'+(loY+dy*ext)+'" stroke="'+color+'" stroke-width="3"/>';
-  s+='<text x="'+(loX+dx*ext+3)+'" y="'+(loY+dy*ext+14)+'" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="'+color+'">D</text>';
+  s+='<text x="'+(loX+dx*ext+3)+'" y="'+(loY+dy*ext+14)+'" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="'+color+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">D</text>';
+  var offX=dy*14, offY=-dx*14;
   var pts=[[loX,loY,lo.nm,lo.qy,'start'],[hiX,hiY,hi.nm,hi.qy,'end']];
   for(var j=0;j<pts.length;j++){
     var px=pts[j][0], py=pts[j][1], nm=pts[j][2], qv=pts[j][3], anch=pts[j][4];
     s+='<line x1="'+px+'" y1="'+py+'" x2="'+px+'" y2="'+B+'" stroke="#b6bfce" stroke-width="1" stroke-dasharray="4 3"/>';
     s+='<text x="'+(px+(anch==='start'?3:-3))+'" y="'+(B+13)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="'+anch+'">'+f(qv)+'</text>';
     s+='<circle cx="'+px+'" cy="'+py+'" r="5" fill="#fff" stroke="'+color+'" stroke-width="2.5"/>';
-    var lx=(anch==='start')?px+9:px-9;
-    s+='<text x="'+lx+'" y="'+(py-8)+'" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#0A0C56" text-anchor="'+(anch==='start'?'start':'end')+'">'+nm+'</text>';
+    s+='<text x="'+(px+offX)+'" y="'+(py+offY+4)+'" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#0A0C56" stroke="#fff" stroke-width="3" paint-order="stroke" text-anchor="middle">'+nm+'</text>';
   }
   return s;
 }
 // Surplus / DWL renderer — kept identical to surInner() in utils.js
 function surCentroid(pts){var x=0,y=0;for(var i=0;i<pts.length;i++){x+=pts[i][0];y+=pts[i][1];}return [x/pts.length,y/pts.length];}
+function surIsExt(m){return m==='negext'||m==='posext';}
+function surExt(mode,E){
+  var neg=(mode==='negext'), Dmax=100, Qm=50, Pm=50;
+  var Qo=neg?(Dmax-E)/2:(Dmax+E)/2;
+  var Po=neg?(Dmax-Qo):Qo;
+  var Pcon=neg?Po:(Dmax-Qo);
+  var Pprod=neg?Qo:Po;
+  var socAtQm=neg?(Qm+E):(Dmax+E-Qm);
+  return {neg:neg,Dmax:Dmax,E:E,Qm:Qm,Pm:Pm,Qo:Qo,Po:Po,Pcon:Pcon,Pprod:Pprod,socAtQm:socAtQm};
+}
+function surExtOrder(policy){return ['CS','PS','EXT',policy?'POL':'DWL'];}
+function surExtAreas(g,policy){
+  var Dmax=g.Dmax,E=g.E,Qt=policy?g.Qo:g.Qm,A={};
+  if(!policy){
+    A.CS=[[0,g.Pm],[0,Dmax],[g.Qm,g.Pm]];
+    A.PS=[[0,0],[0,g.Pm],[g.Qm,g.Pm]];
+    A.DWL=[[g.Qo,g.Po],[g.Qm,g.Pm],[g.Qm,g.socAtQm]];
+  }else{
+    A.CS=[[0,g.Pcon],[0,Dmax],[g.Qo,g.Pcon]];
+    A.PS=[[0,0],[0,g.Pprod],[g.Qo,g.Pprod]];
+    A.POL=[[0,g.Pcon],[Qt,g.Pcon],[Qt,g.Pprod],[0,g.Pprod]];
+  }
+  A.EXT=g.neg?[[0,0],[0,E],[Qt,Qt+E],[Qt,Qt]]
+             :[[0,Dmax],[0,Dmax+E],[Qt,Dmax+E-Qt],[Qt,Dmax-Qt]];
+  return A;
+}
 function surRegions(mode,Qt,Pc,Ps){
   var Dm=100,Pst=50,Qe=50;
   var dm=function(Q){return Dm-Q;}, sp=function(Q){return Q;};
@@ -248,11 +292,15 @@ function surRegions(mode,Qt,Pc,Ps){
     [[Qt,dm(Qt)],[Qe,Pst],[Qt,Pst]], [[Qt,Pst],[Qe,Pst],[Qt,Pc]] ];
 }
 function surInner(q,nRev){
-  var W=400,H=340,L=52,R=372,T=28,B=292,QMAX=100,PMAX=100;
-  var X=function(Q){return L+(Q/QMAX)*(R-L);}, Y=function(P){return B-(P/PMAX)*(B-T);};
-  var esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var W=400,H=340,L=52,T=28,B=292,QMAX=100;
   var Dmax=100,Qeq=50,Peq=50, dem=function(Q){return Dmax-Q;}, sup=function(Q){return Q;};
   var mode=q.mode||'eq', param=(q.param==null?20:q.param);
+  var isExt=surIsExt(mode), policy=(isExt && !!q.showPolicy);
+  var g=isExt?surExt(mode,param):null;
+  var PMAX=isExt?(Dmax+param):100;
+  var R=isExt?352:372;
+  var X=function(Q){return L+(Q/QMAX)*(R-L);}, Y=function(P){return B-(P/PMAX)*(B-T);};
+  var esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
   var dCol=q.dCol||'#185FA5', sCol=q.sCol||'#0F6E56';
   var reveals=q.reveals||[], showLetters=!!q.showLetters;
   if(nRev==null) nRev=reveals.length;
@@ -261,43 +309,112 @@ function surInner(q,nRev){
   var fmtn=function(n){return Math.round(n*100)/100;};
   var pdisp=function(P){return fmtn(P*vU/50);}, qdisp=function(Q){return fmtn(Q*hU/50);};
   var Qt,Pc,Ps,kind='';
-  if(mode==='eq'){Qt=Qeq;Pc=Peq;Ps=Peq;}
+  if(isExt){ Qt=policy?g.Qo:g.Qm; Pc=policy?g.Pcon:g.Pm; Ps=policy?g.Pprod:g.Pm; kind=g.neg?'Negative externality':'Positive externality'; }
+  else if(mode==='eq'){Qt=Qeq;Pc=Peq;Ps=Peq;}
   else if(mode==='qty'){Qt=param;Pc=dem(Qt);Ps=Pc;kind='Restricted quantity';}
   else if(mode==='tax'){Qt=(Dmax-param)/2;Pc=dem(Qt);Ps=sup(Qt);kind='Tax';}
   else if(mode==='price'){ if(param>=Peq){Qt=Dmax-param;Pc=param;Ps=param;kind='Price floor';} else {Qt=param;Pc=param;Ps=param;kind='Price ceiling';} }
   var poly=function(pts){return pts.map(function(p){return X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1);}).join(' ');};
   var s='';
   if(q.title) s+='<text x="'+(W/2)+'" y="15" text-anchor="middle" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(q.title)+'</text>';
-  s+='<defs><pattern id="surhcs" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(24,95,165,0.13)"/><line x1="0" y1="0" x2="0" y2="7" stroke="#185FA5" stroke-width="2.2"/></pattern><pattern id="surhps" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(15,110,86,0.13)"/><line x1="0" y1="0" x2="0" y2="7" stroke="#0F6E56" stroke-width="2.2"/></pattern></defs>';
-  var elem=surRegions(mode,Qt,Pc,Ps);
-  var areaPoly={ CS:[[0,Pc],[0,Dmax],[Qt,dem(Qt)],[Qt,Pc]], PS:[[0,Ps],[0,0],[Qt,sup(Qt)],[Qt,Ps]], DWL:[[Qt,dem(Qt)],[Qt,sup(Qt)],[Qeq,Peq]], TAX:[[0,Pc],[Qt,Pc],[Qt,Ps],[0,Ps]] };
-  var areaFill={CS:'rgba(24,95,165,.32)',PS:'rgba(15,110,86,.32)',DWL:'rgba(216,45,45,.4)',TAX:'rgba(196,125,0,.34)'};
-  var lossIdx=function(key){ if(mode==='tax') return key==='LOSSCS'?[1,3]:(key==='LOSSPS'?[2,4]:[]); if(mode==='qty') return key==='LOSSCS'?[1,3]:[]; if(mode==='price') return (kind==='Price floor')?(key==='LOSSCS'?[1,3]:[]):(key==='LOSSPS'?[1,4]:[]); return []; };
+  s+='<defs><marker id="surarr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="surhcs" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(24,95,165,0.13)"/><line x1="0" y1="0" x2="0" y2="7" stroke="#185FA5" stroke-width="2.2"/></pattern><pattern id="surhps" width="7" height="7" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="rgba(15,110,86,0.13)"/><line x1="0" y1="0" x2="0" y2="7" stroke="#0F6E56" stroke-width="2.2"/></pattern></defs>';
+  var elem=isExt?[]:surRegions(mode,Qt,Pc,Ps);
+  var areaPoly,areaFill;
+  if(isExt){
+    areaPoly=surExtAreas(g,policy);
+    areaFill={CS:'rgba(24,95,165,.32)',PS:'rgba(15,110,86,.32)',DWL:'rgba(216,45,45,.4)',
+              EXT:(g.neg?'rgba(123,47,168,.30)':'rgba(13,148,136,.30)'),POL:'rgba(196,125,0,.34)'};
+  }else{
+    areaPoly={ CS:[[0,Pc],[0,Dmax],[Qt,dem(Qt)],[Qt,Pc]], PS:[[0,Ps],[0,0],[Qt,sup(Qt)],[Qt,Ps]], DWL:[[Qt,dem(Qt)],[Qt,sup(Qt)],[Qeq,Peq]], TAX:[[0,Pc],[Qt,Pc],[Qt,Ps],[0,Ps]] };
+    areaFill={CS:'rgba(24,95,165,.32)',PS:'rgba(15,110,86,.32)',DWL:'rgba(216,45,45,.4)',TAX:'rgba(196,125,0,.34)'};
+  }
+  var lossIdx=function(key){ if(isExt) return []; if(mode==='tax') return key==='LOSSCS'?[1,3]:(key==='LOSSPS'?[2,4]:[]); if(mode==='qty') return key==='LOSSCS'?[1,3]:[]; if(mode==='price') return (kind==='Price floor')?(key==='LOSSCS'?[1,3]:[]):(key==='LOSSPS'?[1,4]:[]); return []; };
   var lossFill={LOSSCS:'url(#surhcs)',LOSSPS:'url(#surhps)'};
   var effReveals=[];
-  for(var ei=0;ei<reveals.length;ei++){ var kk=reveals[ei]; if(kk==='DWL' && !(Qt<Qeq)) continue; if(kk==='TAX' && mode!=='tax') continue; if((kk==='LOSSCS'||kk==='LOSSPS') && lossIdx(kk).length===0) continue; effReveals.push(kk); }
+  for(var ei=0;ei<reveals.length;ei++){ var kk=reveals[ei];
+    if(isExt){ if(kk==='DWL'&&policy) continue; if(kk==='POL'&&!policy) continue; if(!areaPoly[kk]) continue; }
+    else { if(kk==='DWL' && !(Qt<Qeq)) continue; if(kk==='TAX' && mode!=='tax') continue; if((kk==='LOSSCS'||kk==='LOSSPS') && lossIdx(kk).length===0) continue; }
+    effReveals.push(kk); }
   for(var r=0;r<Math.min(nRev,effReveals.length);r++){ var key=effReveals[r]; if(areaPoly[key]){ s+='<polygon class="sur-fade" points="'+poly(areaPoly[key])+'" fill="'+areaFill[key]+'"/>'; } else if(lossFill[key]){ var li=lossIdx(key); for(var mi=0;mi<li.length;mi++){ s+='<polygon class="sur-fade" points="'+poly(elem[li[mi]])+'" fill="'+lossFill[key]+'" stroke="'+(key==='LOSSCS'?'#185FA5':'#0F6E56')+'" stroke-width="1.2" stroke-opacity="0.7"/>'; } } }
-  s+='<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
-  s+='<line x1="'+L+'" y1="'+B+'" x2="'+R+'" y2="'+B+'" stroke="#444" stroke-width="1.5"/>';
+  s+='<line x1="'+L+'" y1="'+(B+6)+'" x2="'+L+'" y2="'+(T-6)+'" stroke="#444" stroke-width="1.5" marker-end="url(#surarr)" opacity="0.8"/>';
+  s+='<line x1="'+(L-6)+'" y1="'+B+'" x2="'+(R+6)+'" y2="'+B+'" stroke="#444" stroke-width="1.5" marker-end="url(#surarr)" opacity="0.8"/>';
   s+='<text x="'+(L-38)+'" y="'+((T+B)/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle" transform="rotate(-90 '+(L-38)+' '+((T+B)/2)+')">'+esc(q.yLbl||'Price ($)')+'</text>';
   s+='<text x="'+((L+R)/2)+'" y="'+(B+30)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle">'+esc(q.xLbl||'Quantity')+'</text>';
-  s+='<line x1="'+X(0)+'" y1="'+Y(Dmax)+'" x2="'+X(Dmax)+'" y2="'+Y(0)+'" stroke="'+dCol+'" stroke-width="2.5"/>';
-  s+='<text x="'+(X(Dmax)+6)+'" y="'+(Y(0)-3)+'" font-size="'+fs2+'" font-family="Verdana" font-weight="700" fill="'+dCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke" text-anchor="start">D</text>';
-  s+='<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(PMAX)+'" y2="'+Y(PMAX)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
-  s+='<text x="'+(X(PMAX)+6)+'" y="'+(Y(PMAX)+11)+'" font-size="'+fs2+'" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke" text-anchor="start">S</text>';
+  var clbl=function(x,y,t,col){return '<text x="'+x+'" y="'+y+'" font-size="'+fs2+'" font-family="Verdana" font-weight="700" fill="'+col+'" stroke="#fff" stroke-width="2.5" paint-order="stroke" text-anchor="start">'+t+'</text>';};
+  if(isExt){
+    s+='<line x1="'+X(0)+'" y1="'+Y(Dmax)+'" x2="'+X(Dmax)+'" y2="'+Y(0)+'" stroke="'+dCol+'" stroke-width="2.5"/>';
+    s+=clbl(X(Dmax)+5,Y(0)-3,'MPB',dCol);
+    s+='<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(100)+'" y2="'+Y(100)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
+    s+=clbl(X(100)+5,Y(100)+(g.neg?11:4),(g.neg?'MPC':'MSC'),sCol);
+    if(g.neg){ s+='<line x1="'+X(0)+'" y1="'+Y(param)+'" x2="'+X(100)+'" y2="'+Y(100+param)+'" stroke="'+sCol+'" stroke-width="2" stroke-dasharray="6 4"/>'; s+=clbl(X(100)+5,Y(100+param)+9,'MSC',sCol); }
+    else { s+='<line x1="'+X(0)+'" y1="'+Y(Dmax+param)+'" x2="'+X(100)+'" y2="'+Y(param)+'" stroke="'+dCol+'" stroke-width="2" stroke-dasharray="6 4"/>'; s+=clbl(X(100)+5,Y(param)-3,'MSB',dCol); }
+  }else{
+    s+='<line x1="'+X(0)+'" y1="'+Y(Dmax)+'" x2="'+X(Dmax)+'" y2="'+Y(0)+'" stroke="'+dCol+'" stroke-width="2.5"/>';
+    s+=clbl(X(Dmax)+6,Y(0)-3,'D',dCol);
+    s+='<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(PMAX)+'" y2="'+Y(PMAX)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
+    s+=clbl(X(PMAX)+6,Y(PMAX)+11,'S',sCol);
+  }
   if(mode==='tax'){ var tt=param; s+='<line x1="'+X(0)+'" y1="'+Y(tt)+'" x2="'+X(100-tt)+'" y2="'+Y(100)+'" stroke="'+sCol+'" stroke-width="1.8" stroke-dasharray="6 4" opacity="0.85"/>'; s+='<text x="'+(X(100-tt)+2)+'" y="'+(Y(100)+10)+'" font-size="9" font-family="Verdana" font-weight="700" fill="'+sCol+'">S+tax</text>'; }
-  if(mode!=='eq'){ s+='<line x1="'+X(Qt)+'" y1="'+B+'" x2="'+X(Qt)+'" y2="'+Y(Math.max(dem(Qt),Pc,Ps))+'" stroke="#888" stroke-width="1" stroke-dasharray="5 3"/>'; s+='<text x="'+X(Qt)+'" y="'+(B+12)+'" font-size="9" font-family="Verdana" fill="#555" text-anchor="middle">'+qdisp(Qt)+'</text>'; }
+  if(mode!=='eq' && Math.abs(Qt-Qeq)>0.01){ s+='<line x1="'+X(Qt)+'" y1="'+B+'" x2="'+X(Qt)+'" y2="'+Y(Math.max(dem(Qt),Pc,Ps))+'" stroke="#888" stroke-width="1" stroke-dasharray="5 3"/>'; s+='<text x="'+X(Qt)+'" y="'+(B+12)+'" font-size="9" font-family="Verdana" fill="#555" text-anchor="middle">'+qdisp(Qt)+'</text>'; }
   var pmark=function(P,label,col){ s+='<line x1="'+L+'" y1="'+Y(P)+'" x2="'+X(Qt)+'" y2="'+Y(P)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="5 3"/>'; s+='<circle cx="'+X(Qt)+'" cy="'+Y(P)+'" r="4" fill="#fff" stroke="'+col+'" stroke-width="2"/>'; s+='<text x="'+(L-5)+'" y="'+(Y(P)+3.5)+'" font-size="9" font-family="Verdana" font-weight="700" fill="'+col+'" text-anchor="end">'+label+'</text>'; };
-  if(mode==='tax'){ pmark(Pc,'Pc '+pdisp(Pc),dCol); pmark(Ps,'Ps '+pdisp(Ps),sCol); }
+  if(isExt){
+    if(policy){ pmark(Pc,'Pc '+pdisp(Pc),dCol); pmark(Ps,'Pp '+pdisp(Ps),sCol); }
+    else { s+='<circle cx="'+X(g.Qo)+'" cy="'+Y(g.Po)+'" r="4" fill="#fff" stroke="#b23a00" stroke-width="2"/>'; s+='<text x="'+(X(g.Qo)+6)+'" y="'+(Y(g.Po)-6)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#b23a00" stroke="#fff" stroke-width="2.5" paint-order="stroke">O</text>'; }
+  }
+  else if(mode==='tax'){ pmark(Pc,'Pc '+pdisp(Pc),dCol); pmark(Ps,'Ps '+pdisp(Ps),sCol); }
   else if(mode==='qty'){ pmark(Pc,'P '+pdisp(Pc),'#b23a00'); }
   else if(mode==='price'){ pmark(Pc,(kind==='Price floor'?'Pf ':'Pc ')+pdisp(Pc),'#b23a00'); }
   s+='<line x1="'+L+'" y1="'+Y(Peq)+'" x2="'+X(Qeq)+'" y2="'+Y(Peq)+'" stroke="#0A0C56" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
   s+='<line x1="'+X(Qeq)+'" y1="'+B+'" x2="'+X(Qeq)+'" y2="'+Y(Peq)+'" stroke="#0A0C56" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
   s+='<circle cx="'+X(Qeq)+'" cy="'+Y(Peq)+'" r="4" fill="#fff" stroke="#0A0C56" stroke-width="2"/>';
-  s+='<text x="'+(X(Qeq)+7)+'" y="'+(Y(Peq)-7)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#0A0C56" stroke="#fff" stroke-width="2.5" paint-order="stroke">E</text>';
-  s+='<text x="'+(L-5)+'" y="'+(Y(Peq)+3.5)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#0A0C56" text-anchor="end">'+(mode==='eq'?'Pe ':'P* ')+pdisp(Peq)+'</text>';
+  s+='<text x="'+(X(Qeq)+7)+'" y="'+(Y(Peq)-7)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#0A0C56" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+(isExt?'M':'E')+'</text>';
+  s+='<text x="'+(L-5)+'" y="'+(Y(Peq)+3.5)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#0A0C56" text-anchor="end">'+(isExt?'Pm ':(mode==='eq'?'Pe ':'P* '))+pdisp(Peq)+'</text>';
   s+='<text x="'+X(Qeq)+'" y="'+(B+12)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#0A0C56" text-anchor="middle">'+qdisp(Qeq)+'</text>';
-  if(showLetters){ var regs=surRegions(mode,Qt,Pc,Ps); for(var i=0;i<regs.length;i++){ var ct=surCentroid(regs[i]); var cxp=X(ct[0]),cyp=Y(ct[1]); s+='<circle cx="'+cxp+'" cy="'+cyp+'" r="8" fill="#fff" stroke="#0A0C56" stroke-width="1"/>'; s+='<text x="'+cxp+'" y="'+(cyp+3)+'" font-size="10" font-family="Verdana" font-weight="700" fill="#0A0C56" text-anchor="middle">'+String.fromCharCode(65+i)+'</text>'; } }
+  if(showLetters){
+    if(isExt){ var ord=surExtOrder(policy);
+      for(var i=0;i<ord.length;i++){ var pg=areaPoly[ord[i]]; if(!pg) continue; var ct=surCentroid(pg); var cxp=X(ct[0]),cyp=Y(ct[1]);
+        s+='<circle cx="'+cxp+'" cy="'+cyp+'" r="8" fill="#fff" stroke="#0A0C56" stroke-width="1"/>';
+        s+='<text x="'+cxp+'" y="'+(cyp+3)+'" font-size="10" font-family="Verdana" font-weight="700" fill="#0A0C56" text-anchor="middle">'+String.fromCharCode(65+i)+'</text>'; } }
+    else { var regs=surRegions(mode,Qt,Pc,Ps); for(var i2=0;i2<regs.length;i2++){ var ct2=surCentroid(regs[i2]); var cx2=X(ct2[0]),cy2=Y(ct2[1]); s+='<circle cx="'+cx2+'" cy="'+cy2+'" r="8" fill="#fff" stroke="#0A0C56" stroke-width="1"/>'; s+='<text x="'+cx2+'" y="'+(cy2+3)+'" font-size="10" font-family="Verdana" font-weight="700" fill="#0A0C56" text-anchor="middle">'+String.fromCharCode(65+i2)+'</text>'; } }
+  }
+  return s;
+}
+function shiftTrail(o){
+  var d = o.cur - o.from;
+  if(Math.abs(d) < 0.0015) return '';
+  var total = (o.to == null || Math.abs(o.to - o.from) < 0.0015) ? d : (o.to - o.from);
+  var prog  = Math.min(1, Math.abs(d / total));
+  // ease-in-out: speed peaks at the half-way point and dies at both ends
+  var speed = Math.min(1, 2 * Math.min(prog, 1 - prog) + 0.06);
+  var dir   = d > 0 ? 1 : -1;
+  var N = 6, step = 0.17 * speed * Math.abs(total);
+  var s = '';
+  var qAt = function(p, ds){ return (o.kind === 'd') ? dQf(p, ds, o.dm, o.dsc) : sQf(p, ds, o.ssc); };
+  // A curve leaves the grid at the low prices when it shifts right (and at the high
+  // prices when it shifts left), so those rows must fade rather than blink out.
+  var edge = function(q){
+    var m = Math.min(q - QS, QE - q);
+    return m <= 0 ? 0 : (m < 0.6 ? m / 0.6 : 1);
+  };
+  for(var p = 1; p <= GRID; p++){
+    var ef = edge(qAt(p, o.cur));
+    if(ef <= 0.02) continue;
+    for(var j = 0; j < N; j++){
+      var d0 = o.cur - dir * step * j;
+      var d1 = o.cur - dir * step * (j + 1);
+      if(dir > 0){ if(d0 < o.from) continue; if(d1 < o.from) d1 = o.from; }   // never trail behind D1/S1
+      else       { if(d0 > o.from) continue; if(d1 > o.from) d1 = o.from; }
+      var q0 = qAt(p, d0), q1 = qAt(p, d1);
+      if(q0 < QS || q0 > QE || q1 < QS || q1 > QE) continue;
+      if(Math.abs(q0 - q1) < 0.004) continue;
+      var a = 0.7 * Math.pow(1 - j / N, 1.6) * ef;   // opaque at the head, thinning back
+      var w = 2.6 * (1 - j / N) + 0.4;
+      s += '<line x1="' + o.gx(q1).toFixed(1) + '" y1="' + o.gy(p).toFixed(1) +
+           '" x2="' + o.gx(q0).toFixed(1) + '" y2="' + o.gy(p).toFixed(1) +
+           '" stroke="' + o.col + '" stroke-width="' + w.toFixed(2) +
+           '" stroke-linecap="round" opacity="' + a.toFixed(2) + '"/>';
+    }
+  }
   return s;
 }
 function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStaticBracket=false){
@@ -315,12 +432,14 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     t+=`</tbody></table></div>`;
     return t;
   }
-  const W=400,H=340,pad={l:44,r:38,t:26,b:34};
+  // Curve names sit just past the right edge of the plot. "D"/"S2" need ~20px;
+  // "MSB"/"MSC" need ~34px, so the externality diagrams get a wider right margin.
+  const W=400,H=340,pad={l:44,r:(q.type==='tax'&&txIsExt(q.taxType))?56:38,t:26,b:34};
   const gx=v=>gxF(v,pad,W),gy=v=>gyF(v,pad,H);
   const vU=q.vUnit,hU=q.hUnit;const fs=12,fs2=10;
   const vDisp=vU>=1000?vU/1000:vU;
   const hDisp=hU>=1000?hU/1000:hU;
-  let s=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+  let s=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><clipPath id="plotclip"><rect x="${pad.l}" y="${pad.t}" width="${W-pad.l-pad.r}" height="${H-pad.t-pad.b}"/></clipPath></defs>`;
   if(q.title) s+=`<text x="${W/2}" y="16" text-anchor="middle" font-size="${fs}" font-family="Verdana" font-weight="bold" fill="#2c2c2a">${q.title}</text>`;
   if(q.type!=='ppf'||q.ppfType!=='schedule'){
     for(let i=1;i<=GRID;i++) s+=`<line x1="${pad.l}" y1="${gy(i)}" x2="${W-pad.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
@@ -421,6 +540,10 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       s+=`<line x1="${(sAx1+sAt0*sAdx).toFixed(1)}" y1="${(sAy1+sAt0*sAdy).toFixed(1)}" x2="${(sAx1+sAt1*sAdx).toFixed(1)}" y2="${(sAy1+sAt1*sAdy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/>`;
       if(sALbl) s+=`<text x="${(sALbl.x2+5).toFixed(1)}" y="${Math.min(sALbl.y1,sALbl.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${sl}</text>`;
     }
+    if(isAnimating){
+      if(shiftDirD!==0) s+=shiftTrail({kind:"d",from:(q.startDS||0),cur:animDS,to:dA,dm:1,dsc:2,gx:gx,gy:gy,col:q.dColor});
+      if(shiftDirS!==0) s+=shiftTrail({kind:"s",from:(q.startSS||0),cur:animSS,to:sA,ssc:2,gx:gx,gy:gy,col:q.sColor});
+    }
     if(eq.q>=QS&&eq.q<=QE&&eq.p>=1&&eq.p<=GRID){
       const ex=gx(eq.q),ey=gy(eq.p);
       if(q.showEqLines!==false){
@@ -447,7 +570,7 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     // Axis tick labels — suppress values that clash with price/eq/Qd/Qs
     for(let i=1;i<=GRID;i++){
       const isCP_=!atEq_&&Math.abs(i-fpA)<0.25;
-      const isEP_=q.showEqLines!==false&&Math.abs(i-eq_.p)<0.15;
+      const isEP_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.p)<0.15;
       const isQd_=!atEq_&&Math.abs(i-qd_)<0.25;
       const isQs_=!atEq_&&Math.abs(i-qs_)<0.25;
       const isEQ_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.q)<0.15;
@@ -529,30 +652,41 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     // fpA = taxStep: -1=initial clean diagram, 0=price labels revealed (after correct answer),
     //   1..N = reveal steps in order of q.reveals array (configurable per question).
     const txStartSS=q.startSS||0;
+    const txStartDS=q.startDS||0;
     const txStep=Math.round(fpA);
     const txShowLbls=txStep>=0;
     const txIsSub=q.taxType==='subsidy';
+    // Externality variants. The UNSHIFTED (private) curve gives the market outcome
+    // and the SHIFTED (social) curve gives the optimum — the reverse of a tax.
+    const txNeg=q.taxType==='negext',txPosE=q.taxType==='posext',txExt=txNeg||txPosE;
+    const txLbl=txLabels(q.taxType);
     // Demand slope multiplier: inelastic=2 (2 rise:1 run), elastic=0.5 (1 rise:2 run), normal=1
     // dsc=txDm, ssc=1 → every shift button moves the curve exactly 1 grid square
     const txDm=q.dElasticity==='inelastic'?2:q.dElasticity==='elastic'?0.5:1;
     // sShiftCoeff saved per-question: normal=2, inelastic=3, elastic=3 (integer equilibria)
     const txSsc=q.sShiftCoeff!=null?q.sShiftCoeff:1;
-    const txEq0=getEq(dA,txStartSS,txDm,txDm,txSsc);
-    const txEq1=getEq(dA,sA,txDm,txDm,txSsc);
-    const txP0=txEq0.p,txQ0=txEq0.q;
-    const txPc=txEq1.p,txQn=txEq1.q;
-    const txPs=sPf(txQn,txStartSS,txSsc);  // producer price = S1 price at Qn
+    // dShiftCoeff: 1 grid square (=txDm) for tax/subsidy, matching txSsc for a
+    // positive externality so the socially optimal P and Q land on whole numbers.
+    // Older question banks predate this field, so fall back to the old behaviour.
+    const txDsc=q.dShiftCoeff!=null?q.dShiftCoeff:txDm;
+    // txEq0 = the "before" point: for a tax that's the free market; for a positive
+    // externality the private-demand intersection. txEq1 = the "after" point.
+    const txEq0=txPosE?getEq(txStartDS,sA,txDm,txDsc,txSsc):getEq(dA,txStartSS,txDm,txDsc,txSsc);
+    const txEq1=getEq(dA,sA,txDm,txDsc,txSsc);
+    const txP0=txEq0.p,txQ0=txEq0.q;      // ext: market price/quantity (Pm, Qm)
+    const txPc=txEq1.p,txQn=txEq1.q;      // ext: socially optimal price/quantity (Ps, Qs)
+    const txPs=sPf(txQn,txStartSS,txSsc);  // producer price = S1 price at Qn (tax/subsidy only)
     // Which reveals have been shown so far (Set of keys)
-    const txRevArr=(q.reveals&&q.reveals.length)?q.reveals:['size','wedge','consumer','prodloss'];
+    const txRevArr=txRev(q);
     const txShown=txStep>0?new Set(txRevArr.slice(0,txStep)):new Set();
     // Common rect coordinates used by multiple reveals
-    const txOnGrid=txQn>=QS&&txQn<=QE&&txPc>=1&&txPc<=GRID&&txPs>=1&&txPs<=GRID;
+    const txOnGrid=txQn>=QS&&txQn<=QE&&txPc>=1&&txPc<=GRID&&(txExt||(txPs>=1&&txPs<=GRID));
     const trxL=pad.l,trxR=gx(txQn),trW=trxR-trxL,trMX=(trxL+trxR)/2;
     const trpHigh=Math.max(txPc,txPs),trpLow=Math.min(txPc,txPs);
     const tryT=gy(trpHigh),tryB=gy(trpLow),trH=tryB-tryT,trMY=(tryT+tryB)/2;
     // Axis tick labels — suppress values near special markers when labels are shown
     for(let i=1;i<=GRID;i++){
-      const txNP=txShowLbls&&(Math.abs(i-txPc)<0.4||Math.abs(i-txPs)<0.4||Math.abs(i-txP0)<0.4);
+      const txNP=txShowLbls&&(Math.abs(i-txPc)<0.4||(!txExt&&Math.abs(i-txPs)<0.4)||Math.abs(i-txP0)<0.4);
       const txNQ=txShowLbls&&(Math.abs(i-txQn)<0.4||Math.abs(i-txQ0)<0.4);
       if(!txNP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
       if(!txNQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
@@ -560,23 +694,34 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
     s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
-    // S1 — always shown faded (original supply at txStartSS, ssc=1)
+    // S1 — original supply at txStartSS. Drawn for tax/subsidy/negative externality.
+    // A positive externality shifts demand, so its supply curve is drawn once, below.
+    if(!txPosE){
     const ts1x1=gx(sQf(1,txStartSS,txSsc)),ts1y1=gy(1),ts1x2=gx(sQf(GRID,txStartSS,txSsc)),ts1y2=gy(GRID);
     const ts1dx=ts1x2-ts1x1,ts1dy=ts1y2-ts1y1;let ts1t0=0,ts1t1=1;
     if(Math.abs(ts1dx)>0.01){const ts1tL=(pad.l-ts1x1)/ts1dx,ts1tR=(W-pad.r-ts1x1)/ts1dx;if(ts1dx>0){ts1t0=Math.max(ts1t0,ts1tL);ts1t1=Math.min(ts1t1,ts1tR);}else{ts1t0=Math.max(ts1t0,ts1tR);ts1t1=Math.min(ts1t1,ts1tL);}}
     if(ts1t0<ts1t1){
       const ts1L=clip(QS,sPf(QS,txStartSS,txSsc),QE,sPf(QE,txStartSS,txSsc),pad,W,H,1);
       s+=`<line x1="${(ts1x1+ts1t0*ts1dx).toFixed(1)}" y1="${(ts1y1+ts1t0*ts1dy).toFixed(1)}" x2="${(ts1x1+ts1t1*ts1dx).toFixed(1)}" y2="${(ts1y1+ts1t1*ts1dy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2" stroke-linecap="round" opacity="1"/>`;
-      if(ts1L)s+=`<text x="${(ts1L.x2+5).toFixed(1)}" y="${Math.min(ts1L.y1,ts1L.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" opacity="1" font-weight="bold">S1</text>`;
+      if(ts1L)s+=`<text x="${(ts1L.x2+5).toFixed(1)}" y="${Math.min(ts1L.y1,ts1L.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" opacity="1" font-weight="bold">${txExt?txLbl.s1:'S1'}</text>`;
+    }
+    }
+    // MPB — private demand, drawn only for a positive externality (demand is the shifted curve)
+    if(txPosE){
+      const tp1L=clip(QS,dPf(QS,txStartDS,txDm,txDsc),QE,dPf(QE,txStartDS,txDm,txDsc),pad,W,H,1);
+      if(tp1L){
+        s+=`<line x1="${tp1L.x1.toFixed(1)}" y1="${tp1L.y1.toFixed(1)}" x2="${tp1L.x2.toFixed(1)}" y2="${tp1L.y2.toFixed(1)}" stroke="${q.dColor}" stroke-width="2" stroke-linecap="round"/>`;
+        s+=`<text x="${(tp1L.x2+5).toFixed(1)}" y="${tp1L.y2.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">${txLbl.d1}</text>`;
+      }
     }
     // Demand curve D (slope=txDm, shift coeff=txDm → 1 grid square per step)
-    const tdx1=gx(dQf(GRID,dA,txDm,txDm)),tdy1=gy(GRID),tdx2=gx(dQf(1,dA,txDm,txDm)),tdy2=gy(1);
+    const tdx1=gx(dQf(GRID,dA,txDm,txDsc)),tdy1=gy(GRID),tdx2=gx(dQf(1,dA,txDm,txDsc)),tdy2=gy(1);
     const tddx=tdx2-tdx1,tddy=tdy2-tdy1;let tdt0=0,tdt1=1;
     if(Math.abs(tddx)>0.01){const tdtL=(pad.l-tdx1)/tddx,tdtR=(W-pad.r-tdx1)/tddx;if(tddx>0){tdt0=Math.max(tdt0,tdtL);tdt1=Math.min(tdt1,tdtR);}else{tdt0=Math.max(tdt0,tdtR);tdt1=Math.min(tdt1,tdtL);}}
     if(tdt0<tdt1){
-      const tdL=clip(QS,dPf(QS,dA,txDm,txDm),QE,dPf(QE,dA,txDm,txDm),pad,W,H,1);
+      const tdL=clip(QS,dPf(QS,dA,txDm,txDsc),QE,dPf(QE,dA,txDm,txDsc),pad,W,H,1);
       s+=`<line x1="${(tdx1+tdt0*tddx).toFixed(1)}" y1="${(tdy1+tdt0*tddy).toFixed(1)}" x2="${(tdx1+tdt1*tddx).toFixed(1)}" y2="${(tdy1+tdt1*tddy).toFixed(1)}" stroke="${q.dColor}" stroke-width="2.5" stroke-linecap="round"/>`;
-      if(tdL)s+=`<text x="${(tdL.x2+5).toFixed(1)}" y="${tdL.y2.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">D</text>`;
+      if(tdL)s+=`<text x="${(tdL.x2+5).toFixed(1)}" y="${tdL.y2.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">${txExt?(dA===0?txLbl.d1:txLbl.d2):'D'}</text>`;
     }
     // S2 — active supply curve (post-intervention, ssc=1)
     const tsx1=gx(sQf(1,sA,txSsc)),tsy1=gy(1),tsx2=gx(sQf(GRID,sA,txSsc)),tsy2=gy(GRID);
@@ -585,20 +730,40 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     if(tst0<tst1){
       const tsL=clip(QS,sPf(QS,sA,txSsc),QE,sPf(QE,sA,txSsc),pad,W,H,1);
       s+=`<line x1="${(tsx1+tst0*tsdx).toFixed(1)}" y1="${(tsy1+tst0*tsdy).toFixed(1)}" x2="${(tsx1+tst1*tsdx).toFixed(1)}" y2="${(tsy1+tst1*tsdy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/>`;
-      if(tsL)s+=`<text x="${(tsL.x2+5).toFixed(1)}" y="${Math.min(tsL.y1,tsL.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">S2</text>`;
+      if(tsL)s+=`<text x="${(tsL.x2+5).toFixed(1)}" y="${Math.min(tsL.y1,tsL.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${txExt?(sA===0?txLbl.s1:txLbl.s2):'S2'}</text>`;
     }
-    // Equilibrium dots and dashed lines — conditional on showEqLines setting
+    // Equilibrium dots and dashed lines — conditional on showEqLines setting.
+    // For a tax the post-intervention point is the headline; for an externality
+    // the MARKET point is, with the social optimum shown as a hollow ring.
     const txShowEqLines=q.showEqLines!==false;
+    const txM0=txQ0>=QS&&txQ0<=QE&&txP0>=1&&txP0<=GRID;
+    const txM1=txQn>=QS&&txQn<=QE&&txPc>=1&&txPc<=GRID;
     if(txShowEqLines){
-      if(txQ0>=QS&&txQ0<=QE&&txP0>=1&&txP0<=GRID&&(Math.abs(txQ0-txQn)>0.1||Math.abs(txP0-txPc)>0.1)){
-        s+=`<circle cx="${gx(txQ0)}" cy="${gy(txP0)}" r="5" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.30"/>`;
+      if(txExt){
+        if(txM1)s+=`<circle cx="${gx(txQn)}" cy="${gy(txPc)}" r="6" fill="white" stroke="#1e7ab8" stroke-width="2.5"/>`;
+        if(txM0)s+=`<circle cx="${gx(txQ0)}" cy="${gy(txP0)}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>`;
+      } else {
+        if(txM0&&(Math.abs(txQ0-txQn)>0.1||Math.abs(txP0-txPc)>0.1)){
+          s+=`<circle cx="${gx(txQ0)}" cy="${gy(txP0)}" r="5" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.30"/>`;
+        }
+        if(txM1)s+=`<circle cx="${gx(txQn)}" cy="${gy(txPc)}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>`;
       }
-      if(txQn>=QS&&txQn<=QE&&txPc>=1&&txPc<=GRID){
-        s+=`<circle cx="${gx(txQn)}" cy="${gy(txPc)}" r="7" fill="#D85A30" stroke="white" stroke-width="2"/>`;
+    }
+    // ── Externality: market point labels (Pm, Qm). The socially optimal point is
+    // labelled by the 'optq' reveal, so students meet the market outcome first.
+    if(txExt&&txShowLbls&&txShowEqLines){
+      const txQmX=txM0?gx(txQ0):W-pad.r;
+      if(txP0>=1&&txP0<=GRID){
+        s+=`<line x1="${pad.l}" y1="${gy(txP0)}" x2="${txQmX.toFixed(1)}" y2="${gy(txP0)}" stroke="#D85A30" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<text x="${pad.l-4}" y="${gy(txP0)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">Pm</text>`;
+      }
+      if(txQ0>=QS&&txQ0<=QE){
+        s+=`<line x1="${gx(txQ0)}" y1="${H-pad.b}" x2="${gx(txQ0)}" y2="${(txP0>=1&&txP0<=GRID?gy(txP0):pad.t)}" stroke="#D85A30" stroke-width="1" stroke-dasharray="6,4"/>`;
+        s+=`<text x="${gx(txQ0)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#D85A30" font-weight="bold">Qm</text>`;
       }
     }
     // Price/qty labels and dashed lines — only revealed after correct answer (txStep >= 0)
-    if(txShowLbls&&txShowEqLines){
+    if(!txExt&&txShowLbls&&txShowEqLines){
       // Use standard economics notation (Pc, Ps, P0, Qn, Q0) — never raw numbers.
       // This is correct textbook convention and also avoids non-integer display issues.
       const tQnX=txQn>=QS&&txQn<=QE?gx(txQn):W-pad.r;
@@ -675,6 +840,70 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
         if(proH>14)s+=`<text x="${trMX.toFixed(1)}" y="${((proT+proB)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${proLbl}</text>`;
       }
     }
+
+    // ── EXTERNALITY REVEALS ────────────────────────────────────────────────────
+    // Geometry, in grid units:
+    //   market   (txQ0, txP0)  private curve ∩ other curve
+    //   optimum  (txQn, txPc)  social  curve ∩ other curve
+    // The private and social curves are parallel, so the vertical gap between them
+    // is the constant marginal external cost (neg) or benefit (pos).
+    if(txExt&&txOnGrid&&txM0){
+      // Value of the shifted (social) curve at the market quantity — the third
+      // vertex of the deadweight loss triangle.
+      const txSocAtQm=txNeg?sPf(txQ0,sA,txSsc):dPf(txQ0,dA,txDm,txDsc);
+      // Value of the unshifted (private) curve at the optimal quantity.
+      const txPrivAtQs=txNeg?sPf(txQn,txStartSS,txSsc):dPf(txQn,txStartDS,txDm,txDsc);
+      const txExtCol=txNeg?'#7B2FA8':'#0F6E56';
+      const txCorrCol=txNeg?'#C47D00':'#7B2FA8';
+
+      // REVEAL: extwedge — band between the private and social curves, 0 → Qm.
+      // Its height is the external cost/benefit per unit; its area is the total.
+      if(txShown.has('extwedge')){
+        const pv=q=>txNeg?sPf(q,txStartSS,txSsc):dPf(q,txStartDS,txDm,txDsc);
+        const sc=q=>txNeg?sPf(q,sA,txSsc):dPf(q,dA,txDm,txDsc);
+        const pts=[[0,pv(0)],[txQ0,pv(txQ0)],[txQ0,sc(txQ0)],[0,sc(0)]]
+          .map(p=>gx(p[0]).toFixed(1)+','+gy(p[1]).toFixed(1)).join(' ');
+        const wLbl=txNeg?'External cost':'External benefit';
+        s+=`<g clip-path="url(#plotclip)">`;
+        s+=`<polygon points="${pts}" fill="${txNeg?'rgba(123,47,168,0.16)':'rgba(15,110,86,0.16)'}" stroke="${txExtCol}" stroke-width="1" stroke-dasharray="4,3"/>`;
+        s+=`</g>`;
+        const wx=gx(txQ0/2),wy=gy((pv(txQ0/2)+sc(txQ0/2))/2);
+        if(wy>pad.t+8&&wy<H-pad.b-8)s+=`<text x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="${txExtCol}" font-weight="bold" stroke="#fff" stroke-width="2.5" paint-order="stroke">${wLbl}</text>`;
+      }
+
+      // REVEAL: dwl — welfare loss between the market quantity and the optimum
+      if(txShown.has('dwl')&&Math.abs(txQ0-txQn)>0.05&&txSocAtQm>=1&&txSocAtQm<=GRID){
+        const v=[[txQn,txPc],[txQ0,txP0],[txQ0,txSocAtQm]];
+        const pts=v.map(p=>gx(p[0]).toFixed(1)+','+gy(p[1]).toFixed(1)).join(' ');
+        s+=`<polygon points="${pts}" fill="rgba(192,57,43,0.30)" stroke="#C0392B" stroke-width="1.5"/>`;
+        const cxD=(gx(v[0][0])+gx(v[1][0])+gx(v[2][0]))/3,cyD=(gy(v[0][1])+gy(v[1][1])+gy(v[2][1]))/3;
+        s+=`<text x="${(cxD+16).toFixed(1)}" y="${cyD.toFixed(1)}" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#C0392B" font-weight="bold" stroke="#fff" stroke-width="2.5" paint-order="stroke">DWL</text>`;
+      }
+
+      // REVEAL: optq — socially optimal price and quantity
+      if(txShown.has('optq')&&txM1){
+        s+=`<line x1="${pad.l}" y1="${gy(txPc)}" x2="${gx(txQn).toFixed(1)}" y2="${gy(txPc)}" stroke="#1e7ab8" stroke-width="1.2" stroke-dasharray="6,4"/>`;
+        s+=`<line x1="${gx(txQn).toFixed(1)}" y1="${H-pad.b}" x2="${gx(txQn).toFixed(1)}" y2="${gy(txPc)}" stroke="#1e7ab8" stroke-width="1.2" stroke-dasharray="6,4"/>`;
+        s+=`<text x="${pad.l-4}" y="${gy(txPc)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#1e7ab8" font-weight="bold">Ps</text>`;
+        s+=`<text x="${gx(txQn).toFixed(1)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#1e7ab8" font-weight="bold">Qs</text>`;
+        const gapLbl=txNeg?'Overproduction':'Underproduction';
+        const oxL=Math.min(gx(txQ0),gx(txQn)),oxR=Math.max(gx(txQ0),gx(txQn));
+        if(oxR-oxL>28)s+=`<text x="${((oxL+oxR)/2).toFixed(1)}" y="${(H-pad.b+24).toFixed(1)}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${gapLbl}</text>`;
+      }
+
+      // REVEAL: corrective — per-unit tax/subsidy that internalises the externality,
+      // measured at the optimal quantity between the private and social curves
+      if(txShown.has('corrective')&&txM1&&txPrivAtQs>=1&&txPrivAtQs<=GRID){
+        const cT=gy(Math.max(txPc,txPrivAtQs)),cB=gy(Math.min(txPc,txPrivAtQs));
+        const cX=Math.min(gx(txQn)+18,W-8);
+        if(cB-cT>4){
+          s+=`<line x1="${cX.toFixed(1)}" y1="${cT.toFixed(1)}" x2="${cX.toFixed(1)}" y2="${cB.toFixed(1)}" stroke="${txCorrCol}" stroke-width="2"/>`;
+          s+=`<line x1="${(cX-5).toFixed(1)}" y1="${cT.toFixed(1)}" x2="${(cX+5).toFixed(1)}" y2="${cT.toFixed(1)}" stroke="${txCorrCol}" stroke-width="2"/>`;
+          s+=`<line x1="${(cX-5).toFixed(1)}" y1="${cB.toFixed(1)}" x2="${(cX+5).toFixed(1)}" y2="${cB.toFixed(1)}" stroke="${txCorrCol}" stroke-width="2"/>`;
+          s+=`<text x="${(cX+8).toFixed(1)}" y="${((cT+cB)/2).toFixed(1)}" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="${txCorrCol}" font-weight="bold" stroke="#fff" stroke-width="2.5" paint-order="stroke">${txNeg?'Tax/unit':'Subsidy/unit'}</text>`;
+        }
+      }
+    }
   } else {
     const fp=fpA,qInt=q.curve==='demand'?dQf(fp,dA):sQf(fp,sA);
     for(let i=1;i<=GRID;i++){
@@ -715,6 +944,9 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       const scLbl=scIsD?clip(QS,dPf(QS,animSC),QE,dPf(QE,animSC),pad,W,H,1):clip(QS,sPf(QS,animSC),QE,sPf(QE,animSC),pad,W,H,1);
       s+=`<line x1="${(scAx1+scAt0*scAdx).toFixed(1)}" y1="${(scAy1+scAt0*scAdy).toFixed(1)}" x2="${(scAx1+scAt1*scAdx).toFixed(1)}" y2="${(scAy1+scAt1*scAdy).toFixed(1)}" stroke="${q.color}" stroke-width="2.5" stroke-linecap="round"/>`;
       if(scLbl){const scLy=scIsD?scLbl.y2:Math.min(scLbl.y1,scLbl.y2);s+=`<text x="${(scLbl.x2+5).toFixed(1)}" y="${scLy.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.color}" font-weight="bold">${lbl}</text>`;}
+      if(isAnimating&&sh) s+=(scIsD
+        ? shiftTrail({kind:"d",from:startSC,cur:animSC,to:finalSC,dm:1,dsc:2,gx:gx,gy:gy,col:q.color})
+        : shiftTrail({kind:"s",from:startSC,cur:animSC,to:finalSC,ssc:2,gx:gx,gy:gy,col:q.color}));
     }
     if(qInt>=QS&&qInt<=QE){
       const ix=gx(qInt),py=gy(fp);
@@ -736,7 +968,7 @@ function wsPos(q){
   if(q.type==='sd') return{dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
   if(q.type==='sc') return{dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
   if(q.type==='pm') return{dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
-  if(q.type==='tax') return{dA:q.startDS||0,sA:q.ansSS||0,fpA:-1};
+  if(q.type==='tax') return Object.assign(txPos(q),{fpA:-1});
   return{dA:0,sA:0,fpA:q.startFP||5};
 }
 function wsEsc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -777,7 +1009,7 @@ function showQ(i){
   const rb=document.getElementById('replayBtn');
   if(rb) rb.style.display=(q.type==='plain'||q.type==='table'||q.type==='ped'||q.type==='sur')?'none':'';
   const rb2=document.getElementById('revealBtn');
-  const txRArr2=(q.reveals&&q.reveals.length)?q.reveals:['size','wedge','consumer','prodloss'];
+  const txRArr2=txRev(q);
   let showRev2=(q.type==='tax'&&attempted(i)&&curPos[i].fpA>=0&&curPos[i].fpA<txRArr2.length);
   if(rb2) rb2.style.display=showRev2?'':'none';
   const abtns=document.getElementById('abtns');
@@ -868,12 +1100,11 @@ function anim(qi,animDur=700){
   if(q.type==='tax'){
     // Both S1 and S2 visible from the start — no shift animation.
     // "Answering" just reveals price labels (fpA: -1 → 0) and shows the Reveal button.
-    const txDAn=q.startDS||0,txSAn=q.ansSS||0;
-    curPos[qi]={dA:txDAn,sA:txSAn,fpA:0};
-    el.innerHTML=mkSVG(q,txDAn,txSAn,0,false);
+    const txPn=txPos(q);
+    curPos[qi]={dA:txPn.dA,sA:txPn.sA,fpA:0};
+    el.innerHTML=mkSVG(q,txPn.dA,txPn.sA,0,false);
     const rb2=document.getElementById('revealBtn');
-    const txRArr3=(q.reveals&&q.reveals.length)?q.reveals:['size','wedge','consumer','prodloss'];
-    if(rb2&&qi===cur)rb2.style.display=txRArr3.length>0?'':'none';
+    if(rb2&&qi===cur)rb2.style.display=txRev(q).length>0?'':'none';
     return;
   }
   if(q.type==='sur'){
@@ -913,7 +1144,7 @@ function replayAnim(){
   if(q.type==='sd') curPos[cur]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
   else if(q.type==='sc') curPos[cur]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
   else if(q.type==='pm') curPos[cur]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
-  else if(q.type==='tax'){curPos[cur]={dA:q.startDS||0,sA:q.ansSS||0,fpA:0};const rb2=document.getElementById('revealBtn');if(rb2)rb2.style.display=attempted(cur)?'':'none';}
+  else if(q.type==='tax'){curPos[cur]=Object.assign(txPos(q),{fpA:0});const rb2=document.getElementById('revealBtn');if(rb2)rb2.style.display=attempted(cur)?'':'none';}
   else curPos[cur]={dA:0,sA:0,fpA:q.startFP||5};
   if(attempted(cur)&&q.type==='pm'&&q.animatePrice===false){
     // Label-reveal mode: just re-trigger the fade-in, no price animation
@@ -937,7 +1168,7 @@ function reveal(){
     return;
   }
   if(q.type!=='tax')return;
-  const reveals=(q.reveals&&q.reveals.length)?q.reveals:['size','wedge','consumer','prodloss'];
+  const reveals=txRev(q);
   if(pos.fpA>=reveals.length){document.getElementById('revealBtn').style.display='none';return;}
   pos.fpA++;
   document.getElementById('diagWrap').innerHTML=mkSVG(q,pos.dA,pos.sA,pos.fpA,false);
@@ -963,7 +1194,7 @@ function restart(){
     if(q.type==='sd') curPos[i]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
     else if(q.type==='sc') curPos[i]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
     else if(q.type==='pm') curPos[i]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
-    else if(q.type==='tax') curPos[i]={dA:q.startDS||0,sA:q.ansSS||0,fpA:-1};
+    else if(q.type==='tax') curPos[i]=Object.assign(txPos(q),{fpA:-1});
     else if(q.type==='sur') curPos[i]={dA:0,sA:0,fpA:0};
     else curPos[i]={dA:0,sA:0,fpA:q.startFP||5};
   });

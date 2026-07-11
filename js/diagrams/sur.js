@@ -8,13 +8,21 @@ var surMode = 'eq';
 
 // Reads the controls into a question-shaped object.
 function surGet() {
+  var ext = surIsExt(surMode);
+  var policy = ext && document.getElementById('surPolicy').checked;
   var reveals = [];
   if (document.getElementById('surRevCS').checked)     reveals.push('CS');
   if (document.getElementById('surRevPS').checked)     reveals.push('PS');
-  if (document.getElementById('surRevLossCS').checked) reveals.push('LOSSCS');
-  if (document.getElementById('surRevLossPS').checked) reveals.push('LOSSPS');
-  if (document.getElementById('surRevDWL').checked)    reveals.push('DWL');
-  if (document.getElementById('surRevTAX').checked)    reveals.push('TAX');
+  if (ext) {
+    if (document.getElementById('surRevEXT').checked)  reveals.push('EXT');
+    if (policy) { if (document.getElementById('surRevPOL').checked) reveals.push('POL'); }
+    else        { if (document.getElementById('surRevDWL').checked) reveals.push('DWL'); }
+  } else {
+    if (document.getElementById('surRevLossCS').checked) reveals.push('LOSSCS');
+    if (document.getElementById('surRevLossPS').checked) reveals.push('LOSSPS');
+    if (document.getElementById('surRevDWL').checked)    reveals.push('DWL');
+    if (document.getElementById('surRevTAX').checked)    reveals.push('TAX');
+  }
   var param = surMode === 'eq' ? 0 : parseFloat(document.getElementById('surParam').value);
   var vU = parseFloat(document.getElementById('surVUnit').value);
   var hU = parseFloat(document.getElementById('surHUnit').value);
@@ -29,6 +37,7 @@ function surGet() {
     sCol:  document.getElementById('surSCol').value,
     mode:  surMode,
     param: param,
+    showPolicy: policy,
     showLetters: document.getElementById('surLetters').checked,
     reveals: reveals
   };
@@ -39,22 +48,43 @@ function surDraw() {
   document.getElementById('surChart').innerHTML = surInner(surGet());
 }
 
-// Switch distortion mode: highlight button, reconfigure the parameter slider.
+// Switch distortion mode: highlight button, reconfigure the parameter slider,
+// and swap the reveal checkboxes between the market set and the externality set.
 function surSetMode(m) {
+  // Re-entering the same mode (e.g. from the policy toggle) must not reset the slider
+  var fresh = (surMode !== m);
   surMode = m;
+  var ext = surIsExt(m);
   var row = document.getElementById('surModeRow');
   [].forEach.call(row.querySelectorAll('.btn'), function(b){ b.classList.toggle('btn-primary', b.dataset.m === m); });
   var pw = document.getElementById('surParamWrap'), sl = document.getElementById('surParam'), lbl = document.getElementById('surParamLabel');
-  document.getElementById('surRevTAXwrap').style.display = (m === 'tax') ? '' : 'none';
+  document.getElementById('surRevTAXwrap').style.display   = (m === 'tax') ? 'flex' : 'none';
+  document.getElementById('surLossWrap').style.display     = ext ? 'none' : 'flex';
+  document.getElementById('surExtWrap').style.display      = ext ? 'flex' : 'none';
+  document.getElementById('surPolicyWrap').style.display   = ext ? '' : 'none';
+  // "Deadweight loss" and "Tax revenue / Subsidy cost" are mutually exclusive:
+  // once the policy corrects the market there is no welfare loss left to shade.
+  var policy = ext && document.getElementById('surPolicy').checked;
+  document.getElementById('surRevPOLwrap').style.display = (ext && policy) ? 'flex' : 'none';
+  document.getElementById('surRevDWLwrap').style.display = (ext && policy) ? 'none' : 'flex';
+  var polLbl = document.getElementById('surRevPOLlabel');
+  if (polLbl) polLbl.textContent = (m === 'negext') ? 'Tax revenue' : 'Subsidy cost';
+  var extLbl = document.getElementById('surRevEXTlabel');
+  if (extLbl) extLbl.textContent = (m === 'negext') ? 'External cost' : 'External benefit';
   if (m === 'eq') { pw.style.display = 'none'; }
   else {
     pw.style.display = '';
-    if (m === 'qty')   { lbl.textContent = 'Restricted quantity (Q)';                 sl.min = 5; sl.max = 49; sl.step = 1; sl.value = 40; }
-    else if (m === 'tax')   { lbl.textContent = 'Tax per unit ($)';                   sl.min = 4; sl.max = 90; sl.step = 2; sl.value = 20; }
-    else if (m === 'price') { lbl.textContent = 'Controlled price ($) — over 50 = floor, under = ceiling'; sl.min = 5; sl.max = 95; sl.step = 5; sl.value = 60; }
+    if (m === 'qty')   { lbl.textContent = 'Restricted quantity (Q)';                 sl.min = 5; sl.max = 49; sl.step = 1; if (fresh) sl.value = 40; }
+    else if (m === 'tax')   { lbl.textContent = 'Tax per unit ($)';                   sl.min = 4; sl.max = 90; sl.step = 2; if (fresh) sl.value = 20; }
+    else if (m === 'price') { lbl.textContent = 'Controlled price ($) — over 50 = floor, under = ceiling'; sl.min = 5; sl.max = 95; sl.step = 5; if (fresh) sl.value = 60; }
+    else if (m === 'negext'){ lbl.textContent = 'External cost per unit ($)';    sl.min = 5; sl.max = 40; sl.step = 5; if (fresh) sl.value = 20; }
+    else if (m === 'posext'){ lbl.textContent = 'External benefit per unit ($)'; sl.min = 5; sl.max = 40; sl.step = 5; if (fresh) sl.value = 20; }
   }
   surDraw();
 }
+
+// The policy checkbox changes which reveals make sense, so it re-runs the mode setup.
+function surTogglePolicy() { surSetMode(surMode); }
 
 function surReset() {
   document.getElementById('surVUnit').value = 50;
@@ -65,9 +95,11 @@ function surReset() {
   document.getElementById('surDCol').value = '#000000';
   document.getElementById('surSCol').value = '#000000';
   document.getElementById('surLetters').checked = false;
-  ['surRevCS','surRevPS','surRevDWL','surRevTAX'].forEach(function(id){ document.getElementById(id).checked = true; });
+  document.getElementById('surPolicy').checked = false;
+  ['surRevCS','surRevPS','surRevDWL','surRevTAX','surRevEXT','surRevPOL'].forEach(function(id){ document.getElementById(id).checked = true; });
   ['surRevLossCS','surRevLossPS'].forEach(function(id){ document.getElementById(id).checked = false; });
   surClearAnswers();
+  surMode = '';            // force surSetMode to treat 'eq' as a fresh mode
   surSetMode('eq');
 }
 
@@ -98,6 +130,7 @@ function surLoad(q) {
   document.getElementById('surDCol').value = q.dCol || '#185FA5';
   document.getElementById('surSCol').value = q.sCol || '#0F6E56';
   document.getElementById('surLetters').checked = !!q.showLetters;
+  document.getElementById('surPolicy').checked  = !!q.showPolicy;
   var rv = q.reveals || [];
   document.getElementById('surRevCS').checked     = rv.indexOf('CS')     >= 0;
   document.getElementById('surRevPS').checked     = rv.indexOf('PS')     >= 0;
@@ -105,6 +138,9 @@ function surLoad(q) {
   document.getElementById('surRevLossPS').checked = rv.indexOf('LOSSPS') >= 0;
   document.getElementById('surRevDWL').checked    = rv.indexOf('DWL')    >= 0;
   document.getElementById('surRevTAX').checked    = rv.indexOf('TAX')    >= 0;
+  document.getElementById('surRevEXT').checked    = rv.indexOf('EXT')    >= 0;
+  document.getElementById('surRevPOL').checked    = rv.indexOf('POL')    >= 0;
+  surMode = '';            // force a fresh mode setup, then restore the saved parameter
   surSetMode(q.mode || 'eq');
   if (q.mode && q.mode !== 'eq') document.getElementById('surParam').value = q.param;
   document.getElementById('surQText').value = q.questionText || '';

@@ -1,9 +1,14 @@
-// ── TAX / SUBSIDY BUILDER ─────────────────────────────────────────────────────
-// Handles state and logic for the Tax/Subsidy diagram builder.
+// ── TAX / SUBSIDY / EXTERNALITY BUILDER ───────────────────────────────────────
+// Handles state and logic for the market-intervention diagram builder.
 // The diagram shows both a demand and supply curve. A tax shifts supply LEFT;
 // a subsidy shifts supply RIGHT. After the student answers correctly, the quiz
 // player animates the supply shift and then reveals the economic rectangles
 // (total wedge, consumer portion, producer portion) one click at a time.
+//
+// The same machinery draws externalities, because the geometry is identical:
+//   negative externality → supply shifts LEFT  (MPC → MSC), overproduction
+//   positive externality → demand shifts RIGHT (MPB → MSB), underproduction
+// The difference is only in what the curves are called and what gets revealed.
 // Depends on: utils.js, app.js
 
 // State
@@ -12,8 +17,13 @@ let txDS = 0, txSS = 0;          // target discrete step positions
 let txStartDS = 0, txStartSS = 0; // configured starting position (pre-intervention)
 let txCap = null;                  // captured answer snapshot
 let txAnim = null;                 // active animation frame handle
-let txType = 'tax';                // 'tax' or 'subsidy'
+let txType = 'tax';                // 'tax' | 'subsidy' | 'negext' | 'posext'
 let txElasticity = 'normal';       // 'normal' | 'inelastic' | 'elastic'
+
+// Which reveal checkboxes belong to which variant, in display order.
+const TX_REV_TAX = [['txRevSize','size'],['txRevWedge','wedge'],['txRevConsumer','consumer'],['txRevProdLoss','prodloss'],['txRevProdRev','prodrev']];
+const TX_REV_EXT = [['txRevDWL','dwl'],['txRevOptQ','optq'],['txRevExtW','extwedge'],['txRevCorr','corrective']];
+function txRevMap() { return txIsExt(txType) ? TX_REV_EXT : TX_REV_TAX; }
 
 // Returns the demand slope multiplier for the current elasticity setting
 function txGetDm() {
@@ -29,12 +39,36 @@ function txGetSsc() {
   return txElasticity === 'normal' ? 2 : 3;
 }
 
+// Demand shift coefficient per step.
+// Tax/subsidy only ever shift demand to set up a starting position, so 1 grid
+// square (dsc = dm) reads most naturally there. A POSITIVE EXTERNALITY makes the
+// demand shift the answer, so it needs the same integer-equilibrium treatment the
+// supply shift gets: Δp = dsc·ds/(1+dm), which is a whole number when dsc = ssc.
+function txGetDsc() {
+  return txType === 'posext' ? txGetSsc() : txGetDm();
+}
+
+// A +2 demand shift throws MSB above the top of the grid unless the demand curve
+// has the normal slope, which would clip the deadweight loss triangle.
+function txMaxDS() {
+  return (txType === 'posext' && txElasticity !== 'normal') ? 1 : 2;
+}
+
+// Keeps the demand shift inside the range the current variant allows
+function txClampDS() {
+  const m = txMaxDS();
+  txDS = Math.max(-m, Math.min(m, txDS));
+  txDA = Math.max(-m, Math.min(m, txDA));
+  txStartDS = Math.max(-m, Math.min(m, txStartDS));
+}
+
 // Updates the Demand Slope button states and redraws
 function txSetElasticity(e) {
   txElasticity = e;
   document.getElementById('txElNormal').className    = 'btn' + (e === 'normal'    ? ' btn-primary' : '');
   document.getElementById('txElInelastic').className = 'btn' + (e === 'inelastic' ? ' btn-primary' : '');
   document.getElementById('txElElastic').className   = 'btn' + (e === 'elastic'   ? ' btn-primary' : '');
+  txClampDS();
   txDraw();
 }
 
@@ -42,8 +76,11 @@ function txSetElasticity(e) {
 function txDraw(isAnimating = false) {
   const vU = parseFloat(document.getElementById('txVUnit').value) || 1;
   const hU = parseFloat(document.getElementById('txHUnit').value) || 5;
+  // MPC/MSC/MPB/MSB are three characters wide and are drawn just outside the plot,
+  // so the externality diagrams need extra room on the right or the last letter clips.
+  const txPad = txIsExt(txType) ? Object.assign({}, PAD, { r: PAD.r + 18 }) : PAD;
   document.getElementById('txChart').innerHTML = buildSVGInner({
-    W, H, pad: PAD,
+    W, H, pad: txPad,
     title:  document.getElementById('txTitle').value,
     yLbl:   getYLbl('txYLbl', vU),
     xLbl:   document.getElementById('txXLbl').value || 'Quantity',
@@ -55,12 +92,13 @@ function txDraw(isAnimating = false) {
     showEqLines: document.getElementById('txShowEq').checked,
     showEqLabel: false,    // show dot/dashes but no number (label shown in quiz as Pc/Ps)
     dMult: txGetDm(),
-    dShiftCoeff: txGetDm(),   // demand: 1 grid square per step
-    sShiftCoeff: txGetSsc()   // supply: integer equilibria guaranteed
+    dShiftCoeff: txGetDsc(),  // demand: 1 grid square, or integer equilibria for +externality
+    sShiftCoeff: txGetSsc(),  // supply: integer equilibria guaranteed
+    labels: txLabels(txType)  // D1/S1/… or MPC/MSC/MPB/MSB
   });
   // Enable/disable shift buttons
-  document.getElementById('txDL').disabled = txDS <= -2;
-  document.getElementById('txDR').disabled = txDS >= 2;
+  document.getElementById('txDL').disabled = txDS <= -txMaxDS();
+  document.getElementById('txDR').disabled = txDS >= txMaxDS();
   document.getElementById('txSL').disabled = txSS <= -2;
   document.getElementById('txSR').disabled = txSS >= 2;
 }
@@ -70,7 +108,7 @@ function txShift(curve, dir) {
   if (txAnim) return;
   const nD = curve === 'd' ? txDS + dir : txDS;
   const nS = curve === 's' ? txSS + dir : txSS;
-  if (nD < -2 || nD > 2 || nS < -2 || nS > 2) return;
+  if (nD < -txMaxDS() || nD > txMaxDS() || nS < -2 || nS > 2) return;
   const fD = txDA, fS = txSA;
   txDS = nD; txSS = nS;
   const start = performance.now(), dur = 500;
@@ -101,7 +139,7 @@ function txSetStart() {
   const card = document.getElementById('txStartCard');
   card.style.display = 'block';
   document.getElementById('txStartMsg').textContent =
-    `✓ Starting position set (D: ${txStartDS >= 0 ? '+' : ''}${txStartDS}, S: ${txStartSS >= 0 ? '+' : ''}${txStartSS}). Now shift supply ${txType === 'tax' ? 'LEFT for the tax' : 'RIGHT for the subsidy'} and capture.`;
+    `✓ Starting position set (D: ${txStartDS >= 0 ? '+' : ''}${txStartDS}, S: ${txStartSS >= 0 ? '+' : ''}${txStartSS}). Now ${TX_MOVE_HINT[txType]} and capture.`;
   txDraw();
 }
 
@@ -126,17 +164,53 @@ function txCapture() {
   txAnim = requestAnimationFrame(step);
   const card = document.getElementById('txCapCard');
   card.style.display = 'block';
+  // A positive externality is a demand shift; everything else is a supply shift.
+  const moved = txType === 'posext' ? txCap.dShift : txCap.sShift;
+  const which = txType === 'posext' ? 'D' : 'S';
+  const name  = { tax:'tax', subsidy:'subsidy', negext:'negative externality', posext:'positive externality' }[txType];
   document.getElementById('txCapMsg').textContent =
-    `✓ Answer captured (S shift: ${txCap.sShift >= 0 ? '+' : ''}${txCap.sShift} = ${txType}). Diagram reset. Now write your question.`;
+    `✓ Answer captured (${which} shift: ${moved >= 0 ? '+' : ''}${moved} = ${name}). Diagram reset. Now write your question.`;
 }
 
-// Sets the tax/subsidy type and updates the UI label
+// The wording used in the "set start / capture" guidance for each variant
+const TX_MOVE_HINT = {
+  tax:     'shift supply LEFT for the tax',
+  subsidy: 'shift supply RIGHT for the subsidy',
+  negext:  'shift supply LEFT to add the external cost (MPC → MSC)',
+  posext:  'shift demand RIGHT to add the external benefit (MPB → MSB)'
+};
+
+const TX_YLBL_MARKET = 'Price ($)';
+const TX_YLBL_EXT    = 'Price, Cost, Benefit ($)';
+
+// Sets the diagram variant and updates the UI to match
 function txSetType(type) {
+  const wasExt = txIsExt(txType);
   txType = type;
-  document.getElementById('txTypeTax').classList.toggle('btn-primary', type === 'tax');
-  document.getElementById('txTypeSub').classList.toggle('btn-primary', type === 'subsidy');
-  document.getElementById('txTypeTax').classList.toggle('btn', type !== 'tax');
-  document.getElementById('txTypeSub').classList.toggle('btn', type !== 'subsidy');
+
+  const btns = { tax:'txTypeTax', subsidy:'txTypeSub', negext:'txTypeNegExt', posext:'txTypePosExt' };
+  Object.entries(btns).forEach(([t, id]) => {
+    const b = document.getElementById(id);
+    if (!b) return;
+    b.classList.toggle('btn-primary', type === t);
+    b.classList.toggle('btn', type !== t);
+  });
+
+  // Swap the reveal checkbox panel
+  const nowExt = txIsExt(type);
+  const rt = document.getElementById('txRevTaxSet'), re = document.getElementById('txRevExtSet');
+  if (rt) rt.style.display = nowExt ? 'none' : 'flex';
+  if (re) re.style.display = nowExt ? 'flex' : 'none';
+
+  // Nudge the y-axis label across, but only if it's still the untouched default
+  const yl = document.getElementById('txYLbl');
+  if (yl && wasExt !== nowExt) {
+    if (nowExt && yl.value === TX_YLBL_MARKET) yl.value = TX_YLBL_EXT;
+    if (!nowExt && yl.value === TX_YLBL_EXT)   yl.value = TX_YLBL_MARKET;
+  }
+
+  txClampDS();
+  txDraw();
 }
 
 // Returns index of selected correct-answer radio button, or -1
@@ -150,20 +224,15 @@ function txGetCorrect() {
 function txBuildQ() {
   const vU = parseFloat(document.getElementById('txVUnit').value) || 1;
   const hU = parseFloat(document.getElementById('txHUnit').value) || 5;
-  // Build reveals array in display order, only including checked options
-  const revMap = [
-    ['txRevSize',    'size'],
-    ['txRevWedge',   'wedge'],
-    ['txRevConsumer','consumer'],
-    ['txRevProdLoss','prodloss'],
-    ['txRevProdRev', 'prodrev'],
-  ];
-  const reveals = revMap.filter(([id]) => document.getElementById(id).checked).map(([,key]) => key);
+  // Build reveals array in display order, only including checked options.
+  // The externality variants have their own reveal set.
+  const reveals = txRevMap().filter(([id]) => document.getElementById(id).checked).map(([,key]) => key);
   return {
     type:         'tax',
     taxType:      txType,
     dElasticity:  txElasticity,
     sShiftCoeff:  txGetSsc(),
+    dShiftCoeff:  txGetDsc(),
     showEqLines:  document.getElementById('txShowEq').checked,
     title:        document.getElementById('txTitle').value,
     yLabel:       getYLbl('txYLbl', vU),
@@ -195,8 +264,8 @@ function txClearForm() {
   document.getElementById('txQText').value = '';
   [0,1,2,3].forEach(i => document.getElementById('txA' + i).value = '');
   document.querySelectorAll('input[name="txC"]').forEach(r => r.checked = false);
-  // Reset reveal options to defaults (size/wedge/consumer/prodloss on, prodrev off)
-  ['txRevSize','txRevWedge','txRevConsumer','txRevProdLoss'].forEach(id => {
+  // Reset reveal options to defaults (all ticked except Producer revenue)
+  ['txRevSize','txRevWedge','txRevConsumer','txRevProdLoss','txRevDWL','txRevOptQ','txRevExtW','txRevCorr'].forEach(id => {
     const el = document.getElementById(id); if (el) el.checked = true;
   });
   const pr = document.getElementById('txRevProdRev'); if (pr) pr.checked = false;
@@ -218,12 +287,13 @@ function txLoad(q) {
     document.getElementById('txVUnit').value = q.vUnit  || 1;
     document.getElementById('txHUnit').value = q.hUnit  || 5;
     document.getElementById('txTitle').value = q.title  || '';
-    document.getElementById('txYLbl').value  = q.yLabel || 'Price ($)';
     document.getElementById('txXLbl').value  = q.xLabel || 'Quantity';
     document.getElementById('txDCol').value  = q.dColor || '#185FA5';
     document.getElementById('txSCol').value  = q.sColor || '#0F6E56';
     document.getElementById('txShowEq').checked = q.showEqLines !== false;
+    // Type first — txSetType nudges the y-axis default, so the saved label is written after it
     txSetType(q.taxType || 'tax');
+    document.getElementById('txYLbl').value  = q.yLabel || (txIsExt(q.taxType) ? TX_YLBL_EXT : TX_YLBL_MARKET);
     txStartDS = q.startDS || 0;
     txStartSS = q.startSS || 0;
     txDA = txStartDS; txSA = txStartSS; txDS = txStartDS; txSS = txStartSS;
@@ -234,12 +304,13 @@ function txLoad(q) {
     }
     txCap = { dShift: q.ansDS || 0, sShift: q.ansSS || 0 };
     document.getElementById('txCapCard').style.display = 'block';
+    const ldMoved = q.taxType === 'posext' ? txCap.dShift : txCap.sShift;
+    const ldWhich = q.taxType === 'posext' ? 'D' : 'S';
     document.getElementById('txCapMsg').textContent =
-      `Previously captured (S shift: ${txCap.sShift >= 0 ? '+' : ''}${txCap.sShift}). Re-capture to change, or click Update Question to keep.`;
-    // Restore reveal checkboxes
-    const revIds = {size:'txRevSize',wedge:'txRevWedge',consumer:'txRevConsumer',prodloss:'txRevProdLoss',prodrev:'txRevProdRev'};
-    const savedRevs = q.reveals || ['size','wedge','consumer','prodloss'];
-    Object.entries(revIds).forEach(([key, id]) => {
+      `Previously captured (${ldWhich} shift: ${ldMoved >= 0 ? '+' : ''}${ldMoved}). Re-capture to change, or click Update Question to keep.`;
+    // Restore reveal checkboxes (only those belonging to this variant)
+    const savedRevs = q.reveals || txDefRev(q);
+    txRevMap().forEach(([id, key]) => {
       const el = document.getElementById(id); if (el) el.checked = savedRevs.includes(key);
     });
     // Restore demand elasticity (txSetElasticity also redraws, so skip explicit txDraw)

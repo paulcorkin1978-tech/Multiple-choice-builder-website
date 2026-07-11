@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shift trail — mockup</title>
+<style>
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#fafaf8;color:#2c2c2a;margin:0;padding:26px 30px 60px}
+  h1{font-size:19px;margin:0 0 4px;font-weight:600}
+  p.sub{margin:0 0 22px;color:#5f5e5a;font-size:13px;max-width:760px;line-height:1.6}
+  .row{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:8px}
+  .card{background:#fff;border:1px solid #e3e1d9;border-radius:10px;padding:14px 14px 8px}
+  .card h2{font-size:13px;margin:0 0 2px;font-weight:600}
+  .card .note{font-size:11px;color:#888;margin:0 0 8px;height:28px;line-height:1.35}
+  svg{display:block;background:#fff}
+  .bar{display:flex;align-items:center;gap:16px;margin:18px 0 22px;flex-wrap:wrap}
+  button{font:inherit;font-size:13px;padding:7px 16px;border-radius:7px;border:1px solid #0A0C56;
+         background:#0A0C56;color:#fff;cursor:pointer}
+  button.alt{background:#fff;color:#0A0C56}
+  label{font-size:12px;color:#5f5e5a;display:flex;align-items:center;gap:7px}
+  input[type=range]{width:130px}
+  code{background:#f1f0ec;padding:1px 5px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+
+<h1>Shift trail — three treatments</h1>
+<p class="sub">Demand shifts right by one step. Tails are anchored to the horizontal gridlines, so every
+tail moves sideways — that is what breaks the "it looks like it's going up" illusion. No large head dots.
+Watch the low-price rows (bottom of the grid): their intersection runs off the right edge part-way through,
+so those tails have to drop out. That is real, not a bug in the mockup.</p>
+
+<div class="bar">
+  <button id="play">▶ Replay</button>
+  <button class="alt" id="slow">Slow motion</button>
+  <label>Rows: <input type="range" id="rows" min="3" max="9" step="2" value="9"><span id="rowsv">9</span></label>
+  <label>Tail length: <input type="range" id="tail" min="3" max="10" value="6"><span id="tailv">6</span></label>
+</div>
+
+<div class="row">
+  <div class="card">
+    <h2>A · Dot trail</h2>
+    <p class="note">Small dots, no emphasised head.<br>Closest to what's in the code now.</p>
+    <svg id="a" width="300" height="270" viewBox="0 0 300 270"></svg>
+  </div>
+  <div class="card">
+    <h2>B · Tapered streak</h2>
+    <p class="note">A continuous comet, thick and opaque at the head, thinning backwards.</p>
+    <svg id="b" width="300" height="270" viewBox="0 0 300 270"></svg>
+  </div>
+  <div class="card">
+    <h2>C · Ghost curves</h2>
+    <p class="note">Past positions of the whole curve, fading. Tails emerge for free.</p>
+    <svg id="c" width="300" height="270" viewBox="0 0 300 270"></svg>
+  </div>
+</div>
+
+<script>
+// ── the real grid maths, lifted from utils.js ────────────────────────────────
+const GRID=9, QS=1, QE=9, W=300, H=270, pad={l:36,r:28,t:22,b:30};
+const dPf=(q,ds)=>10-q+2*ds;
+const dQf=(p,ds)=>10-p+2*ds;
+const gx=q=>pad.l+q*(W-pad.l-pad.r)/GRID;
+const gy=p=>pad.t+(GRID-p)*(H-pad.t-pad.b)/GRID;
+const ease=t=>t<0.5?2*t*t:-1+(4-2*t)*t;
+const COL='#000000';
+
+function rowsFor(n){                       // n gridlines, centred on p=5
+  if(n>=9) return [1,2,3,4,5,6,7,8,9];
+  if(n===7) return [2,3,4,5,6,7,8];
+  if(n===5) return [3,4,5,6,7];
+  return [3,5,7];
+}
+function chrome(){
+  let s='';
+  for(let i=1;i<=GRID;i++){
+    s+=`<line x1="${pad.l}" y1="${gy(i)}" x2="${W-pad.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+    s+=`<line x1="${gx(i)}" y1="${pad.t}" x2="${gx(i)}" y2="${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+  }
+  s+=`<line x1="${pad.l}" y1="${H-pad.b}" x2="${pad.l}" y2="${pad.t-6}" stroke="#444" stroke-width="1.5"/>`;
+  s+=`<line x1="${pad.l-6}" y1="${H-pad.b}" x2="${W-pad.r+6}" y2="${H-pad.b}" stroke="#444" stroke-width="1.5"/>`;
+  return s;
+}
+// clip a curve at shift ds to the price band [1,9]
+function curve(ds,op,wid){
+  const q1=Math.max(QS,Math.min(QE,dQf(GRID,ds))), q2=Math.max(QS,Math.min(QE,dQf(1,ds)));
+  const p1=dPf(q1,ds), p2=dPf(q2,ds);
+  return `<line x1="${gx(q1)}" y1="${gy(p1)}" x2="${gx(q2)}" y2="${gy(p2)}" stroke="${COL}" stroke-width="${wid}" stroke-linecap="round" opacity="${op}"/>`;
+}
+function speedAt(t){ return Math.min(1, 2*Math.min(t,1-t)+0.06); }
+
+// ── A: dot trail ─────────────────────────────────────────────────────────────
+function drawA(cur,t,rows,N){
+  let s=chrome()+curve(0,1,2)+curve(cur,1,2.5);
+  const step=0.17*speedAt(t)*1;
+  for(const p of rows()) for(let j=N;j>=0;j--){
+    const ds=Math.max(0,cur-step*j), q=dQf(p,ds);
+    if(q<QS||q>QE) continue;
+    const a=0.55*Math.pow(1-j/(N+1),1.5), r=2.2-0.13*j;
+    if(r<=0.3) continue;
+    s+=`<circle cx="${gx(q).toFixed(1)}" cy="${gy(p).toFixed(1)}" r="${r.toFixed(1)}" fill="${COL}" opacity="${a.toFixed(2)}"/>`;
+  }
+  return s;
+}
+// ── B: tapered streak ────────────────────────────────────────────────────────
+function drawB(cur,t,rows,N){
+  let s=chrome()+curve(0,1,2)+curve(cur,1,2.5);
+  const step=0.17*speedAt(t)*1;
+  for(const p of rows()) for(let j=0;j<N;j++){
+    const d0=Math.max(0,cur-step*j), d1=Math.max(0,cur-step*(j+1));
+    const q0=dQf(p,d0), q1=dQf(p,d1);
+    if(q0<QS||q0>QE||q1<QS||q1>QE) continue;
+    if(Math.abs(q0-q1)<0.005) continue;
+    const a=0.7*Math.pow(1-j/N,1.6), w=(2.6*(1-j/N)+0.4);
+    s+=`<line x1="${gx(q1).toFixed(1)}" y1="${gy(p).toFixed(1)}" x2="${gx(q0).toFixed(1)}" y2="${gy(p).toFixed(1)}" stroke="${COL}" stroke-width="${w.toFixed(2)}" stroke-linecap="round" opacity="${a.toFixed(2)}"/>`;
+  }
+  return s;
+}
+// ── C: ghost curves ──────────────────────────────────────────────────────────
+function drawC(cur,t,rows,N){
+  let s=chrome()+curve(0,1,2);
+  const step=0.17*speedAt(t)*1;
+  for(let j=N;j>=1;j--){
+    const ds=Math.max(0,cur-step*j);
+    if(ds<=0.0005) continue;
+    s+=curve(ds,(0.30*Math.pow(1-j/(N+1),1.7)).toFixed(2),1.6);
+  }
+  return s+curve(cur,1,2.5);
+}
+
+// ── driver ───────────────────────────────────────────────────────────────────
+let raf=null, dur=2200;
+const $=id=>document.getElementById(id);
+const nRows=()=>+$('rows').value, nTail=()=>+$('tail').value;
+const rows=()=>rowsFor(nRows());
+
+function frame(t){
+  const cur=ease(t);
+  $('a').innerHTML=drawA(cur,t,rows,nTail());
+  $('b').innerHTML=drawB(cur,t,rows,nTail());
+  $('c').innerHTML=drawC(cur,t,rows,nTail());
+}
+function run(){
+  if(raf) cancelAnimationFrame(raf);
+  const t0=performance.now();
+  (function step(now){
+    const t=Math.min((now-t0)/dur,1);
+    frame(t);
+    if(t<1) raf=requestAnimationFrame(step);
+    else { frame(1); setTimeout(()=>frame(0),700); }   // settle, then reset to D1
+  })(t0);
+}
+$('play').onclick=()=>{dur=2200;run();};
+$('slow').onclick=()=>{dur=7000;run();};
+$('rows').oninput=e=>{$('rowsv').textContent=e.target.value;frame(0.5);};
+$('tail').oninput=e=>{$('tailv').textContent=e.target.value;frame(0.5);};
+frame(0);
+setTimeout(run,400);
+</script>
+</body>
+</html>

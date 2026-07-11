@@ -103,9 +103,9 @@ textarea::placeholder{color:#b4b2a9}
 .table-preview{padding:16px;overflow-x:auto;flex:1;display:flex;flex-direction:column}
 .tbl-preview-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
 .tbl-preview-title{font-size:13px;font-weight:600;color:#2c2c2a;text-align:center}
-.tbl-preview-table{border-collapse:collapse;width:100%;font-size:12px;font-family:'Verdana',sans-serif}
-.tbl-preview-table th{background:#185FA5;color:#fff;padding:8px 12px;text-align:center;font-size:11px;font-weight:600}
-.tbl-preview-table td{padding:6px 12px;text-align:center;border:1px solid #d3d1c7;color:#2c2c2a}
+.tbl-preview-table{border-collapse:collapse;width:100%;font-size:12px;font-family:'Verdana',sans-serif;border:1.5px solid #EC3C78}
+.tbl-preview-table th{background:#0A0C56;color:#fff;padding:8px 12px;text-align:center;font-size:11px;font-weight:600}
+.tbl-preview-table td{padding:6px 12px;text-align:center;border:1px solid rgba(236,60,120,0.30);color:#2c2c2a}
 .tbl-preview-table tr:nth-child(even) td{background:#f5f4f0}
 
 /* ── TABLE DATA ENTRY GRID ── */

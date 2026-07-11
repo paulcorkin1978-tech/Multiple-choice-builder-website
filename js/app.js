@@ -8,7 +8,12 @@ let quizQuestions = [];
 let editingIndex  = -1;   // -1 = adding new; ≥0 = editing that question index
 
 // ── TYPE LABEL HELPER ─────────────────────────────────────────────────────────
-function typeLabel(type) {
+function typeLabel(type, q) {
+  // The 'tax' type covers four variants; show which one so the list stays readable
+  if (type === 'tax' && q) {
+    const v = { tax:'Tax', subsidy:'Subsidy', negext:'− Extern.', posext:'+ Extern.' }[q.taxType];
+    if (v) return v;
+  }
   return { plain:'Text', sc:'SC', sd:'S&D', ppf:'PPF', table:'Table', pm:'Price Mech', tax:'Tax/Sub', ped:'PED', sur:'Surplus' }[type] || type;
 }
 
@@ -54,11 +59,11 @@ function openBuilder(type) {
   } else if (type === 'tax') {
     document.getElementById('taxBuilder').classList.add('active');
     if (editingIndex < 0) {
-      txStartDS = 0; txStartSS = 0; txType = 'tax';
-      txSetType('tax');
+      txStartDS = 0; txStartSS = 0;
+      txDA = 0; txSA = 0; txDS = 0; txSS = 0;
+      txSetType('tax');   // also redraws
       document.getElementById('txStartCard').style.display = 'none';
       document.getElementById('txCapCard').style.display   = 'none';
-      txDA = 0; txSA = 0; txDS = 0; txSS = 0;
     }
     txDraw();
     if (editingIndex >= 0) txLoad(quizQuestions[editingIndex]);
@@ -141,7 +146,7 @@ function updateMenu() {
     listEl.innerHTML = quizQuestions.map((q, i) =>
       `<div class="qitem">
         <span class="qitem-text">
-          <em class="qtype-tag">${typeLabel(q.type)}</em>
+          <em class="qtype-tag">${typeLabel(q.type, q)}</em>
           Q${i+1}: ${q.questionText ? q.questionText.substring(0, 55) + (q.questionText.length > 55 ? '…' : '') : '—'}
         </span>
         <div class="qitem-btns">

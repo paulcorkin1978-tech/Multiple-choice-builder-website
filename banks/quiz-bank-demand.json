@@ -5,7 +5,7 @@
     "title": "Demand for apples",
     "yLabel": "Price ($kg)",
     "xLabel": "Quantity",
-    "color": "#00ff11",
+    "color": "#000000",
     "vUnit": 1,
     "hUnit": 5,
     "startFP": 5,
@@ -28,7 +28,7 @@
     "title": "Demand for lemonade",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#C47D00",
+    "color": "#000000",
     "vUnit": 0.5,
     "hUnit": 10,
     "startFP": 4,
@@ -46,96 +46,38 @@
     "correctIndex": 2
   },
   {
-    "type": "sc",
-    "curve": "demand",
-    "title": "Demand for cars",
-    "yLabel": "Price (thousands $)",
-    "xLabel": "Quantity",
-    "color": "#050505",
-    "vUnit": 5000,
-    "hUnit": 100,
-    "startFP": 5,
-    "startCS": 0,
-    "showEqLines": false,
-    "ansFP": 5,
-    "ansCS": 1,
-    "questionText": "Consider the demand curve for cars. Suppose that due to strong economic growth there is an increase in income levels amongst the population. What would happen to the demand for cars?",
+    "type": "plain",
+    "questionText": "Which of the following would cause a movement along the demand curve for coffee, rather than a shift of the whole curve?",
     "answers": [
-      "There would be an increase in demand for cars",
-      "There would be a decrease in demand for cars",
-      "There would be an expansion in the demand for cars",
-      "There would be a contraction in the demand for cars"
+      "A fall in the price of coffee",
+      "A rise in the incomes of coffee drinkers",
+      "A fall in the price of tea, a substitute for coffee",
+      "A health report praising the benefits of drinking coffee"
     ],
     "correctIndex": 0
   },
   {
     "type": "sc",
     "curve": "demand",
-    "title": "Demand for iPads",
-    "yLabel": "Price ($)",
+    "title": "Demand for cars",
+    "yLabel": "Price (thousands $)",
     "xLabel": "Quantity",
-    "color": "#858585",
-    "vUnit": 100,
-    "hUnit": 30,
-    "startFP": 5,
-    "startCS": 0,
-    "showEqLines": true,
-    "ansFP": 5,
-    "ansCS": -1,
-    "questionText": "Consider the demand for curve for iPads. Suppose Apple announces that the price of iPads will be reduced by 20% in one month’s time. What will happen to the demand for iPads today?",
-    "answers": [
-      "There will be an increase in demand for iPads",
-      "There will be a decrease in demand for iPads",
-      "There will be an expansion in demand for iPads",
-      "There will be a contraction in demand for iPads"
-    ],
-    "correctIndex": 1
-  },
-  {
-    "type": "sc",
-    "curve": "demand",
-    "title": "Demand for iPads",
-    "yLabel": "Price ($)",
-    "xLabel": "Quantity",
-    "color": "#525252",
-    "vUnit": 100,
-    "hUnit": 30,
-    "startFP": 5,
-    "startCS": 0,
-    "showEqLines": true,
-    "ansFP": 4,
-    "ansCS": 0,
-    "questionText": "Consider the same demand curve for iPads. One month has passed and the price of iPads falls by 10%. What happens to the demand for iPads?",
-    "answers": [
-      "There will be an increase in demand for iPads",
-      "There will be a decrease in demand for iPads",
-      "There will be an expansion in demand for iPads",
-      "There will be a contraction in demand for iPads"
-    ],
-    "correctIndex": 2
-  },
-  {
-    "type": "sc",
-    "curve": "demand",
-    "title": "Demand for cinema tickets",
-    "yLabel": "Price ($)",
-    "xLabel": "Quantity",
-    "color": "#b047f5",
-    "vUnit": 3,
-    "hUnit": 20,
+    "color": "#000000",
+    "vUnit": 5000,
+    "hUnit": 100,
     "startFP": 5,
     "startCS": 0,
     "showEqLines": false,
     "ansFP": 5,
-    "ansCS": -1,
-    "questionText": "A recession causes rising unemployment and a 5% reduction in the average income of workers in an economy. How would this affect the demand for cinema tickets?",
+    "ansCS": 2,
+    "questionText": "Consider the demand curve for cars. Suppose that due to strong economic growth there is an increase in income levels amongst the population. What would happen to the demand for cars?",
     "answers": [
-      "There will be a decrease in demand for cinema tickets by 5%",
-      "There will be an unknown decrease in demand for cinema tickets",
-      "There will be an increase in the demand for cinema tickets by 5%",
-      "There will be an unknown increase in demand for cinema tickets"
+      "There would be a decrease in demand for cars",
+      "There would be an expansion in the demand for cars",
+      "There would be a contraction in the demand for cars",
+      "There would be an increase in demand for cars"
     ],
-    "correctIndex": 1
+    "correctIndex": 3
   },
   {
     "type": "sc",
@@ -143,12 +85,12 @@
     "title": "Demand for the children's toy",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#fb04b9",
+    "color": "#000000",
     "vUnit": 8,
     "hUnit": 25,
     "startFP": 6,
     "startCS": 0,
-    "showEqLines": true,
+    "showEqLines": false,
     "ansFP": 6,
     "ansCS": 1,
     "questionText": "A viral marketing campaign on social media for a children’s toy makes it the ‘must have’ Christmas present. How will this affect demand for the toy?",
@@ -159,6 +101,51 @@
       "There will be a contraction in demand for the toy"
     ],
     "correctIndex": 0
+  },
+  {
+    "type": "plain",
+    "questionText": "Increased immigration leads to an increase in demand for hospitality services. What factor affecting demand best explains this shift?",
+    "answers": [
+      "Price changes",
+      "Changes in tastes and preferences",
+      "Change in the number of consumers",
+      "Changes in the price of substitutes"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "sc",
+    "curve": "demand",
+    "color": "#000000",
+    "yLabel": "Price ($)",
+    "xLabel": "Quantity (games)",
+    "startCS": 0,
+    "ansCS": 0,
+    "showEqLines": true,
+    "title": "Demand for Switch games",
+    "vUnit": 10,
+    "hUnit": 20,
+    "startFP": 6,
+    "ansFP": 4,
+    "questionText": "Consider the demand curve for Nintendo Switch games. Suppose the price of Switch games falls from $60 to $40. What happens to the demand for Switch games?",
+    "answers": [
+      "There will be an increase in demand from 80 to 120 games",
+      "There will be a contraction in demand from 120 to 80 games",
+      "There will be a decrease in demand from 120 to 80 games",
+      "There will be an expansion in demand from 80 to 120 games"
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "plain",
+    "questionText": "Suppose that the price of Nintendo Switch games reduce. What would be the likely impact on the demand for Nintendo Switch consoles?",
+    "answers": [
+      "No change in demand",
+      "An increase in demand",
+      "An expansion in demand",
+      "A decrease in demand"
+    ],
+    "correctIndex": 1
   },
   {
     "type": "table",
@@ -183,11 +170,11 @@
     "questionText": "Consider the data table below showing price changes for two substitute goods. Given the data, what is likely to happen to the demand for Good A in year 2?",
     "answers": [
       "There will be an increase in demand for Good A",
-      "There will be a decrease in demand for Good A",
       "There will be a contraction in demand for Good A",
-      "There will be no change in demand for Good A"
+      "There will be no change in demand for Good A",
+      "There will be a decrease in demand for Good A"
     ],
-    "correctIndex": 1
+    "correctIndex": 3
   },
   {
     "type": "table",
@@ -221,93 +208,163 @@
   {
     "type": "sc",
     "curve": "demand",
+    "title": "Demand for Snickers bars",
+    "yLabel": "Price ($)",
+    "xLabel": "Quantity",
+    "color": "#000000",
+    "vUnit": 0.5,
+    "hUnit": 25,
+    "startFP": 4,
+    "startCS": 0,
+    "showEqLines": true,
+    "ansFP": 4,
+    "ansCS": -2,
+    "questionText": "What statement would most likely be correct if the price of Mars bars was to reduce?",
+    "answers": [
+      "There would be a decrease in demand for Snickers bars at all price levels",
+      "There would be a decrease in demand for Snickers bars at $2 only",
+      "There would be a decrease in the demand for Snickers bars below $2",
+      "There would be a contraction in demand for Snickers bars"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "sc",
+    "curve": "demand",
+    "color": "#000000",
+    "yLabel": "Price ($)",
+    "xLabel": "Quantity (cups per day)",
+    "startCS": 1,
+    "ansCS": 1,
+    "showEqLines": true,
+    "title": "Demand for coffee",
+    "vUnit": 1,
+    "hUnit": 50,
+    "startFP": 5,
+    "ansFP": 5,
+    "questionText": "A health report praises the benefits of coffee, shifting demand from D1 to D2. At a price of $5, by how much has the demand for coffee increased?",
+    "answers": [
+      "By 50 cups per day",
+      "By 150 cups per day",
+      "By 100 cups per day",
+      "By 200 cups per day"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "sc",
+    "curve": "demand",
+    "color": "#000000",
+    "yLabel": "Price ($/kg)",
+    "xLabel": "Quantity (kg)",
+    "startCS": -2,
+    "ansCS": -2,
+    "showEqLines": true,
+    "title": "Demand for beef",
+    "vUnit": 2,
+    "hUnit": 20,
+    "startFP": 3,
+    "ansFP": 3,
+    "questionText": "Following a health scare, the demand for beef shifts from D1 to D2. At a price of $6 per kg, by how much has the demand for beef decreased?",
+    "answers": [
+      "By 80 kg",
+      "By 40 kg",
+      "By 60 kg",
+      "By 100 kg"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "sc",
+    "curve": "demand",
     "title": "Demand for Coca-Cola",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#fb1d04",
+    "color": "#000000",
     "vUnit": 0.5,
     "hUnit": 25,
     "startFP": 4,
     "startCS": 1,
-    "showEqLines": true,
+    "showEqLines": false,
     "ansFP": 4,
     "ansCS": 1,
     "questionText": "Consider the demand curves shown for Coca-Cola. What could explain the shift from D1 to D2?",
     "answers": [
       "There has been an increase in the price of Coca-Cola",
       "There has been a decrease in the price of Coca-Cola",
-      "There has been an increase in the price of Pepsi",
-      "There has been a decrease in the price of Pepsi"
+      "There has been a decrease in the price of Pepsi",
+      "There has been an increase in the price of Pepsi"
     ],
-    "correctIndex": 2
+    "correctIndex": 3
   },
   {
-    "type": "plain",
-    "questionText": "Suppose that the price of Nintendo Switch games reduce. What would be the likely impact on the demand for Nintendo Switch consoles?",
+    "type": "sc",
+    "curve": "demand",
+    "title": "Demand for iPads",
+    "yLabel": "Price ($)",
+    "xLabel": "Quantity",
+    "color": "#000000",
+    "vUnit": 100,
+    "hUnit": 30,
+    "startFP": 5,
+    "startCS": 0,
+    "showEqLines": false,
+    "ansFP": 5,
+    "ansCS": -2,
+    "questionText": "Consider the demand curve for iPads. Suppose Apple announces that the price of iPads will be reduced by 20% in one month’s time. What will happen to the demand for iPads today?",
     "answers": [
-      "No change in demand",
-      "An increase in demand",
-      "An expansion in demand",
-      "A decrease in demand"
+      "There will be an increase in demand for iPads",
+      "There will be a decrease in demand for iPads",
+      "There will be an expansion in demand for iPads",
+      "There will be a contraction in demand for iPads"
     ],
     "correctIndex": 1
   },
   {
     "type": "sc",
     "curve": "demand",
-    "title": "Demand for scooters",
+    "title": "Demand for iPads",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#6A8F00",
-    "vUnit": 15,
-    "hUnit": 40,
+    "color": "#000000",
+    "vUnit": 100,
+    "hUnit": 30,
     "startFP": 5,
     "startCS": 0,
     "showEqLines": true,
-    "ansFP": 7,
+    "ansFP": 4,
     "ansCS": 0,
-    "questionText": "Given the demand curve for scooters, what would cause a contraction in demand of 80 scooters?",
+    "questionText": "Consider the same demand curve for iPads. One month has passed and the price of iPads falls by 20%. What happens to the demand for iPads?",
     "answers": [
-      "A price decrease to $60",
-      "A price decrease to $45",
-      "A price increase to $90",
-      "A price increase to $105"
-    ],
-    "correctIndex": 3
-  },
-  {
-    "type": "plain",
-    "questionText": "Increased immigration leads to an increase in the demand in the hospitality industry. What factor affecting demand best explains this shift?",
-    "answers": [
-      "Price changes",
-      "Changes in tastes and preferences",
-      "Change in the number of consumers",
-      "Changes in the price of substitutes"
+      "There will be an increase in demand for iPads",
+      "There will be a decrease in demand for iPads",
+      "There will be an expansion in demand for iPads",
+      "There will be a contraction in demand for iPads"
     ],
     "correctIndex": 2
   },
   {
     "type": "sc",
     "curve": "demand",
-    "title": "Demand for Snickers bars",
+    "title": "Demand for cinema tickets",
     "yLabel": "Price ($)",
     "xLabel": "Quantity",
-    "color": "#6A8F00",
-    "vUnit": 0.5,
-    "hUnit": 25,
-    "startFP": 4,
+    "color": "#000000",
+    "vUnit": 3,
+    "hUnit": 20,
+    "startFP": 5,
     "startCS": 0,
-    "showEqLines": true,
-    "ansFP": 4,
+    "showEqLines": false,
+    "ansFP": 5,
     "ansCS": -1,
-    "questionText": "What statement would most likely be correct if the price of Mars bars was to reduce?",
+    "questionText": "A recession causes rising unemployment and a 5% reduction in the average income of workers in an economy. How would this affect the demand for cinema tickets?",
     "answers": [
-      "There would be a decrease in demand for Snickers bars at $2 only",
-      "There would be a decrease in the demand for Snickers bars below $2",
-      "There would be a decrease in demand for Snickers bars at all price levels",
-      "There would be a contraction in demand for Snickers bars"
+      "There will be a decrease in demand for cinema tickets by 5%",
+      "There will be an unknown decrease in demand for cinema tickets",
+      "There will be an increase in the demand for cinema tickets by 5%",
+      "There will be an unknown increase in demand for cinema tickets"
     ],
-    "correctIndex": 2
+    "correctIndex": 1
   },
   {
     "type": "table",
@@ -320,12 +377,12 @@
     "rows": [
       [
         "A",
-        "An increase in the price of a substitute",
+        "A decrease in the price of a substitute",
         "An increase in the price of a complementary good"
       ],
       [
         "B",
-        "A decrease in the price of a substitute",
+        "An increase in the price of a substitute",
         "An increase in the price of a complementary good"
       ],
       [
@@ -346,6 +403,52 @@
       "Row C",
       "Row D"
     ],
+    "correctIndex": 0
+  },
+  {
+    "type": "sc",
+    "curve": "demand",
+    "color": "#000000",
+    "yLabel": "Price ($/month)",
+    "xLabel": "Quantity (subscriptions)",
+    "startCS": 2,
+    "ansCS": 2,
+    "showEqLines": true,
+    "title": "Demand for streaming subscriptions",
+    "vUnit": 2,
+    "hUnit": 30,
+    "startFP": 5,
+    "ansFP": 5,
+    "questionText": "A rise in household incomes shifts the demand for streaming subscriptions from D1 to D2. At a price of $10 per month, what quantity is now demanded, and how should the change be described?",
+    "answers": [
+      "150 subscriptions, an increase of 120",
+      "270 subscriptions, an increase of 120",
+      "270 subscriptions, an expansion of 120",
+      "150 subscriptions, an expansion of 120"
+    ],
     "correctIndex": 1
+  },
+  {
+    "type": "sc",
+    "curve": "demand",
+    "title": "Demand for scooters",
+    "yLabel": "Price ($)",
+    "xLabel": "Quantity",
+    "color": "#000000",
+    "vUnit": 15,
+    "hUnit": 40,
+    "startFP": 5,
+    "startCS": 0,
+    "showEqLines": true,
+    "ansFP": 7,
+    "ansCS": 0,
+    "questionText": "Given the demand curve for scooters, what would cause a contraction in demand of 80 scooters?",
+    "answers": [
+      "A price decrease to $60",
+      "A price decrease to $45",
+      "A price increase to $90",
+      "A price increase to $105"
+    ],
+    "correctIndex": 3
   }
 ]

@@ -2,10 +2,10 @@
   {
     "type": "pm",
     "title": "Market for oranges",
-    "yLabel": "Price ($kg)",
-    "xLabel": "Quantity kg",
-    "dColor": "#f37520",
-    "sColor": "#ed7932",
+    "yLabel": "Price ($/kg)",
+    "xLabel": "Quantity (kg)",
+    "dColor": "#000000",
+    "sColor": "#000000",
     "vUnit": 0.5,
     "hUnit": 5,
     "dShift": 0,
@@ -13,12 +13,58 @@
     "startPrice": 7,
     "showEqLines": false,
     "animatePrice": false,
-    "questionText": "Consider the market for oranges. What disequilibrium condition would occur if the price of oranges were $3.5kg?",
+    "questionText": "Consider the market for oranges. What disequilibrium condition would occur if the price of oranges were $3.50 per kg?",
     "answers": [
-      "A surplus of 20kg",
       "A surplus of 10kg",
+      "A surplus of 20kg",
       "A shortage of 10kg",
       "A shortage of 20kg"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "pm",
+    "title": "Market for strawberries",
+    "yLabel": "Price ($/kg)",
+    "xLabel": "Quantity (kg)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 0.5,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 7,
+    "showEqLines": true,
+    "animatePrice": true,
+    "questionText": "Consider the market for strawberries. At a price of $3.50 per kg, what triggers the price mechanism to begin?",
+    "answers": [
+      "Strawberry producers have excess demand and so need to lower prices to clear their stock",
+      "Strawberry producers have excess demand and so need to raise prices to clear their stock",
+      "Strawberry producers have excess supply and so need to lower prices to clear their stock",
+      "Strawberry producers have excess supply and so need to raise prices to clear their stock"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "pm",
+    "title": "Market for strawberries",
+    "yLabel": "Price ($/kg)",
+    "xLabel": "Quantity (kg)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 0.5,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 7,
+    "showEqLines": true,
+    "animatePrice": true,
+    "questionText": "The surplus of strawberries pushes the price down from $3.50 towards $2.50. As the price falls, how does the market reach equilibrium?",
+    "answers": [
+      "Supply contracts and demand expands at the same time, until both reach 25kg at $2.50",
+      "Supply expands and demand contracts at the same time, until both reach 25kg at $2.50",
+      "Supply decreases and demand increases, until the market clears",
+      "The supply curve shifts to the left until the surplus disappears"
     ],
     "correctIndex": 0
   },
@@ -36,12 +82,35 @@
     "startPrice": 2,
     "showEqLines": false,
     "animatePrice": false,
-    "questionText": "Consider the market for rental housing. At a rental price of $200 per week, which of the following statements is true?",
+    "questionText": "Consider the market for rental housing. At a rent of $200 per week, which of the following statements is true?",
     "answers": [
-      "There is a shortage of rental houses. The market is only willing to supply 10,000 houses at this rent level",
-      "There is shortage of rental houses. The market is willing to supply 30,000 houses at this rent level",
-      "There is a surplus of rental houses. The market is willing to supply 10,000 houses at this rent level",
-      "There is a surplus of rental houses. The market is willing to supply 30,000 houses at this rent level"
+      "There is a surplus of rental houses. The market is willing to supply 10,000 houses at this rent",
+      "There is a surplus of rental houses. The market is willing to supply 30,000 houses at this rent",
+      "There is a shortage of rental houses. The market is willing to supply 30,000 houses at this rent",
+      "There is a shortage of rental houses. The market is only willing to supply 10,000 houses at this rent"
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "pm",
+    "title": "Market for rental houses",
+    "yLabel": "Rent per week ($)",
+    "xLabel": "Quantity of houses (000s)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 100,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 2,
+    "showEqLines": true,
+    "animatePrice": true,
+    "questionText": "At a rent of $200 per week, what will likely begin the process of the price mechanism operating to restore equilibrium?",
+    "answers": [
+      "Competition for limited housing will cause tenants to bid up the rent, causing a contraction in demand",
+      "Competition for limited housing will cause tenants to bid up the rent, causing an increase in the supply of housing",
+      "Competition for limited housing will cause tenants to give up looking for housing",
+      "Competition for limited housing will cause landlords to lower their rents"
     ],
     "correctIndex": 0
   },
@@ -57,16 +126,16 @@
     "dShift": 0,
     "sShift": 0,
     "startPrice": 2,
-    "showEqLines": false,
+    "showEqLines": true,
     "animatePrice": true,
-    "questionText": "At a rental price of $200 per week, what will likely begin the process of the price mechanism operating to restore equilibrium?",
+    "questionText": "As the rent rises, why does the quantity of rental housing supplied expand?",
     "answers": [
-      "Competition for limited housing will cause tenants to bid up the price of rent causing an expansion in supply",
-      "Competition for limited housing will cause tenants to bid up the price of rent causing a contraction in demand",
-      "Competition for limited housing will cause tenants give up looking for housing",
-      "Competition for limited housing will cause landlords to lower their rental prices"
+      "Because the government requires landlords to supply more housing",
+      "Because the supply curve shifts to the right when rents rise",
+      "Because landlords offer more properties for rent once the higher rent makes it worthwhile",
+      "Because landlords lower their rents in order to attract more tenants"
     ],
-    "correctIndex": 1
+    "correctIndex": 2
   },
   {
     "type": "pm",
@@ -80,23 +149,23 @@
     "dShift": 0,
     "sShift": 0,
     "startPrice": 2,
-    "showEqLines": false,
+    "showEqLines": true,
     "animatePrice": true,
-    "questionText": "What triggers the expansion in supply from this disequilibrium?",
+    "questionText": "Once the price mechanism has fully operated in this market, what will the rent be and how many houses will be rented?",
     "answers": [
-      "More landlords offer rental houses to assist with the disequilibrium",
-      "Landlords see that tenants are willing to pay more an so revise down their rental prices",
-      "Fewer landlords offer rental houses to assist with the disequilibrium",
-      "Landlords see that tenants are willing to pay more an so revise up their rental prices"
+      "$200 per week, with 10,000 houses rented",
+      "$500 per week, with 25,000 houses rented",
+      "$500 per week, with 40,000 houses rented",
+      "$300 per week, with 15,000 houses rented"
     ],
-    "correctIndex": 3
+    "correctIndex": 1
   },
   {
     "type": "pm",
-    "title": "Labour Market",
-    "yLabel": "hourly wage ($)",
+    "title": "Labour market",
+    "yLabel": "Hourly wage ($)",
     "xLabel": "Quantity of labour (000s)",
-    "dColor": "#f90101",
+    "dColor": "#000000",
     "sColor": "#000000",
     "vUnit": 4,
     "hUnit": 5,
@@ -105,47 +174,253 @@
     "startPrice": 6,
     "showEqLines": false,
     "animatePrice": false,
-    "questionText": "Consider the labour market shown. If the government were to introduce a minimum wage of $24 per hour, what disequilibrium would occur?",
+    "questionText": "Consider the labour market shown. If the government were to set a minimum wage of $24 per hour, what disequilibrium would occur?",
     "answers": [
-      "The demand for workers is greater than the supply of workers leading to a shortage of 10,000 workers",
-      "The supply of workers is greater than the demand for workers leading to a shortage of 10,000 workers",
-      "The demand for workers is greater than the supply of workers leading to a surplus of 10,000 workers",
-      "The supply of workers is greater than the demand for workers leading to a surplus of 10,000 workers"
+      "The demand for workers is greater than the supply of workers, leading to a shortage of 10,000 workers",
+      "The supply of workers is greater than the demand for workers, leading to a shortage of 10,000 workers",
+      "The demand for workers is greater than the supply of workers, leading to a surplus of 10,000 workers",
+      "The supply of workers is greater than the demand for workers, leading to a surplus of 10,000 workers"
     ],
     "correctIndex": 3
   },
   {
     "type": "pm",
-    "title": "market for strawberries",
-    "yLabel": "price ($kg)",
-    "xLabel": "Quantity (kg)",
-    "dColor": "#f90101",
-    "sColor": "#fd6b1c",
-    "vUnit": 0.5,
+    "title": "Labour market",
+    "yLabel": "Hourly wage ($)",
+    "xLabel": "Quantity of labour (000s)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 4,
+    "hUnit": 5,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 6,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "In this labour market, the surplus of 10,000 workers at a wage of $24 per hour is best described as:",
+    "answers": [
+      "A shortage of labour",
+      "Full employment",
+      "Unemployment",
+      "An increase in the demand for labour"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "pm",
+    "title": "Market for wheat",
+    "yLabel": "Price ($ per tonne)",
+    "xLabel": "Quantity (tonnes)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 1,
+    "hUnit": 10,
+    "dShift": 0,
+    "sShift": 1,
+    "startPrice": 5,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "A bumper harvest increases the supply of wheat from S1 to S2, as shown. If the price initially stays at $5 per tonne, what will occur?",
+    "answers": [
+      "A surplus of 20 tonnes",
+      "A shortage of 20 tonnes",
+      "A surplus of 10 tonnes",
+      "A shortage of 10 tonnes"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "pm",
+    "title": "Market for wheat",
+    "yLabel": "Price ($ per tonne)",
+    "xLabel": "Quantity (tonnes)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 1,
+    "hUnit": 10,
+    "dShift": 0,
+    "sShift": 1,
+    "startPrice": 5,
+    "showEqLines": true,
+    "animatePrice": true,
+    "questionText": "After the harvest has shifted supply from S1 to S2, how will the price mechanism restore equilibrium in this wheat market?",
+    "answers": [
+      "The surplus pushes the price up to $6, and 60 tonnes are traded",
+      "The supply curve shifts back to the left until the surplus disappears",
+      "The surplus pushes the price down to $4, and the quantity traded falls to 50 tonnes",
+      "The surplus pushes the price down to $4. As the price falls, supply contracts along S2 while demand expands along D at the same time, until both reach 60 tonnes"
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "pm",
+    "title": "Market for ice cream",
+    "yLabel": "Price ($ per tub)",
+    "xLabel": "Quantity of tubs",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 1,
+    "hUnit": 100,
+    "dShift": 1,
+    "sShift": 0,
+    "startPrice": 5,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "A heatwave increases the demand for ice cream from D1 to D2, as shown. If the price initially stays at $5 per tub, what will occur?",
+    "answers": [
+      "A shortage of 200 tubs",
+      "A surplus of 200 tubs",
+      "A shortage of 100 tubs",
+      "A surplus of 100 tubs"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "pm",
+    "title": "Market for coffee",
+    "yLabel": "Price ($/kg)",
+    "xLabel": "Quantity (tonnes)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 2,
+    "hUnit": 20,
+    "dShift": 0,
+    "sShift": -1,
+    "startPrice": 5,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "A severe frost destroys part of the coffee crop, decreasing supply from S1 to S2, as shown. If the price initially stays at $10 per kg, what will occur?",
+    "answers": [
+      "A surplus of 40 tonnes",
+      "A shortage of 40 tonnes",
+      "A surplus of 20 tonnes",
+      "A shortage of 20 tonnes"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "pm",
+    "title": "Market for winter coats",
+    "yLabel": "Price ($)",
+    "xLabel": "Quantity of coats (000s)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 20,
+    "hUnit": 10,
+    "dShift": -1,
+    "sShift": 0,
+    "startPrice": 5,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "An unusually warm winter decreases the demand for coats from D1 to D2, as shown. If the price initially stays at $100, what will occur?",
+    "answers": [
+      "A shortage of 20,000 coats",
+      "A surplus of 10,000 coats",
+      "A shortage of 10,000 coats",
+      "A surplus of 20,000 coats"
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "pm",
+    "title": "Market for games consoles",
+    "yLabel": "Price ($)",
+    "xLabel": "Quantity of consoles (000s)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 100,
     "hUnit": 5,
     "dShift": 0,
     "sShift": 0,
     "startPrice": 7,
     "showEqLines": false,
-    "animatePrice": true,
-    "questionText": "Consider the market for strawberries. At a price of $3.50 per kg, what triggers the price mechanism to begin?",
+    "animatePrice": false,
+    "questionText": "A manufacturer sets the price of its new games console at $700, well above the price at which the market would clear. What will occur?",
     "answers": [
-      "Strawberry producers have excess demand and so need to lower prices to clear their stock",
-      "Strawberry producers have excess supply and so need to lower prices to clear their stock",
-      "Strawberry producers have excess demand and so need to raise prices to clear their stock",
-      "Strawberry producers have excess supply and so need to raise prices to clear their stock"
+      "A shortage of 20,000 consoles",
+      "A surplus of 20,000 consoles",
+      "A surplus of 10,000 consoles",
+      "The market will clear at $700"
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "pm",
+    "title": "Market for bread",
+    "yLabel": "Price per loaf ($)",
+    "xLabel": "Quantity of loaves",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 1,
+    "hUnit": 100,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 3,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "The government rules that bread may not be sold for more than $3 a loaf, although the market would otherwise settle at $5. What will occur?",
+    "answers": [
+      "A shortage of 400 loaves",
+      "A surplus of 400 loaves",
+      "A shortage of 200 loaves",
+      "The market will clear at $3"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "pm",
+    "title": "Market for bread",
+    "yLabel": "Price per loaf ($)",
+    "xLabel": "Quantity of loaves",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 1,
+    "hUnit": 100,
+    "dShift": 0,
+    "sShift": 0,
+    "startPrice": 3,
+    "showEqLines": false,
+    "animatePrice": false,
+    "questionText": "In this bread market, why does the price mechanism fail to remove the shortage?",
+    "answers": [
+      "Because bread producers refuse to supply bread at any price",
+      "Because the demand for bread is unlimited at $3 a loaf",
+      "Because the price is not permitted to rise, so it cannot signal producers to supply more",
+      "Because the shortage will disappear on its own once consumers stop buying bread"
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "plain",
+    "questionText": "In a market with a shortage, the price rises. Economists say the higher price acts as a signal. What does this mean?",
+    "answers": [
+      "It rewards producers with higher profits, encouraging them to produce more",
+      "It tells producers that consumers value the good more highly, so more of it should be produced",
+      "It decides which consumers receive the limited quantity that is available",
+      "It guarantees that the market will always clear"
     ],
     "correctIndex": 1
   },
   {
     "type": "plain",
-    "questionText": "Which of the following best describes how the price mechanism leads to market clearing?",
+    "questionText": "As the price rises during a shortage, some consumers are no longer willing or able to buy the good, and the limited quantity available is allocated to those who are. Which function of the price mechanism does this describe?",
     "answers": [
-      "government intervention in the market will ensure that there is no shortage or surplus and that the market clears",
-      "Market forces and government intervention both ensure that there is no shortage or surplus and that the market clears",
-      "Market forces of supply and demand ensure that there is no shortage or surplus and that the market clears",
-      "the price mechanism will always reduce prices to ensure that equilibrium is reached and the market clears"
+      "The signalling function",
+      "The incentive function",
+      "The rationing function",
+      "The market clearing function"
     ],
     "correctIndex": 2
+  },
+  {
+    "type": "plain",
+    "questionText": "Which of the following best describes how the price mechanism leads to market clearing?",
+    "answers": [
+      "Government intervention in the market ensures that there is no shortage or surplus and that the market clears",
+      "The price mechanism will always reduce prices to ensure that equilibrium is reached and the market clears",
+      "Market forces and government intervention both ensure that there is no shortage or surplus and that the market clears",
+      "Market forces of supply and demand ensure that there is no shortage or surplus and that the market clears"
+    ],
+    "correctIndex": 3
   }
 ]

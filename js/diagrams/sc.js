@@ -114,6 +114,8 @@ function scDraw(isAnimating = false) {
     col:    document.getElementById('scCol').value,
     dA, sA, fpA: scFPA,
     startCS: scStartCS, showFaded: true, isAnimating,
+    tgtD: scCurve === 'demand' ? scCS : null,   // where the shift is heading
+    tgtS: scCurve === 'supply' ? scCS : null,
     showEqLines: document.getElementById('scShowEq').checked
   });
   document.getElementById('scPUp').disabled = scFP >= GRID;

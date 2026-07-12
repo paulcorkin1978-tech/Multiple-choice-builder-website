@@ -285,11 +285,14 @@ function buildSVGInner(cfg) {
 // Written with plain string concatenation only, so the identical source can be
 // embedded inside the exported quiz template in quiz-export.js.
 
-function txIsExt(t){ return t==='negext'||t==='posext'; }
+function txIsExt(t){ return t==='negext'||t==='posext'||t==='posprod'; }
 
 // Curve names. d1/s1 = unshifted (private) curve, d2/s2 = shifted (social) curve.
+//   negext  (neg. production):  supply MPC → MSC (shifts left),  demand = MSB
+//   posprod (pos. production):  supply MPC → MSC (shifts right), demand = MSB
+//   posext  (pos. consumption): demand MPB → MSB (shifts right), supply = MSC
 function txLabels(t){
-  if(t==='negext') return {d1:'MSB', d2:'MSB', s1:'MPC', s2:'MSC'};
+  if(t==='negext'||t==='posprod') return {d1:'MSB', d2:'MSB', s1:'MPC', s2:'MSC'};
   if(t==='posext') return {d1:'MPB', d2:'MSB', s1:'MSC', s2:'MSC'};
   return {d1:'D1', d2:'D2', s1:'S1', s2:'S2'};
 }

@@ -1,7 +1,18 @@
 [
   {
     "type": "plain",
-    "questionText": "Vaccinations and regular GP consultations are said to generate positive externalities. Which statement best explains why?",
+    "questionText": "Healthcare is said to create a positive externality of consumption. What does this mean?",
+    "answers": [
+      "When a person consumes healthcare, third parties who did not pay for it also benefit.",
+      "When a firm produces healthcare, it creates pollution that harms third parties.",
+      "Healthcare is so expensive that only wealthy consumers can afford it.",
+      "The demand for healthcare is high because everyone values their own health."
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "plain",
+    "questionText": "Vaccinations and regular GP consultations are said to generate positive externalities of consumption. Which statement best explains why?",
     "answers": [
       "They are provided free of charge, so consumers pay nothing for them.",
       "They are a necessity, so demand for them is highly inelastic.",
@@ -197,11 +208,11 @@
     "ansDS": 1,
     "ansSS": 0,
     "reveals": ["corrective", "optq"],
-    "questionText": "The government wants to move the market to the socially optimal quantity of 6 million consultations by paying a per-unit subsidy. How large must the subsidy be, and what will patients then pay?",
+    "questionText": "Because this is a positive externality of consumption, the government pays patients a per-unit subsidy for each consultation, raising their demand towards MSB and moving the market to the socially optimal 6 million consultations. How large must the subsidy be, and what will patients pay after receiving it?",
     "answers": [
       "A subsidy of $20 per consultation, with patients paying $60 and doctors receiving $40.",
       "A subsidy of $10 per consultation, with patients paying $50 and doctors receiving $60.",
-      "A subsidy of $20 per consultation, with patients paying $40 and doctors receiving $60.",
+      "A subsidy of $20 per consultation, with patients paying $40 (after the subsidy) and doctors receiving $60.",
       "A subsidy of $60 per consultation, with patients paying nothing."
     ],
     "correctIndex": 2

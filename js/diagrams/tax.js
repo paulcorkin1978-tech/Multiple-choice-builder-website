@@ -167,7 +167,7 @@ function txCapture() {
   // A positive externality is a demand shift; everything else is a supply shift.
   const moved = txType === 'posext' ? txCap.dShift : txCap.sShift;
   const which = txType === 'posext' ? 'D' : 'S';
-  const name  = { tax:'tax', subsidy:'subsidy', negext:'negative externality', posext:'positive externality' }[txType];
+  const name  = { tax:'tax', subsidy:'subsidy', negext:'negative externality', posext:'positive consumption externality', posprod:'positive production externality' }[txType];
   document.getElementById('txCapMsg').textContent =
     `✓ Answer captured (${which} shift: ${moved >= 0 ? '+' : ''}${moved} = ${name}). Diagram reset. Now write your question.`;
 }
@@ -177,7 +177,8 @@ const TX_MOVE_HINT = {
   tax:     'shift supply LEFT for the tax',
   subsidy: 'shift supply RIGHT for the subsidy',
   negext:  'shift supply LEFT to add the external cost (MPC → MSC)',
-  posext:  'shift demand RIGHT to add the external benefit (MPB → MSB)'
+  posext:  'shift demand RIGHT to add the external benefit (MPB → MSB)',
+  posprod: 'shift supply RIGHT to add the external benefit (MPC → MSC)'
 };
 
 const TX_YLBL_MARKET = 'Price ($)';
@@ -188,7 +189,7 @@ function txSetType(type) {
   const wasExt = txIsExt(txType);
   txType = type;
 
-  const btns = { tax:'txTypeTax', subsidy:'txTypeSub', negext:'txTypeNegExt', posext:'txTypePosExt' };
+  const btns = { tax:'txTypeTax', subsidy:'txTypeSub', negext:'txTypeNegExt', posext:'txTypePosExt', posprod:'txTypePosProd' };
   Object.entries(btns).forEach(([t, id]) => {
     const b = document.getElementById(id);
     if (!b) return;

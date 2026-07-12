@@ -1,0 +1,392 @@
+[
+  {
+    "type": "plain",
+    "questionText": "A positive externality exists in a market when:",
+    "answers": [
+      "A third party who is neither the buyer nor the seller receives a benefit from the transaction.",
+      "The government provides the good free of charge.",
+      "The buyer pays more than the good is worth to them.",
+      "Producers make a loss on every unit they sell."
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "plain",
+    "questionText": "How does a positive externality of consumption differ from one of production?",
+    "answers": [
+      "In both cases the external benefit arises only from producing the good.",
+      "In consumption the external benefit arises from using the good; in production it arises from making the good.",
+      "In consumption only the buyer benefits; in production only the seller benefits.",
+      "Production externalities affect demand, while consumption externalities affect supply."
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "plain",
+    "questionText": "Why does a free market under-provide a good that generates a positive externality?",
+    "answers": [
+      "Because the good is too expensive for most people to afford.",
+      "Because the government sets the price too high.",
+      "Because private buyers and sellers ignore the benefit that spills over to third parties, so they trade less than the socially optimal quantity.",
+      "Because producers deliberately restrict output to force up prices."
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "plain",
+    "questionText": "Vaccinations and regular GP consultations generate a positive externality of consumption. Which statement best explains why?",
+    "answers": [
+      "Because healthcare is provided free of charge to patients.",
+      "Because the demand for healthcare is highly inelastic.",
+      "Because doctors earn high incomes that they spend in the economy.",
+      "Because treatment reduces the spread of disease, so people who never attended a consultation also benefit."
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "tax",
+    "taxType": "posext",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 2,
+    "showEqLines": true,
+    "title": "Market for GP consultations",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "GP consultations (millions)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 10,
+    "hUnit": 1,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 1,
+    "ansSS": 0,
+    "reveals": ["extwedge"],
+    "questionText": "Three curves are labelled on the diagram. What do the abbreviations MPB, MSB and MSC stand for?",
+    "answers": [
+      "Marginal private benefit, marginal social benefit and marginal social cost.",
+      "Maximum private benefit, maximum social benefit and maximum social cost.",
+      "Market price benefit, market supply benefit and market social cost.",
+      "Mean private benefit, mean social benefit and mean social cost."
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "tax",
+    "taxType": "posext",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 2,
+    "showEqLines": true,
+    "title": "Market for GP consultations",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "GP consultations (millions)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 10,
+    "hUnit": 1,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 1,
+    "ansSS": 0,
+    "reveals": ["extwedge"],
+    "questionText": "Which curve measures the full benefit society receives from each GP consultation?",
+    "answers": [
+      "MPB, because it shows the benefit to the patient who pays for the consultation.",
+      "MSC, because it shows what society gives up to provide each consultation.",
+      "MSB, because it includes both the private benefit to the patient and the external benefit to others.",
+      "Neither curve, because external benefits cannot be shown on a diagram."
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "tax",
+    "taxType": "posext",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 2,
+    "showEqLines": true,
+    "title": "Market for GP consultations",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "GP consultations (millions)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 10,
+    "hUnit": 1,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 1,
+    "ansSS": 0,
+    "reveals": ["extwedge", "corrective"],
+    "questionText": "At every quantity, MSB lies $20 above MPB. What does this vertical gap of $20 measure?",
+    "answers": [
+      "The marginal private benefit received by the patient.",
+      "The marginal external benefit — the benefit each consultation gives to people other than the patient.",
+      "The marginal cost of supplying one more consultation.",
+      "The consumer surplus earned on each consultation."
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "tax",
+    "taxType": "posext",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 2,
+    "showEqLines": true,
+    "title": "Market for GP consultations",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "GP consultations (millions)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 10,
+    "hUnit": 1,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 1,
+    "ansSS": 0,
+    "reveals": ["optq"],
+    "questionText": "The free market produces where MPB meets MSC, but the social optimum is where MSB meets MSC. Compared with the socially optimal quantity, the free market:",
+    "answers": [
+      "Over-provides by 1 million consultations, delivering 6 million rather than 5 million.",
+      "Delivers exactly the socially optimal quantity of 5 million consultations.",
+      "Under-provides by 2 million consultations, delivering 5 million rather than 7 million.",
+      "Under-provides by 1 million consultations, delivering 5 million rather than the optimal 6 million."
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "tax",
+    "taxType": "posext",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 2,
+    "showEqLines": true,
+    "title": "Market for GP consultations",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "GP consultations (millions)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 10,
+    "hUnit": 1,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 1,
+    "ansSS": 0,
+    "reveals": ["corrective", "optq"],
+    "questionText": "Because this is a positive externality of consumption, the government pays patients a per-unit subsidy, raising their demand towards MSB and reaching the socially optimal 6 million consultations. How large must the subsidy be, and what happens to prices?",
+    "answers": [
+      "A subsidy of $20 per consultation, paid to patients; patients then pay $40 and doctors receive $60.",
+      "A subsidy of $10 per consultation, paid to patients; patients pay $50 and doctors receive $60.",
+      "A subsidy of $20 per consultation, paid to patients; patients pay $60 and doctors receive $40.",
+      "A subsidy of $60 per consultation, paid to patients, who then pay nothing."
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "plain",
+    "questionText": "Education also generates a positive externality of consumption. Which statement best explains why?",
+    "answers": [
+      "Because education is expensive, so only the government can provide it.",
+      "Because students personally enjoy the experience of studying.",
+      "Because a more educated population is more productive and informed, benefiting society beyond the individual student.",
+      "Because teachers earn salaries that they spend in the economy."
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "plain",
+    "questionText": "Beekeeping generates a positive externality of production. Which statement best explains why?",
+    "answers": [
+      "Because people who eat honey become healthier.",
+      "Because the beekeeper's bees pollinate neighbouring orchards, benefiting farmers who did not pay for it.",
+      "Because producing honey creates pollution that harms nearby residents.",
+      "Because honey is consumed by the producers themselves."
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "tax",
+    "taxType": "posprod",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 1,
+    "showEqLines": true,
+    "title": "Market for honey",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "Honey (tonnes)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 5,
+    "hUnit": 20,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": 1,
+    "reveals": ["extwedge"],
+    "questionText": "Three curves are labelled on this diagram. What do the abbreviations MPC, MSC and MSB stand for?",
+    "answers": [
+      "Maximum private cost, maximum social cost and maximum social benefit.",
+      "Market price cost, market supply cost and market social benefit.",
+      "Mean private cost, mean social cost and mean social benefit.",
+      "Marginal private cost, marginal social cost and marginal social benefit."
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "tax",
+    "taxType": "posprod",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 1,
+    "showEqLines": true,
+    "title": "Market for honey",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "Honey (tonnes)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 5,
+    "hUnit": 20,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": 1,
+    "reveals": ["extwedge"],
+    "questionText": "Which curve shows the true cost to society of producing each tonne of honey?",
+    "answers": [
+      "MSC, because it lies below MPC once the external benefit of pollination is taken into account.",
+      "MPC, because it shows the cost the beekeeper personally pays.",
+      "MSB, because it shows the benefit society receives from honey.",
+      "Neither curve, because external benefits cannot be shown on a diagram."
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "tax",
+    "taxType": "posprod",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 1,
+    "showEqLines": true,
+    "title": "Market for honey",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "Honey (tonnes)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 5,
+    "hUnit": 20,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": 1,
+    "reveals": ["extwedge", "corrective"],
+    "questionText": "At every quantity, MSC lies $10 below MPC. What does this vertical gap of $10 measure?",
+    "answers": [
+      "The marginal private cost paid by the beekeeper.",
+      "The marginal social benefit consumers receive from honey.",
+      "The marginal external benefit — the value the pollination gives to farmers other than the beekeeper.",
+      "The profit the beekeeper makes on each tonne."
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "tax",
+    "taxType": "posprod",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 1,
+    "showEqLines": true,
+    "title": "Market for honey",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "Honey (tonnes)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 5,
+    "hUnit": 20,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": 1,
+    "reveals": ["optq"],
+    "questionText": "The free market produces where demand meets MPC, but the social optimum is where demand meets MSC. Compared with the socially optimal quantity, the free market:",
+    "answers": [
+      "Over-produces by 20 tonnes, producing 120 tonnes rather than 100 tonnes.",
+      "Under-produces by 20 tonnes, producing 100 tonnes rather than the optimal 120 tonnes.",
+      "Produces exactly the socially optimal quantity of 100 tonnes.",
+      "Under-produces by 40 tonnes, producing 100 tonnes rather than 140 tonnes."
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "tax",
+    "taxType": "posprod",
+    "dElasticity": "normal",
+    "sShiftCoeff": 2,
+    "dShiftCoeff": 1,
+    "showEqLines": true,
+    "title": "Market for honey",
+    "yLabel": "Price, Cost, Benefit ($)",
+    "xLabel": "Honey (tonnes)",
+    "dColor": "#000000",
+    "sColor": "#000000",
+    "vUnit": 5,
+    "hUnit": 20,
+    "startDS": 0,
+    "startSS": 0,
+    "ansDS": 0,
+    "ansSS": 1,
+    "reveals": ["corrective", "optq"],
+    "questionText": "Because this is a positive externality of production, the government pays beekeepers a per-unit subsidy to reach the socially optimal 120 tonnes. How large must the subsidy be, and who receives it?",
+    "answers": [
+      "A subsidy of $10 per tonne, paid to consumers, who then pay $15 for honey.",
+      "A subsidy of $5 per tonne, paid to beekeepers, who then receive $25.",
+      "A subsidy of $30 per tonne, paid to beekeepers, who then supply honey for free.",
+      "A subsidy of $10 per tonne, paid to beekeepers; consumers pay $20 and beekeepers receive $30."
+    ],
+    "correctIndex": 3
+  },
+  {
+    "type": "plain",
+    "questionText": "A firm's research and development often generates a positive externality of production. Which statement best explains why?",
+    "answers": [
+      "Because the knowledge it creates spills over to other firms, who use it without paying for it.",
+      "Because research and development is risky and firms often lose money on it.",
+      "Because consumers enjoy the new products that result.",
+      "Because the government taxes research heavily."
+    ],
+    "correctIndex": 0
+  },
+  {
+    "type": "plain",
+    "questionText": "Both the healthcare market and the honey market are corrected by a per-unit subsidy. How do the two subsidies differ?",
+    "answers": [
+      "The healthcare subsidy shifts supply, while the beekeeping subsidy shifts demand.",
+      "The healthcare subsidy is paid to consumers and shifts demand towards MSB; the beekeeping subsidy is paid to producers and shifts supply towards MSC.",
+      "Only the healthcare subsidy reaches the socially optimal quantity.",
+      "The two subsidies are identical in every respect."
+    ],
+    "correctIndex": 1
+  },
+  {
+    "type": "plain",
+    "questionText": "In both markets the corrective subsidy is set equal to the marginal external benefit. What does this achieve?",
+    "answers": [
+      "It guarantees that producers earn the maximum possible profit.",
+      "It removes the need for a market in the good altogether.",
+      "It moves the market to the socially optimal quantity, where marginal social benefit equals marginal social cost.",
+      "It always raises the price that consumers pay."
+    ],
+    "correctIndex": 2
+  },
+  {
+    "type": "plain",
+    "questionText": "A common criticism of correcting positive externalities with subsidies is that:",
+    "answers": [
+      "positive externalities do not actually exist in real markets.",
+      "subsidies always make society worse off.",
+      "a subsidy can only ever be paid to producers, never to consumers.",
+      "the exact size of the external benefit is hard to measure, so the subsidy may be set too high or too low."
+    ],
+    "correctIndex": 3
+  }
+]

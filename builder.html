@@ -616,8 +616,9 @@
         <button class="btn"             id="txTypeSub" onclick="txSetType('subsidy')">Subsidy</button>
       </div>
       <div class="btn-row" style="margin-top:6px">
-        <button class="btn" id="txTypeNegExt" onclick="txSetType('negext')" title="MPC → MSC. Shift supply LEFT: the market overproduces.">− Externality</button>
-        <button class="btn" id="txTypePosExt" onclick="txSetType('posext')" title="MPB → MSB. Shift demand RIGHT: the market underproduces.">+ Externality</button>
+        <button class="btn" id="txTypeNegExt"  onclick="txSetType('negext')"  title="Negative production externality. MPC → MSC, supply shifts LEFT: the market overproduces.">− Ext (prod)</button>
+        <button class="btn" id="txTypePosExt"  onclick="txSetType('posext')"  title="Positive consumption externality. MPB → MSB, demand shifts RIGHT: the market underproduces.">+ Ext (cons)</button>
+        <button class="btn" id="txTypePosProd" onclick="txSetType('posprod')" title="Positive production externality. MPC → MSC, supply shifts RIGHT: the market underproduces.">+ Ext (prod)</button>
       </div>
     </div>
     <div class="diag-ctrl-group">

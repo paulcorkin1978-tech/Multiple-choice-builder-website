@@ -1,5 +1,16 @@
 [
   {
+    "type": "plain",
+    "questionText": "The price mechanism relies on two key assumptions in order to allocate resources efficiently. Which of the following correctly states both?",
+    "answers": [
+      "Perfect competition, and strong government regulation of prices",
+      "A single dominant firm setting prices, and no government intervention",
+      "Perfect competition, and no government intervention",
+      "Government price controls, and a single dominant buyer"
+    ],
+    "correctIndex": 2
+  },
+  {
     "type": "pm",
     "title": "Market for oranges",
     "yLabel": "Price ($/kg)",
@@ -245,7 +256,7 @@
     "animatePrice": true,
     "questionText": "After the harvest has shifted supply from S1 to S2, how will the price mechanism restore equilibrium in this wheat market?",
     "answers": [
-      "The surplus pushes the price up to $6, and 60 tonnes are traded",
+      "The surplus pushes the price down to $4. As the price falls, supply expands along S2 while demand contracts along D at the same time, until both reach 60 tonnes",
       "The supply curve shifts back to the left until the surplus disappears",
       "The surplus pushes the price down to $4, and the quantity traded falls to 50 tonnes",
       "The surplus pushes the price down to $4. As the price falls, supply contracts along S2 while demand expands along D at the same time, until both reach 60 tonnes"
@@ -277,24 +288,24 @@
   },
   {
     "type": "pm",
-    "title": "Market for coffee",
-    "yLabel": "Price ($/kg)",
-    "xLabel": "Quantity (tonnes)",
+    "title": "Market for ice cream",
+    "yLabel": "Price ($ per tub)",
+    "xLabel": "Quantity of tubs",
     "dColor": "#000000",
     "sColor": "#000000",
-    "vUnit": 2,
-    "hUnit": 20,
-    "dShift": 0,
-    "sShift": -1,
+    "vUnit": 1,
+    "hUnit": 100,
+    "dShift": 1,
+    "sShift": 0,
     "startPrice": 5,
-    "showEqLines": false,
-    "animatePrice": false,
-    "questionText": "A severe frost destroys part of the coffee crop, decreasing supply from S1 to S2, as shown. If the price initially stays at $10 per kg, what will occur?",
+    "showEqLines": true,
+    "animatePrice": true,
+    "questionText": "Continuing the ice cream market: at $5 per tub there is a shortage. How does the price mechanism restore equilibrium?",
     "answers": [
-      "A surplus of 40 tonnes",
-      "A shortage of 40 tonnes",
-      "A surplus of 20 tonnes",
-      "A shortage of 20 tonnes"
+      "The demand curve shifts back to the left until the shortage disappears",
+      "The shortage pushes the price up to $6. As the price rises, demand contracts along D2 while supply expands along S at the same time, until both reach 600 tubs",
+      "The shortage pushes the price up to $6, and 700 tubs are traded",
+      "The shortage pushes the price up to $6. As the price rises, supply contracts along S while demand expands along D2 at the same time, until both reach 600 tubs"
     ],
     "correctIndex": 1
   },
@@ -323,24 +334,24 @@
   },
   {
     "type": "pm",
-    "title": "Market for games consoles",
+    "title": "Market for winter coats",
     "yLabel": "Price ($)",
-    "xLabel": "Quantity of consoles (000s)",
+    "xLabel": "Quantity of coats (000s)",
     "dColor": "#000000",
     "sColor": "#000000",
-    "vUnit": 100,
-    "hUnit": 5,
-    "dShift": 0,
+    "vUnit": 20,
+    "hUnit": 10,
+    "dShift": -1,
     "sShift": 0,
-    "startPrice": 7,
-    "showEqLines": false,
-    "animatePrice": false,
-    "questionText": "A manufacturer sets the price of its new games console at $700, well above the price at which the market would clear. What will occur?",
+    "startPrice": 5,
+    "showEqLines": true,
+    "animatePrice": true,
+    "questionText": "Continuing the winter coats market: at $100 there is a surplus. How does the price mechanism restore equilibrium?",
     "answers": [
-      "A shortage of 20,000 consoles",
-      "A surplus of 20,000 consoles",
-      "A surplus of 10,000 consoles",
-      "The market will clear at $700"
+      "The supply curve shifts to the left until the surplus disappears",
+      "The surplus pushes the price down to $80. As the price falls, supply contracts along S while demand expands along D2 at the same time, until both reach 40,000 coats",
+      "The surplus pushes the price down to $80, and 30,000 coats are traded",
+      "The surplus pushes the price down to $80. As the price falls, supply expands along S while demand contracts along D2 at the same time, until both reach 40,000 coats"
     ],
     "correctIndex": 1
   },
@@ -392,28 +403,6 @@
   },
   {
     "type": "plain",
-    "questionText": "In a market with a shortage, the price rises. Economists say the higher price acts as a signal. What does this mean?",
-    "answers": [
-      "It rewards producers with higher profits, encouraging them to produce more",
-      "It tells producers that consumers value the good more highly, so more of it should be produced",
-      "It decides which consumers receive the limited quantity that is available",
-      "It guarantees that the market will always clear"
-    ],
-    "correctIndex": 1
-  },
-  {
-    "type": "plain",
-    "questionText": "As the price rises during a shortage, some consumers are no longer willing or able to buy the good, and the limited quantity available is allocated to those who are. Which function of the price mechanism does this describe?",
-    "answers": [
-      "The signalling function",
-      "The incentive function",
-      "The rationing function",
-      "The market clearing function"
-    ],
-    "correctIndex": 2
-  },
-  {
-    "type": "plain",
     "questionText": "Which of the following best describes how the price mechanism leads to market clearing?",
     "answers": [
       "Government intervention in the market ensures that there is no shortage or surplus and that the market clears",
@@ -422,5 +411,16 @@
       "Market forces of supply and demand ensure that there is no shortage or surplus and that the market clears"
     ],
     "correctIndex": 3
+  },
+  {
+    "type": "plain",
+    "questionText": "When the price mechanism works well, economists say it achieves allocative efficiency. What does this mean?",
+    "answers": [
+      "The economy produces goods and services at the lowest possible cost per unit",
+      "The economy produces the goods and services that consumers most want, in the quantities they want",
+      "The economy produces as many goods and services as possible, regardless of what consumers want",
+      "The government decides which goods and services should be produced"
+    ],
+    "correctIndex": 1
   }
 ]

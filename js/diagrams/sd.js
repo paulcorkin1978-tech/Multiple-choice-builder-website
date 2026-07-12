@@ -27,10 +27,22 @@ function sdDraw(isAnimating = false) {
     tgtD: sdDS, tgtS: sdSS,     // where the shift is heading — sizes the comet tail
     showEqLines: document.getElementById('sdShowEq').checked
   });
-  document.getElementById('sdDL').disabled = sdDS <= -2;
-  document.getElementById('sdDR').disabled = sdDS >= 2;
-  document.getElementById('sdSL').disabled = sdSS <= -2;
-  document.getElementById('sdSR').disabled = sdSS >= 2;
+  // Disable a shift button when the next step would exceed ±4 or push the
+  // equilibrium off the grid.
+  document.getElementById('sdDL').disabled = !sdPosOK(sdDS - 1, sdSS);
+  document.getElementById('sdDR').disabled = !sdPosOK(sdDS + 1, sdSS);
+  document.getElementById('sdSL').disabled = !sdPosOK(sdDS, sdSS - 1);
+  document.getElementById('sdSR').disabled = !sdPosOK(sdDS, sdSS + 1);
+}
+
+// A curve position is allowed if neither curve is shifted more than 4 steps AND
+// the resulting equilibrium stays on the grid (price and quantity both within 1..9).
+// This lets single curves shift a long way while stopping a combined shift from
+// pushing the equilibrium off the chart.
+function sdPosOK(nD, nS) {
+  if (nD < -4 || nD > 4 || nS < -4 || nS > 4) return false;
+  const eqP = 5 + nD - nS, eqQ = 5 + nD + nS;
+  return eqP >= 1 && eqP <= 9 && eqQ >= 1 && eqQ <= 9;
 }
 
 // Animates a curve shift (curve = 'd' or 's', dir = -1 or +1)
@@ -38,7 +50,7 @@ function sdShift(curve, dir) {
   if (sdAnim) return;
   const nD = curve === 'd' ? sdDS + dir : sdDS;
   const nS = curve === 's' ? sdSS + dir : sdSS;
-  if (nD < -2 || nD > 2 || nS < -2 || nS > 2) return;
+  if (!sdPosOK(nD, nS)) return;
   const fD = sdDA, fS = sdSA;
   sdDS = nD; sdSS = nS;
   const start = performance.now(), dur = 500;

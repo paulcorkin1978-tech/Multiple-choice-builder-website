@@ -49,6 +49,10 @@
         <h3>Surplus &amp; DWL</h3>
         <p>Consumer &amp; producer surplus and deadweight loss — tax, quota or price control, shaded areas reveal step by step, lettered for identify questions</p>
       </div>
+      <div class="menu-card" onclick="openBuilder('trade')">
+        <h3>Trade Protection</h3>
+        <p>Tariff, import quota or production subsidy on a good with a world price — shade the policy area (tariff revenue / quota / subsidy cost), domestic producer revenue and import spending, with quantity brackets</p>
+      </div>
       <!-- NEW DIAGRAM TYPES: add a menu card here and a builder section below -->
     </div>
     <div id="menuQuizSection" style="display:none">
@@ -990,6 +994,105 @@
   </div>
 </div>
 
+<!-- ══ TRADE PROTECTION BUILDER ══ -->
+<div class="builder" id="tradeBuilder">
+  <!-- LEFT: diagram + controls -->
+  <div class="diag-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+    <svg id="trChart" width="100%" viewBox="0 0 400 340" style="display:block"></svg>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">Policy</div>
+      <div class="btn-row" id="trModeRow">
+        <button class="btn btn-primary" data-m="tariff"  onclick="trSetMode('tariff')">Tariff</button>
+        <button class="btn"             data-m="quota"   onclick="trSetMode('quota')">Quota</button>
+        <button class="btn"             data-m="subsidy" onclick="trSetMode('subsidy')">Subsidy</button>
+      </div>
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label">World price ($)</div>
+      <input type="number" id="trWorld" min="0" step="10" value="20" oninput="trDraw()" onchange="trSnap()" style="width:100%">
+    </div>
+    <div class="diag-ctrl-group">
+      <div class="diag-ctrl-label" id="trPolicyLabel">Tariff ($ per unit)</div>
+      <input type="number" id="trTariff" min="0" step="10" value="20" oninput="trDraw()" onchange="trSnap()" style="width:100%">
+      <div id="trTariffVal" style="font-size:12px;font-weight:700;color:#b23a00;margin-top:5px"></div>
+    </div>
+    <button class="btn" onclick="trReset()" style="width:100%">↺ Reset Diagram</button>
+  </div>
+
+  <div class="resizer" onmousedown="startResize(event, 'tradeBuilder')"></div>
+
+  <!-- RIGHT: question form -->
+  <div class="form-panel">
+    <div class="form-cols">
+
+      <!-- Diagram set-up -->
+      <div class="form-col-narrow">
+        <div class="card">
+          <div class="card-title">Diagram &amp; Labels</div>
+          <div class="field"><label>Price scale</label><input type="number" id="trVUnit" value="10" min="1" step="1" oninput="trDraw()"></div>
+          <div class="field"><label>Qty scale</label>  <input type="number" id="trHUnit" value="10" min="1" step="1" oninput="trDraw()"></div>
+          <div class="field"><label>Title</label>  <input type="text" id="trTitle" placeholder="e.g. Market for steel" oninput="trDraw()"></div>
+          <div class="field"><label>Y-axis</label> <input type="text" id="trYLbl" value="Price ($)" oninput="trDraw()"></div>
+          <div class="field"><label>X-axis</label> <input type="text" id="trXLbl" value="Quantity"  oninput="trDraw()"></div>
+          <div class="field"><label>D colour</label><input type="color" id="trDCol" value="#000000" oninput="trDraw()"></div>
+          <div class="field"><label>S colour</label><input type="color" id="trSCol" value="#000000" oninput="trDraw()"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Reveal Areas <span style="font-size:11px;font-weight:400;color:#888">(one at a time, in this order)</span></div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevTariff" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0"><span id="trRevWedgeLabel">Tariff revenue</span></label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevDomProd" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Domestic producer revenue</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevImports" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Import spending</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevProdInc" onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Bracket: rise in production</label>
+            <label id="trRevConsDecRow" style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevConsDec" onchange="trDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Bracket: fall in consumption</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question builder -->
+      <div class="form-col-wide">
+        <div class="info-card">
+          <p>
+            <span class="step">1</span>Set the <strong>world price</strong> and <strong>tariff</strong> with the sliders<br>
+            <span class="step">2</span>Set <strong>title, axis labels</strong>, colours and the price/qty scale<br>
+            <span class="step">3</span>Tick which <strong>areas &amp; brackets reveal</strong> (left panel) — they appear as soon as the student answers correctly<br>
+            <span class="step">4</span>Write your question &amp; four answers and mark the correct one
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Question Text</div>
+          <textarea id="trQText" placeholder="e.g. On the diagram, which shaded area represents the revenue the government collects from the tariff?"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Answer Options</div>
+          <p class="correct-hint">Select the radio button next to the correct answer</p>
+          <div class="arow"><input type="radio" name="trC" value="0"><span class="alabel">A</span><input type="text" id="trA0" placeholder="Answer A"></div>
+          <div class="arow"><input type="radio" name="trC" value="1"><span class="alabel">B</span><input type="text" id="trA1" placeholder="Answer B"></div>
+          <div class="arow"><input type="radio" name="trC" value="2"><span class="alabel">C</span><input type="text" id="trA2" placeholder="Answer C"></div>
+          <div class="arow"><input type="radio" name="trC" value="3"><span class="alabel">D</span><input type="text" id="trA3" placeholder="Answer D"></div>
+        </div>
+
+        <div class="add-bar">
+          <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-success" id="trAddBtn" onclick="trAddQ()">+ Add to Quiz</button>
+            <button class="btn" onclick="trPreview()">Preview this ↗</button>
+          </div>
+          <div class="msg" id="trMsg"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- ══ PLAIN TEXT BUILDER ══ -->
 <div class="builder" id="plainBuilder">
   <div class="plain-form-panel">
@@ -1046,6 +1149,7 @@
 <script src="js/diagrams/tax.js"></script>
 <script src="js/diagrams/ped.js"></script>
 <script src="js/diagrams/sur.js"></script>
+<script src="js/diagrams/trade.js"></script>
 <script src="js/diagrams/plain.js"></script>
 <script src="js/quiz-export.js?v=2"></script>
 <script src="js/app.js"></script>

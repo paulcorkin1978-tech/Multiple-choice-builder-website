@@ -552,3 +552,145 @@ function surInner(q,nRev){
   }
   return s;
 }
+
+// ── TRADE PROTECTION RENDERER ─────────────────────────────────────────────────
+// Small open economy, internal coords 0..10 for both P and Q.
+//   Domestic supply P = Q ; domestic demand P = 10 - Q ; domestic eq (5,5).
+//   World price Pw horizontal, below 5 -> the country imports.
+//   Tariff t raises the internal price to Pt = Pw + t (kept < domestic eq).
+// Free-trade qty: Qs0=Pw, Qd0=10-Pw. Tariff qty: Qst=Pt, Qdt=10-Pt.
+// Reveals (ordered): shaded areas 'tariffrev','domprod','imports' and quantity
+// brackets 'prodinc','consdec'. nRev = how many to show (stepped reveal).
+// Plain string concatenation so the identical source embeds in quiz-export.js.
+function tradeInner(q, nRev){
+  var W=400,H=340,padl=48,padr=44,padt=26,padb=46,GRID=10;
+  var gx=function(Q){return padl+Q*(W-padl-padr)/GRID;};
+  var gy=function(P){return padt+(GRID-P)*(H-padt-padb)/GRID;};
+  var esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var vU=(q.vUnit==null?10:q.vUnit), hU=(q.hUnit==null?10:q.hUnit);
+  var f=function(n){return Math.round(n*100)/100;};
+  var fmt=function(n){n=Math.round(n*100)/100; return (''+n);};
+  var Pw=(q.worldPrice==null?20:q.worldPrice);      // world price in dollars (typed)
+  var tar=(q.tariff==null?20:q.tariff);             // tariff in dollars (typed)
+  var gPw=Math.round(Pw/vU); if(gPw<1)gPw=1; if(gPw>4)gPw=4;   // snap world price to a gridline (multiple of the price interval), below autarky (5)
+  var mode=q.mode||'tariff';
+  var gPt;                                          // policy price (grid): tariff/quota => domestic price; subsidy => effective producer price Pw+s
+  if(mode==='quota'){
+    var Qq=(q.quota==null?40:q.quota), gQq=Math.round(Qq/hU);   // snap quota to a whole number of quantity intervals
+    var freeImp=10-2*gPw; if(freeImp<0)freeImp=0;   // free-trade import quantity (grid)
+    if(gQq>freeImp)gQq=freeImp; if(gQq<0)gQq=0;     // cannot allow more than free-trade imports
+    gPt=(10-gQq)/2;                                 // price where the demand-supply gap == quota
+  } else if(mode==='subsidy'){
+    var sub=(q.subsidy==null?20:q.subsidy);         // subsidy ($ per unit): producers receive Pw+s
+    gPt=gPw+Math.round(sub/vU);                     // snap subsidy to whole price intervals
+  } else {
+    gPt=gPw+Math.round(tar/vU);                     // snap tariff to whole price intervals
+  }
+  var cap=(mode==='subsidy')?(GRID-gPw):5;          // subsidy caps at self-sufficiency (imports=0); tariff/quota at autarky (5)
+  if(gPt>cap)gPt=cap; if(gPt<gPw)gPt=gPw;           // prohibitive policy clamp
+  var dCol=q.dCol||'#185FA5', sCol=q.sCol||'#0F6E56';
+  var reveals=q.reveals||[]; if(nRev==null)nRev=reveals.length;
+  var fs=12, fs2=9;
+  var Qs0=gPw, Qd0=GRID-gPw, Qst=gPt, Qdt=(mode==='subsidy')?Qd0:(GRID-gPt);   // subsidy: consumers still pay Pw, so consumption unchanged
+  var poly=function(pts){return pts.map(function(p){return gx(p[0]).toFixed(1)+','+gy(p[1]).toFixed(1);}).join(' ');};
+  var rect=function(x0,x1,y0,y1,fill,stroke){
+    return '<polygon class="tr-fade" points="'+poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]])+'" fill="'+fill+'"'+(stroke?' stroke="'+stroke+'" stroke-width="1.2"':'')+'/>';
+  };
+  var s='';
+  if(q.title) s+='<text x="'+(W/2)+'" y="16" text-anchor="middle" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(q.title)+'</text>';
+  // -- grid squares --
+  var i;
+  for(i=1;i<=GRID;i++) s+='<line x1="'+padl+'" y1="'+gy(i).toFixed(1)+'" x2="'+(W-padr)+'" y2="'+gy(i).toFixed(1)+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
+  for(i=1;i<=GRID;i++) s+='<line x1="'+gx(i).toFixed(1)+'" y1="'+padt+'" x2="'+gx(i).toFixed(1)+'" y2="'+(H-padb)+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
+  // -- shaded areas (stepped) --
+  var areas, brackets;
+  if(mode==='quota'){
+    // No separate 'quota rents' box (not used at HSC): import spending is one tall
+    // box from 0 up to the quota price Pq. The quota size shows as a bracket.
+    areas={
+      domprod:{r:[0,Qst,0,gPt],   fill:'rgba(15,110,86,.22)', stroke:'#0F6E56', lbl:'Domestic producer revenue'},
+      imports:{r:[Qst,Qdt,0,gPt], fill:'rgba(24,95,165,.24)', stroke:'#185FA5', lbl:'Import spending'}
+    };
+    brackets={
+      tariffrev:{a:Qst,b:Qdt,lbl:'Quota',col:'#C47D00'},
+      prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol},
+      consdec:{a:Qdt,b:Qd0,lbl:'Fall in consumption',col:dCol}
+    };
+  } else if(mode==='subsidy'){
+    // Production subsidy: consumers keep paying Pw (consumption unchanged). Producers
+    // get Pw+s, so output rises to Qst. Subsidy cost sits above Pw over domestic output.
+    areas={
+      tariffrev:{r:[0,Qst,gPw,gPt], fill:'rgba(196,125,0,.34)', stroke:'#C47D00', lbl:'Subsidy cost'},
+      domprod:  {r:[0,Qst,0,gPw],   fill:'rgba(15,110,86,.22)', stroke:'#0F6E56', lbl:'Domestic producer revenue'},
+      imports:  {r:[Qst,Qd0,0,gPw], fill:'rgba(24,95,165,.24)', stroke:'#185FA5', lbl:'Import spending'}
+    };
+    brackets={ prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol} };
+  } else {
+    areas={
+      tariffrev:{r:[Qst,Qdt,gPw,gPt], fill:'rgba(196,125,0,.34)', stroke:'#C47D00', lbl:'Tariff revenue'},
+      domprod:  {r:[0,Qst,0,gPt],     fill:'rgba(15,110,86,.22)', stroke:'#0F6E56', lbl:'Domestic producer revenue'},
+      imports:  {r:[Qst,Qdt,0,gPw],   fill:'rgba(24,95,165,.24)', stroke:'#185FA5', lbl:'Import spending'}
+    };
+    brackets={ prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol}, consdec:{a:Qdt,b:Qd0,lbl:'Fall in consumption',col:dCol} };
+  }
+  var order=[], seen={};
+  for(i=0;i<reveals.length;i++){ var rk=reveals[i]; if((areas[rk]||brackets[rk])&&!seen[rk]){order.push(rk);seen[rk]=1;} }
+  var brk='', alab='';   // brackets and box labels are deferred so they draw in front of the curves
+  for(var r=0;r<Math.min(nRev,order.length);r++){
+    var key=order[r];
+    if(areas[key]){
+      var a=areas[key];
+      if(Math.abs(a.r[1]-a.r[0])<0.05 || Math.abs(a.r[3]-a.r[2])<0.05) continue;   // skip zero-area (prohibitive tariff)
+      s+=rect(a.r[0],a.r[1],a.r[2],a.r[3],a.fill,a.stroke);
+      var cx=gx((a.r[0]+a.r[1])/2), cy=gy((a.r[2]+a.r[3])/2);
+      var words=a.lbl.split(' '), lh=fs2+1, y0=cy-(words.length-1)*lh/2;
+      alab+='<text x="'+cx.toFixed(1)+'" y="'+y0.toFixed(1)+'" text-anchor="middle" dominant-baseline="central" font-size="'+fs2+'" font-family="Verdana" font-weight="bold" fill="#1a1a1a" stroke="#fff" stroke-width="3" paint-order="stroke">';
+      for(var wi=0;wi<words.length;wi++){ alab+='<tspan x="'+cx.toFixed(1)+'" dy="'+(wi===0?0:lh)+'">'+words[wi]+'</tspan>'; }
+      alab+='</text>';
+    } else {
+      var bk=brackets[key]; if(Math.abs(bk.b-bk.a)<0.05) continue;
+      var xa=gx(bk.a), xb=gx(bk.b), by=(H-padb)+20, mid=(xa+xb)/2;
+      brk+='<line x1="'+xa.toFixed(1)+'" y1="'+by+'" x2="'+xb.toFixed(1)+'" y2="'+by+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+      brk+='<line x1="'+xa.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xa.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+      brk+='<line x1="'+xb.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xb.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+      brk+='<text x="'+mid.toFixed(1)+'" y="'+(by+12)+'" text-anchor="middle" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
+    }
+  }
+  // -- axes with arrowheads --
+  s+='<defs><marker id="trarr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
+  s+='<line x1="'+padl+'" y1="'+((H-padb)+6)+'" x2="'+padl+'" y2="'+(padt-6)+'" stroke="#444" stroke-width="1.5" marker-end="url(#trarr)" opacity="0.8"/>';
+  s+='<line x1="'+(padl-6)+'" y1="'+(H-padb)+'" x2="'+(W-padr+6)+'" y2="'+(H-padb)+'" stroke="#444" stroke-width="1.5" marker-end="url(#trarr)" opacity="0.8"/>';
+  // -- tick labels (dollars on P axis, units on Q axis) --
+  for(i=1;i<=GRID;i++){
+    s+='<text x="'+(padl-5)+'" y="'+gy(i).toFixed(1)+'" text-anchor="end" dominant-baseline="central" font-size="'+fs2+'" font-family="Verdana" fill="#888">'+fmt(i*vU)+'</text>';
+    s+='<text x="'+gx(i).toFixed(1)+'" y="'+((H-padb)+11)+'" text-anchor="middle" font-size="'+fs2+'" font-family="Verdana" fill="#888">'+fmt(i*hU)+'</text>';
+  }
+  s+='<text x="'+(padl-6)+'" y="'+((H-padb)+11)+'" text-anchor="end" font-size="'+fs2+'" font-family="Verdana" fill="#888">0</text>';
+  s+='<text x="'+(padl-34)+'" y="'+((padt+(H-padb))/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle" transform="rotate(-90 '+(padl-34)+' '+((padt+(H-padb))/2)+')">'+esc(q.yLbl||'Price ($)')+'</text>';
+  s+='<text x="'+((padl+(W-padr))/2)+'" y="'+((H-padb)+40)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle">'+esc(q.xLbl||'Quantity')+'</text>';
+  // -- domestic supply & demand (inset one grid square, cross at 5,5) --
+  var C0=1, C1=GRID-1;
+  s+='<line x1="'+gx(C0)+'" y1="'+gy(C0)+'" x2="'+gx(C1)+'" y2="'+gy(C1)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
+  s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+(mode==='subsidy'?'S1':'S')+'</text>';
+  if(mode==='subsidy'){ var gsub=gPt-gPw;   // per-unit subsidy shifts supply right/down: S -> S2 (meets Pw at the higher output)
+    s+='<line x1="'+gx(C0+gsub)+'" y1="'+gy(C0)+'" x2="'+gx(C1)+'" y2="'+gy(C1-gsub)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
+    s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1-gsub)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">S2</text>';
+  }
+  s+='<line x1="'+gx(C0)+'" y1="'+gy(C1)+'" x2="'+gx(C1)+'" y2="'+gy(C0)+'" stroke="'+dCol+'" stroke-width="2.5"/>';
+  s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C0)-3)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+dCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">D</text>';
+  // -- world-price and tariff-price lines --
+  s+='<line x1="'+padl+'" y1="'+gy(gPw)+'" x2="'+(W-padr)+'" y2="'+gy(gPw)+'" stroke="#444" stroke-width="1.5" stroke-dasharray="7 4"/>';
+  s+='<text x="'+(W-padr+3)+'" y="'+(gy(gPw)+3.5)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#444">Pw</text>';
+  if(mode!=='subsidy'){
+    s+='<line x1="'+padl+'" y1="'+gy(gPt)+'" x2="'+gx(Qdt)+'" y2="'+gy(gPt)+'" stroke="#b23a00" stroke-width="1.5" stroke-dasharray="7 4"/>';
+    s+='<text x="'+(gx(Qdt)+3)+'" y="'+(gy(gPt)-3)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#b23a00">'+(mode==='quota'?'Pq':'Pw+t')+'</text>';
+  }
+  // -- quantity guide lines (tariff state) + faint free-trade markers --
+  var fguide=function(Q){ s+='<line x1="'+gx(Q)+'" y1="'+(H-padb)+'" x2="'+gx(Q)+'" y2="'+gy(gPw)+'" stroke="#aaa" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>'; };
+  fguide(Qs0); fguide(Qd0);
+  var qline=function(Q,col){
+    s+='<line x1="'+gx(Q)+'" y1="'+(H-padb)+'" x2="'+gx(Q)+'" y2="'+gy(Q<5?Q:GRID-Q)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+  };
+  qline(Qst,sCol); qline(Qdt,dCol);
+  return s+alab+brk;
+}

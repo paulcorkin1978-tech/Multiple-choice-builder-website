@@ -105,6 +105,8 @@ function ppfBuildSVG(shiftA, isAnimating) {
   const yLbl      = document.getElementById('ppfYLbl').value  || 'Good B';
   const col       = document.getElementById('ppfCol').value;
   const showFaded = document.getElementById('ppfShowFaded').checked;
+  const hideGrid  = !!(document.getElementById('ppfHideGrid') && document.getElementById('ppfHideGrid').checked);
+  const hideNums  = !!(document.getElementById('ppfHideNums') && document.getElementById('ppfHideNums').checked);
 
   // ── Base SVG: arrow marker ──
   let s = `<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
@@ -122,11 +124,13 @@ function ppfBuildSVG(shiftA, isAnimating) {
 
   if (ppfMode === 'curved') {
     // ── Curved: GRID=9 background gridlines + "0" origin label ──
-    for (let i = 1; i <= GRID; i++) {
-      s += `<line x1="${PAD.l}" y1="${gy(i)}" x2="${W-PAD.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
-      s += `<line x1="${gx(i)}" y1="${PAD.t}" x2="${gx(i)}" y2="${H-PAD.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+    if (!hideGrid) {
+      for (let i = 1; i <= GRID; i++) {
+        s += `<line x1="${PAD.l}" y1="${gy(i)}" x2="${W-PAD.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+        s += `<line x1="${gx(i)}" y1="${PAD.t}" x2="${gx(i)}" y2="${H-PAD.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+      }
     }
-    s += `<text x="${PAD.l-4}" y="${H-PAD.b+11}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+    if (!hideNums) s += `<text x="${PAD.l-4}" y="${H-PAD.b+11}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
 
     // ── Faded original curve (only when shifted) ──
     if (showFaded && Math.abs(shiftA) > 0.05) {
@@ -157,16 +161,20 @@ function ppfBuildSVG(shiftA, isAnimating) {
 
       xTicks.forEach(v => {
         const gxPos = gx(v * 9 / xMax);
-        s += `<line x1="${gxPos.toFixed(1)}" y1="${PAD.t}" x2="${gxPos.toFixed(1)}" y2="${H-PAD.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
-        s += `<line x1="${gxPos.toFixed(1)}" y1="${H-PAD.b}" x2="${gxPos.toFixed(1)}" y2="${H-PAD.b+4}" stroke="#999" stroke-width="1"/>`;
-        s += `<text x="${gxPos.toFixed(1)}" y="${H-PAD.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+        if (!hideGrid) s += `<line x1="${gxPos.toFixed(1)}" y1="${PAD.t}" x2="${gxPos.toFixed(1)}" y2="${H-PAD.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
+        if (!hideNums) {
+          s += `<line x1="${gxPos.toFixed(1)}" y1="${H-PAD.b}" x2="${gxPos.toFixed(1)}" y2="${H-PAD.b+4}" stroke="#999" stroke-width="1"/>`;
+          s += `<text x="${gxPos.toFixed(1)}" y="${H-PAD.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+        }
       });
 
       yTicks.forEach(v => {
         const gyPos = gy(v * 9 / yMax);
-        s += `<line x1="${PAD.l}" y1="${gyPos.toFixed(1)}" x2="${W-PAD.r}" y2="${gyPos.toFixed(1)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
-        s += `<line x1="${PAD.l-4}" y1="${gyPos.toFixed(1)}" x2="${PAD.l}" y2="${gyPos.toFixed(1)}" stroke="#999" stroke-width="1"/>`;
-        s += `<text x="${(PAD.l-7)}" y="${gyPos.toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+        if (!hideGrid) s += `<line x1="${PAD.l}" y1="${gyPos.toFixed(1)}" x2="${W-PAD.r}" y2="${gyPos.toFixed(1)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
+        if (!hideNums) {
+          s += `<line x1="${PAD.l-4}" y1="${gyPos.toFixed(1)}" x2="${PAD.l}" y2="${gyPos.toFixed(1)}" stroke="#999" stroke-width="1"/>`;
+          s += `<text x="${(PAD.l-7)}" y="${gyPos.toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+        }
       });
 
       // ── Plot points and connecting line ──
@@ -182,11 +190,13 @@ function ppfBuildSVG(shiftA, isAnimating) {
       });
     } else {
       // ── No data yet: blank grid with "0" origin ──
-      for (let i = 1; i <= GRID; i++) {
-        s += `<line x1="${PAD.l}" y1="${gy(i)}" x2="${W-PAD.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
-        s += `<line x1="${gx(i)}" y1="${PAD.t}" x2="${gx(i)}" y2="${H-PAD.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+      if (!hideGrid) {
+        for (let i = 1; i <= GRID; i++) {
+          s += `<line x1="${PAD.l}" y1="${gy(i)}" x2="${W-PAD.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+          s += `<line x1="${gx(i)}" y1="${PAD.t}" x2="${gx(i)}" y2="${H-PAD.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
+        }
       }
-      s += `<text x="${PAD.l-4}" y="${H-PAD.b+11}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+      if (!hideNums) s += `<text x="${PAD.l-4}" y="${H-PAD.b+11}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     }
   }
 
@@ -290,7 +300,9 @@ function ppfBuildQ() {
     ppfType:      ppfCap ? ppfCap.mode : ppfMode,
     questionText: document.getElementById('ppfQText').value,
     answers:      [0,1,2,3].map(i => document.getElementById('ppfA' + i).value),
-    correctIndex: ppfGetCorrect()
+    correctIndex: ppfGetCorrect(),
+    hideGrid:     document.getElementById('ppfHideGrid').checked,
+    hideNums:     document.getElementById('ppfHideNums').checked
   };
   if (q.ppfType === 'curved') {
     q.ansShift = ppfCap ? ppfCap.shift : ppfShift;
@@ -344,6 +356,8 @@ function ppfLoad(q) {
     document.getElementById('ppfXLbl').value  = q.xLabel || 'Good A';
     document.getElementById('ppfYLbl').value  = q.yLabel || 'Good B';
     document.getElementById('ppfCol').value   = q.color  || '#185FA5';
+    document.getElementById('ppfHideGrid').checked = !!q.hideGrid;
+    document.getElementById('ppfHideNums').checked = !!q.hideNums;
     // Switch to the stored mode
     ppfSetMode(q.ppfType || 'curved');
     if (q.ppfType === 'schedule' && q.schedulePoints) {

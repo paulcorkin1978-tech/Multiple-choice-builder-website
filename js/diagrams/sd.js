@@ -25,7 +25,9 @@ function sdDraw(isAnimating = false) {
     dA: sdDA, sA: sdSA, fpA: 5,
     startDS: sdStartDS, startSS: sdStartSS, showFaded: true, isAnimating,
     tgtD: sdDS, tgtS: sdSS,     // where the shift is heading — sizes the comet tail
-    showEqLines: document.getElementById('sdShowEq').checked
+    showEqLines: document.getElementById('sdShowEq').checked,
+    hideGrid: document.getElementById('sdHideGrid').checked,
+    hideNums: document.getElementById('sdHideNums').checked
   });
   // Disable a shift button when the next step would exceed ±4 or push the
   // equilibrium off the grid.
@@ -132,6 +134,8 @@ function sdBuildQ() {
     vUnit: vU, hUnit: hU,
     startDS: sdStartDS, startSS: sdStartSS,
     showEqLines:   document.getElementById('sdShowEq').checked,
+    hideGrid:      document.getElementById('sdHideGrid').checked,
+    hideNums:      document.getElementById('sdHideNums').checked,
     ansDS:         sdCap ? sdCap.dShift : sdDS,
     ansSS:         sdCap ? sdCap.sShift : sdSS,
     questionText:  document.getElementById('sdQText').value,
@@ -176,6 +180,8 @@ function sdLoad(q) {
     document.getElementById('sdDCol').value     = q.dColor || '#185FA5';
     document.getElementById('sdSCol').value     = q.sColor || '#0F6E56';
     document.getElementById('sdShowEq').checked = q.showEqLines !== false;
+    document.getElementById('sdHideGrid').checked = !!q.hideGrid;
+    document.getElementById('sdHideNums').checked = !!q.hideNums;
     // Restore starting position
     sdStartDS = q.startDS || 0;
     sdStartSS = q.startSS || 0;

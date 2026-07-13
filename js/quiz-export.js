@@ -338,8 +338,10 @@ function tradeInner(q, nRev){
   if(q.title) s+='<text x="'+(W/2)+'" y="16" text-anchor="middle" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(q.title)+'</text>';
   // -- grid squares --
   var i;
-  for(i=1;i<=GRID;i++) s+='<line x1="'+padl+'" y1="'+gy(i).toFixed(1)+'" x2="'+(W-padr)+'" y2="'+gy(i).toFixed(1)+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
-  for(i=1;i<=GRID;i++) s+='<line x1="'+gx(i).toFixed(1)+'" y1="'+padt+'" x2="'+gx(i).toFixed(1)+'" y2="'+(H-padb)+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
+  if(!q.hideGrid){
+    for(i=1;i<=GRID;i++) s+='<line x1="'+padl+'" y1="'+gy(i).toFixed(1)+'" x2="'+(W-padr)+'" y2="'+gy(i).toFixed(1)+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
+    for(i=1;i<=GRID;i++) s+='<line x1="'+gx(i).toFixed(1)+'" y1="'+padt+'" x2="'+gx(i).toFixed(1)+'" y2="'+(H-padb)+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
+  }
   // -- shaded areas (stepped) --
   var areas, brackets;
   if(mode==='quota'){
@@ -362,7 +364,10 @@ function tradeInner(q, nRev){
       domprod:  {r:[0,Qst,0,gPw],   fill:'rgba(15,110,86,.22)', stroke:'#0F6E56', lbl:'Domestic producer revenue'},
       imports:  {r:[Qst,Qd0,0,gPw], fill:'rgba(24,95,165,.24)', stroke:'#185FA5', lbl:'Import spending'}
     };
-    brackets={ prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol} };
+    brackets={
+      prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol},
+      consdec:{vert:true, x:Qst, y0:gPw, y1:gPt, lbl:'Subsidy', col:'#C47D00'}   // vertical bracket = per-unit subsidy
+    };
   } else {
     areas={
       tariffrev:{r:[Qst,Qdt,gPw,gPt], fill:'rgba(196,125,0,.34)', stroke:'#C47D00', lbl:'Tariff revenue'},
@@ -386,12 +391,21 @@ function tradeInner(q, nRev){
       for(var wi=0;wi<words.length;wi++){ alab+='<tspan x="'+cx.toFixed(1)+'" dy="'+(wi===0?0:lh)+'">'+words[wi]+'</tspan>'; }
       alab+='</text>';
     } else {
-      var bk=brackets[key]; if(Math.abs(bk.b-bk.a)<0.05) continue;
-      var xa=gx(bk.a), xb=gx(bk.b), by=(H-padb)+20, mid=(xa+xb)/2;
-      brk+='<line x1="'+xa.toFixed(1)+'" y1="'+by+'" x2="'+xb.toFixed(1)+'" y2="'+by+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
-      brk+='<line x1="'+xa.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xa.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
-      brk+='<line x1="'+xb.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xb.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
-      brk+='<text x="'+mid.toFixed(1)+'" y="'+(by+12)+'" text-anchor="middle" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
+      var bk=brackets[key];
+      if(bk.vert){   // vertical bracket (per-unit subsidy = price gap Pw..Pw+s), drawn just right of the domestic-output line
+        var vx=gx(bk.x)+10, vy0=gy(bk.y0), vy1=gy(bk.y1);
+        brk+='<line x1="'+vx+'" y1="'+vy0.toFixed(1)+'" x2="'+vx+'" y2="'+vy1.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        brk+='<line x1="'+vx+'" y1="'+vy0.toFixed(1)+'" x2="'+(vx-5)+'" y2="'+vy0.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        brk+='<line x1="'+vx+'" y1="'+vy1.toFixed(1)+'" x2="'+(vx-5)+'" y2="'+vy1.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        brk+='<text x="'+(vx+4)+'" y="'+((vy0+vy1)/2).toFixed(1)+'" dominant-baseline="central" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
+      } else {
+        if(Math.abs(bk.b-bk.a)<0.05) continue;
+        var xa=gx(bk.a), xb=gx(bk.b), by=(H-padb)+20, mid=(xa+xb)/2;
+        brk+='<line x1="'+xa.toFixed(1)+'" y1="'+by+'" x2="'+xb.toFixed(1)+'" y2="'+by+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        brk+='<line x1="'+xa.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xa.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        brk+='<line x1="'+xb.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xb.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        brk+='<text x="'+mid.toFixed(1)+'" y="'+(by+12)+'" text-anchor="middle" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
+      }
     }
   }
   // -- axes with arrowheads --
@@ -399,11 +413,13 @@ function tradeInner(q, nRev){
   s+='<line x1="'+padl+'" y1="'+((H-padb)+6)+'" x2="'+padl+'" y2="'+(padt-6)+'" stroke="#444" stroke-width="1.5" marker-end="url(#trarr)" opacity="0.8"/>';
   s+='<line x1="'+(padl-6)+'" y1="'+(H-padb)+'" x2="'+(W-padr+6)+'" y2="'+(H-padb)+'" stroke="#444" stroke-width="1.5" marker-end="url(#trarr)" opacity="0.8"/>';
   // -- tick labels (dollars on P axis, units on Q axis) --
-  for(i=1;i<=GRID;i++){
-    s+='<text x="'+(padl-5)+'" y="'+gy(i).toFixed(1)+'" text-anchor="end" dominant-baseline="central" font-size="'+fs2+'" font-family="Verdana" fill="#888">'+fmt(i*vU)+'</text>';
-    s+='<text x="'+gx(i).toFixed(1)+'" y="'+((H-padb)+11)+'" text-anchor="middle" font-size="'+fs2+'" font-family="Verdana" fill="#888">'+fmt(i*hU)+'</text>';
+  if(!q.hideNums){
+    for(i=1;i<=GRID;i++){
+      s+='<text x="'+(padl-5)+'" y="'+gy(i).toFixed(1)+'" text-anchor="end" dominant-baseline="central" font-size="'+fs2+'" font-family="Verdana" fill="#888">'+fmt(i*vU)+'</text>';
+      s+='<text x="'+gx(i).toFixed(1)+'" y="'+((H-padb)+11)+'" text-anchor="middle" font-size="'+fs2+'" font-family="Verdana" fill="#888">'+fmt(i*hU)+'</text>';
+    }
+    s+='<text x="'+(padl-6)+'" y="'+((H-padb)+11)+'" text-anchor="end" font-size="'+fs2+'" font-family="Verdana" fill="#888">0</text>';
   }
-  s+='<text x="'+(padl-6)+'" y="'+((H-padb)+11)+'" text-anchor="end" font-size="'+fs2+'" font-family="Verdana" fill="#888">0</text>';
   s+='<text x="'+(padl-34)+'" y="'+((padt+(H-padb))/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle" transform="rotate(-90 '+(padl-34)+' '+((padt+(H-padb))/2)+')">'+esc(q.yLbl||'Price ($)')+'</text>';
   s+='<text x="'+((padl+(W-padr))/2)+'" y="'+((H-padb)+40)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle">'+esc(q.xLbl||'Quantity')+'</text>';
   // -- domestic supply & demand (inset one grid square, cross at 5,5) --
@@ -583,7 +599,7 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
   const hDisp=hU>=1000?hU/1000:hU;
   let s=\`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><clipPath id="plotclip"><rect x="\${pad.l}" y="\${pad.t}" width="\${W-pad.l-pad.r}" height="\${H-pad.t-pad.b}"/></clipPath></defs>\`;
   if(q.title) s+=\`<text x="\${W/2}" y="16" text-anchor="middle" font-size="\${fs}" font-family="Verdana" font-weight="bold" fill="#2c2c2a">\${q.title}</text>\`;
-  if(q.type!=='ppf'||q.ppfType!=='schedule'){
+  if(!q.hideGrid && (q.type!=='ppf'||q.ppfType!=='schedule')){
     for(let i=1;i<=GRID;i++) s+=\`<line x1="\${pad.l}" y1="\${gy(i)}" x2="\${W-pad.r}" y2="\${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>\`;
     for(let i=1;i<=GRID;i++) s+=\`<line x1="\${gx(i)}" y1="\${pad.t}" x2="\${gx(i)}" y2="\${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>\`;
   }
@@ -596,7 +612,7 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#666">\${q.xLabel||'Good A'}</text>\`;
     s+=\`<text x="9" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#666" transform="rotate(-90,9,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel||'Good B'}</text>\`;
     if(q.ppfType==='curved'){
-      s+=\`<text x="\${pad.l-4}" y="\${H-pad.b+11}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
+      if(!q.hideNums) s+=\`<text x="\${pad.l-4}" y="\${H-pad.b+11}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
       if(Math.abs(dA)>0.05){
         const r0=PPF_BASE;
         const rx0=(r0*cW_/GRID).toFixed(1),ry0=(r0*cH_/GRID).toFixed(1);
@@ -616,15 +632,19 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       const xM=q.xMax||9,yM=q.yMax||9;
       (q.xTicks||[]).forEach(v=>{
         const gxP=gx(v*9/xM);
-        s+=\`<line x1="\${gxP.toFixed(1)}" y1="\${pad.t}" x2="\${gxP.toFixed(1)}" y2="\${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>\`;
-        s+=\`<line x1="\${gxP.toFixed(1)}" y1="\${H-pad.b}" x2="\${gxP.toFixed(1)}" y2="\${H-pad.b+5}" stroke="#999" stroke-width="1"/>\`;
-        s+=\`<text x="\${gxP.toFixed(1)}" y="\${H-pad.b+15}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#666">\${v}</text>\`;
+        if(!q.hideGrid) s+=\`<line x1="\${gxP.toFixed(1)}" y1="\${pad.t}" x2="\${gxP.toFixed(1)}" y2="\${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>\`;
+        if(!q.hideNums){
+          s+=\`<line x1="\${gxP.toFixed(1)}" y1="\${H-pad.b}" x2="\${gxP.toFixed(1)}" y2="\${H-pad.b+5}" stroke="#999" stroke-width="1"/>\`;
+          s+=\`<text x="\${gxP.toFixed(1)}" y="\${H-pad.b+15}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#666">\${v}</text>\`;
+        }
       });
       (q.yTicks||[]).forEach(v=>{
         const gyP=gy(v*9/yM);
-        s+=\`<line x1="\${pad.l}" y1="\${gyP.toFixed(1)}" x2="\${W-pad.r}" y2="\${gyP.toFixed(1)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>\`;
-        s+=\`<line x1="\${pad.l-5}" y1="\${gyP.toFixed(1)}" x2="\${pad.l}" y2="\${gyP.toFixed(1)}" stroke="#999" stroke-width="1"/>\`;
-        s+=\`<text x="\${pad.l-8}" y="\${gyP.toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#666">\${v}</text>\`;
+        if(!q.hideGrid) s+=\`<line x1="\${pad.l}" y1="\${gyP.toFixed(1)}" x2="\${W-pad.r}" y2="\${gyP.toFixed(1)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>\`;
+        if(!q.hideNums){
+          s+=\`<line x1="\${pad.l-5}" y1="\${gyP.toFixed(1)}" x2="\${pad.l}" y2="\${gyP.toFixed(1)}" stroke="#999" stroke-width="1"/>\`;
+          s+=\`<text x="\${pad.l-8}" y="\${gyP.toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#666">\${v}</text>\`;
+        }
       });
       const pts=(q.schedulePoints||[]).filter(p=>p.x>=0&&p.x<=GRID&&p.y>=0&&p.y<=GRID).sort((a,b)=>a.x-b.x);
       if(pts.length>=2){
@@ -637,13 +657,15 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     }
   } else if(q.type==='sd'){
     const eq=getEq(dA,sA);
-    for(let i=1;i<=GRID;i++){
-      const eP=q.showEqLines!==false&&Math.abs(i-eq.p)<0.05;
-      const eQ=q.showEqLines!==false&&Math.abs(i-eq.q)<0.05;
-      if(!eP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
-      if(!eQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+    if(!q.hideNums){
+      for(let i=1;i<=GRID;i++){
+        const eP=q.showEqLines!==false&&Math.abs(i-eq.p)<0.05;
+        const eQ=q.showEqLines!==false&&Math.abs(i-eq.q)<0.05;
+        if(!eP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
+        if(!eQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+      }
+      s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
     }
-    s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
     s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>\`;
     s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
     // Faded D1/S1 always at origin — visible whenever the active curve is shifted
@@ -708,19 +730,25 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const hasSurplus_=fpA>eq_.p+0.06;
     const bracketCol_=hasSurplus_?'#D85A30':'#7B2FA8';
     const lbl_=hasSurplus_?'SURPLUS':'SHORTAGE';
+    const policyActive_=q.policy==='floor'||q.policy==='ceiling';
+    const binds_=q.policy==='floor'?fpA>eq_.p+0.06:q.policy==='ceiling'?fpA<eq_.p-0.06:false;
+    const showDiseq_=policyActive_?binds_:!atEq_;
+    const policyLbl_=q.policy==='floor'?'Price floor':q.policy==='ceiling'?'Price ceiling':'';
     const sp_=q.startPrice||fpA,td_=Math.abs(sp_-eq_.p),cd_2=Math.abs(fpA-eq_.p);
     const fade_=td_>0.01?Math.min(cd_2/td_,1):1;
     // Axis tick labels — suppress values that clash with price/eq/Qd/Qs
-    for(let i=1;i<=GRID;i++){
-      const isCP_=!atEq_&&Math.abs(i-fpA)<0.25;
-      const isEP_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.p)<0.15;
-      const isQd_=!atEq_&&Math.abs(i-qd_)<0.25;
-      const isQs_=!atEq_&&Math.abs(i-qs_)<0.25;
-      const isEQ_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.q)<0.15;
-      if(!isCP_&&!isEP_) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
-      if(!isQd_&&!isQs_&&!isEQ_) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+    if(!q.hideNums){
+      for(let i=1;i<=GRID;i++){
+        const isCP_=!atEq_&&Math.abs(i-fpA)<0.25;
+        const isEP_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.p)<0.15;
+        const isQd_=!atEq_&&Math.abs(i-qd_)<0.25;
+        const isQs_=!atEq_&&Math.abs(i-qs_)<0.25;
+        const isEQ_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.q)<0.15;
+        if(!isCP_&&!isEP_) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
+        if(!isQd_&&!isQs_&&!isEQ_) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+      }
+      s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
     }
-    s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
     s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>\`;
     s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
     // S & D curves — a shifted curve also shows its original position, so that a
@@ -738,8 +766,8 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const csP_=clip(QS,sPf(QS,sA),QE,sPf(QE,sA),pad,W,H,1);
     if(cdP_) s+=\`<line x1="\${cdP_.x1}" y1="\${cdP_.y1}" x2="\${cdP_.x2}" y2="\${cdP_.y2}" stroke="\${q.dColor}" stroke-width="2.5" stroke-linecap="round"/><text x="\${cdP_.x2+5}" y="\${cdP_.y2}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" font-weight="bold">\${dLblP_}</text>\`;
     if(csP_) s+=\`<line x1="\${csP_.x1}" y1="\${csP_.y1}" x2="\${csP_.x2}" y2="\${csP_.y2}" stroke="\${q.sColor}" stroke-width="2.5" stroke-linecap="round"/><text x="\${csP_.x2+5}" y="\${Math.min(csP_.y1,csP_.y2)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" font-weight="bold">\${sLblP_}</text>\`;
-    if(atEq_){
-      // At equilibrium — standard dot
+    if(!showDiseq_){
+      // At equilibrium (or a non-binding control) — standard dot
       if(eq_.q>=QS&&eq_.q<=QE&&eq_.p>=1&&eq_.p<=GRID){
         const ex_=gx(eq_.q),ey_=gy(eq_.p);
         if(q.showEqLines!==false){
@@ -752,6 +780,11 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
           }
         }
       }
+      if(policyActive_&&!atEq_){
+        const lpy_=gy(fpA);
+        s+=\`<line x1="\${pad.l}" y1="\${lpy_}" x2="\${W-pad.r}" y2="\${lpy_}" stroke="#999" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.75"/>\`;
+        s+=\`<text x="\${W-pad.r-2}" y="\${lpy_+(q.policy==='floor'?12:-5)}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#999" font-weight="bold">\${policyLbl_} (non-binding)</text>\`;
+      }
     } else {
       const py_=gy(fpA);
       const qdV_=Math.max(QS,Math.min(QE,qd_)),qsV_=Math.max(QS,Math.min(QE,qs_));
@@ -760,8 +793,9 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       // Faint destination dot
       if(eq_.q>=QS&&eq_.q<=QE&&eq_.p>=1&&eq_.p<=GRID)
         s+=\`<circle cx="\${gx(eq_.q)}" cy="\${gy(eq_.p)}" r="4" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.2"/>\`;
-      // Dashed price line
-      s+=\`<line x1="\${pad.l}" y1="\${py_}" x2="\${W-pad.r}" y2="\${py_}" stroke="#555" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.7"/>\`;
+      // Dashed price line (red style + label when it is a binding control)
+      s+=\`<line x1="\${pad.l}" y1="\${py_}" x2="\${W-pad.r}" y2="\${py_}" stroke="\${policyActive_?'#b23a00':'#555'}" stroke-width="\${policyActive_?1.6:1.2}" stroke-dasharray="6,4" opacity="0.85"/>\`;
+      if(policyActive_) s+=\`<text x="\${W-pad.r-2}" y="\${py_+(q.policy==='floor'?-5:13)}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#b23a00" font-weight="bold">\${policyLbl_}</text>\`;
       // Vertical dotted lines from intersections
       if(qd_>=QS&&qd_<=QE) s+=\`<line x1="\${xQd_}" y1="\${py_}" x2="\${xQd_}" y2="\${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>\`;
       if(qs_>=QS&&qs_<=QE) s+=\`<line x1="\${xQs_}" y1="\${py_}" x2="\${xQs_}" y2="\${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>\`;
@@ -848,13 +882,15 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     // labels, always shown; for an externality they wait for the reveal, so until
     // then the normal axis numbers stay put rather than leaving gaps.
     const txOptL=!txExt||txShown.has('optq');
-    for(let i=1;i<=GRID;i++){
-      const txNP=txShowLbls&&((txOptL&&Math.abs(i-txPc)<0.4)||(!txExt&&Math.abs(i-txPs)<0.4)||Math.abs(i-txP0)<0.4);
-      const txNQ=txShowLbls&&((txOptL&&Math.abs(i-txQn)<0.4)||Math.abs(i-txQ0)<0.4);
-      if(!txNP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
-      if(!txNQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+    if(!q.hideNums){
+      for(let i=1;i<=GRID;i++){
+        const txNP=txShowLbls&&((txOptL&&Math.abs(i-txPc)<0.4)||(!txExt&&Math.abs(i-txPs)<0.4)||Math.abs(i-txP0)<0.4);
+        const txNQ=txShowLbls&&((txOptL&&Math.abs(i-txQn)<0.4)||Math.abs(i-txQ0)<0.4);
+        if(!txNP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
+        if(!txNQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+      }
+      s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
     }
-    s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
     s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>\`;
     s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
     // S1 — original supply at txStartSS. Drawn for tax/subsidy/negative externality.
@@ -1069,13 +1105,15 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     }
   } else {
     const fp=fpA,qInt=q.curve==='demand'?dQf(fp,dA):sQf(fp,sA);
-    for(let i=1;i<=GRID;i++){
-      const isFP=q.showEqLines!==false&&Math.abs(i-fp)<0.05;
-      const isIQ=q.showEqLines!==false&&Math.abs(i-qInt)<0.05;
-      if(!isFP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
-      if(!isIQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+    if(!q.hideNums){
+      for(let i=1;i<=GRID;i++){
+        const isFP=q.showEqLines!==false&&Math.abs(i-fp)<0.05;
+        const isIQ=q.showEqLines!==false&&Math.abs(i-qInt)<0.05;
+        if(!isFP) s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*vDisp)}</text>\`;
+        if(!isIQ) s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${fmt(i*hDisp)}</text>\`;
+      }
+      s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
     }
-    s+=\`<text x="\${pad.l-6}" y="\${H-pad.b+10}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
     s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>\`;
     s+=\`<text x="11" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel}</text>\`;
     // Faded D1/S1 always at origin — visible whenever the active curve is shifted
@@ -1295,98 +1333,4 @@ function anim(qi,animDur=700){
     tD=q.ansShift||0;tS=0;fromD=0;fromS=0;
   } else {
     // sc: put shift in correct field based on curve type
-    if(q.curve==='demand'){tD=q.ansCS||0;tS=0;fromD=q.startCS||0;fromS=0;}
-    else{tD=0;tS=q.ansCS||0;fromD=0;fromS=q.startCS||0;}
-  }
-  const tFP=q.ansFP||(q.startFP||5),sFP=q.startFP||5;
-  const dirD=Math.sign(tD-fromD),dirS=Math.sign(tS-fromS);
-  const start=performance.now(),dur=animDur;
-  function step(now){
-    if(qi!==cur)return;
-    const t=Math.min((now-start)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
-    const dA=fromD+(tD-fromD)*e,sA=fromS+(tS-fromS)*e,fpA=sFP+(tFP-sFP)*e;
-    curPos[qi]={dA,sA,fpA};
-    el.innerHTML=mkSVG(q,dA,sA,fpA,t<1,dirD,dirS,t);
-    if(t<1)requestAnimationFrame(step);
-    else curPos[qi]={dA:tD,sA:tS,fpA:tFP};
-  }
-  requestAnimationFrame(step);
-}
-function replayAnim(){
-  const q=qs[cur];
-  if(q.type==='plain'||q.type==='table'||q.type==='ped'||q.type==='sur'||q.type==='trade')return;
-  if(q.type==='sd') curPos[cur]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
-  else if(q.type==='sc') curPos[cur]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
-  else if(q.type==='pm') curPos[cur]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
-  else if(q.type==='tax'){curPos[cur]=Object.assign(txPos(q),{fpA:0});const rb2=document.getElementById('revealBtn');if(rb2)rb2.style.display=attempted(cur)?'':'none';}
-  else curPos[cur]={dA:0,sA:0,fpA:q.startFP||5};
-  if(attempted(cur)&&q.type==='pm'&&q.animatePrice===false){
-    // Label-reveal mode: just re-trigger the fade-in, no price animation
-    document.getElementById('diagWrap').innerHTML=mkSVG(q,q.dShift||0,q.sShift||0,q.startPrice||5,false,0,0,0,true);
-  }else{
-    document.getElementById('diagWrap').innerHTML=mkSVG(q,curPos[cur].dA,curPos[cur].sA,curPos[cur].fpA,false);
-    if(attempted(cur))anim(cur,3000);
-  }
-}
-function reveal(){
-  const q=qs[cur];
-  if(!attempted(cur))return;
-  const pos=curPos[cur];
-  if(q.type==='sur'){
-    const eff=surEff(q);
-    if(pos.fpA>=eff.length){document.getElementById('revealBtn').style.display='none';return;}
-    pos.fpA++;
-    document.getElementById('diagWrap').innerHTML=mkSVG(q,0,0,pos.fpA,false);
-    const rbS=document.getElementById('revealBtn');
-    if(rbS)rbS.style.display=pos.fpA>=eff.length?'none':'';
-    return;
-  }
-  if(q.type==='trade'){
-    const trR=q.reveals||[];
-    if(pos.fpA>=trR.length){document.getElementById('revealBtn').style.display='none';return;}
-    pos.fpA++;
-    document.getElementById('diagWrap').innerHTML=mkSVG(q,0,0,pos.fpA,false);
-    const rbT=document.getElementById('revealBtn');
-    if(rbT)rbT.style.display=pos.fpA>=trR.length?'none':'';
-    return;
-  }
-  if(q.type!=='tax')return;
-  const reveals=txRev(q);
-  if(pos.fpA>=reveals.length){document.getElementById('revealBtn').style.display='none';return;}
-  pos.fpA++;
-  document.getElementById('diagWrap').innerHTML=mkSVG(q,pos.dA,pos.sA,pos.fpA,false);
-  const rb2=document.getElementById('revealBtn');
-  if(rb2)rb2.style.display=pos.fpA>=reveals.length?'none':'';
-}
-function prev(){if(cur>0)showQ(cur-1);}
-function next(){
-  if(cur<qs.length-1)showQ(cur+1);
-  else showScore();
-}
-function showScore(){
-  const n=done.filter(Boolean).length;
-  document.getElementById('snum').textContent=n+' / '+qs.length;
-  const msgs=["Keep practising — you'll get there!","Good effort — nearly there!","Great work!","Excellent!","Perfect score!"];
-  document.getElementById('smsg').textContent=msgs[Math.min(Math.floor(n/qs.length*4),4)];
-  document.getElementById('score-screen').classList.add('show');
-}
-function restart(){
-  done.fill(false);
-  picked.fill(null);
-  qs.forEach((q,i)=>{
-    if(q.type==='sd') curPos[i]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
-    else if(q.type==='sc') curPos[i]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
-    else if(q.type==='pm') curPos[i]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
-    else if(q.type==='tax') curPos[i]=Object.assign(txPos(q),{fpA:-1});
-    else if(q.type==='sur') curPos[i]={dA:0,sA:0,fpA:0};
-    else if(q.type==='trade') curPos[i]={dA:0,sA:0,fpA:-1};
-    else curPos[i]={dA:0,sA:0,fpA:q.startFP||5};
-  });
-  document.getElementById('score-screen').classList.remove('show');
-  showQ(0);
-}
-showQ(0);
-<\/script>
-</body>
-</html>`;
-}
+    if(q.curve===

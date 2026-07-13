@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tariff Explainer — Market for Steel</title>
+<style>
+  :root{ --ink:#2c2c2a; --line:#d3d1c7; --panel:#f5f4f0; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:#faf9f6; color:var(--ink);
+        font-family:Verdana, Geneva, sans-serif;
+        min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
+  .card{ background:#fff; border:1.5px solid var(--line); border-radius:16px;
+         box-shadow:0 10px 40px rgba(0,0,0,.06); padding:20px 22px 16px; width:100%; max-width:720px; }
+  svg#chart{ width:100%; height:auto; display:block; }
+  /* fade-in reveal for each staged element */
+  #chart .beat{ opacity:0; transition:opacity .55s ease; }
+  #chart .beat.on{ opacity:1; }
+
+  #capwrap{ min-height:78px; margin:6px 4px 4px; transition:opacity .3s ease; }
+  #step{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#b23a00; }
+  #title{ font-size:17px; font-weight:700; margin:3px 0 5px; }
+  #cap{ font-size:14px; line-height:1.5; color:#44433f; }
+  body.nocap #capwrap{ visibility:hidden; }
+
+  .controls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+             border-top:1.5px solid var(--line); padding-top:12px; margin-top:6px; }
+  .btn{ font-family:inherit; font-size:14px; font-weight:700; color:var(--ink);
+        background:var(--panel); border:1.5px solid var(--line); border-radius:9px;
+        padding:9px 16px; cursor:pointer; transition:background .15s, opacity .15s; }
+  .btn:hover:not(:disabled){ background:#eceae3; }
+  .btn:disabled{ opacity:.4; cursor:default; }
+  .btn.primary{ background:#1f6feb; border-color:#1f6feb; color:#fff; }
+  .btn.primary:hover:not(:disabled){ background:#175fd0; }
+  .spacer{ flex:1; }
+  .dots{ display:flex; gap:6px; align-items:center; }
+  .dot{ width:9px; height:9px; border-radius:50%; background:#d3d1c7; cursor:pointer; transition:background .2s, transform .2s; }
+  .dot.on{ background:#b23a00; transform:scale(1.25); }
+  .mini{ font-size:12px; color:#888780; font-weight:700; }
+  .hint{ text-align:center; font-size:11px; color:#a8a69c; margin-top:10px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <svg id="chart" viewBox="0 0 400 340" role="img" aria-label="Animated tariff diagram for the market for steel"></svg>
+
+    <div id="capwrap">
+      <div id="step"></div>
+      <div id="title"></div>
+      <div id="cap"></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="backBtn" onclick="prev()">&larr; Back</button>
+      <button class="btn primary" id="nextBtn" onclick="next()">Next &rarr;</button>
+      <div class="dots" id="dots"></div>
+      <span class="mini" id="ind"></span>
+      <div class="spacer"></div>
+      <button class="btn" id="capBtn" onclick="toggleCap()">Hide captions</button>
+      <button class="btn" onclick="go(0)">Restart</button>
+    </div>
+    <div class="hint">Advance with the Next button, the right-arrow key, or the spacebar. Press C to toggle captions.</div>
+  </div>
+
+<script>
+// ── geometry (steel: world price $20, tariff $20, price interval $10) ──────────
+var W=400,H=340,padl=48,padr=44,padt=26,padb=46,GRID=10;
+function gx(Q){return padl+Q*(W-padl-padr)/GRID;}
+function gy(P){return padt+(GRID-P)*(H-padt-padb)/GRID;}
+var sCol='#1a1a1a', dCol='#1a1a1a';
+var vU=10,hU=10, gPw=2, gPt=4, C0=1, C1=9, Qs0=2,Qd0=8,Qst=4,Qdt=6;
+function n1(x){return (Math.round(x*10)/10);}
+function E(from,to,svg){ return '<g class="beat" data-from="'+from+'"'+(to!=null?(' data-to="'+to+'"'):'')+'>'+svg+'</g>'; }
+function txt(x,y,s,extra){ return '<text x="'+x+'" y="'+y+'" '+(extra||'')+'>'+s+'</text>'; }
+function halo(fill){ return 'fill="'+(fill||'#1a1a1a')+'" stroke="#fff" stroke-width="2.6" paint-order="stroke" font-family="Verdana" font-weight="700"'; }
+
+function buildSVG(){
+  var P=[], i;
+  // BASE (always on)
+  var b='';
+  b+='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
+  b+='<text x="'+(W/2)+'" y="16" text-anchor="middle" font-size="12" font-family="Verdana" font-weight="bold" fill="#2c2c2a">The market for steel</text>';
+  for(i=1;i<=GRID;i++) b+='<line x1="'+padl+'" y1="'+n1(gy(i))+'" x2="'+(W-padr)+'" y2="'+n1(gy(i))+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
+  for(i=1;i<=GRID;i++) b+='<line x1="'+n1(gx(i))+'" y1="'+padt+'" x2="'+n1(gx(i))+'" y2="'+(H-padb)+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
+  b+='<line x1="'+padl+'" y1="'+((H-padb)+6)+'" x2="'+padl+'" y2="'+(padt-6)+'" stroke="#444" stroke-width="1.5" marker-end="url(#ar)" opacity="0.85"/>';
+  b+='<line x1="'+(padl-6)+'" y1="'+(H-padb)+'" x2="'+(W-padr+6)+'" y2="'+(H-padb)+'" stroke="#444" stroke-width="1.5" marker-end="url(#ar)" opacity="0.85"/>';
+  for(i=1;i<=GRID;i++){ b+='<text x="'+(padl-5)+'" y="'+n1(gy(i))+'" text-anchor="end" dominant-baseline="central" font-size="9" font-family="Verdana" fill="#888">'+(i*vU)+'</text>';
+    b+='<text x="'+n1(gx(i))+'" y="'+((H-padb)+11)+'" text-anchor="middle" font-size="9" font-family="Verdana" fill="#888">'+(i*hU)+'</text>'; }
+  b+='<text x="'+(padl-6)+'" y="'+((H-padb)+11)+'" text-anchor="end" font-size="9" font-family="Verdana" fill="#888">0</text>';
+  b+='<text x="'+(padl-34)+'" y="'+((padt+(H-padb))/2)+'" font-size="9" font-family="Verdana" fill="#555" text-anchor="middle" transform="rotate(-90 '+(padl-34)+' '+((padt+(H-padb))/2)+')">Price ($)</text>';
+  b+='<text x="'+((padl+(W-padr))/2)+'" y="'+((H-padb)+40)+'" font-size="9" font-family="Verdana" fill="#555" text-anchor="middle">Quantity (000 tonnes)</text>';
+  P.push(E(0,null,b));
+
+  // shaded boxes (behind curves)
+  function rect(x0,x1,y0,y1,fill,stroke){ return '<polygon points="'+gx(x0).toFixed(1)+','+gy(y0).toFixed(1)+' '+gx(x1).toFixed(1)+','+gy(y0).toFixed(1)+' '+gx(x1).toFixed(1)+','+gy(y1).toFixed(1)+' '+gx(x0).toFixed(1)+','+gy(y1).toFixed(1)+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.2"/>'; }
+  P.push(E(6,null, rect(Qst,Qdt,gPw,gPt,'rgba(196,125,0,.34)','#C47D00')));
+  P.push(E(7,null, rect(0,Qst,0,gPt,'rgba(15,110,86,.22)','#0F6E56')));
+  P.push(E(7,null, rect(Qst,Qdt,0,gPw,'rgba(24,95,165,.24)','#185FA5')));
+
+  // curves
+  P.push(E(1,null,'<line x1="'+gx(C0)+'" y1="'+gy(C0)+'" x2="'+gx(C1)+'" y2="'+gy(C1)+'" stroke="'+sCol+'" stroke-width="2.5"/>'
+                 +'<line x1="'+gx(C0)+'" y1="'+gy(C1)+'" x2="'+gx(C1)+'" y2="'+gy(C0)+'" stroke="'+dCol+'" stroke-width="2.5"/>'));
+
+  // price lines
+  P.push(E(2,null,'<line x1="'+padl+'" y1="'+gy(gPw)+'" x2="'+(W-padr)+'" y2="'+gy(gPw)+'" stroke="#444" stroke-width="1.6" stroke-dasharray="7 4"/>'));
+  P.push(E(4,null,'<line x1="'+padl+'" y1="'+gy(gPt)+'" x2="'+gx(Qdt)+'" y2="'+gy(gPt)+'" stroke="#b23a00" stroke-width="1.6" stroke-dasharray="7 4"/>'));
+
+  // equilibrium dot + guides
+  P.push(E(1,null,'<line x1="'+padl+'" y1="'+gy(5)+'" x2="'+gx(5)+'" y2="'+gy(5)+'" stroke="#888" stroke-width="1" stroke-dasharray="4 3"/>'
+                 +'<line x1="'+gx(5)+'" y1="'+(H-padb)+'" x2="'+gx(5)+'" y2="'+gy(5)+'" stroke="#888" stroke-width="1" stroke-dasharray="4 3"/>'
+                 +'<circle cx="'+gx(5)+'" cy="'+gy(5)+'" r="3.5" fill="#2c2c2a"/>'));
+
+  var by=(H-padb)+20;
+  // free-trade markers (stages 3-4)
+  var ft='';
+  ft+='<line x1="'+gx(Qs0)+'" y1="'+(H-padb)+'" x2="'+gx(Qs0)+'" y2="'+gy(gPw)+'" stroke="#0F6E56" stroke-width="1" stroke-dasharray="4 3" opacity="0.8"/>';
+  ft+='<line x1="'+gx(Qd0)+'" y1="'+(H-padb)+'" x2="'+gx(Qd0)+'" y2="'+gy(gPw)+'" stroke="#185FA5" stroke-width="1" stroke-dasharray="4 3" opacity="0.8"/>';
+  ft+='<circle cx="'+gx(Qs0)+'" cy="'+gy(gPw)+'" r="3" fill="#0F6E56"/><circle cx="'+gx(Qd0)+'" cy="'+gy(gPw)+'" r="3" fill="#185FA5"/>';
+  ft+='<line x1="'+gx(Qs0)+'" y1="'+by+'" x2="'+gx(Qd0)+'" y2="'+by+'" stroke="#b23a00" stroke-width="1.6"/>';
+  ft+='<line x1="'+gx(Qs0)+'" y1="'+(by-5)+'" x2="'+gx(Qs0)+'" y2="'+(by+3)+'" stroke="#b23a00" stroke-width="1.6"/>';
+  ft+='<line x1="'+gx(Qd0)+'" y1="'+(by-5)+'" x2="'+gx(Qd0)+'" y2="'+(by+3)+'" stroke="#b23a00" stroke-width="1.6"/>';
+  ft+=txt(((gx(Qs0)+gx(Qd0))/2),(by+12),'Imports = 60','text-anchor="middle" font-size="9" '+halo());
+  P.push(E(3,4,ft));
+
+  // tariff-state markers (stage 5+)
+  var ts='';
+  ts+='<line x1="'+gx(Qst)+'" y1="'+(H-padb)+'" x2="'+gx(Qst)+'" y2="'+gy(gPt)+'" stroke="#0F6E56" stroke-width="1" stroke-dasharray="4 3" opacity="0.8"/>';
+  ts+='<line x1="'+gx(Qdt)+'" y1="'+(H-padb)+'" x2="'+gx(Qdt)+'" y2="'+gy(gPt)+'" stroke="#185FA5" stroke-width="1" stroke-dasharray="4 3" opacity="0.8"/>';
+  ts+='<circle cx="'+gx(Qst)+'" cy="'+gy(gPt)+'" r="3" fill="#0F6E56"/><circle cx="'+gx(Qdt)+'" cy="'+gy(gPt)+'" r="3" fill="#185FA5"/>';
+  ts+='<line x1="'+gx(Qs0)+'" y1="'+by+'" x2="'+gx(Qst)+'" y2="'+by+'" stroke="#0F6E56" stroke-width="1.6"/>';
+  ts+='<line x1="'+gx(Qs0)+'" y1="'+(by-5)+'" x2="'+gx(Qs0)+'" y2="'+(by+3)+'" stroke="#0F6E56" stroke-width="1.6"/>';
+  ts+='<line x1="'+gx(Qst)+'" y1="'+(by-5)+'" x2="'+gx(Qst)+'" y2="'+(by+3)+'" stroke="#0F6E56" stroke-width="1.6"/>';
+  ts+=txt(((gx(Qs0)+gx(Qst))/2),(by+12),'Production +20','text-anchor="middle" font-size="9" '+halo());
+  ts+='<line x1="'+gx(Qdt)+'" y1="'+by+'" x2="'+gx(Qd0)+'" y2="'+by+'" stroke="#185FA5" stroke-width="1.6"/>';
+  ts+='<line x1="'+gx(Qdt)+'" y1="'+(by-5)+'" x2="'+gx(Qdt)+'" y2="'+(by+3)+'" stroke="#185FA5" stroke-width="1.6"/>';
+  ts+='<line x1="'+gx(Qd0)+'" y1="'+(by-5)+'" x2="'+gx(Qd0)+'" y2="'+(by+3)+'" stroke="#185FA5" stroke-width="1.6"/>';
+  ts+=txt(((gx(Qdt)+gx(Qd0))/2),(by+12),'Consumption -20','text-anchor="middle" font-size="9" '+halo());
+  P.push(E(5,null,ts));
+
+  // labels (top layer)
+  P.push(E(1,null, txt(gx(C1)+4,gy(C1)+4,'S','font-size="11" '+halo(sCol)) + txt(gx(C1)+4,gy(C0)-3,'D','font-size="11" '+halo(dCol))));
+  P.push(E(1,null, txt(gx(5)+6,gy(5)-6,'Equilibrium: $50, 50','font-size="9" text-anchor="start" '+halo('#2c2c2a'))));
+  P.push(E(2,null, txt((W-padr+3),gy(gPw)+3.5,'Pw = $20','font-size="9.5" '+halo('#444'))));
+  P.push(E(4,null, txt(gx(Qdt)+4,gy(gPt)-3,'Pw + t = $40','font-size="9.5" '+halo('#b23a00'))));
+  P.push(E(6,null, txt(gx((Qst+Qdt)/2),gy((gPw+gPt)/2),'Tariff revenue','text-anchor="middle" dominant-baseline="central" font-size="9" '+halo())
+                 + txt(gx((Qst+Qdt)/2),gy((gPw+gPt)/2)+11,'$400','text-anchor="middle" dominant-baseline="central" font-size="9" '+halo())));
+  P.push(E(7,null, txt(gx(Qst/2),gy(gPt/2),'Domestic','text-anchor="middle" dominant-baseline="central" font-size="9" '+halo())
+                 + txt(gx(Qst/2),gy(gPt/2)+11,'producer rev.','text-anchor="middle" dominant-baseline="central" font-size="9" '+halo())
+                 + txt(gx((Qst+Qdt)/2),gy(gPw/2),'Import','text-anchor="middle" dominant-baseline="central" font-size="9" '+halo())
+                 + txt(gx((Qst+Qdt)/2),gy(gPw/2)+11,'spending','text-anchor="middle" dominant-baseline="central" font-size="9" '+halo())));
+  return P.join('');
+}
+
+// ── captions ─────────────────────────────────────────────────────────────────
+var STEPS=[
+  {t:'Setting the scene', c:'The market for steel. Price is on the vertical axis, quantity (in thousands of tonnes) on the horizontal.'},
+  {t:'Domestic equilibrium', c:'With no trade, domestic supply and demand meet at equilibrium: a price of $50 and a quantity of 50.'},
+  {t:'The world price', c:'Now open the economy. The world price of steel is $20 - well below the $50 domestic price - so the country will import.'},
+  {t:'Free trade: production &amp; imports', c:'At $20, local firms supply only 20, but consumers want 80. The 60-unit gap is filled by imports.'},
+  {t:'Adding the tariff', c:'The government places a $20 tariff on each imported unit. The price in the domestic market rises to $40.'},
+  {t:'The quantity effects', c:'At the higher price, domestic production rises from 20 to 40 and consumption falls from 80 to 60. Imports shrink to just 20.'},
+  {t:'Tariff revenue', c:'The government collects the tariff on every imported unit: 20 units &times; $20 = $400 of tariff revenue.'},
+  {t:'The full breakdown', c:'Domestic producers earn more (green), the government collects tariff revenue (gold), and spending on the remaining 20 imports (blue) is far smaller.'}
+];
+var N=STEPS.length-1, stage=0, capOn=true;
+
+document.getElementById('chart').innerHTML=buildSVG();
+// build progress dots
+var dotsEl=document.getElementById('dots');
+for(var d=0; d<=N; d++){ var el=document.createElement('div'); el.className='dot'; el.dataset.i=d; el.onclick=(function(k){return function(){go(k);};})(d); dotsEl.appendChild(el); }
+
+function render(){
+  var beats=document.querySelectorAll('#chart .beat');
+  for(var i=0;i<beats.length;i++){
+    var g=beats[i], from=+g.getAttribute('data-from'), to=g.getAttribute('data-to');
+    to=(to==null?Infinity:+to);
+    g.classList.toggle('on', stage>=from && stage<=to);
+  }
+  var capw=document.getElementById('capwrap');
+  capw.style.opacity=0;
+  setTimeout(function(){
+    document.getElementById('step').textContent='Step '+(stage+1)+' of '+(N+1);
+    document.getElementById('title').innerHTML=STEPS[stage].t;
+    document.getElementById('cap').innerHTML=STEPS[stage].c;
+    capw.style.opacity=1;
+  },140);
+  document.getElementById('ind').textContent=(stage+1)+' / '+(N+1);
+  document.getElementById('backBtn').disabled=(stage===0);
+  document.getElementById('nextBtn').disabled=(stage===N);
+  var dots=document.querySelectorAll('.dot');
+  for(var j=0;j<dots.length;j++) dots[j].classList.toggle('on', +dots[j].dataset.i===stage);
+}
+function next(){ if(stage<N){ stage++; render(); } }
+function prev(){ if(stage>0){ stage--; render(); } }
+function go(n){ stage=Math.max(0,Math.min(N,n)); render(); }
+function toggleCap(){ capOn=!capOn; document.body.classList.toggle('nocap',!capOn);
+  document.getElementById('capBtn').textContent=capOn?'Hide captions':'Show captions'; }
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); next(); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); prev(); }
+  else if(e.key==='c'||e.key==='C'){ toggleCap(); }
+  else if(e.key==='r'||e.key==='R'){ go(0); }
+});
+
+render();
+</script>
+</body>
+</html>

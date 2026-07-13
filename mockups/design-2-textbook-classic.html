@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concept 2 — Textbook Classic · theory2econ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#faf6ee; --paper2:#f3ecdd; --ink:#1a1a18; --rule:#1a1a18;
+    --red:#C41E1E; --grey:#6d6a60; --line:#d9d2c0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink)}
+  .serif{font-family:'Playfair Display',serif}
+
+  .concept-tag{position:fixed;top:12px;right:12px;background:var(--ink);color:#fff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:50px;z-index:99;opacity:.85}
+
+  /* Masthead */
+  .masthead{border-bottom:3px double var(--ink);padding:22px 48px 16px;display:flex;align-items:flex-end;justify-content:space-between;background:var(--paper)}
+  .masthead .brand{display:flex;flex-direction:column;gap:4px}
+  .masthead img{height:40px;filter:grayscale(1) contrast(1.2)}
+  .masthead .edition{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--grey)}
+  .masthead .links{display:flex;gap:26px;font-size:13px;font-weight:600;letter-spacing:.04em}
+  .masthead .links span{border-bottom:2px solid transparent;padding-bottom:3px;cursor:pointer}
+  .masthead .links span:hover{border-color:var(--red)}
+
+  /* Hero */
+  .hero{max-width:960px;margin:0 auto;padding:72px 32px 56px;display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:center}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+  .hero h1{font-family:'Playfair Display',serif;font-size:3rem;font-weight:800;line-height:1.12;margin-bottom:18px}
+  .hero p{font-size:1.08rem;line-height:1.75;color:#3d3b34;margin-bottom:28px;max-width:44ch}
+  .btn{display:inline-block;font-family:inherit;font-size:14px;font-weight:700;letter-spacing:.05em;padding:13px 30px;cursor:pointer;text-transform:uppercase}
+  .btn-solid{background:var(--ink);color:var(--paper);border:2px solid var(--ink);margin-right:12px}
+  .btn-solid:hover{background:var(--red);border-color:var(--red)}
+  .btn-line{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+  .figure{border:2px solid var(--ink);background:#fff;padding:18px}
+  .figure figcaption{font-size:12px;color:var(--grey);margin-top:10px;font-style:italic;text-align:center}
+
+  /* Section rules */
+  .section-head{max-width:960px;margin:40px auto 22px;padding:0 32px}
+  .section-head .rule{border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);height:6px;margin-bottom:12px}
+  .section-head h2{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:800}
+  .section-head .sub{font-size:13px;color:var(--grey);font-style:italic}
+
+  /* Builder menu — chapter list */
+  .chapters{max-width:960px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1fr 1fr;gap:0 44px}
+  .chapter{display:flex;gap:18px;padding:20px 6px;border-bottom:1px solid var(--line);cursor:pointer}
+  .chapter:hover .ch-title{color:var(--red)}
+  .ch-num{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:800;color:var(--red);min-width:44px;line-height:1}
+  .ch-title{font-size:15.5px;font-weight:700;margin-bottom:4px;transition:.15s}
+  .chapter p{font-size:13px;color:var(--grey);line-height:1.6}
+
+  /* Builder slice */
+  .slice{max-width:960px;margin:26px auto 70px;padding:0 32px}
+  .sheet{background:#fff;border:2px solid var(--ink);display:flex}
+  .sheet-diag{width:46%;border-right:1px solid var(--line);padding:26px;background:repeating-linear-gradient(#fff,#fff 27px,#f1ede2 28px)}
+  .fig-label{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
+  .sheet-form{flex:1;padding:26px}
+  .q-line{font-family:'Playfair Display',serif;font-size:1.05rem;line-height:1.6;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px}
+  .opt{display:flex;gap:12px;align-items:baseline;padding:9px 4px;border-bottom:1px dotted var(--line);font-size:14.5px}
+  .opt b{font-family:'Playfair Display',serif;color:var(--grey)}
+  .opt.correct{background:#f8efe0}
+  .opt.correct b{color:var(--red)}
+  .stamp{display:inline-block;margin-top:16px;border:2px solid var(--red);color:var(--red);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:6px 14px;transform:rotate(-2deg)}
+  .add-btn{margin-top:20px;width:100%;background:var(--ink);color:var(--paper);border:none;font-family:inherit;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:14px;cursor:pointer}
+  .add-btn:hover{background:var(--red)}
+  footer{text-align:center;padding:26px;font-size:12.5px;color:var(--grey);border-top:3px double var(--ink);background:var(--paper2)}
+</style>
+</head>
+<body>
+<div class="concept-tag">Concept 2 · Textbook Classic</div>
+
+<header class="masthead">
+  <div class="brand">
+    <img src="../assets/logo.svg" alt="theory2econ">
+    <span class="edition">HSC Economics · Est. 2026 · Ninth Edition energy</span>
+  </div>
+  <div class="links"><span>Quizzes</span><span>Builder</span><span>For Teachers</span><span>About</span></div>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="kicker">Chapter One — Getting Started</div>
+    <h1>Economic theory, examined properly.</h1>
+    <p>Rigorous multiple-choice practice with textbook-quality diagrams. Every question drawn the way it appears in the exam — because that's how you'll see it in October.</p>
+    <button class="btn btn-solid">Begin a Quiz</button>
+    <button class="btn btn-line">Teacher Builder</button>
+  </div>
+  <figure class="figure">
+    <svg viewBox="0 0 280 220" style="width:100%">
+      <line x1="36" y1="16" x2="36" y2="190" stroke="#1a1a18" stroke-width="2"/>
+      <line x1="36" y1="190" x2="266" y2="190" stroke="#1a1a18" stroke-width="2"/>
+      <text x="16" y="22" font-size="12" font-style="italic" font-family="Georgia">P</text>
+      <text x="258" y="208" font-size="12" font-style="italic" font-family="Georgia">Q</text>
+      <line x1="56" y1="34" x2="244" y2="176" stroke="#C41E1E" stroke-width="2.5"/>
+      <line x1="56" y1="176" x2="244" y2="34" stroke="#1a1a18" stroke-width="2.5"/>
+      <line x1="36" y1="105" x2="150" y2="105" stroke="#6d6a60" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <line x1="150" y1="105" x2="150" y2="190" stroke="#6d6a60" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <circle cx="150" cy="105" r="4.5" fill="#1a1a18"/>
+      <text x="232" y="30" font-size="13" font-weight="700" font-family="Georgia">D</text>
+      <text x="232" y="190" font-size="13" font-weight="700" font-family="Georgia">S</text>
+      <text x="22" y="109" font-size="11" font-style="italic" font-family="Georgia">Pe</text>
+      <text x="145" y="204" font-size="11" font-style="italic" font-family="Georgia">Qe</text>
+    </svg>
+    <figcaption>Fig. 1.1 — Market equilibrium for a normal good</figcaption>
+  </figure>
+</section>
+
+<div class="section-head">
+  <div class="rule"></div>
+  <h2>Builder menu — same theme</h2>
+  <div class="sub">Question types presented as a table of contents</div>
+</div>
+
+<div class="chapters">
+  <div class="chapter"><div class="ch-num">01</div><div><div class="ch-title">Supply &amp; Demand</div><p>Both curves, equilibrium shifts, new equilibrium animation</p></div></div>
+  <div class="chapter"><div class="ch-num">02</div><div><div class="ch-title">Single Curve</div><p>Demand or supply only, expansion &amp; contraction</p></div></div>
+  <div class="chapter"><div class="ch-num">03</div><div><div class="ch-title">Production Possibility Frontier</div><p>Curved shift or data-point schedule</p></div></div>
+  <div class="chapter"><div class="ch-num">04</div><div><div class="ch-title">Price Mechanism</div><p>Surplus / shortage brackets animate to equilibrium</p></div></div>
+  <div class="chapter"><div class="ch-num">05</div><div><div class="ch-title">Tax, Subsidy &amp; Externalities</div><p>Wedges, MSC/MSB, deadweight loss revealed step by step</p></div></div>
+  <div class="chapter"><div class="ch-num">06</div><div><div class="ch-title">Surplus &amp; Deadweight Loss</div><p>Shaded areas, lettered for identify questions</p></div></div>
+</div>
+
+<div class="section-head">
+  <div class="rule"></div>
+  <h2>Builder screen — same theme</h2>
+  <div class="sub">The builder styled like a worked example on paper</div>
+</div>
+
+<div class="slice">
+  <div class="sheet">
+    <div class="sheet-diag">
+      <div class="fig-label">Fig. 4.2 — Live Preview</div>
+      <svg viewBox="0 0 280 220" style="width:100%;background:#fff;border:1px solid var(--line)">
+        <line x1="36" y1="16" x2="36" y2="190" stroke="#1a1a18" stroke-width="2"/>
+        <line x1="36" y1="190" x2="266" y2="190" stroke="#1a1a18" stroke-width="2"/>
+        <line x1="56" y1="34" x2="244" y2="176" stroke="#C41E1E" stroke-width="2.5"/>
+        <line x1="86" y1="34" x2="266" y2="170" stroke="#C41E1E" stroke-width="2" stroke-dasharray="6 4"/>
+        <line x1="56" y1="176" x2="244" y2="34" stroke="#1a1a18" stroke-width="2.5"/>
+        <text x="230" y="30" font-size="13" font-weight="700" font-family="Georgia">D₁</text>
+        <text x="254" y="56" font-size="13" font-weight="700" font-family="Georgia" fill="#C41E1E">D₂</text>
+        <text x="232" y="190" font-size="13" font-weight="700" font-family="Georgia">S</text>
+        <path d="M150 60 l26 0" stroke="#C41E1E" stroke-width="2" marker-end="url(#arr)"/>
+        <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 z" fill="#C41E1E"/></marker></defs>
+      </svg>
+      <div class="stamp">Shift captured ✓</div>
+    </div>
+    <div class="sheet-form">
+      <div class="fig-label">Question 4</div>
+      <div class="q-line serif">Household incomes rise. What happens to the market for restaurant meals?</div>
+      <div class="opt"><b>(a)</b> Demand contracts along the curve</div>
+      <div class="opt correct"><b>(b)</b> Demand shifts right; price and quantity rise</div>
+      <div class="opt"><b>(c)</b> Supply shifts left; price rises</div>
+      <div class="opt"><b>(d)</b> No change to equilibrium</div>
+      <button class="add-btn">＋ Add to Question Paper</button>
+    </div>
+  </div>
+</div>
+
+<footer>Concept 2 · <strong>Textbook Classic</strong> — cream paper, serif headlines, double rules and figure captions. The Economist meets a well-set exam paper.</footer>
+</body>
+</html>

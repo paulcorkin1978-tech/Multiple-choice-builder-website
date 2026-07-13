@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concept 1 — Bold Brand · theory2econ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A0C56; --navy2:#1a1d7a; --pink:#EC3C78; --pink-soft:#fde8f0;
+    --ink:#1c1e3a; --grey:#6b6e8a; --bg:#f7f7fb; --card:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink)}
+
+  .concept-tag{position:fixed;top:12px;right:12px;background:var(--ink);color:#fff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:50px;z-index:99;opacity:.85}
+
+  /* Nav */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:#fff;border-bottom:1px solid #e8e8f2;position:sticky;top:0;z-index:10}
+  nav img{height:38px}
+  nav .links{display:flex;gap:28px;font-size:14px;font-weight:600;color:var(--grey)}
+  nav .links span:hover{color:var(--navy);cursor:pointer}
+  nav .cta{background:var(--pink);color:#fff;font-weight:700;font-size:14px;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(236,60,120,.35)}
+
+  /* Hero */
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 55%,#3a1657 100%);color:#fff;padding:88px 48px 110px;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:
+    linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+    background-size:44px 44px}
+  .hero *{position:relative}
+  .badge{display:inline-block;background:rgba(236,60,120,.18);border:1px solid rgba(236,60,120,.5);color:#ff9dbf;font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;padding:6px 18px;border-radius:50px;margin-bottom:22px}
+  .hero h1{font-size:3.2rem;font-weight:800;letter-spacing:-1px;line-height:1.15;max-width:760px;margin:0 auto 18px}
+  .hero h1 em{font-style:normal;color:var(--pink);text-decoration:underline;text-decoration-thickness:5px;text-underline-offset:8px}
+  .hero p{font-size:1.15rem;color:#c4c6e8;max-width:560px;margin:0 auto 34px;line-height:1.7}
+  .hero .btns{display:flex;gap:14px;justify-content:center}
+  .btn-hero{padding:15px 34px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:inherit}
+  .btn-pink{background:var(--pink);color:#fff;box-shadow:0 8px 24px rgba(236,60,120,.45)}
+  .btn-ghost{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.35)}
+
+  /* Section label */
+  .divider{max-width:1060px;margin:64px auto 26px;padding:0 24px;display:flex;align-items:center;gap:16px}
+  .divider h2{font-size:1.35rem;font-weight:800;color:var(--navy);white-space:nowrap}
+  .divider .line{height:2px;background:linear-gradient(90deg,var(--pink),transparent);flex:1}
+
+  /* Builder menu cards */
+  .cards{max-width:1060px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+  .mcard{background:var(--card);border-radius:16px;padding:26px 24px;cursor:pointer;border:1px solid #e8e8f2;transition:.18s;position:relative;overflow:hidden}
+  .mcard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--navy),var(--pink));opacity:0;transition:.18s}
+  .mcard:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(10,12,86,.14);border-color:transparent}
+  .mcard:hover::before{opacity:1}
+  .mcard .icon{width:42px;height:42px;border-radius:11px;background:var(--pink-soft);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .mcard h3{font-size:15.5px;font-weight:700;color:var(--navy);margin-bottom:7px}
+  .mcard p{font-size:12.5px;color:var(--grey);line-height:1.6}
+
+  /* Builder slice */
+  .slice{max-width:1060px;margin:26px auto 80px;padding:0 24px}
+  .window{background:#fff;border-radius:18px;border:1px solid #e8e8f2;box-shadow:0 20px 60px rgba(10,12,86,.10);overflow:hidden}
+  .winbar{background:var(--navy);padding:12px 20px;display:flex;align-items:center;gap:8px}
+  .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.25)}
+  .winbar span{color:#c4c6e8;font-size:12.5px;font-weight:600;margin-left:10px}
+  .panes{display:flex}
+  .pane-diag{width:46%;padding:26px;border-right:1px solid #eeeef5;background:#fbfbfe}
+  .pane-form{flex:1;padding:26px}
+  .ctl-label{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);margin-bottom:10px}
+  .chip-row{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+  .chip{font-size:12px;font-weight:700;padding:7px 16px;border-radius:50px;background:#f0f0f8;color:var(--grey);cursor:pointer}
+  .chip.on{background:var(--navy);color:#fff}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:6px}
+  .field input,.field textarea{width:100%;font-family:inherit;font-size:13.5px;padding:11px 14px;border:1.5px solid #e2e2ee;border-radius:10px;outline:none;background:#fff}
+  .field input:focus{border-color:var(--pink)}
+  .arow{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .aletter{width:28px;height:28px;border-radius:8px;background:#f0f0f8;color:var(--grey);font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .aletter.correct{background:var(--pink);color:#fff}
+  .arow input{flex:1;font-family:inherit;font-size:13px;padding:9px 13px;border:1.5px solid #e2e2ee;border-radius:9px;outline:none}
+  .add-btn{width:100%;margin-top:8px;background:linear-gradient(90deg,var(--navy),var(--pink));color:#fff;font-family:inherit;font-weight:800;font-size:14.5px;padding:14px;border:none;border-radius:11px;cursor:pointer}
+  footer{text-align:center;padding:26px;font-size:12.5px;color:var(--grey)}
+</style>
+</head>
+<body>
+<div class="concept-tag">Concept 1 · Bold Brand</div>
+
+<nav>
+  <img src="../assets/logo.svg" alt="theory2econ">
+  <div class="links"><span>Quizzes</span><span>Builder</span><span>For Teachers</span><span>About</span></div>
+  <button class="cta">Student Portal →</button>
+</nav>
+
+<section class="hero">
+  <span class="badge">HSC Economics</span>
+  <h1>Master the theory.<br>Ace the <em>multiple choice</em>.</h1>
+  <p>Interactive quizzes with animated supply &amp; demand diagrams — built by a teacher, for HSC economics students.</p>
+  <div class="btns">
+    <button class="btn-hero btn-pink">Start a Quiz</button>
+    <button class="btn-hero btn-ghost">Teacher Builder</button>
+  </div>
+</section>
+
+<div class="divider"><h2>Builder menu — same theme</h2><div class="line"></div></div>
+
+<div class="cards">
+  <div class="mcard"><div class="icon"><svg width="22" height="22" viewBox="0 0 22 22"><path d="M3 19 19 3M3 3l16 16" stroke="#EC3C78" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></div><h3>Supply &amp; Demand</h3><p>Both curves, equilibrium shifts, new equilibrium animation</p></div>
+  <div class="mcard"><div class="icon"><svg width="22" height="22" viewBox="0 0 22 22"><path d="M3 19 19 3" stroke="#EC3C78" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></div><h3>Single Curve</h3><p>Demand or supply only, expansion &amp; contraction</p></div>
+  <div class="mcard"><div class="icon"><svg width="22" height="22" viewBox="0 0 22 22"><path d="M3 3v16h16M4 4c8 1 13 6 14 14" stroke="#EC3C78" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></div><h3>PPF</h3><p>Production possibility frontier — curved shift or schedule</p></div>
+  <div class="mcard"><div class="icon"><svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 6h14M4 11h14M4 16h14" stroke="#EC3C78" stroke-width="2.2" stroke-linecap="round"/></svg></div><h3>Data Table</h3><p>Custom rows &amp; columns — schedules and economic data</p></div>
+  <div class="mcard"><div class="icon"><svg width="22" height="22" viewBox="0 0 22 22"><path d="M3 19 19 3M3 3l16 16M2 11h18" stroke="#EC3C78" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div><h3>Price Mechanism</h3><p>Surplus / shortage brackets animate to equilibrium</p></div>
+  <div class="mcard"><div class="icon"><svg width="22" height="22" viewBox="0 0 22 22"><rect x="4" y="8" width="14" height="7" fill="#fde8f0" stroke="#EC3C78" stroke-width="2"/></svg></div><h3>Surplus &amp; DWL</h3><p>Shaded areas reveal step by step, lettered for identify questions</p></div>
+</div>
+
+<div class="divider"><h2>Builder screen — same theme</h2><div class="line"></div></div>
+
+<div class="slice">
+  <div class="window">
+    <div class="winbar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span>Quiz Builder · Supply &amp; Demand</span></div>
+    <div class="panes">
+      <div class="pane-diag">
+        <div class="ctl-label">Live Diagram</div>
+        <svg viewBox="0 0 300 240" style="width:100%">
+          <line x1="40" y1="20" x2="40" y2="205" stroke="#0A0C56" stroke-width="2"/>
+          <line x1="40" y1="205" x2="285" y2="205" stroke="#0A0C56" stroke-width="2"/>
+          <text x="18" y="24" font-size="12" fill="#0A0C56" font-weight="700">P</text>
+          <text x="278" y="225" font-size="12" fill="#0A0C56" font-weight="700">Q</text>
+          <line x1="60" y1="40" x2="260" y2="190" stroke="#EC3C78" stroke-width="3" stroke-linecap="round"/>
+          <line x1="60" y1="190" x2="260" y2="40" stroke="#0A0C56" stroke-width="3" stroke-linecap="round"/>
+          <line x1="40" y1="115" x2="160" y2="115" stroke="#9a9cc0" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <line x1="160" y1="115" x2="160" y2="205" stroke="#9a9cc0" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <circle cx="160" cy="115" r="6" fill="#EC3C78"/>
+          <text x="248" y="36" font-size="13" fill="#EC3C78" font-weight="800">D</text>
+          <text x="248" y="200" font-size="13" fill="#0A0C56" font-weight="800">S</text>
+        </svg>
+        <div class="ctl-label" style="margin-top:16px">Shift Controls</div>
+        <div class="chip-row"><span class="chip on">D →</span><span class="chip">← D</span><span class="chip">S →</span><span class="chip">← S</span></div>
+      </div>
+      <div class="pane-form">
+        <div class="ctl-label">Question</div>
+        <div class="field"><label>Question text</label><textarea rows="2">Household incomes rise. What happens to the market for restaurant meals?</textarea></div>
+        <div class="ctl-label" style="margin-top:18px">Answers</div>
+        <div class="arow"><div class="aletter">A</div><input value="Demand contracts along the curve"></div>
+        <div class="arow"><div class="aletter correct">B</div><input value="Demand shifts right; price and quantity rise"></div>
+        <div class="arow"><div class="aletter">C</div><input value="Supply shifts left; price rises"></div>
+        <div class="arow"><div class="aletter">D</div><input value="No change to equilibrium"></div>
+        <button class="add-btn">+ Add to Quiz</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Concept 1 · <strong>Bold Brand</strong> — your existing navy &amp; pink, polished into a modern SaaS look: gradient hero, grid texture, floating cards, gradient buttons.</footer>
+</body>
+</html>

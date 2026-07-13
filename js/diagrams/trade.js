@@ -23,22 +23,22 @@ function trSetMode(m) {
   var polLbl   = document.getElementById('trPolicyLabel');
   var wedgeLbl = document.getElementById('trRevWedgeLabel');
   var input    = document.getElementById('trTariff');
-  var consRow  = document.getElementById('trRevConsDecRow');
+  var consLbl  = document.getElementById('trRevConsDecLabel');
   if (m === 'quota') {
     if (polLbl)  polLbl.textContent  = 'Quota (units of imports allowed)';
     if (wedgeLbl) wedgeLbl.textContent = 'Quota size (bracket)';
+    if (consLbl) consLbl.textContent = 'Bracket: fall in consumption';
     input.value = 40;
-    if (consRow) consRow.style.display = '';
   } else if (m === 'subsidy') {
     if (polLbl)  polLbl.textContent  = 'Subsidy ($ per unit)';
     if (wedgeLbl) wedgeLbl.textContent = 'Subsidy cost';
+    if (consLbl) consLbl.textContent = 'Bracket: subsidy size';   // consumption is unchanged; reuse this toggle for the subsidy-size bracket
     input.value = 20;
-    if (consRow) consRow.style.display = 'none';   // consumption is unchanged under a production subsidy
   } else {
     if (polLbl)  polLbl.textContent  = 'Tariff ($ per unit)';
     if (wedgeLbl) wedgeLbl.textContent = 'Tariff revenue';
+    if (consLbl) consLbl.textContent = 'Bracket: fall in consumption';
     input.value = 20;
-    if (consRow) consRow.style.display = '';
   }
   trStepPolicy(0);   // clamp the default to the current world price + redraw
 }
@@ -66,7 +66,9 @@ function trGet() {
     vUnit: (isFinite(vU) && vU > 0) ? vU : 10,
     hUnit: (isFinite(hU) && hU > 0) ? hU : 10,
     worldPrice: (isFinite(wp) ? wp : 20),
-    reveals: reveals
+    reveals: reveals,
+    hideGrid: document.getElementById('trHideGrid').checked,
+    hideNums: document.getElementById('trHideNums').checked
   };
   if (trMode === 'quota')        q.quota   = isFinite(val) ? val : 40;
   else if (trMode === 'subsidy') q.subsidy = isFinite(val) ? val : 20;
@@ -78,10 +80,6 @@ function trGet() {
 function trDraw() {
   var vU = parseFloat(document.getElementById('trVUnit').value) || 10;
   var hU = parseFloat(document.getElementById('trHUnit').value) || 10;
-  // spinner arrows step by the relevant interval (price for tariff/subsidy, quantity for quota)
-  document.getElementById('trWorld').step  = vU;
-  document.getElementById('trTariff').step = (trMode === 'quota') ? hU : vU;
-
   document.getElementById('trChart').innerHTML = '<svg width="100%" viewBox="0 0 400 340">' + tradeInner(trGet()) + '</svg>';
 
   // Readout mirrors the on-grid snapping the renderer uses (values round to whole intervals).
@@ -150,64 +148,7 @@ function trReset() {
   document.getElementById('trWorld').value = 20;
   ['trRevTariff', 'trRevDomProd', 'trRevImports'].forEach(function (id) { document.getElementById(id).checked = true; });
   ['trRevProdInc', 'trRevConsDec'].forEach(function (id) { document.getElementById(id).checked = false; });
+  document.getElementById('trHideGrid').checked = false;
+  document.getElementById('trHideNums').checked = false;
   trClearAnswers();
-  trSetMode('tariff');   // sets the policy input default + labels, then draws
-}
-
-function trClearAnswers() {
-  document.getElementById('trQText').value = '';
-  for (var i = 0; i < 4; i++) document.getElementById('trA' + i).value = '';
-  var r = document.querySelector('input[name="trC"]:checked');
-  if (r) r.checked = false;
-  var msg = document.getElementById('trMsg');
-  if (msg) msg.textContent = '';
-}
-
-function trAddQ() {
-  var q = trGet();
-  q.questionText = document.getElementById('trQText').value;
-  q.answers = [0, 1, 2, 3].map(function (i) { return document.getElementById('trA' + i).value; });
-  var r = document.querySelector('input[name="trC"]:checked');
-  q.correctIndex = r ? parseInt(r.value) : -1;
-  addToQuiz(q, 'trMsg', trClearAnswers);
-}
-
-function trLoad(q) {
-  document.getElementById('trVUnit').value = q.vUnit != null ? q.vUnit : 10;
-  document.getElementById('trHUnit').value = q.hUnit != null ? q.hUnit : 10;
-  document.getElementById('trTitle').value = q.title || '';
-  document.getElementById('trYLbl').value = q.yLbl || 'Price ($)';
-  document.getElementById('trXLbl').value = q.xLbl || 'Quantity';
-  document.getElementById('trDCol').value = q.dCol || '#185FA5';
-  document.getElementById('trSCol').value = q.sCol || '#0F6E56';
-  document.getElementById('trWorld').value = q.worldPrice != null ? q.worldPrice : 20;
-  trSetMode(q.mode === 'quota' ? 'quota' : (q.mode === 'subsidy' ? 'subsidy' : 'tariff'));   // relabels + sets default input
-  // then override the input with the saved value
-  if (q.mode === 'quota')        document.getElementById('trTariff').value = q.quota   != null ? q.quota   : 40;
-  else if (q.mode === 'subsidy') document.getElementById('trTariff').value = q.subsidy != null ? q.subsidy : 20;
-  else                           document.getElementById('trTariff').value = q.tariff  != null ? q.tariff  : 20;
-  var rv = q.reveals || [];
-  document.getElementById('trRevTariff').checked  = rv.indexOf('tariffrev') >= 0;
-  document.getElementById('trRevDomProd').checked = rv.indexOf('domprod')   >= 0;
-  document.getElementById('trRevImports').checked = rv.indexOf('imports')   >= 0;
-  document.getElementById('trRevProdInc').checked = rv.indexOf('prodinc')   >= 0;
-  document.getElementById('trRevConsDec').checked = rv.indexOf('consdec')   >= 0;
-  document.getElementById('trQText').value = q.questionText || '';
-  for (var i = 0; i < 4; i++) document.getElementById('trA' + i).value = (q.answers && q.answers[i]) || '';
-  if (q.correctIndex >= 0) { var r = document.querySelector('input[name="trC"][value="' + q.correctIndex + '"]'); if (r) r.checked = true; }
-  trDraw();
-}
-
-function trPreview() {
-  var q = trGet();
-  q.questionText = document.getElementById('trQText').value || '(preview)';
-  var raw = [0, 1, 2, 3].map(function (i) { return document.getElementById('trA' + i).value; });
-  var r = document.querySelector('input[name="trC"]:checked');
-  var chosen = r ? parseInt(r.value) : 0;
-  var filled = [], nc = -1;
-  raw.forEach(function (a, i) { if (a && a.trim()) { if (i === chosen) nc = filled.length; filled.push(a.trim()); } });
-  if (filled.length < 2) { filled = ['Option A', 'Option B']; nc = 0; }
-  q.answers = filled;
-  q.correctIndex = nc < 0 ? 0 : nc;
-  window.open(URL.createObjectURL(new Blob([buildQuizHTML([q])], { type: 'text/html' })), '_blank');
-}
+  trSetMode('tariff');   // sets

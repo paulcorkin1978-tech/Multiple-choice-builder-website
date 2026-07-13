@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concept 4 — Playful Classroom · theory2econ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fffdf5; --ink:#2d2a4a; --grey:#7b7894;
+    --purple:#6c5ce7; --green:#00b894; --orange:#ff9f43; --pink:#EC3C78; --sky:#54a0ff;
+    --purple-soft:#efecff; --green-soft:#e0f7f1; --orange-soft:#fff1e0; --pink-soft:#ffe6ef; --sky-soft:#e5f1ff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink)}
+
+  .concept-tag{position:fixed;top:12px;right:12px;background:var(--ink);color:#fff;font-size:11px;font-weight:800;padding:6px 14px;border-radius:50px;z-index:99;opacity:.85}
+
+  nav{display:flex;align-items:center;justify-content:space-between;padding:16px 44px;background:var(--bg)}
+  nav img{height:38px}
+  nav .links{display:flex;gap:26px;font-size:14.5px;font-weight:800;color:var(--grey)}
+  nav .links span:hover{color:var(--purple);cursor:pointer}
+  nav .cta{background:var(--green);color:#fff;font-family:inherit;font-weight:900;font-size:14.5px;padding:11px 24px;border-radius:14px;border:none;border-bottom:4px solid #00997e;cursor:pointer}
+  nav .cta:active{border-bottom-width:1px;transform:translateY(3px)}
+
+  .hero{max-width:1060px;margin:0 auto;padding:64px 32px 40px;display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:center}
+  .pill{display:inline-block;background:var(--orange-soft);color:#d97d17;font-size:13px;font-weight:900;padding:7px 18px;border-radius:50px;margin-bottom:18px}
+  .hero h1{font-size:3rem;font-weight:900;line-height:1.14;margin-bottom:16px}
+  .hero h1 .u1{color:var(--purple)}
+  .hero h1 .u2{color:var(--green)}
+  .hero p{font-size:1.12rem;color:var(--grey);font-weight:700;line-height:1.7;max-width:44ch;margin-bottom:28px}
+  .btn-big{font-family:inherit;font-size:16px;font-weight:900;padding:15px 32px;border-radius:16px;cursor:pointer;margin-right:12px;border:none}
+  .btn-p{background:var(--purple);color:#fff;border-bottom:5px solid #5346c4}
+  .btn-o{background:#fff;color:var(--ink);border:2.5px solid var(--ink);border-bottom-width:5px}
+  .btn-big:active{border-bottom-width:2px;transform:translateY(3px)}
+
+  .hero-art{background:#fff;border:3px solid var(--ink);border-radius:24px;padding:22px;box-shadow:10px 10px 0 var(--purple-soft);position:relative}
+  .hero-art .score{position:absolute;top:-16px;right:22px;background:var(--green);color:#fff;font-weight:900;font-size:14px;padding:8px 18px;border-radius:50px;box-shadow:0 4px 0 #00997e}
+
+  .sec{max-width:1060px;margin:48px auto 20px;padding:0 32px;text-align:center}
+  .sec h2{font-size:1.7rem;font-weight:900}
+  .sec p{color:var(--grey);font-weight:700;font-size:14.5px;margin-top:6px}
+
+  .cards{max-width:1060px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:18px}
+  .mcard{background:#fff;border:3px solid var(--ink);border-radius:20px;padding:24px 22px;cursor:pointer;transition:.15s;text-align:center}
+  .mcard:hover{transform:translateY(-5px) rotate(-.5deg)}
+  .mcard .emoji{width:56px;height:56px;border-radius:16px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:26px}
+  .mcard h3{font-size:16px;font-weight:900;margin-bottom:6px}
+  .mcard p{font-size:12.5px;color:var(--grey);font-weight:700;line-height:1.55}
+  .c1{box-shadow:6px 6px 0 var(--purple-soft)} .c1 .emoji{background:var(--purple-soft)}
+  .c2{box-shadow:6px 6px 0 var(--green-soft)} .c2 .emoji{background:var(--green-soft)}
+  .c3{box-shadow:6px 6px 0 var(--orange-soft)} .c3 .emoji{background:var(--orange-soft)}
+  .c4{box-shadow:6px 6px 0 var(--sky-soft)} .c4 .emoji{background:var(--sky-soft)}
+  .c5{box-shadow:6px 6px 0 var(--pink-soft)} .c5 .emoji{background:var(--pink-soft)}
+  .c6{box-shadow:6px 6px 0 var(--green-soft)} .c6 .emoji{background:var(--green-soft)}
+
+  .slice{max-width:1060px;margin:36px auto 80px;padding:0 32px}
+  .board{background:#fff;border:3px solid var(--ink);border-radius:24px;overflow:hidden;box-shadow:10px 10px 0 var(--green-soft);display:flex}
+  .board-diag{width:46%;padding:24px;border-right:3px dashed #e4e2f4}
+  .board-form{flex:1;padding:24px}
+  .tab-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .tab{font-size:12.5px;font-weight:900;padding:8px 16px;border-radius:50px;background:var(--purple-soft);color:var(--purple);cursor:pointer}
+  .tab.on{background:var(--purple);color:#fff}
+  .lbl{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--grey);margin-bottom:10px}
+  .field{margin-bottom:13px}
+  .field textarea,.arow input{width:100%;font-family:inherit;font-weight:700;font-size:13.5px;padding:11px 14px;border:2.5px solid #e4e2f4;border-radius:12px;outline:none;color:var(--ink)}
+  .field textarea:focus,.arow input:focus{border-color:var(--purple)}
+  .arow{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .abub{width:32px;height:32px;border-radius:50%;background:var(--purple-soft);color:var(--purple);font-size:13.5px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .abub.correct{background:var(--green);color:#fff;box-shadow:0 3px 0 #00997e}
+  .arow input{flex:1}
+  .add-btn{width:100%;margin-top:10px;background:var(--orange);color:#fff;font-family:inherit;font-weight:900;font-size:15.5px;padding:14px;border:none;border-bottom:5px solid #e08528;border-radius:14px;cursor:pointer}
+  .add-btn:active{border-bottom-width:2px;transform:translateY(3px)}
+  footer{text-align:center;padding:26px;font-size:13px;color:var(--grey);font-weight:700}
+</style>
+</head>
+<body>
+<div class="concept-tag">Concept 4 · Playful Classroom</div>
+
+<nav>
+  <img src="../assets/logo.svg" alt="theory2econ">
+  <div class="links"><span>Quizzes</span><span>Builder</span><span>For Teachers</span><span>About</span></div>
+  <button class="cta">Let's go! 🚀</button>
+</nav>
+
+<section class="hero">
+  <div>
+    <span class="pill">⚡ HSC Economics practice</span>
+    <h1>Learn the <span class="u1">theory</span>. Nail the <span class="u2">quiz</span>.</h1>
+    <p>Bite-sized multiple choice with diagrams that actually move. Retry in class mode, get scored honestly in study mode.</p>
+    <button class="btn-big btn-p">Start a Quiz</button>
+    <button class="btn-big btn-o">I'm a Teacher</button>
+  </div>
+  <div class="hero-art">
+    <span class="score">+10 points!</span>
+    <svg viewBox="0 0 300 230" style="width:100%">
+      <line x1="40" y1="16" x2="40" y2="200" stroke="#2d2a4a" stroke-width="3" stroke-linecap="round"/>
+      <line x1="40" y1="200" x2="285" y2="200" stroke="#2d2a4a" stroke-width="3" stroke-linecap="round"/>
+      <text x="18" y="24" font-size="13" fill="#2d2a4a" font-weight="900" font-family="Nunito,sans-serif">P</text>
+      <text x="276" y="220" font-size="13" fill="#2d2a4a" font-weight="900" font-family="Nunito,sans-serif">Q</text>
+      <path d="M60 36 Q160 100 264 184" stroke="#6c5ce7" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M60 184 Q160 100 264 36" stroke="#00b894" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="162" cy="102" r="9" fill="#ff9f43" stroke="#fff" stroke-width="3"/>
+      <text x="248" y="32" font-size="14" fill="#00b894" font-weight="900" font-family="Nunito,sans-serif">S</text>
+      <text x="248" y="198" font-size="14" fill="#6c5ce7" font-weight="900" font-family="Nunito,sans-serif">D</text>
+    </svg>
+  </div>
+</section>
+
+<div class="sec"><h2>Builder menu — same theme</h2><p>Pick a question type to get building</p></div>
+
+<div class="cards">
+  <div class="mcard c1"><div class="emoji">✂️</div><h3>Supply &amp; Demand</h3><p>Both curves, equilibrium shifts &amp; animation</p></div>
+  <div class="mcard c2"><div class="emoji">📈</div><h3>Single Curve</h3><p>Demand or supply only, expansion &amp; contraction</p></div>
+  <div class="mcard c3"><div class="emoji">🌏</div><h3>PPF</h3><p>Frontier shifts or data-point schedule</p></div>
+  <div class="mcard c4"><div class="emoji">⚖️</div><h3>Price Mechanism</h3><p>Surplus / shortage animates to equilibrium</p></div>
+  <div class="mcard c5"><div class="emoji">💸</div><h3>Tax &amp; Subsidy</h3><p>Wedges, externalities and deadweight loss</p></div>
+  <div class="mcard c6"><div class="emoji">🧩</div><h3>Surplus &amp; DWL</h3><p>Shaded areas, lettered for identify questions</p></div>
+</div>
+
+<div class="sec"><h2>Builder screen — same theme</h2><p>Friendly for teachers too</p></div>
+
+<div class="slice">
+  <div class="board">
+    <div class="board-diag">
+      <div class="lbl">Live diagram</div>
+      <svg viewBox="0 0 300 220" style="width:100%">
+        <line x1="38" y1="14" x2="38" y2="192" stroke="#2d2a4a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="38" y1="192" x2="286" y2="192" stroke="#2d2a4a" stroke-width="3" stroke-linecap="round"/>
+        <path d="M58 30 Q158 95 262 178" stroke="#6c5ce7" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M58 178 Q158 95 262 30" stroke="#00b894" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle cx="160" cy="97" r="8" fill="#ff9f43" stroke="#fff" stroke-width="3"/>
+      </svg>
+      <div class="lbl" style="margin-top:14px">Shift the curves</div>
+      <div class="tab-row"><span class="tab on">Demand →</span><span class="tab">← Demand</span><span class="tab">Supply →</span><span class="tab">← Supply</span></div>
+    </div>
+    <div class="board-form">
+      <div class="lbl">Your question</div>
+      <div class="field"><textarea rows="2">Household incomes rise. What happens to the market for restaurant meals?</textarea></div>
+      <div class="lbl" style="margin-top:14px">Answers — tap the bubble to mark correct</div>
+      <div class="arow"><div class="abub">A</div><input value="Demand contracts along the curve"></div>
+      <div class="arow"><div class="abub correct">B</div><input value="Demand shifts right; price and quantity rise"></div>
+      <div class="arow"><div class="abub">C</div><input value="Supply shifts left; price rises"></div>
+      <div class="arow"><div class="abub">D</div><input value="No change to equilibrium"></div>
+      <button class="add-btn">＋ Add to Quiz 🎉</button>
+    </div>
+  </div>
+</div>
+
+<footer>Concept 4 · <strong>Playful Classroom</strong> — chunky borders, candy colours, press-down buttons and points. Duolingo energy for Year 11–12s.</footer>
+</body>
+</html>

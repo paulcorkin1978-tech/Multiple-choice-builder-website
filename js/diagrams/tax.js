@@ -90,6 +90,8 @@ function txDraw(isAnimating = false) {
     dA: txDA, sA: txSA, fpA: 5,
     startDS: txStartDS, startSS: txStartSS, showFaded: true, isAnimating,
     showEqLines: document.getElementById('txShowEq').checked,
+    hideGrid: document.getElementById('txHideGrid').checked,
+    hideNums: document.getElementById('txHideNums').checked,
     showEqLabel: false,    // show dot/dashes but no number (label shown in quiz as Pc/Ps)
     dMult: txGetDm(),
     dShiftCoeff: txGetDsc(),  // demand: 1 grid square, or integer equilibria for +externality
@@ -235,6 +237,8 @@ function txBuildQ() {
     sShiftCoeff:  txGetSsc(),
     dShiftCoeff:  txGetDsc(),
     showEqLines:  document.getElementById('txShowEq').checked,
+    hideGrid:     document.getElementById('txHideGrid').checked,
+    hideNums:     document.getElementById('txHideNums').checked,
     title:        document.getElementById('txTitle').value,
     yLabel:       getYLbl('txYLbl', vU),
     xLabel:       document.getElementById('txXLbl').value || 'Quantity',
@@ -292,6 +296,8 @@ function txLoad(q) {
     document.getElementById('txDCol').value  = q.dColor || '#185FA5';
     document.getElementById('txSCol').value  = q.sColor || '#0F6E56';
     document.getElementById('txShowEq').checked = q.showEqLines !== false;
+    document.getElementById('txHideGrid').checked = !!q.hideGrid;
+    document.getElementById('txHideNums').checked = !!q.hideNums;
     // Type first — txSetType nudges the y-axis default, so the saved label is written after it
     txSetType(q.taxType || 'tax');
     document.getElementById('txYLbl').value  = q.yLabel || (txIsExt(q.taxType) ? TX_YLBL_EXT : TX_YLBL_MARKET);

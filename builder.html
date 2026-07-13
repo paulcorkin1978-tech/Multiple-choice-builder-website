@@ -151,6 +151,8 @@
           <div class="field"><label>D colour</label>   <input type="color"  id="sdDCol"  value="#000000"                  oninput="sdDraw()"></div>
           <div class="field"><label>S colour</label>   <input type="color"  id="sdSCol"  value="#000000"                  oninput="sdDraw()"></div>
           <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="sdShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="sdDraw()"></div>
+          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="sdHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="sdDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="sdHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="sdDraw()"></div>
         </div>
       </div>
 
@@ -261,6 +263,8 @@
           <div class="field"><label>Y-axis</label>     <input type="text"   id="scYLbl"    value="Price ($)"                oninput="scDraw()"></div>
           <div class="field"><label>X-axis</label>     <input type="text"   id="scXLbl"    value="Quantity"                 oninput="scDraw()"></div>
           <div class="field"><label>Colour</label>     <input type="color"  id="scCol"     value="#000000"                  oninput="scDraw()"></div>
+          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="scHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="scDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="scHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="scDraw()"></div>
           <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="scShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="scDraw()"></div>
         </div>
       </div>
@@ -363,6 +367,8 @@
           <div class="field"><label>Y-axis</label>     <input type="text"   id="ppfYLbl"    value="Good B"                   oninput="ppfDraw()"></div>
           <div class="field"><label>Colour</label>     <input type="color"  id="ppfCol"     value="#000000"                  oninput="ppfDraw()"></div>
           <div class="field"><label>Faded PPF1</label> <input type="checkbox" id="ppfShowFaded" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="ppfDraw()"></div>
+          <div class="field"><label>Hide grid</label>   <input type="checkbox" id="ppfHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="ppfDraw()"></div>
+          <div class="field"><label>Hide numbers</label> <input type="checkbox" id="ppfHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="ppfDraw()"></div>
         </div>
       </div>
 
@@ -544,6 +550,8 @@
           <div class="field"><label>X-axis</label>     <input type="text"   id="pmXLbl"  value="Quantity"                 oninput="pmDraw()"></div>
           <div class="field"><label>D colour</label>   <input type="color"  id="pmDCol"  value="#000000"                  oninput="pmDraw()"></div>
           <div class="field"><label>S colour</label>   <input type="color"  id="pmSCol"  value="#000000"                  oninput="pmDraw()"></div>
+          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="pmHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="pmDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="pmHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="pmDraw()"></div>
           <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="pmShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="pmDraw()"></div>
           <div class="field"><label>Animate price</label> <input type="checkbox" id="pmAnimatePrice" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" title="Checked: animate price to equilibrium. Unchecked: reveal surplus/shortage label only."></div>
         </div>
@@ -572,6 +580,12 @@
               style="flex:1;accent-color:#185FA5;cursor:pointer"
               oninput="pmSetPrice(this.value)">
             <span id="pmPriceVal" style="font-size:14px;font-weight:700;color:#185FA5;min-width:18px;text-align:right">7</span>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:#888780;margin-bottom:6px">Price control (optional)</div>
+          <div id="pmPolicyRow" class="btn-row" style="margin-bottom:10px">
+            <button class="btn btn-primary" data-p="none"    onclick="pmSetPolicy('none')">No control</button>
+            <button class="btn"             data-p="floor"   onclick="pmSetPolicy('floor')">Price floor</button>
+            <button class="btn"             data-p="ceiling" onclick="pmSetPolicy('ceiling')">Price ceiling</button>
           </div>
           <div id="pmEqInfo" style="font-size:12px;line-height:1.5;padding:8px 10px;background:#f5f4f0;border-radius:6px;color:#888"></div>
         </div>
@@ -667,6 +681,8 @@
           <div class="field"><label>X-axis</label>     <input type="text"   id="txXLbl"  value="Quantity"                oninput="txDraw()"></div>
           <div class="field"><label>D colour</label>   <input type="color"  id="txDCol"  value="#000000"                 oninput="txDraw()"></div>
           <div class="field"><label>S colour</label>   <input type="color"  id="txSCol"  value="#000000"                 oninput="txDraw()"></div>
+          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="txHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="txDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="txHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="txDraw()"></div>
           <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="txShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="txDraw()"></div>
         </div>
 
@@ -1010,11 +1026,19 @@
     </div>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">World price ($)</div>
-      <input type="number" id="trWorld" min="0" step="10" value="20" oninput="trDraw()" onchange="trSnap()" style="width:100%">
+      <div style="display:flex;gap:5px;align-items:stretch">
+        <button class="btn" onclick="trStepWorld(-1)" style="flex:0 0 34px;padding:6px 0;font-size:16px;font-weight:700">&minus;</button>
+        <input type="text" id="trWorld" value="20" readonly style="flex:1 1 0;min-width:0;width:100%;text-align:center;font-weight:700;border:1.5px solid #d3d1c7;border-radius:8px;background:#f7f6f2;color:#2c2c2a">
+        <button class="btn" onclick="trStepWorld(1)" style="flex:0 0 34px;padding:6px 0;font-size:16px;font-weight:700">+</button>
+      </div>
     </div>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label" id="trPolicyLabel">Tariff ($ per unit)</div>
-      <input type="number" id="trTariff" min="0" step="10" value="20" oninput="trDraw()" onchange="trSnap()" style="width:100%">
+      <div style="display:flex;gap:5px;align-items:stretch">
+        <button class="btn" onclick="trStepPolicy(-1)" style="flex:0 0 34px;padding:6px 0;font-size:16px;font-weight:700">&minus;</button>
+        <input type="text" id="trTariff" value="20" readonly style="flex:1 1 0;min-width:0;width:100%;text-align:center;font-weight:700;border:1.5px solid #d3d1c7;border-radius:8px;background:#f7f6f2;color:#2c2c2a">
+        <button class="btn" onclick="trStepPolicy(1)" style="flex:0 0 34px;padding:6px 0;font-size:16px;font-weight:700">+</button>
+      </div>
       <div id="trTariffVal" style="font-size:12px;font-weight:700;color:#b23a00;margin-top:5px"></div>
     </div>
     <button class="btn" onclick="trReset()" style="width:100%">↺ Reset Diagram</button>
@@ -1037,6 +1061,8 @@
           <div class="field"><label>X-axis</label> <input type="text" id="trXLbl" value="Quantity"  oninput="trDraw()"></div>
           <div class="field"><label>D colour</label><input type="color" id="trDCol" value="#000000" oninput="trDraw()"></div>
           <div class="field"><label>S colour</label><input type="color" id="trSCol" value="#000000" oninput="trDraw()"></div>
+          <div class="field"><label>Hide grid</label><input type="checkbox" id="trHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="trDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="trHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="trDraw()"></div>
         </div>
 
         <div class="card">
@@ -1046,7 +1072,7 @@
             <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevDomProd" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Domestic producer revenue</label>
             <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevImports" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Import spending</label>
             <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevProdInc" onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Bracket: rise in production</label>
-            <label id="trRevConsDecRow" style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevConsDec" onchange="trDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Bracket: fall in consumption</label>
+            <label id="trRevConsDecRow" style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevConsDec" onchange="trDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0"><span id="trRevConsDecLabel">Bracket: fall in consumption</span></label>
           </div>
         </div>
       </div>

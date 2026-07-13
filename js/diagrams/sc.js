@@ -116,7 +116,9 @@ function scDraw(isAnimating = false) {
     startCS: scStartCS, showFaded: true, isAnimating,
     tgtD: scCurve === 'demand' ? scCS : null,   // where the shift is heading
     tgtS: scCurve === 'supply' ? scCS : null,
-    showEqLines: document.getElementById('scShowEq').checked
+    showEqLines: document.getElementById('scShowEq').checked,
+    hideGrid: document.getElementById('scHideGrid').checked,
+    hideNums: document.getElementById('scHideNums').checked
   });
   document.getElementById('scPUp').disabled = scFP >= GRID;
   document.getElementById('scPDn').disabled = scFP <= 1;
@@ -169,6 +171,8 @@ function scBuildQ() {
     vUnit: vU, hUnit: hU,
     startFP: scGetStartFP(), startCS: scStartCS,
     showEqLines:  document.getElementById('scShowEq').checked,
+    hideGrid:     document.getElementById('scHideGrid').checked,
+    hideNums:     document.getElementById('scHideNums').checked,
     ansFP:        scCap ? scCap.fp : scFP,
     ansCS:        scCap ? scCap.cs : scCS,
     questionText: document.getElementById('scQText').value,
@@ -212,6 +216,8 @@ function scLoad(q) {
     document.getElementById('scXLbl').value     = q.xLabel || 'Quantity';
     document.getElementById('scCol').value      = q.color  || '#185FA5';
     document.getElementById('scShowEq').checked = q.showEqLines !== false;
+    document.getElementById('scHideGrid').checked = !!q.hideGrid;
+    document.getElementById('scHideNums').checked = !!q.hideNums;
     if (q.curve) scSetCurve(q.curve);
     const vU   = q.vUnit || 1;
     const spEl = document.getElementById('scStartFP');

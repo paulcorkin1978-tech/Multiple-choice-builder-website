@@ -1316,3 +1316,118 @@ function anim(qi,animDur=700){
   }
   if(q.type==='sur'){
     // Reveal all chosen areas immediately when the correct answer is chosen (no button).
+    const nAll=surEff(q).length;
+    curPos[qi]={dA:0,sA:0,fpA:nAll};
+    el.innerHTML=mkSVG(q,0,0,nAll,false);
+    return;
+  }
+  if(q.type==='trade'){
+    // Answering shows the Reveal button; areas step in one at a time (fpA: -1 -> 0 -> N).
+    curPos[qi]={dA:0,sA:0,fpA:0};
+    el.innerHTML=mkSVG(q,0,0,0,false);
+    const rb2=document.getElementById('revealBtn');
+    if(rb2&&qi===cur)rb2.style.display=(q.reveals||[]).length>0?'':'none';
+    return;
+  }
+  let tD,tS,fromD,fromS;
+  if(q.type==='sd'){
+    tD=q.ansDS||0;tS=q.ansSS||0;fromD=q.startDS||0;fromS=q.startSS||0;
+  } else if(q.type==='ppf'){
+    tD=q.ansShift||0;tS=0;fromD=0;fromS=0;
+  } else {
+    // sc: put shift in correct field based on curve type
+    if(q.curve==='demand'){tD=q.ansCS||0;tS=0;fromD=q.startCS||0;fromS=0;}
+    else{tD=0;tS=q.ansCS||0;fromD=0;fromS=q.startCS||0;}
+  }
+  const tFP=q.ansFP||(q.startFP||5),sFP=q.startFP||5;
+  const dirD=Math.sign(tD-fromD),dirS=Math.sign(tS-fromS);
+  const start=performance.now(),dur=animDur;
+  function step(now){
+    if(qi!==cur)return;
+    const t=Math.min((now-start)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    const dA=fromD+(tD-fromD)*e,sA=fromS+(tS-fromS)*e,fpA=sFP+(tFP-sFP)*e;
+    curPos[qi]={dA,sA,fpA};
+    el.innerHTML=mkSVG(q,dA,sA,fpA,t<1,dirD,dirS,t);
+    if(t<1)requestAnimationFrame(step);
+    else curPos[qi]={dA:tD,sA:tS,fpA:tFP};
+  }
+  requestAnimationFrame(step);
+}
+function replayAnim(){
+  const q=qs[cur];
+  if(q.type==='plain'||q.type==='table'||q.type==='ped'||q.type==='sur'||q.type==='trade')return;
+  if(q.type==='sd') curPos[cur]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
+  else if(q.type==='sc') curPos[cur]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
+  else if(q.type==='pm') curPos[cur]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
+  else if(q.type==='tax'){curPos[cur]=Object.assign(txPos(q),{fpA:0});const rb2=document.getElementById('revealBtn');if(rb2)rb2.style.display=attempted(cur)?'':'none';}
+  else curPos[cur]={dA:0,sA:0,fpA:q.startFP||5};
+  if(attempted(cur)&&q.type==='pm'&&q.animatePrice===false){
+    // Label-reveal mode: just re-trigger the fade-in, no price animation
+    document.getElementById('diagWrap').innerHTML=mkSVG(q,q.dShift||0,q.sShift||0,q.startPrice||5,false,0,0,0,true);
+  }else{
+    document.getElementById('diagWrap').innerHTML=mkSVG(q,curPos[cur].dA,curPos[cur].sA,curPos[cur].fpA,false);
+    if(attempted(cur))anim(cur,3000);
+  }
+}
+function reveal(){
+  const q=qs[cur];
+  if(!attempted(cur))return;
+  const pos=curPos[cur];
+  if(q.type==='sur'){
+    const eff=surEff(q);
+    if(pos.fpA>=eff.length){document.getElementById('revealBtn').style.display='none';return;}
+    pos.fpA++;
+    document.getElementById('diagWrap').innerHTML=mkSVG(q,0,0,pos.fpA,false);
+    const rbS=document.getElementById('revealBtn');
+    if(rbS)rbS.style.display=pos.fpA>=eff.length?'none':'';
+    return;
+  }
+  if(q.type==='trade'){
+    const trR=q.reveals||[];
+    if(pos.fpA>=trR.length){document.getElementById('revealBtn').style.display='none';return;}
+    pos.fpA++;
+    document.getElementById('diagWrap').innerHTML=mkSVG(q,0,0,pos.fpA,false);
+    const rbT=document.getElementById('revealBtn');
+    if(rbT)rbT.style.display=pos.fpA>=trR.length?'none':'';
+    return;
+  }
+  if(q.type!=='tax')return;
+  const reveals=txRev(q);
+  if(pos.fpA>=reveals.length){document.getElementById('revealBtn').style.display='none';return;}
+  pos.fpA++;
+  document.getElementById('diagWrap').innerHTML=mkSVG(q,pos.dA,pos.sA,pos.fpA,false);
+  const rb2=document.getElementById('revealBtn');
+  if(rb2)rb2.style.display=pos.fpA>=reveals.length?'none':'';
+}
+function prev(){if(cur>0)showQ(cur-1);}
+function next(){
+  if(cur<qs.length-1)showQ(cur+1);
+  else showScore();
+}
+function showScore(){
+  const n=done.filter(Boolean).length;
+  document.getElementById('snum').textContent=n+' / '+qs.length;
+  const msgs=["Keep practising - you'll get there!","Good effort - nearly there!","Great work!","Excellent!","Perfect score!"];
+  document.getElementById('smsg').textContent=msgs[Math.min(Math.floor(n/qs.length*4),4)];
+  document.getElementById('score-screen').classList.add('show');
+}
+function restart(){
+  done.fill(false);
+  picked.fill(null);
+  qs.forEach((q,i)=>{
+    if(q.type==='sd') curPos[i]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
+    else if(q.type==='sc') curPos[i]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
+    else if(q.type==='pm') curPos[i]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
+    else if(q.type==='tax') curPos[i]=Object.assign(txPos(q),{fpA:-1});
+    else if(q.type==='sur') curPos[i]={dA:0,sA:0,fpA:0};
+    else if(q.type==='trade') curPos[i]={dA:0,sA:0,fpA:-1};
+    else curPos[i]={dA:0,sA:0,fpA:q.startFP||5};
+  });
+  document.getElementById('score-screen').classList.remove('show');
+  showQ(0);
+}
+showQ(0);
+<\/script>
+</body>
+</html>`;
+}

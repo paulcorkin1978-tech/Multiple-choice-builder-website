@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HSC Economics Quiz</title>
+<title>Economics Quiz</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#fafaf8;height:100vh;height:100dvh;overflow:hidden;color:#33343c;display:flex;flex-direction:column}
@@ -974,7 +974,7 @@ function wsPos(q){
 function wsEsc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function buildWorksheet(withAnswers){
   var letters=['A','B','C','D'];
-  var html='<div class="ws-head">HSC Economics Quiz'+(withAnswers?' — Teacher copy (answers shown)':'')+'</div><div class="ws-body">';
+  var html='<div class="ws-head">Economics Quiz'+(withAnswers?' — Teacher copy (answers shown)':'')+'</div><div class="ws-body">';
   for(var i=0;i<qs.length;i++){
     var q=qs[i], pos=wsPos(q);
     html+='<div class="ws-q"><div class="ws-qhead">Q'+(i+1)+'. '+wsEsc(q.questionText)+'</div>';

@@ -8,7 +8,8 @@
       "Honey is expensive to produce, so beekeepers earn high profits.",
       "Producing honey creates pollution that harms nearby residents."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "Producing honey makes bees pollinate neighbouring orchards, benefiting farmers who did not pay — a positive externality of production."
   },
   {
     "type": "plain",
@@ -19,7 +20,8 @@
       "Because honey is consumed by producers themselves.",
       "Because the government pays a subsidy to honey producers."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "The extra benefit comes from the act of producing honey (the bees pollinating crops), not from anyone consuming it."
   },
   {
     "type": "tax",
@@ -39,7 +41,9 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["extwedge"],
+    "reveals": [
+      "extwedge"
+    ],
     "questionText": "Three curves are labelled on the diagram. What do the abbreviations MPC, MSC and MSB stand for?",
     "answers": [
       "Maximum private cost, maximum social cost and maximum social benefit.",
@@ -47,7 +51,8 @@
       "Market price cost, market supply cost and market social benefit.",
       "Mean private cost, mean social cost and mean social benefit."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "They stand for marginal private cost, marginal social cost and marginal social benefit."
   },
   {
     "type": "tax",
@@ -67,7 +72,9 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["extwedge"],
+    "reveals": [
+      "extwedge"
+    ],
     "questionText": "Which curve shows the true cost to society of producing each tonne of honey?",
     "answers": [
       "MPC, because it shows the cost the beekeeper personally pays.",
@@ -75,7 +82,8 @@
       "MSC, because it lies below MPC once the external benefit of pollination is subtracted from the private cost.",
       "Neither curve, because external benefits cannot be shown on a diagram."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "MSC shows society's true cost: it lies below MPC because the external benefit of pollination offsets part of the beekeeper's private cost."
   },
   {
     "type": "tax",
@@ -95,7 +103,10 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["extwedge", "corrective"],
+    "reveals": [
+      "extwedge",
+      "corrective"
+    ],
     "questionText": "At every quantity, MSC lies $20 below MPC. What does this vertical gap of $20 measure?",
     "answers": [
       "The marginal external benefit — the value the pollination gives to farmers other than the beekeeper.",
@@ -103,7 +114,8 @@
       "The marginal social benefit consumers receive from honey.",
       "The profit the beekeeper makes on each tonne."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "The gap between MPC and MSC is the marginal external benefit — the value pollination gives to farmers other than the beekeeper."
   },
   {
     "type": "tax",
@@ -123,7 +135,9 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["optq"],
+    "reveals": [
+      "optq"
+    ],
     "questionText": "Beekeepers decide how much honey to produce by weighing up their own private costs. What quantity does the free market produce?",
     "answers": [
       "60 tonnes, where demand meets MSC.",
@@ -131,7 +145,8 @@
       "40 tonnes, where MPC meets MSC.",
       "70 tonnes, where demand meets the horizontal axis."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "Beekeepers weigh only their private costs, so the free market produces where demand meets MPC — 50 tonnes."
   },
   {
     "type": "tax",
@@ -151,7 +166,10 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["optq", "dwl"],
+    "reveals": [
+      "optq",
+      "dwl"
+    ],
     "questionText": "Society should produce honey up to the point where the benefit to society equals the true cost to society. Compared with the socially optimal quantity, the free market:",
     "answers": [
       "Over-produces by 10 tonnes, producing 60 tonnes rather than 50 tonnes.",
@@ -159,7 +177,8 @@
       "Produces exactly the socially optimal quantity of 50 tonnes.",
       "Under-produces by 20 tonnes, producing 50 tonnes rather than 70 tonnes."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The optimum is where demand meets MSC (60 tonnes), but the market produces where demand meets MPC (50 tonnes), so it under-produces by 10 tonnes."
   },
   {
     "type": "tax",
@@ -179,7 +198,10 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["dwl", "optq"],
+    "reveals": [
+      "dwl",
+      "optq"
+    ],
     "questionText": "Left to market forces alone, only 50 tonnes of honey are produced instead of the socially optimal 60 tonnes. At the market quantity, MSB (the demand curve) is $50 while MSC is only $30. What deadweight loss does the unregulated market create?",
     "answers": [
       "$20 million, calculated as 10 tonnes × $20.",
@@ -187,7 +209,8 @@
       "$50, calculated as ½ × 10 tonnes × $10.",
       "$100, calculated as ½ × 10 tonnes × $20."
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "The deadweight loss is the triangle between MSB and MSC over the missing 10 tonnes: 1/2 x 10 x $20 = $100."
   },
   {
     "type": "tax",
@@ -207,7 +230,10 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["corrective", "optq"],
+    "reveals": [
+      "corrective",
+      "optq"
+    ],
     "questionText": "Because this is a positive externality of production, the government pays beekeepers a per-unit subsidy to move the market to the socially optimal 60 tonnes. How large must the subsidy be, and who receives it?",
     "answers": [
       "A subsidy of $20 per tonne, paid to consumers, who then pay $30 for honey.",
@@ -215,6 +241,7 @@
       "A subsidy of $20 per tonne, paid to beekeepers; consumers pay $40 and beekeepers receive $60.",
       "A subsidy of $60 per tonne, paid to beekeepers, who then supply honey for free."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "The subsidy equals the $20 external benefit. Paid to beekeepers, consumers pay $40 while beekeepers receive $60, reaching 60 tonnes."
   }
 ]

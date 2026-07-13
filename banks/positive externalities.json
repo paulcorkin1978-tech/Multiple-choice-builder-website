@@ -8,7 +8,8 @@
       "The buyer pays more than the good is worth to them.",
       "Producers make a loss on every unit they sell."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "A positive externality means a third party — neither buyer nor seller — gains a benefit from the transaction."
   },
   {
     "type": "plain",
@@ -19,7 +20,8 @@
       "In consumption only the buyer benefits; in production only the seller benefits.",
       "Production externalities affect demand, while consumption externalities affect supply."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "A consumption externality's external benefit comes from using the good; a production externality's comes from making it."
   },
   {
     "type": "plain",
@@ -30,7 +32,8 @@
       "Because private buyers and sellers ignore the benefit that spills over to third parties, so they trade less than the socially optimal quantity.",
       "Because producers deliberately restrict output to force up prices."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "The market only counts private benefits and ignores the benefit to third parties, so it trades less than the socially optimal quantity."
   },
   {
     "type": "plain",
@@ -41,7 +44,8 @@
       "Because doctors earn high incomes that they spend in the economy.",
       "Because treatment reduces the spread of disease, so people who never attended a consultation also benefit."
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "Treatment reduces the spread of disease, so even people who never had a consultation benefit — a positive externality of consumption."
   },
   {
     "type": "tax",
@@ -61,7 +65,9 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["extwedge"],
+    "reveals": [
+      "extwedge"
+    ],
     "questionText": "Three curves are labelled on the diagram. What do the abbreviations MPB, MSB and MSC stand for?",
     "answers": [
       "Marginal private benefit, marginal social benefit and marginal social cost.",
@@ -69,7 +75,8 @@
       "Market price benefit, market supply benefit and market social cost.",
       "Mean private benefit, mean social benefit and mean social cost."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "They stand for marginal private benefit, marginal social benefit and marginal social cost."
   },
   {
     "type": "tax",
@@ -89,7 +96,9 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["extwedge"],
+    "reveals": [
+      "extwedge"
+    ],
     "questionText": "Which curve measures the full benefit society receives from each GP consultation?",
     "answers": [
       "MPB, because it shows the benefit to the patient who pays for the consultation.",
@@ -97,7 +106,8 @@
       "MSB, because it includes both the private benefit to the patient and the external benefit to others.",
       "Neither curve, because external benefits cannot be shown on a diagram."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "MSB measures the full social benefit because it adds the external benefit to others onto the private benefit to the patient."
   },
   {
     "type": "tax",
@@ -117,7 +127,10 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["extwedge", "corrective"],
+    "reveals": [
+      "extwedge",
+      "corrective"
+    ],
     "questionText": "At every quantity, MSB lies $20 above MPB. What does this vertical gap of $20 measure?",
     "answers": [
       "The marginal private benefit received by the patient.",
@@ -125,7 +138,8 @@
       "The marginal cost of supplying one more consultation.",
       "The consumer surplus earned on each consultation."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The vertical gap between MSB and MPB is the marginal external benefit — the value each consultation gives to people other than the patient."
   },
   {
     "type": "tax",
@@ -145,7 +159,9 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["optq"],
+    "reveals": [
+      "optq"
+    ],
     "questionText": "The free market produces where MPB meets MSC, but the social optimum is where MSB meets MSC. Compared with the socially optimal quantity, the free market:",
     "answers": [
       "Over-provides by 1 million consultations, delivering 6 million rather than 5 million.",
@@ -153,7 +169,8 @@
       "Under-provides by 2 million consultations, delivering 5 million rather than 7 million.",
       "Under-provides by 1 million consultations, delivering 5 million rather than the optimal 6 million."
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "The free market stops where MPB meets MSC (5 million), but the optimum is where MSB meets MSC (6 million), so it under-provides by 1 million."
   },
   {
     "type": "tax",
@@ -173,7 +190,10 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["corrective", "optq"],
+    "reveals": [
+      "corrective",
+      "optq"
+    ],
     "questionText": "Because this is a positive externality of consumption, the government pays patients a per-unit subsidy, raising their demand towards MSB and reaching the socially optimal 6 million consultations. How large must the subsidy be, and what happens to prices?",
     "answers": [
       "A subsidy of $20 per consultation, paid to patients; patients then pay $40 and doctors receive $60.",
@@ -181,7 +201,8 @@
       "A subsidy of $20 per consultation, paid to patients; patients pay $60 and doctors receive $40.",
       "A subsidy of $60 per consultation, paid to patients, who then pay nothing."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "The subsidy equals the $20 external benefit. Paid to patients, they pay $40 while doctors receive $60, reaching 6 million consultations."
   },
   {
     "type": "plain",
@@ -192,7 +213,8 @@
       "Because a more educated population is more productive and informed, benefiting society beyond the individual student.",
       "Because teachers earn salaries that they spend in the economy."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "A more educated population is more productive and informed, benefiting society beyond the individual student."
   },
   {
     "type": "plain",
@@ -203,7 +225,8 @@
       "Because producing honey creates pollution that harms nearby residents.",
       "Because honey is consumed by the producers themselves."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The beekeeper's bees pollinate neighbouring orchards, benefiting farmers who did not pay — a positive externality of production."
   },
   {
     "type": "tax",
@@ -223,7 +246,9 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["extwedge"],
+    "reveals": [
+      "extwedge"
+    ],
     "questionText": "Three curves are labelled on this diagram. What do the abbreviations MPC, MSC and MSB stand for?",
     "answers": [
       "Maximum private cost, maximum social cost and maximum social benefit.",
@@ -231,7 +256,8 @@
       "Mean private cost, mean social cost and mean social benefit.",
       "Marginal private cost, marginal social cost and marginal social benefit."
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "They stand for marginal private cost, marginal social cost and marginal social benefit."
   },
   {
     "type": "tax",
@@ -251,7 +277,9 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["extwedge"],
+    "reveals": [
+      "extwedge"
+    ],
     "questionText": "Which curve shows the true cost to society of producing each tonne of honey?",
     "answers": [
       "MSC, because it lies below MPC once the external benefit of pollination is taken into account.",
@@ -259,7 +287,8 @@
       "MSB, because it shows the benefit society receives from honey.",
       "Neither curve, because external benefits cannot be shown on a diagram."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "MSC shows the true social cost: it lies below MPC because the external benefit of pollination offsets part of the private cost."
   },
   {
     "type": "tax",
@@ -279,7 +308,10 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["extwedge", "corrective"],
+    "reveals": [
+      "extwedge",
+      "corrective"
+    ],
     "questionText": "At every quantity, MSC lies $10 below MPC. What does this vertical gap of $10 measure?",
     "answers": [
       "The marginal private cost paid by the beekeeper.",
@@ -287,7 +319,8 @@
       "The marginal external benefit — the value the pollination gives to farmers other than the beekeeper.",
       "The profit the beekeeper makes on each tonne."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "The gap between MPC and MSC is the marginal external benefit — the value pollination gives to farmers other than the beekeeper."
   },
   {
     "type": "tax",
@@ -307,7 +340,9 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["optq"],
+    "reveals": [
+      "optq"
+    ],
     "questionText": "The free market produces where demand meets MPC, but the social optimum is where demand meets MSC. Compared with the socially optimal quantity, the free market:",
     "answers": [
       "Over-produces by 20 tonnes, producing 120 tonnes rather than 100 tonnes.",
@@ -315,7 +350,8 @@
       "Produces exactly the socially optimal quantity of 100 tonnes.",
       "Under-produces by 40 tonnes, producing 100 tonnes rather than 140 tonnes."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The free market produces where demand meets MPC (100 tonnes), but the optimum is where demand meets MSC (120 tonnes), so it under-produces by 20 tonnes."
   },
   {
     "type": "tax",
@@ -335,7 +371,10 @@
     "startSS": 0,
     "ansDS": 0,
     "ansSS": 1,
-    "reveals": ["corrective", "optq"],
+    "reveals": [
+      "corrective",
+      "optq"
+    ],
     "questionText": "Because this is a positive externality of production, the government pays beekeepers a per-unit subsidy to reach the socially optimal 120 tonnes. How large must the subsidy be, and who receives it?",
     "answers": [
       "A subsidy of $10 per tonne, paid to consumers, who then pay $15 for honey.",
@@ -343,7 +382,8 @@
       "A subsidy of $30 per tonne, paid to beekeepers, who then supply honey for free.",
       "A subsidy of $10 per tonne, paid to beekeepers; consumers pay $20 and beekeepers receive $30."
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "The subsidy equals the $10 external benefit. Paid to beekeepers, consumers pay $20 while beekeepers receive $30, reaching 120 tonnes."
   },
   {
     "type": "plain",
@@ -354,7 +394,8 @@
       "Because consumers enjoy the new products that result.",
       "Because the government taxes research heavily."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "R&D creates knowledge that spills over to other firms who use it without paying — a positive externality of production."
   },
   {
     "type": "plain",
@@ -365,7 +406,8 @@
       "Only the healthcare subsidy reaches the socially optimal quantity.",
       "The two subsidies are identical in every respect."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The healthcare subsidy goes to consumers and shifts demand towards MSB; the beekeeping subsidy goes to producers and shifts supply towards MSC."
   },
   {
     "type": "plain",
@@ -376,7 +418,8 @@
       "It moves the market to the socially optimal quantity, where marginal social benefit equals marginal social cost.",
       "It always raises the price that consumers pay."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "Setting the subsidy equal to the marginal external benefit moves the market to the socially optimal quantity, where MSB equals MSC."
   },
   {
     "type": "plain",
@@ -387,6 +430,7 @@
       "a subsidy can only ever be paid to producers, never to consumers.",
       "the exact size of the external benefit is hard to measure, so the subsidy may be set too high or too low."
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "The main difficulty is measuring the external benefit accurately, so the subsidy may be set too high or too low."
   }
 ]

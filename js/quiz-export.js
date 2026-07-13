@@ -11,60 +11,63 @@ function buildQuizHTML(questions, testMode) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HSC Economics Quiz</title>
+<title>Economics Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#fafaf8;height:100vh;height:100dvh;overflow:hidden;color:#33343c;display:flex;flex-direction:column}
-#topbar{background:#0A0C56;padding:9px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+body{font-family:'Nunito','Segoe UI',system-ui,-apple-system,sans-serif;background:#fffdf5;height:100vh;height:100dvh;overflow:hidden;color:#2d2a4a;display:flex;flex-direction:column}
+#topbar{background:#2d2a4a;padding:9px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 #brand{display:flex;align-items:center}
 #brand svg{height:19px;width:auto;display:block}
-#progline{height:3px;background:#1b1e63;flex-shrink:0}
-#progfill{height:3px;background:#EC3C78;width:0%;transition:width .3s}
+#progline{height:3px;background:#3d3960;flex-shrink:0}
+#progfill{height:3px;background:#ff9f43;width:0%;transition:width .3s}
 #app{display:flex;flex:1;min-height:0}
-#diag-panel{flex:1.2;background:#fff;border-right:1px solid #ecebe4;display:flex;align-items:center;justify-content:center;padding:32px;overflow:hidden}
+#diag-panel{flex:1.2;background:#fff;border-right:1px solid #efecff;display:flex;align-items:center;justify-content:center;padding:32px;overflow:hidden}
 #diagWrap{width:100%}
 #diagWrap svg{width:100%;max-height:86dvh;display:block}
 #q-panel{flex:1;display:flex;flex-direction:column;padding:36px 32px;padding-bottom:max(36px,env(safe-area-inset-bottom));gap:18px;min-width:280px;overflow-y:auto}
-.qnum{font-size:12px;color:#9a9a92;letter-spacing:.02em;font-weight:400}
-.qtext{font-size:19px;line-height:1.6;font-weight:600;color:#2f3038}
+.qnum{font-size:12px;color:#6c5ce7;letter-spacing:.02em;font-weight:800}
+.qtext{font-size:19px;line-height:1.6;font-weight:800;color:#2d2a4a}
 .abtns{display:flex;flex-direction:column;gap:10px}
-.abtn{font-family:inherit;font-size:18px;padding:15px 19px;border:1px solid #e0e0da;border-radius:10px;background:#fff;cursor:pointer;text-align:left;color:#3a3a44;transition:all .15s;line-height:1.5}
-.abtn:hover{border-color:#c3c2b9;background:#fdfdfb}
-.abtn.wrong{background:#fdecec;border-color:#a32d2d;color:#a32d2d;pointer-events:none;font-weight:600}
-.abtn.correct{background:#eef5f1;border-color:#0F6E56;color:#0F6E56;font-weight:600;pointer-events:none}
+.abtn{font-family:inherit;font-size:18px;font-weight:600;padding:15px 19px;border:2px solid #e4e2f4;border-radius:14px;background:#fff;cursor:pointer;text-align:left;color:#2d2a4a;transition:all .15s;line-height:1.5;box-shadow:0 2px 0 #e4e2f4}
+.abtn:hover{border-color:#6c5ce7;background:#f7f5ff;box-shadow:0 2px 0 #cfc8f5}
+.abtn.wrong{background:#ffe6ef;border-color:#EC3C78;color:#c2185b;pointer-events:none;font-weight:700;box-shadow:none}
+.abtn.correct{background:#e0f7f1;border-color:#00b894;color:#00795f;font-weight:700;pointer-events:none;box-shadow:none}
 .abtn.used{pointer-events:none;opacity:0.5}
-.fb{font-size:14px;font-weight:600;min-height:20px}
-.fb.c{color:#0F6E56}.fb.w{color:#a32d2d}
-.nav{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:16px;border-top:1px solid #ecebe4;flex-shrink:0}
-.nbtn{font-family:inherit;font-size:14px;font-weight:500;padding:10px 22px;border-radius:8px;cursor:pointer;border:1px solid #e0e0da;background:transparent;color:#5c5c66;transition:all .15s;white-space:nowrap}
-.nbtn:hover:not(:disabled){background:#f4f3ef;border-color:#c3c2b9}
+.fb{font-size:14px;font-weight:800;min-height:20px}
+.fb.c{color:#00997e}.fb.w{color:#c2185b}
+.fb-exp{display:block;margin-top:6px;font-weight:500;font-size:13px;line-height:1.45;color:#4a4766}
+.nav{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:16px;border-top:2px dashed #e4e2f4;flex-shrink:0}
+.nbtn{font-family:inherit;font-size:14px;font-weight:700;padding:10px 22px;border-radius:12px;cursor:pointer;border:2px solid #e4e2f4;background:transparent;color:#7b7894;transition:all .15s;white-space:nowrap}
+.nbtn:hover:not(:disabled){background:#efecff;border-color:#6c5ce7;color:#2d2a4a}
 .nbtn:disabled{opacity:0.3;cursor:not-allowed}
-.nbtn.pri{background:#0A0C56;color:#fff;border-color:#0A0C56;font-weight:600}
-.nbtn.pri:hover:not(:disabled){background:#151875;border-color:#151875}
-#replayBtn{font-family:'Verdana',sans-serif;font-size:16px;font-weight:600;padding:10px 14px;border-radius:8px;cursor:pointer;border:1.5px solid #d3d1c7;background:#fff;color:#5f5e5a;transition:all .15s;white-space:nowrap}
-#replayBtn:hover{background:#f1efe8;border-color:#888780;color:#2c2c2a}
-#revealBtn{font-family:'Verdana',sans-serif;font-size:13px;font-weight:600;padding:10px 16px;border-radius:8px;cursor:pointer;border:1.5px solid #C47D00;background:#fff8ed;color:#C47D00;transition:all .15s;white-space:nowrap}
-#revealBtn:hover{background:#fef0cc;border-color:#9a5f00;color:#9a5f00}
-.prog{font-size:12px;color:#888780;flex:1;text-align:center;line-height:1.5}
-#score-screen{display:none;position:fixed;inset:0;background:rgba(250,250,248,0.97);align-items:center;justify-content:center;flex-direction:column;gap:24px}
+.nbtn.pri{background:#6c5ce7;color:#fff;border-color:#6c5ce7;font-weight:800;box-shadow:0 3px 0 #5346c4}
+.nbtn.pri:hover:not(:disabled){background:#5b4bd5;border-color:#5b4bd5}
+#replayBtn{font-family:inherit;font-size:16px;font-weight:700;padding:10px 14px;border-radius:12px;cursor:pointer;border:2px solid #e4e2f4;background:#fff;color:#7b7894;transition:all .15s;white-space:nowrap}
+#replayBtn:hover{background:#efecff;border-color:#6c5ce7;color:#2d2a4a}
+#revealBtn{font-family:inherit;font-size:13px;font-weight:800;padding:10px 16px;border-radius:12px;cursor:pointer;border:2px solid #ff9f43;background:#fff1e0;color:#c96f00;transition:all .15s;white-space:nowrap}
+#revealBtn:hover{background:#ffd6a3;border-color:#e08528;color:#9a5f00}
+.prog{font-size:12px;color:#7b7894;font-weight:700;flex:1;text-align:center;line-height:1.5}
+#score-screen{display:none;position:fixed;inset:0;background:rgba(255,253,245,0.97);align-items:center;justify-content:center;flex-direction:column;gap:24px}
 #score-screen.show{display:flex}
-.sbox{background:#fff;border:1.5px solid #d3d1c7;border-radius:16px;padding:52px 72px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
-.sbox h2{font-size:22px;font-weight:700;margin-bottom:6px}
-.snum{font-size:56px;font-weight:700;color:#0A0C56;margin:16px 0 8px}
-.sbox p{font-size:14px;color:#5f5e5a}
-.rbtn{font-family:inherit;font-size:13px;font-weight:600;padding:12px 32px;background:#0A0C56;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background .15s}
-.rbtn:hover{background:#151875}
+.sbox{background:#fff;border:3px solid #2d2a4a;border-radius:24px;padding:52px 72px;text-align:center;box-shadow:8px 8px 0 #e0f7f1}
+.sbox h2{font-size:22px;font-weight:900;margin-bottom:6px}
+.snum{font-size:56px;font-weight:900;color:#6c5ce7;margin:16px 0 8px}
+.sbox p{font-size:14px;color:#7b7894;font-weight:700}
+.rbtn{font-family:inherit;font-size:13px;font-weight:900;padding:12px 32px;background:#00b894;color:#fff;border:none;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 #00997e;transition:all .15s}
+.rbtn:hover{transform:translateY(2px);box-shadow:0 2px 0 #00997e}
 .quiz-tbl-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding:32px;width:100%}
-.quiz-tbl-title{font-size:20px;font-weight:700;color:#2c2c2a;text-align:center}
-.quiz-tbl{border-collapse:collapse;font-size:18px;font-family:'Verdana',sans-serif;border:2px solid #EC3C78}
-.quiz-tbl th{background:#0A0C56;color:#fff;padding:14px 28px;font-size:17px;font-weight:600;text-align:center}
-.quiz-tbl td{padding:13px 28px;border:1px solid rgba(236,60,120,0.30);text-align:center;color:#2c2c2a;background:#fff}
-.quiz-tbl tbody tr:nth-child(even) td{background:#f5f4f0}
+.quiz-tbl-title{font-size:20px;font-weight:900;color:#2d2a4a;text-align:center}
+.quiz-tbl{border-collapse:collapse;font-size:18px;font-family:'Verdana',sans-serif;border:2px solid #6c5ce7;border-radius:8px}
+.quiz-tbl th{background:#6c5ce7;color:#fff;padding:14px 28px;font-size:17px;font-weight:600;text-align:center}
+.quiz-tbl td{padding:13px 28px;border:1px solid #e4e2f4;text-align:center;color:#2d2a4a;background:#fff}
+.quiz-tbl tbody tr:nth-child(even) td{background:#fbfaff}
 #app.plain-q #diag-panel{display:none}
 #app.plain-q #q-panel{max-width:700px;margin:0 auto;flex:none;width:100%}
 @media (max-width:680px) and (orientation:portrait){
   #app{flex-direction:column}
-  #diag-panel{flex:none;height:42dvh;border-right:none;border-bottom:2px solid #d3d1c7;padding:10px;justify-content:center}
+  #diag-panel{flex:none;height:42dvh;border-right:none;border-bottom:2px solid #e4e2f4;padding:10px;justify-content:center}
   #diagWrap svg{max-height:40dvh}
   #q-panel{flex:1;padding:10px 14px;padding-bottom:max(10px,env(safe-area-inset-bottom));gap:6px;min-width:0;overflow-y:auto}
   .qtext{font-size:14px;line-height:1.5}
@@ -345,7 +348,7 @@ function tradeInner(q, nRev){
   // -- shaded areas (stepped) --
   var areas, brackets;
   if(mode==='quota'){
-    // No separate 'quota rents' box (not used at HSC): import spending is one tall
+    // No separate 'quota rents' box (not used at this level): import spending is one tall
     // box from 0 up to the quota price Pq. The quota size shows as a bracket.
     areas={
       domprod:{r:[0,Qst,0,gPt],   fill:'rgba(15,110,86,.22)', stroke:'#0F6E56', lbl:'Domestic producer revenue'},
@@ -1177,7 +1180,7 @@ function wsPos(q){
 function wsEsc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function buildWorksheet(withAnswers){
   var letters=['A','B','C','D'];
-  var html='<div class="ws-head">HSC Economics Quiz'+(withAnswers?' — Teacher copy (answers shown)':'')+'</div><div class="ws-body">';
+  var html='<div class="ws-head">Economics Quiz'+(withAnswers?' — Teacher copy (answers shown)':'')+'</div><div class="ws-body">';
   for(var i=0;i<qs.length;i++){
     var q=qs[i], pos=wsPos(q);
     html+='<div class="ws-q"><div class="ws-qhead">Q'+(i+1)+'. '+wsEsc(q.questionText)+'</div>';
@@ -1228,7 +1231,7 @@ function showQ(i){
   const fb=document.getElementById('fb');
   if(TESTMODE&&picked[i]!==null){
     if(done[i]){fb.textContent='✓ Correct!';fb.className='fb c';}
-    else{fb.textContent='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.';fb.className='fb w';}
+    else{fb.innerHTML='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.'+(q.explanation?'<span class="fb-exp">'+q.explanation.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>':'');fb.className='fb w';}
   } else {
     fb.textContent=done[i]?'✓ Correct!':'';
     fb.className=done[i]?'fb c':'fb';
@@ -1251,7 +1254,7 @@ function go(qi,ai){
     btns2.forEach((b,i)=>{ b.classList.add(i===q.correctIndex?'correct':(i===ai?'wrong':'used')); });
     const fb2=document.getElementById('fb');
     if(done[qi]){fb2.textContent='✓ Correct!';fb2.className='fb c';}
-    else{fb2.textContent='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.';fb2.className='fb w';}
+    else{fb2.innerHTML='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.'+(q.explanation?'<span class="fb-exp">'+q.explanation.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>':'');fb2.className='fb w';}
     document.getElementById('prog').textContent=(qi+1)+' of '+qs.length+(done[qi]?' · ✓':' · ✗');
     if(q.type==='pm'&&q.animatePrice===false){
       document.getElementById('diagWrap').innerHTML=mkSVG(q,q.dShift||0,q.sShift||0,q.startPrice||5,false,0,0,0,true);
@@ -1313,24 +1316,3 @@ function anim(qi,animDur=700){
   }
   if(q.type==='sur'){
     // Reveal all chosen areas immediately when the correct answer is chosen (no button).
-    const nAll=surEff(q).length;
-    curPos[qi]={dA:0,sA:0,fpA:nAll};
-    el.innerHTML=mkSVG(q,0,0,nAll,false);
-    return;
-  }
-  if(q.type==='trade'){
-    // Answering shows the Reveal button; areas step in one at a time (fpA: -1 → 0 → N).
-    curPos[qi]={dA:0,sA:0,fpA:0};
-    el.innerHTML=mkSVG(q,0,0,0,false);
-    const rb2=document.getElementById('revealBtn');
-    if(rb2&&qi===cur)rb2.style.display=(q.reveals||[]).length>0?'':'none';
-    return;
-  }
-  let tD,tS,fromD,fromS;
-  if(q.type==='sd'){
-    tD=q.ansDS||0;tS=q.ansSS||0;fromD=q.startDS||0;fromS=q.startSS||0;
-  } else if(q.type==='ppf'){
-    tD=q.ansShift||0;tS=0;fromD=0;fromS=0;
-  } else {
-    // sc: put shift in correct field based on curve type
-    if(q.curve===

@@ -20,7 +20,8 @@
       "There will be an increase in demand",
       "There will be a decrease in demand"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "A change in the good’s own price causes a movement along the demand curve, not a shift. A lower price means more is demanded — an expansion."
   },
   {
     "type": "sc",
@@ -43,7 +44,8 @@
       "There will be a contraction in demand from 60 cans to 40 cans",
       "There will be an expansion in demand from 40 cans to 60 cans"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "The good’s own price rose, so we move along the curve. A higher price reduces quantity demanded — a contraction — from 60 to 40 cans."
   },
   {
     "type": "plain",
@@ -54,7 +56,8 @@
       "A fall in the price of tea, a substitute for coffee",
       "A health report praising the benefits of drinking coffee"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "Only a change in the good’s own price moves us along its demand curve. Income, substitute prices and health reports all shift the whole curve."
   },
   {
     "type": "sc",
@@ -77,7 +80,8 @@
       "There would be a contraction in the demand for cars",
       "There would be an increase in demand for cars"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "Cars are a normal good, so higher incomes shift the whole demand curve to the right — an increase in demand, not a movement along it."
   },
   {
     "type": "sc",
@@ -100,7 +104,8 @@
       "There will be an expansion in demand for the toy",
       "There will be a contraction in demand for the toy"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "A viral ‘must-have’ campaign changes tastes and preferences, shifting the whole demand curve right — an increase in demand."
   },
   {
     "type": "plain",
@@ -111,7 +116,8 @@
       "Change in the number of consumers",
       "Changes in the price of substitutes"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "More people means more consumers in the market. A change in the number of consumers shifts demand right."
   },
   {
     "type": "sc",
@@ -134,7 +140,8 @@
       "There will be a decrease in demand from 120 to 80 games",
       "There will be an expansion in demand from 80 to 120 games"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "A fall in the good’s own price is a movement along the curve. Lower price raises quantity demanded — an expansion — from 80 to 120 games."
   },
   {
     "type": "plain",
@@ -145,7 +152,8 @@
       "An expansion in demand",
       "A decrease in demand"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "Games and consoles are complements. Cheaper games make consoles more attractive, shifting demand for consoles right — an increase."
   },
   {
     "type": "table",
@@ -174,7 +182,8 @@
       "There will be no change in demand for Good A",
       "There will be a decrease in demand for Good A"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "Good B (a substitute) became cheaper, so consumers switch to it. Demand for Good A shifts left — a decrease."
   },
   {
     "type": "table",
@@ -203,7 +212,8 @@
       "There will be an expansion in demand for Good B",
       "There will be a contraction in demand for Good B"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "Good B’s own price fell, so we move along its own demand curve. A lower price raises quantity demanded — an expansion."
   },
   {
     "type": "sc",
@@ -226,7 +236,8 @@
       "There would be a decrease in the demand for Snickers bars below $2",
       "There would be a contraction in demand for Snickers bars"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "Cheaper Mars bars (a substitute) shift the whole Snickers curve left, so demand falls at every price level — not just at one price."
   },
   {
     "type": "sc",
@@ -249,7 +260,8 @@
       "By 100 cups per day",
       "By 200 cups per day"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "Read the horizontal gap between D1 and D2 at $5: quantity demanded rises by 100 cups per day."
   },
   {
     "type": "sc",
@@ -272,7 +284,8 @@
       "By 60 kg",
       "By 100 kg"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "Read the horizontal gap between D1 and D2 at $6 per kg: quantity demanded falls by 80 kg."
   },
   {
     "type": "sc",
@@ -295,7 +308,8 @@
       "There has been a decrease in the price of Pepsi",
       "There has been an increase in the price of Pepsi"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "The rightward shift is an increase in demand. A dearer substitute (Pepsi) makes consumers switch to Coca-Cola; a change in Coke’s own price would only move along the curve."
   },
   {
     "type": "sc",
@@ -318,7 +332,8 @@
       "There will be an expansion in demand for iPads",
       "There will be a contraction in demand for iPads"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "Expecting a price cut next month, consumers delay buying, so demand today shifts left — a decrease. The current price hasn’t changed, so it’s a shift, not a contraction."
   },
   {
     "type": "sc",
@@ -341,7 +356,8 @@
       "There will be an expansion in demand for iPads",
       "There will be a contraction in demand for iPads"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "Now the good’s own price actually falls, so we move along the curve — an expansion in quantity demanded."
   },
   {
     "type": "sc",
@@ -364,7 +380,8 @@
       "There will be an increase in the demand for cinema tickets by 5%",
       "There will be an unknown increase in demand for cinema tickets"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "Lower incomes decrease demand for cinema tickets (a normal good), but a 5% income fall doesn’t translate into a precise 5% fall in demand — the size is unknown."
   },
   {
     "type": "table",
@@ -403,7 +420,8 @@
       "Row C",
       "Row D"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "Demand falls when a substitute gets cheaper (consumers switch away) and when a complement gets dearer (the pair is bought less) — that is Row A."
   },
   {
     "type": "sc",
@@ -426,7 +444,8 @@
       "270 subscriptions, an expansion of 120",
       "150 subscriptions, an expansion of 120"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The rightward shift is an increase in demand. At $10, D2 gives 270 subscriptions, up 120 from 150. It is an ‘increase’ (a shift), not an ‘expansion’."
   },
   {
     "type": "sc",
@@ -449,6 +468,7 @@
       "A price increase to $90",
       "A price increase to $105"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "A contraction is a movement up the demand curve caused by a higher own price. Raising the price to $105 reduces quantity demanded by 80 scooters."
   }
 ]

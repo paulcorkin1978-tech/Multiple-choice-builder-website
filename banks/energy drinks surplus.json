@@ -11,10 +11,16 @@
     "mode": "eq",
     "param": 0,
     "showLetters": true,
-    "reveals": ["CS"],
+    "reveals": [
+      "CS"
+    ],
     "questionText": "Consider the market for energy drinks shown. Which letter represents consumer surplus at the market equilibrium?",
-    "answers": ["A", "B"],
-    "correctIndex": 0
+    "answers": [
+      "A",
+      "B"
+    ],
+    "correctIndex": 0,
+    "explanation": "Consumer surplus is the area between the demand curve and the price, up to the equilibrium quantity — region A."
   },
   {
     "type": "sur",
@@ -28,10 +34,16 @@
     "mode": "eq",
     "param": 0,
     "showLetters": true,
-    "reveals": ["PS"],
+    "reveals": [
+      "PS"
+    ],
     "questionText": "Which letter represents producer surplus at the market equilibrium?",
-    "answers": ["A", "B"],
-    "correctIndex": 1
+    "answers": [
+      "A",
+      "B"
+    ],
+    "correctIndex": 1,
+    "explanation": "Producer surplus is the area between the price and the supply curve, up to the equilibrium quantity — region B."
   },
   {
     "type": "sur",
@@ -47,8 +59,14 @@
     "showLetters": false,
     "reveals": [],
     "questionText": "Energy drinks are addictive, so the government places a per-unit tax on them (shown by the S + tax curve). Using the diagram, what is the size of the tax per can?",
-    "answers": ["$1.00", "$2.00", "$4.00", "$6.00"],
-    "correctIndex": 1
+    "answers": [
+      "$1.00",
+      "$2.00",
+      "$4.00",
+      "$6.00"
+    ],
+    "correctIndex": 1,
+    "explanation": "The per-unit tax is the vertical gap between the original supply curve and the S+tax curve — $2.00 per can."
   },
   {
     "type": "sur",
@@ -64,8 +82,14 @@
     "showLetters": false,
     "reveals": [],
     "questionText": "After the tax, what price do consumers pay per can?",
-    "answers": ["$4.00", "$5.00", "$6.00", "$7.00"],
-    "correctIndex": 2
+    "answers": [
+      "$4.00",
+      "$5.00",
+      "$6.00",
+      "$7.00"
+    ],
+    "correctIndex": 2,
+    "explanation": "After the tax the price consumers pay rises to where demand meets the S+tax curve — $6.00 per can."
   },
   {
     "type": "sur",
@@ -81,8 +105,14 @@
     "showLetters": false,
     "reveals": [],
     "questionText": "By how much does the tax reduce the quantity of energy drinks traded?",
-    "answers": ["5 million cans", "10 million cans", "20 million cans", "40 million cans"],
-    "correctIndex": 1
+    "answers": [
+      "5 million cans",
+      "10 million cans",
+      "20 million cans",
+      "40 million cans"
+    ],
+    "correctIndex": 1,
+    "explanation": "The tax lifts the price and cuts trade: quantity falls to where demand meets S+tax — a drop of 10 million cans."
   },
   {
     "type": "sur",
@@ -96,10 +126,18 @@
     "mode": "tax",
     "param": 20,
     "showLetters": true,
-    "reveals": ["LOSSCS"],
+    "reveals": [
+      "LOSSCS"
+    ],
     "questionText": "Which letters represent the loss of consumer surplus caused by the tax?",
-    "answers": ["A", "B + D", "C + E", "D + E"],
-    "correctIndex": 1
+    "answers": [
+      "A",
+      "B + D",
+      "C + E",
+      "D + E"
+    ],
+    "correctIndex": 1,
+    "explanation": "Consumers lose the area between the old and new price up to the new quantity, plus the surplus on trades no longer made — regions B + D."
   },
   {
     "type": "sur",
@@ -113,10 +151,18 @@
     "mode": "tax",
     "param": 20,
     "showLetters": true,
-    "reveals": ["LOSSPS"],
+    "reveals": [
+      "LOSSPS"
+    ],
     "questionText": "Which letters represent the loss of producer surplus caused by the tax?",
-    "answers": ["A + B", "B + D", "C + E", "F"],
-    "correctIndex": 2
+    "answers": [
+      "A + B",
+      "B + D",
+      "C + E",
+      "F"
+    ],
+    "correctIndex": 2,
+    "explanation": "Producers lose the area between the old and new price they keep, plus the surplus on trades no longer made — regions C + E."
   },
   {
     "type": "sur",
@@ -130,10 +176,18 @@
     "mode": "tax",
     "param": 20,
     "showLetters": true,
-    "reveals": ["TAX"],
+    "reveals": [
+      "TAX"
+    ],
     "questionText": "Which letters represent the government's tax revenue?",
-    "answers": ["A", "B + C", "D + E", "F"],
-    "correctIndex": 1
+    "answers": [
+      "A",
+      "B + C",
+      "D + E",
+      "F"
+    ],
+    "correctIndex": 1,
+    "explanation": "Tax revenue is the per-unit tax times the quantity still traded — the rectangle B + C."
   },
   {
     "type": "sur",
@@ -147,10 +201,18 @@
     "mode": "tax",
     "param": 20,
     "showLetters": true,
-    "reveals": ["DWL"],
+    "reveals": [
+      "DWL"
+    ],
     "questionText": "Which letters represent the deadweight loss caused by the tax?",
-    "answers": ["A", "B + C", "D + E", "F"],
-    "correctIndex": 2
+    "answers": [
+      "A",
+      "B + C",
+      "D + E",
+      "F"
+    ],
+    "correctIndex": 2,
+    "explanation": "The tax cuts trade below the efficient quantity; the lost gains from trade are the deadweight loss, regions D + E."
   },
   {
     "type": "sur",
@@ -164,10 +226,18 @@
     "mode": "qty",
     "param": 30,
     "showLetters": true,
-    "reveals": ["CS"],
+    "reveals": [
+      "CS"
+    ],
     "questionText": "Instead, suppose the government imposes a quota limiting energy drink sales to 30 million cans. Which letter(s) show the new consumer surplus?",
-    "answers": ["A", "A + B + D", "B + C", "D + E"],
-    "correctIndex": 0
+    "answers": [
+      "A",
+      "A + B + D",
+      "B + C",
+      "D + E"
+    ],
+    "correctIndex": 0,
+    "explanation": "Limiting sales raises the price consumers pay, so consumer surplus shrinks to the triangle above that price — region A."
   },
   {
     "type": "sur",
@@ -181,10 +251,18 @@
     "mode": "qty",
     "param": 30,
     "showLetters": true,
-    "reveals": ["PS"],
+    "reveals": [
+      "PS"
+    ],
     "questionText": "Under the 30 million can quota, which letter(s) show the new producer surplus?",
-    "answers": ["A", "A + B + D", "B + C", "D + E"],
-    "correctIndex": 2
+    "answers": [
+      "A",
+      "A + B + D",
+      "B + C",
+      "D + E"
+    ],
+    "correctIndex": 2,
+    "explanation": "Under the quota producers sell fewer cans but at a higher price, giving producer surplus of B + C."
   },
   {
     "type": "sur",
@@ -198,9 +276,17 @@
     "mode": "qty",
     "param": 30,
     "showLetters": true,
-    "reveals": ["DWL"],
+    "reveals": [
+      "DWL"
+    ],
     "questionText": "Which letters represent the deadweight loss created by the quota?",
-    "answers": ["A", "A + B + D", "B + C", "D + E"],
-    "correctIndex": 3
+    "answers": [
+      "A",
+      "A + B + D",
+      "B + C",
+      "D + E"
+    ],
+    "correctIndex": 3,
+    "explanation": "The quota holds trade below the efficient quantity, so the lost gains from trade — the deadweight loss — are regions D + E."
   }
 ]

@@ -1,6 +1,6 @@
-# HSC Economics Quiz Builder
+# Economics Quiz Builder
 
-A browser-based tool for building, previewing, and exporting self-contained HSC Economics multiple-choice quizzes with animated supply/demand diagrams.
+A browser-based tool for building, previewing, and exporting self-contained Economics multiple-choice quizzes with animated supply/demand diagrams.
 
 ---
 
@@ -60,9 +60,9 @@ Downloading a quiz produces one of two versions, set by the **Student self-study
 checkbox on the builder menu:
 
 - **unticked (classroom)** — wrong answers can be retried until correct; everyone finishes on 100%.
-  Good for projecting at the front of a room. → `hsc-economics-quiz.html`
+  Good for projecting at the front of a room. → `economics-quiz.html`
 - **ticked (self-study)** — the first answer is locked in, the correct answer is shown, and the
-  score reflects what the student actually got right. → `hsc-economics-quiz-selfstudy.html`
+  score reflects what the student actually got right. → `economics-quiz-selfstudy.html`
 
 Every exported quiz also has **Student PDF** and **Teacher PDF** buttons that print a
 worksheet (≈3 questions per page); the teacher copy marks the correct answers.
@@ -226,7 +226,7 @@ picker gives a live preview.
 
 ---
 
-## HSC Economics Notes
+## Economics Notes
 
 - **Movement along curve** = contraction/expansion (caused by price change)
 - **Shift of curve** = increase/decrease in demand/supply (caused by non-price factors)

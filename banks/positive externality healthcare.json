@@ -8,7 +8,8 @@
       "Healthcare is so expensive that only wealthy consumers can afford it.",
       "The demand for healthcare is high because everyone values their own health."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "When someone consumes healthcare, third parties who did not pay also benefit — a positive externality of consumption."
   },
   {
     "type": "plain",
@@ -19,7 +20,8 @@
       "They reduce the spread of infectious disease, so people who never attended a consultation also benefit.",
       "Doctors earn high incomes, so the government collects more tax revenue."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "They reduce the spread of infectious disease, so even people who never attended a consultation benefit."
   },
   {
     "type": "tax",
@@ -39,7 +41,9 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["extwedge"],
+    "reveals": [
+      "extwedge"
+    ],
     "questionText": "Three curves are labelled on the diagram. What do the abbreviations MPB, MSB and MSC stand for?",
     "answers": [
       "Maximum private benefit, maximum social benefit and maximum social cost.",
@@ -47,7 +51,8 @@
       "Market price benefit, market supply benefit and market supply cost.",
       "Mean private benefit, mean social benefit and mean social cost."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "They stand for marginal private benefit, marginal social benefit and marginal social cost."
   },
   {
     "type": "tax",
@@ -67,7 +72,9 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["extwedge"],
+    "reveals": [
+      "extwedge"
+    ],
     "questionText": "Which curve measures the full benefit society receives from each GP consultation?",
     "answers": [
       "MPB, because it shows the benefit to the patient who pays for the consultation.",
@@ -75,7 +82,8 @@
       "Neither curve, because external benefits cannot be shown on a diagram.",
       "MSB, because it includes both the private benefit to the patient and the external benefit to others."
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "MSB measures the full social benefit because it adds the external benefit to others onto the patient's private benefit."
   },
   {
     "type": "tax",
@@ -95,7 +103,10 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["extwedge", "corrective"],
+    "reveals": [
+      "extwedge",
+      "corrective"
+    ],
     "questionText": "At every quantity, MSB lies $20 above MPB. What does this vertical gap of $20 measure?",
     "answers": [
       "The marginal external benefit — the benefit each consultation gives to people other than the patient.",
@@ -103,7 +114,8 @@
       "The marginal cost of supplying one more consultation.",
       "The consumer surplus earned on each consultation."
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "The gap between MSB and MPB is the marginal external benefit — the benefit each consultation gives to people other than the patient."
   },
   {
     "type": "tax",
@@ -123,7 +135,9 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["optq"],
+    "reveals": [
+      "optq"
+    ],
     "questionText": "Consumers decide how many consultations to buy by weighing up their own private benefit. What quantity does the free market deliver?",
     "answers": [
       "6 million, where MSB intersects MSC.",
@@ -131,7 +145,8 @@
       "5 million, where MPB intersects MSC.",
       "7 million, where MSB meets the vertical axis."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "Consumers weigh only their private benefit, so the market delivers where MPB meets MSC — 5 million consultations."
   },
   {
     "type": "tax",
@@ -151,7 +166,10 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["optq", "dwl"],
+    "reveals": [
+      "optq",
+      "dwl"
+    ],
     "questionText": "Society should provide consultations up to the point where the benefit to society equals the cost to society. Compared with the socially optimal quantity, the free market:",
     "answers": [
       "Over-provides by 1 million consultations, delivering 6 million rather than 5 million.",
@@ -159,7 +177,8 @@
       "Delivers exactly the socially optimal quantity of 5 million consultations.",
       "Under-provides by 2 million consultations, delivering 5 million rather than 7 million."
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The optimum is where MSB meets MSC (6 million), but the market stops where MPB meets MSC (5 million), so it under-provides by 1 million."
   },
   {
     "type": "tax",
@@ -179,7 +198,10 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["dwl", "optq"],
+    "reveals": [
+      "dwl",
+      "optq"
+    ],
     "questionText": "Left to market forces alone, only 5 million consultations are provided, instead of the socially optimal 6 million. At that market quantity MSB is $70 while MSC is only $50. What deadweight loss does the unregulated market create?",
     "answers": [
       "$20 million, calculated as 1 million × $20.",
@@ -187,7 +209,8 @@
       "$5 million, calculated as ½ × 1 million × $10.",
       "$10 million, calculated as ½ × 1 million × $20."
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "The deadweight loss is the triangle between MSB and MSC over the missing 1 million consultations: 1/2 x 1 million x $20 = $10 million."
   },
   {
     "type": "tax",
@@ -207,7 +230,10 @@
     "startSS": 0,
     "ansDS": 1,
     "ansSS": 0,
-    "reveals": ["corrective", "optq"],
+    "reveals": [
+      "corrective",
+      "optq"
+    ],
     "questionText": "Because this is a positive externality of consumption, the government pays patients a per-unit subsidy for each consultation, raising their demand towards MSB and moving the market to the socially optimal 6 million consultations. How large must the subsidy be, and what will patients pay after receiving it?",
     "answers": [
       "A subsidy of $20 per consultation, with patients paying $60 and doctors receiving $40.",
@@ -215,6 +241,7 @@
       "A subsidy of $20 per consultation, with patients paying $40 (after the subsidy) and doctors receiving $60.",
       "A subsidy of $60 per consultation, with patients paying nothing."
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "The subsidy equals the $20 external benefit. Paid to patients, they pay $40 while doctors receive $60, reaching 6 million consultations."
   }
 ]

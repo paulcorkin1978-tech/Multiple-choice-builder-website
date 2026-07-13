@@ -20,7 +20,8 @@
       "A",
       "B"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "Producer surplus is the area between the price and the supply curve — the gap between what producers receive and their lowest acceptable price. Here that is region B."
   },
   {
     "type": "sur",
@@ -43,7 +44,8 @@
       "A",
       "B"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "Consumer surplus is the area between the demand curve and the price — the gap between what consumers would pay and what they do pay. Here that is region A."
   },
   {
     "type": "sur",
@@ -68,7 +70,8 @@
       "A + B + D",
       "C"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "At the higher disequilibrium price consumers pay more, so consumer surplus shrinks to the triangle above the price and below demand — region A."
   },
   {
     "type": "sur",
@@ -93,7 +96,8 @@
       "B + C + D",
       "B + C + D + E"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "At the higher price producers earn more per unit on the quantity actually traded, so producer surplus is the area B + C."
   },
   {
     "type": "sur",
@@ -118,7 +122,8 @@
       "D + E",
       "B"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "Because trade is below the efficient quantity, the mutually beneficial trades that no longer happen are lost — the deadweight loss, regions D + E."
   },
   {
     "type": "sur",
@@ -140,7 +145,8 @@
       "$40,000",
       "$52,000"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "The per-unit tax is the vertical distance between the original supply curve and the S+tax curve — $24,000 per car."
   },
   {
     "type": "sur",
@@ -164,7 +170,8 @@
       "D + E",
       "F"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "The tax raises the price consumers pay, shrinking consumer surplus to the triangle above that price — region A."
   },
   {
     "type": "sur",
@@ -188,7 +195,8 @@
       "D + E",
       "F"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "The tax lowers the price producers keep, shrinking producer surplus to the area below that price and above supply — region F."
   },
   {
     "type": "sur",
@@ -212,7 +220,8 @@
       "D + E",
       "F"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "Tax revenue is the per-unit tax times the quantity still traded — the rectangle B + C."
   },
   {
     "type": "sur",
@@ -236,7 +245,8 @@
       "D + E",
       "F"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "The tax reduces trade below the efficient quantity; the lost gains from trade are the deadweight loss, regions D + E."
   },
   {
     "type": "sur",
@@ -260,7 +270,8 @@
       "B + C",
       "D + E"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "The quota raises the price consumers pay, so consumer surplus falls to the triangle above that price — region A."
   },
   {
     "type": "sur",
@@ -284,7 +295,8 @@
       "B + C",
       "D + E"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "With sales capped at 25,000 and a higher price, producer surplus is the area B + C."
   },
   {
     "type": "sur",
@@ -308,6 +320,7 @@
       "B + C",
       "D + E"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "The quota cuts trade below the efficient quantity, so the lost gains from trade — the deadweight loss — are regions D + E."
   }
 ]

@@ -8,7 +8,8 @@
       "Perfect competition, and no government intervention",
       "Government price controls, and a single dominant buyer"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "The price mechanism allocates efficiently only under perfect competition with no government intervention, so prices reflect true supply and demand."
   },
   {
     "type": "pm",
@@ -31,7 +32,8 @@
       "A shortage of 10kg",
       "A shortage of 20kg"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "$3.50 is below equilibrium, so quantity supplied exceeds quantity demanded. Reading the gap gives a surplus of 20kg."
   },
   {
     "type": "pm",
@@ -54,7 +56,8 @@
       "Strawberry producers have excess supply and so need to lower prices to clear their stock",
       "Strawberry producers have excess supply and so need to raise prices to clear their stock"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "$3.50 is below equilibrium, so there is excess supply (a surplus). Producers cut prices to clear unsold stock, starting the price mechanism."
   },
   {
     "type": "pm",
@@ -77,7 +80,8 @@
       "Supply decreases and demand increases, until the market clears",
       "The supply curve shifts to the left until the surplus disappears"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "As the price falls, quantity supplied contracts and quantity demanded expands — movements along the curves — until they meet at 25kg and $2.50."
   },
   {
     "type": "pm",
@@ -100,7 +104,8 @@
       "There is a shortage of rental houses. The market is willing to supply 30,000 houses at this rent",
       "There is a shortage of rental houses. The market is only willing to supply 10,000 houses at this rent"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "$200 is below the equilibrium rent, so there is a shortage: at that low rent landlords offer only 10,000 houses."
   },
   {
     "type": "pm",
@@ -123,7 +128,8 @@
       "Competition for limited housing will cause tenants to give up looking for housing",
       "Competition for limited housing will cause landlords to lower their rents"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "With a shortage, tenants compete and bid the rent up. The higher rent causes a contraction in the quantity of housing demanded."
   },
   {
     "type": "pm",
@@ -146,7 +152,8 @@
       "Because landlords offer more properties for rent once the higher rent makes it worthwhile",
       "Because landlords lower their rents in order to attract more tenants"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "A higher rent is a movement along the supply curve: it makes renting out property more profitable, so landlords offer more."
   },
   {
     "type": "pm",
@@ -169,7 +176,8 @@
       "$500 per week, with 40,000 houses rented",
       "$300 per week, with 15,000 houses rented"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The price mechanism settles where quantity demanded equals quantity supplied — a rent of $500 with 25,000 houses rented."
   },
   {
     "type": "pm",
@@ -192,7 +200,8 @@
       "The demand for workers is greater than the supply of workers, leading to a surplus of 10,000 workers",
       "The supply of workers is greater than the demand for workers, leading to a surplus of 10,000 workers"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "$24 is above the equilibrium wage, so the quantity of labour supplied exceeds the quantity demanded — a surplus of 10,000 workers."
   },
   {
     "type": "pm",
@@ -215,7 +224,8 @@
       "Unemployment",
       "An increase in the demand for labour"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "A surplus of labour means more people want to work at that wage than there are jobs — this is unemployment."
   },
   {
     "type": "pm",
@@ -238,7 +248,8 @@
       "A surplus of 10 tonnes",
       "A shortage of 10 tonnes"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "At the old price of $5 the increased supply (S2) exceeds demand. Reading the gap gives a surplus of 20 tonnes."
   },
   {
     "type": "pm",
@@ -261,7 +272,8 @@
       "The surplus pushes the price down to $4, and the quantity traded falls to 50 tonnes",
       "The surplus pushes the price down to $4. As the price falls, supply contracts along S2 while demand expands along D at the same time, until both reach 60 tonnes"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "The surplus pushes the price down to $4. Quantity supplied contracts along S2 and quantity demanded expands along D until both meet at 60 tonnes."
   },
   {
     "type": "pm",
@@ -284,7 +296,8 @@
       "A shortage of 100 tubs",
       "A surplus of 100 tubs"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "At the old price of $5 the increased demand (D2) exceeds supply. Reading the gap gives a shortage of 200 tubs."
   },
   {
     "type": "pm",
@@ -307,7 +320,8 @@
       "The shortage pushes the price up to $6, and 700 tubs are traded",
       "The shortage pushes the price up to $6. As the price rises, supply contracts along S while demand expands along D2 at the same time, until both reach 600 tubs"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The shortage pushes the price up to $6. Quantity demanded contracts along D2 and quantity supplied expands along S until both meet at 600 tubs."
   },
   {
     "type": "pm",
@@ -330,7 +344,8 @@
       "A shortage of 10,000 coats",
       "A surplus of 20,000 coats"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "At the old price of $100 the reduced demand (D2) is below supply. Reading the gap gives a surplus of 20,000 coats."
   },
   {
     "type": "pm",
@@ -353,7 +368,8 @@
       "The surplus pushes the price down to $80, and 30,000 coats are traded",
       "The surplus pushes the price down to $80. As the price falls, supply expands along S while demand contracts along D2 at the same time, until both reach 40,000 coats"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The surplus pushes the price down to $80. Quantity supplied contracts along S and quantity demanded expands along D2 until both meet at 40,000 coats."
   },
   {
     "type": "pm",
@@ -376,7 +392,8 @@
       "A shortage of 200 loaves",
       "The market will clear at $3"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "A price ceiling of $3 holds the price below the $5 equilibrium, so quantity demanded exceeds quantity supplied — a shortage of 400 loaves."
   },
   {
     "type": "pm",
@@ -399,7 +416,8 @@
       "Because the price is not permitted to rise, so it cannot signal producers to supply more",
       "Because the shortage will disappear on its own once consumers stop buying bread"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "With a price ceiling the price cannot rise, so it can't signal producers to supply more, and the shortage persists."
   },
   {
     "type": "plain",
@@ -410,7 +428,8 @@
       "Market forces and government intervention both ensure that there is no shortage or surplus and that the market clears",
       "Market forces of supply and demand ensure that there is no shortage or surplus and that the market clears"
     ],
-    "correctIndex": 3
+    "correctIndex": 3,
+    "explanation": "Left free, the forces of supply and demand adjust the price until quantity demanded equals quantity supplied and the market clears."
   },
   {
     "type": "plain",
@@ -421,6 +440,7 @@
       "The economy produces as many goods and services as possible, regardless of what consumers want",
       "The government decides which goods and services should be produced"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "Allocative efficiency means resources go to producing the goods consumers value most, in the quantities they want."
   }
 ]

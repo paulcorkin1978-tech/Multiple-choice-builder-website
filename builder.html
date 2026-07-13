@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HSC Economics Quiz Builder</title>
+<title>Economics Quiz Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -11,7 +13,7 @@
 <!-- ══ MAIN MENU ══ -->
 <div id="menuScreen">
   <div class="menu">
-    <h2>HSC Economics Quiz Builder</h2>
+    <h2>Economics Quiz Builder</h2>
     <div class="menu-cards">
       <div class="menu-card" onclick="openBuilder('sd')">
         <h3>Supply &amp; Demand</h3>
@@ -73,8 +75,8 @@
       <button class="btn" id="loadBankBtn" onclick="loadBank()">📂 Load Question Bank</button>
     </div>
     <div class="menu-btns" style="margin-top:10px">
-      <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
-        <input type="checkbox" id="testModeChk" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer">
+      <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
+        <input type="checkbox" id="testModeChk" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer">
         <span><strong>Student self-study mode</strong> — first answer is locked in and scored honestly (no retries). Leave unticked for the classroom version.</span>
       </label>
     </div>
@@ -150,9 +152,9 @@
           <div class="field"><label>X-axis</label>     <input type="text"   id="sdXLbl"  value="Quantity"                 oninput="sdDraw()"></div>
           <div class="field"><label>D colour</label>   <input type="color"  id="sdDCol"  value="#000000"                  oninput="sdDraw()"></div>
           <div class="field"><label>S colour</label>   <input type="color"  id="sdSCol"  value="#000000"                  oninput="sdDraw()"></div>
-          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="sdShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="sdDraw()"></div>
-          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="sdHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="sdDraw()"></div>
-          <div class="field"><label>Hide numbers</label><input type="checkbox" id="sdHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="sdDraw()"></div>
+          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="sdShowEq" checked style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="sdDraw()"></div>
+          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="sdHideGrid" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="sdDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="sdHideNums" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="sdDraw()"></div>
         </div>
       </div>
 
@@ -201,8 +203,8 @@
 
         <div class="add-bar">
           <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
           </div>
           <div class="btn-row">
             <button class="btn btn-success" id="sdAddBtn" onclick="sdAddQ()">+ Add to Quiz</button>
@@ -263,9 +265,9 @@
           <div class="field"><label>Y-axis</label>     <input type="text"   id="scYLbl"    value="Price ($)"                oninput="scDraw()"></div>
           <div class="field"><label>X-axis</label>     <input type="text"   id="scXLbl"    value="Quantity"                 oninput="scDraw()"></div>
           <div class="field"><label>Colour</label>     <input type="color"  id="scCol"     value="#000000"                  oninput="scDraw()"></div>
-          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="scHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="scDraw()"></div>
-          <div class="field"><label>Hide numbers</label><input type="checkbox" id="scHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="scDraw()"></div>
-          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="scShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="scDraw()"></div>
+          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="scHideGrid" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="scDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="scHideNums" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="scDraw()"></div>
+          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="scShowEq" checked style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="scDraw()"></div>
         </div>
       </div>
 
@@ -314,8 +316,8 @@
 
         <div class="add-bar">
           <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
           </div>
           <div class="btn-row">
             <button class="btn btn-success" id="scAddBtn" onclick="scAddQ()">+ Add to Quiz</button>
@@ -366,9 +368,9 @@
           <div class="field"><label>X-axis</label>     <input type="text"   id="ppfXLbl"    value="Good A"                   oninput="ppfDraw()"></div>
           <div class="field"><label>Y-axis</label>     <input type="text"   id="ppfYLbl"    value="Good B"                   oninput="ppfDraw()"></div>
           <div class="field"><label>Colour</label>     <input type="color"  id="ppfCol"     value="#000000"                  oninput="ppfDraw()"></div>
-          <div class="field"><label>Faded PPF1</label> <input type="checkbox" id="ppfShowFaded" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="ppfDraw()"></div>
-          <div class="field"><label>Hide grid</label>   <input type="checkbox" id="ppfHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="ppfDraw()"></div>
-          <div class="field"><label>Hide numbers</label> <input type="checkbox" id="ppfHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="ppfDraw()"></div>
+          <div class="field"><label>Faded PPF1</label> <input type="checkbox" id="ppfShowFaded" checked style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="ppfDraw()"></div>
+          <div class="field"><label>Hide grid</label>   <input type="checkbox" id="ppfHideGrid" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="ppfDraw()"></div>
+          <div class="field"><label>Hide numbers</label> <input type="checkbox" id="ppfHideNums" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="ppfDraw()"></div>
         </div>
       </div>
 
@@ -424,8 +426,8 @@
 
         <div class="add-bar">
           <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
           </div>
           <div class="btn-row">
             <button class="btn btn-success" id="ppfAddBtn" onclick="ppfAddQ()">+ Add to Quiz</button>
@@ -495,8 +497,8 @@
 
     <div class="add-bar">
       <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-        <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-        <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+        <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+        <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
       </div>
       <div class="btn-row">
         <button class="btn btn-success" id="tblAddBtn" onclick="tblAddQ()">+ Add to Quiz</button>
@@ -550,10 +552,10 @@
           <div class="field"><label>X-axis</label>     <input type="text"   id="pmXLbl"  value="Quantity"                 oninput="pmDraw()"></div>
           <div class="field"><label>D colour</label>   <input type="color"  id="pmDCol"  value="#000000"                  oninput="pmDraw()"></div>
           <div class="field"><label>S colour</label>   <input type="color"  id="pmSCol"  value="#000000"                  oninput="pmDraw()"></div>
-          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="pmHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="pmDraw()"></div>
-          <div class="field"><label>Hide numbers</label><input type="checkbox" id="pmHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="pmDraw()"></div>
-          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="pmShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="pmDraw()"></div>
-          <div class="field"><label>Animate price</label> <input type="checkbox" id="pmAnimatePrice" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" title="Checked: animate price to equilibrium. Unchecked: reveal surplus/shortage label only."></div>
+          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="pmHideGrid" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="pmDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="pmHideNums" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="pmDraw()"></div>
+          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="pmShowEq" checked style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="pmDraw()"></div>
+          <div class="field"><label>Animate price</label> <input type="checkbox" id="pmAnimatePrice" checked style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" title="Checked: animate price to equilibrium. Unchecked: reveal surplus/shortage label only."></div>
         </div>
       </div>
 
@@ -577,11 +579,11 @@
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
             <label style="font-size:13px;font-weight:600;color:#444;white-space:nowrap">Price:</label>
             <input type="range" id="pmPriceSlider" min="1" max="9" step="1" value="7"
-              style="flex:1;accent-color:#185FA5;cursor:pointer"
+              style="flex:1;accent-color:#6c5ce7;cursor:pointer"
               oninput="pmSetPrice(this.value)">
             <span id="pmPriceVal" style="font-size:14px;font-weight:700;color:#185FA5;min-width:18px;text-align:right">7</span>
           </div>
-          <div style="font-size:12px;font-weight:600;color:#888780;margin-bottom:6px">Price control (optional)</div>
+          <div style="font-size:12px;font-weight:600;color:#7b7894;margin-bottom:6px">Price control (optional)</div>
           <div id="pmPolicyRow" class="btn-row" style="margin-bottom:10px">
             <button class="btn btn-primary" data-p="none"    onclick="pmSetPolicy('none')">No control</button>
             <button class="btn"             data-p="floor"   onclick="pmSetPolicy('floor')">Price floor</button>
@@ -606,8 +608,8 @@
 
         <div class="add-bar">
           <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
           </div>
           <div class="btn-row">
             <button class="btn btn-success" id="pmAddBtn" onclick="pmAddQ()">+ Add to Quiz</button>
@@ -681,9 +683,9 @@
           <div class="field"><label>X-axis</label>     <input type="text"   id="txXLbl"  value="Quantity"                oninput="txDraw()"></div>
           <div class="field"><label>D colour</label>   <input type="color"  id="txDCol"  value="#000000"                 oninput="txDraw()"></div>
           <div class="field"><label>S colour</label>   <input type="color"  id="txSCol"  value="#000000"                 oninput="txDraw()"></div>
-          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="txHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="txDraw()"></div>
-          <div class="field"><label>Hide numbers</label><input type="checkbox" id="txHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="txDraw()"></div>
-          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="txShowEq" checked style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="txDraw()"></div>
+          <div class="field"><label>Hide grid</label>  <input type="checkbox" id="txHideGrid" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="txDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="txHideNums" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="txDraw()"></div>
+          <div class="field"><label>Eq. lines</label>  <input type="checkbox" id="txShowEq" checked style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="txDraw()"></div>
         </div>
 
         <div class="card">
@@ -692,19 +694,19 @@
 
           <!-- Externality reveals — shown only for the two externality types -->
           <div id="txRevExtSet" style="display:none;flex-direction:column;gap:9px">
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
               <input type="checkbox" id="txRevDWL" checked style="width:15px;height:15px;accent-color:#C0392B;cursor:pointer;flex-shrink:0">
               Deadweight loss triangle
             </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
               <input type="checkbox" id="txRevOptQ" checked style="width:15px;height:15px;accent-color:#1e7ab8;cursor:pointer;flex-shrink:0">
               Socially optimal P and Q
             </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
               <input type="checkbox" id="txRevExtW" checked style="width:15px;height:15px;accent-color:#7B2FA8;cursor:pointer;flex-shrink:0">
               External cost / benefit
             </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
               <input type="checkbox" id="txRevCorr" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
               Corrective tax / subsidy
             </label>
@@ -712,23 +714,23 @@
 
           <!-- Tax &amp; subsidy reveals -->
           <div id="txRevTaxSet" style="display:flex;flex-direction:column;gap:9px">
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
               <input type="checkbox" id="txRevSize" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
               Size of tax / subsidy
             </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
               <input type="checkbox" id="txRevWedge" checked style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
               Tax revenue / Subsidy cost
             </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
               <input type="checkbox" id="txRevConsumer" checked style="width:15px;height:15px;accent-color:#D85A30;cursor:pointer;flex-shrink:0">
               Consumer cost / benefit
             </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
               <input type="checkbox" id="txRevProdLoss" checked style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">
               Producer revenue loss / benefit
             </label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
               <input type="checkbox" id="txRevProdRev" style="width:15px;height:15px;accent-color:#1e7ab8;cursor:pointer;flex-shrink:0">
               Producer revenue
             </label>
@@ -782,8 +784,8 @@
 
         <div class="add-bar">
           <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
           </div>
           <div class="btn-row">
             <button class="btn btn-success" id="txAddBtn" onclick="txAddQ()">+ Add to Quiz</button>
@@ -884,8 +886,8 @@
 
         <div class="add-bar">
           <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
           </div>
           <div class="btn-row">
             <button class="btn btn-success" id="pedAddBtn" onclick="pedAddQ()">+ Add to Quiz</button>
@@ -923,7 +925,7 @@
       <input type="range" id="surParam" min="5" max="49" step="1" value="40" oninput="surDraw()" style="width:100%">
     </div>
     <div class="diag-ctrl-group" id="surPolicyWrap" style="display:none">
-      <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a">
+      <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
         <input type="checkbox" id="surPolicy" onchange="surTogglePolicy()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">
         Show the corrective tax / subsidy
       </label>
@@ -948,22 +950,22 @@
           <div class="field"><label>X-axis</label> <input type="text" id="surXLbl" value="Quantity"  oninput="surDraw()"></div>
           <div class="field"><label>D colour</label><input type="color" id="surDCol" value="#000000" oninput="surDraw()"></div>
           <div class="field"><label>S colour</label><input type="color" id="surSCol" value="#000000" oninput="surDraw()"></div>
-          <div class="field"><label>Area letters</label><input type="checkbox" id="surLetters" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="surDraw()"></div>
+          <div class="field"><label>Area letters</label><input type="checkbox" id="surLetters" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="surDraw()"></div>
         </div>
 
         <div class="card">
           <div class="card-title">Reveal Areas <span style="font-size:11px;font-weight:400;color:#888">(one at a time, in this order)</span></div>
           <div style="display:flex;flex-direction:column;gap:9px">
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevCS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Consumer surplus</label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevPS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Producer surplus</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="surRevCS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer;flex-shrink:0">Consumer surplus</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="surRevPS" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Producer surplus</label>
             <div id="surLossWrap" style="display:flex;flex-direction:column;gap:9px">
-              <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossCS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Loss of consumer surplus</label>
-              <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevLossPS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Loss of producer surplus</label>
+              <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="surRevLossCS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer;flex-shrink:0">Loss of consumer surplus</label>
+              <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="surRevLossPS" onchange="surDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Loss of producer surplus</label>
             </div>
-            <label id="surExtWrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevEXT" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#7B2FA8;cursor:pointer;flex-shrink:0"><span id="surRevEXTlabel">External benefit</span></label>
-            <label id="surRevDWLwrap" style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevDWL" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#d82d2d;cursor:pointer;flex-shrink:0">Deadweight loss</label>
-            <label id="surRevPOLwrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevPOL" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0"><span id="surRevPOLlabel">Subsidy cost</span></label>
-            <label id="surRevTAXwrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="surRevTAX" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">Tax revenue</label>
+            <label id="surExtWrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="surRevEXT" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#7B2FA8;cursor:pointer;flex-shrink:0"><span id="surRevEXTlabel">External benefit</span></label>
+            <label id="surRevDWLwrap" style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="surRevDWL" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#d82d2d;cursor:pointer;flex-shrink:0">Deadweight loss</label>
+            <label id="surRevPOLwrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="surRevPOL" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0"><span id="surRevPOLlabel">Subsidy cost</span></label>
+            <label id="surRevTAXwrap" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="surRevTAX" checked onchange="surDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0">Tax revenue</label>
           </div>
         </div>
       </div>
@@ -995,8 +997,8 @@
 
         <div class="add-bar">
           <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
           </div>
           <div class="btn-row">
             <button class="btn btn-success" id="surAddBtn" onclick="surAddQ()">+ Add to Quiz</button>
@@ -1028,7 +1030,7 @@
       <div class="diag-ctrl-label">World price ($)</div>
       <div style="display:flex;gap:5px;align-items:stretch">
         <button class="btn" onclick="trStepWorld(-1)" style="flex:0 0 34px;padding:6px 0;font-size:16px;font-weight:700">&minus;</button>
-        <input type="text" id="trWorld" value="20" readonly style="flex:1 1 0;min-width:0;width:100%;text-align:center;font-weight:700;border:1.5px solid #d3d1c7;border-radius:8px;background:#f7f6f2;color:#2c2c2a">
+        <input type="text" id="trWorld" value="20" readonly style="flex:1 1 0;min-width:0;width:100%;text-align:center;font-weight:700;border:2px solid #e4e2f4;border-radius:8px;background:#f7f6f2;color:#2d2a4a">
         <button class="btn" onclick="trStepWorld(1)" style="flex:0 0 34px;padding:6px 0;font-size:16px;font-weight:700">+</button>
       </div>
     </div>
@@ -1036,7 +1038,7 @@
       <div class="diag-ctrl-label" id="trPolicyLabel">Tariff ($ per unit)</div>
       <div style="display:flex;gap:5px;align-items:stretch">
         <button class="btn" onclick="trStepPolicy(-1)" style="flex:0 0 34px;padding:6px 0;font-size:16px;font-weight:700">&minus;</button>
-        <input type="text" id="trTariff" value="20" readonly style="flex:1 1 0;min-width:0;width:100%;text-align:center;font-weight:700;border:1.5px solid #d3d1c7;border-radius:8px;background:#f7f6f2;color:#2c2c2a">
+        <input type="text" id="trTariff" value="20" readonly style="flex:1 1 0;min-width:0;width:100%;text-align:center;font-weight:700;border:2px solid #e4e2f4;border-radius:8px;background:#f7f6f2;color:#2d2a4a">
         <button class="btn" onclick="trStepPolicy(1)" style="flex:0 0 34px;padding:6px 0;font-size:16px;font-weight:700">+</button>
       </div>
       <div id="trTariffVal" style="font-size:12px;font-weight:700;color:#b23a00;margin-top:5px"></div>
@@ -1061,18 +1063,18 @@
           <div class="field"><label>X-axis</label> <input type="text" id="trXLbl" value="Quantity"  oninput="trDraw()"></div>
           <div class="field"><label>D colour</label><input type="color" id="trDCol" value="#000000" oninput="trDraw()"></div>
           <div class="field"><label>S colour</label><input type="color" id="trSCol" value="#000000" oninput="trDraw()"></div>
-          <div class="field"><label>Hide grid</label><input type="checkbox" id="trHideGrid" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="trDraw()"></div>
-          <div class="field"><label>Hide numbers</label><input type="checkbox" id="trHideNums" style="width:16px;height:16px;accent-color:#185FA5;cursor:pointer" onchange="trDraw()"></div>
+          <div class="field"><label>Hide grid</label><input type="checkbox" id="trHideGrid" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="trDraw()"></div>
+          <div class="field"><label>Hide numbers</label><input type="checkbox" id="trHideNums" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="trDraw()"></div>
         </div>
 
         <div class="card">
           <div class="card-title">Reveal Areas <span style="font-size:11px;font-weight:400;color:#888">(one at a time, in this order)</span></div>
           <div style="display:flex;flex-direction:column;gap:9px">
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevTariff" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0"><span id="trRevWedgeLabel">Tariff revenue</span></label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevDomProd" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Domestic producer revenue</label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevImports" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Import spending</label>
-            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevProdInc" onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Bracket: rise in production</label>
-            <label id="trRevConsDecRow" style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2c2c2a"><input type="checkbox" id="trRevConsDec" onchange="trDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0"><span id="trRevConsDecLabel">Bracket: fall in consumption</span></label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevTariff" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#C47D00;cursor:pointer;flex-shrink:0"><span id="trRevWedgeLabel">Tariff revenue</span></label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevDomProd" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Domestic producer revenue</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevImports" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer;flex-shrink:0">Import spending</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevProdInc" onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Bracket: rise in production</label>
+            <label id="trRevConsDecRow" style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevConsDec" onchange="trDraw()" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer;flex-shrink:0"><span id="trRevConsDecLabel">Bracket: fall in consumption</span></label>
           </div>
         </div>
       </div>
@@ -1104,8 +1106,8 @@
 
         <div class="add-bar">
           <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-            <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
           </div>
           <div class="btn-row">
             <button class="btn btn-success" id="trAddBtn" onclick="trAddQ()">+ Add to Quiz</button>
@@ -1149,8 +1151,8 @@
 
     <div class="add-bar">
       <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-        <label style="font-size:12px;color:#888780;font-weight:600;white-space:nowrap">Insert at:</label>
-        <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:1.5px solid #d3d1c7;border-radius:8px;background:#fff;color:#2c2c2a;flex:1"><option value="-1">End of quiz</option></select>
+        <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+        <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
       </div>
       <div class="btn-row">
         <button class="btn btn-success" id="plainAddBtn" onclick="plainAddQ()">+ Add to Quiz</button>
@@ -1166,21 +1168,14 @@
      Load order matters: utils first, then diagram modules, then quiz export, then app.
      To add a new diagram type, add its <script> tag here alongside the others.
 -->
-<script src="js/utils.js"></script>
-<script src="js/diagrams/sd.js"></script>
-<script src="js/diagrams/sc.js"></script>
-<script src="js/diagrams/ppf.js"></script>
-<script src="js/diagrams/table.js"></script>
-<script src="js/diagrams/pm.js"></script>
-<script src="js/diagrams/tax.js"></script>
-<script src="js/diagrams/ped.js"></script>
-<script src="js/diagrams/sur.js"></script>
-<script src="js/diagrams/trade.js"></script>
-<script src="js/diagrams/plain.js"></script>
-<script src="js/quiz-export.js?v=2"></script>
-<script src="js/app.js"></script>
-<script src="js/dictate.js"></script>
-<script src="js/autocap.js"></script>
-
-</body>
-</html>
+<script src="js/utils.js?v=3"></script>
+<script src="js/diagrams/sd.js?v=3"></script>
+<script src="js/diagrams/sc.js?v=3"></script>
+<script src="js/diagrams/ppf.js?v=3"></script>
+<script src="js/diagrams/table.js?v=3"></script>
+<script src="js/diagrams/pm.js?v=3"></script>
+<script src="js/diagrams/tax.js?v=3"></script>
+<script src="js/diagrams/ped.js?v=3"></script>
+<script src="js/diagrams/sur.js?v=3"></script>
+<script src="js/diagrams/trade.js?v=3"></script>
+<script src="js/diagrams/plai

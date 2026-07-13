@@ -4,12 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Teacher Portal – Theory2Econ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #f0f0ec;
+    font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+    background: #fffdf5;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -17,7 +19,7 @@
 
   /* ── Header ─────────────────────────────── */
   header {
-    background: #0A0C56;
+    background: #fffdf5;
     padding: 20px 40px;
     display: flex;
     align-items: center;
@@ -32,10 +34,12 @@
 
   .logo-box {
     background: white;
-    border-radius: 10px;
+    border: 2.5px solid #2d2a4a;
+    border-radius: 14px;
     padding: 7px 16px;
     display: flex;
     align-items: center;
+    box-shadow: 4px 4px 0 #e0f7f1;
   }
 
   .logo-box svg {
@@ -45,7 +49,8 @@
   }
 
   .back-link {
-    color: rgba(255,255,255,0.75);
+    color: #7b7894;
+    font-weight: 800;
     text-decoration: none;
     font-size: 0.9rem;
     display: flex;
@@ -54,7 +59,7 @@
     transition: color 0.18s;
   }
 
-  .back-link:hover { color: #EC3C78; }
+  .back-link:hover { color: #00b894; }
 
   /* ── Page title ──────────────────────────── */
   .page-title {
@@ -63,18 +68,29 @@
   }
 
   .page-title h1 {
-    color: #0A0C56;
+    color: #2d2a4a;
     font-size: 2rem;
-    font-weight: 800;
+    font-weight: 900;
     margin-bottom: 10px;
     letter-spacing: -0.4px;
   }
 
-  .page-title h1 span { color: #EC3C78; }
+  .page-title h1 span { color: #00b894; }
+
+  .page-title h2 {
+    color: #2d2a4a;
+    font-size: 1.6rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+    letter-spacing: -0.4px;
+  }
+
+  .page-title h2 span { color: #00b894; }
 
   .page-title p {
-    color: #666;
+    color: #7b7894;
     font-size: 1rem;
+    font-weight: 700;
     max-width: 480px;
     margin: 0 auto;
     line-height: 1.6;
@@ -94,47 +110,50 @@
 
   .quiz-card {
     background: white;
-    border-radius: 16px;
+    border: 3px solid #2d2a4a;
+    border-radius: 20px;
     padding: 28px 28px 24px;
     width: 300px;
-    box-shadow: 0 4px 20px rgba(10,12,86,0.09);
-    border: 2.5px solid transparent;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.18s ease;
     display: flex;
     flex-direction: column;
   }
 
+  .quiz-card:nth-child(4n+1) { box-shadow: 6px 6px 0 #e0f7f1; }
+  .quiz-card:nth-child(4n+2) { box-shadow: 6px 6px 0 #fff1e0; }
+  .quiz-card:nth-child(4n+3) { box-shadow: 6px 6px 0 #efecff; }
+  .quiz-card:nth-child(4n+4) { box-shadow: 6px 6px 0 #e5f1ff; }
+
   .quiz-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 36px rgba(10,12,86,0.15);
-    border-color: #EC3C78;
+    transform: translateY(-5px) rotate(-0.4deg);
   }
 
   .quiz-tag {
     display: inline-block;
-    background: #EC3C78;
-    color: white;
+    background: #e0f7f1;
+    color: #00795f;
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 900;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    padding: 4px 12px;
+    padding: 5px 13px;
     border-radius: 50px;
     margin-bottom: 14px;
     align-self: flex-start;
   }
 
   .quiz-card h2 {
-    color: #0A0C56;
+    color: #2d2a4a;
     font-size: 1.15rem;
-    font-weight: 800;
+    font-weight: 900;
     margin-bottom: 8px;
     line-height: 1.3;
   }
 
   .quiz-card p {
-    color: #777;
+    color: #7b7894;
     font-size: 0.88rem;
+    font-weight: 600;
     line-height: 1.6;
     margin-bottom: 22px;
     flex: 1;
@@ -143,41 +162,44 @@
   .quiz-btn {
     display: block;
     text-align: center;
-    padding: 11px 0;
-    background: #0A0C56;
+    padding: 12px 0;
+    background: #00b894;
     color: white;
-    border-radius: 50px;
+    border-radius: 14px;
     font-size: 0.92rem;
-    font-weight: 700;
+    font-weight: 900;
     text-decoration: none;
-    transition: background 0.18s ease, transform 0.18s ease;
+    box-shadow: 0 4px 0 #00997e;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .quiz-btn:hover {
-    background: #EC3C78;
-    transform: scale(1.03);
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #00997e;
   }
 
   /* ── Empty state ─────────────────────────── */
   .empty-state {
     text-align: center;
     padding: 60px 24px;
-    color: #aaa;
+    color: #b9b6cf;
     font-size: 1rem;
+    font-weight: 700;
     line-height: 1.7;
   }
 
   /* ── Footer ──────────────────────────────── */
   footer {
     margin-top: auto;
-    background: #0A0C56;
-    color: rgba(255,255,255,0.55);
+    background: #2d2a4a;
+    color: rgba(255,255,255,0.6);
     text-align: center;
     padding: 20px;
     font-size: 0.85rem;
+    font-weight: 700;
   }
 
-  footer strong { color: #EC3C78; }
+  footer strong { color: #ff9f43; }
 
   @media (max-width: 600px) {
     .quiz-grid { padding: 16px 20px 56px; }
@@ -260,23 +282,4 @@
       <span class="quiz-tag">Classroom</span>
       <h2>Consumer &amp; Producer Surplus</h2>
       <p>13 questions — the market for cars, with a price floor, a tax and a quota.</p>
-      <a class="quiz-btn" href="quizzes/consumer producer surplus.html">Open in Class →</a>
-    </div>
-
-    <div class="quiz-card">
-      <span class="quiz-tag">Classroom</span>
-      <h2>Energy Drinks: Tax &amp; Quota</h2>
-      <p>12 questions — taxing an addictive good, tax incidence, loss of surplus and deadweight loss.</p>
-      <a class="quiz-btn" href="quizzes/energy drinks surplus.html">Open in Class →</a>
-    </div>
-
-  </div>
-</main>
-
-<!-- ── Footer ────────────────────────────────── -->
-<footer>
-  <p>© 2025 <strong>Theory2Econ</strong> · Helping HSC students master Economics</p>
-</footer>
-
-</body>
-</html>
+      <a class="quiz-btn" href="qu

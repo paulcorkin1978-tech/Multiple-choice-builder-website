@@ -6,6 +6,7 @@
 // ── SHARED STATE ──────────────────────────────────────────────────────────────
 let quizQuestions = [];
 let editingIndex  = -1;   // -1 = adding new; ≥0 = editing that question index
+let lastRemoved   = null; // {q, index} of the most recent delete, for one-step undo
 
 // ── TYPE LABEL HELPER ─────────────────────────────────────────────────────────
 function typeLabel(type, q) {
@@ -112,8 +113,30 @@ function goMenu() {
   updateMenu();
 }
 
-// ── EDIT MODAL ────────────────────────────────────────────────────────────────
+// ── EDIT / REORDER / DUPLICATE ────────────────────────────────────────────────
+// ✏ jumps straight into the correct builder with the question loaded (the type
+// is already known, so no need to re-pick it). Clicking the type tag opens the
+// change-type dialog for the rarer case of converting a question.
 function editQ(i) {
+  editingIndex = i;
+  openBuilder(quizQuestions[i].type || 'plain');
+}
+
+function moveQ(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= quizQuestions.length) return;
+  const tmp = quizQuestions[i]; quizQuestions[i] = quizQuestions[j]; quizQuestions[j] = tmp;
+  updateMenu();
+}
+
+function dupQ(i) {
+  const clone = JSON.parse(JSON.stringify(quizQuestions[i]));   // deep copy (answers, reveals, etc.)
+  quizQuestions.splice(i + 1, 0, clone);
+  updateMenu();
+}
+
+// Opens the type-picker dialog (used when converting a question to another type).
+function changeType(i) {
   editingIndex = i;
   const q = quizQuestions[i];
   document.getElementById('editModalQNum').textContent  = i + 1;
@@ -151,11 +174,14 @@ function updateMenu() {
     listEl.innerHTML = quizQuestions.map((q, i) =>
       `<div class="qitem">
         <span class="qitem-text">
-          <em class="qtype-tag">${typeLabel(q.type, q)}</em>
+          <em class="qtype-tag" onclick="changeType(${i})" style="cursor:pointer" title="Change question type">${typeLabel(q.type, q)}</em>
           Q${i+1}: ${q.questionText ? q.questionText.substring(0, 55) + (q.questionText.length > 55 ? '…' : '') : '—'}
         </span>
         <div class="qitem-btns">
+          <button class="btn btn-sm" onclick="moveQ(${i},-1)" title="Move up"${i === 0 ? ' disabled' : ''}>▲</button>
+          <button class="btn btn-sm" onclick="moveQ(${i},1)" title="Move down"${i === quizQuestions.length - 1 ? ' disabled' : ''}>▼</button>
           <button class="btn btn-sm btn-edit" onclick="editQ(${i})" title="Edit">✏</button>
+          <button class="btn btn-sm" onclick="dupQ(${i})" title="Duplicate">⧉</button>
           <button class="btn btn-sm btn-danger" onclick="removeQ(${i})" title="Remove">✕</button>
         </div>
       </div>`
@@ -246,8 +272,36 @@ function renderList(listId, countId) {
 }
 
 function removeQ(i) {
+  lastRemoved = { q: quizQuestions[i], index: i, label: 'Q' + (i + 1) };
   quizQuestions.splice(i, 1);
   updateMenu();
+  showUndoToast(lastRemoved.label);
+}
+
+// Restore the most recently removed question to its original position.
+function undoRemove() {
+  if (!lastRemoved) return;
+  quizQuestions.splice(Math.min(lastRemoved.index, quizQuestions.length), 0, lastRemoved.q);
+  lastRemoved = null;
+  const t = document.getElementById('undoToast');
+  if (t) t.style.display = 'none';
+  updateMenu();
+}
+
+// Lightweight bottom toast with an Undo button; self-dismisses after 7s.
+function showUndoToast(label) {
+  let t = document.getElementById('undoToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'undoToast';
+    t.style.cssText = 'position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#2c2c2a;color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,.28);z-index:9999;display:flex;align-items:center;gap:14px';
+    document.body.appendChild(t);
+  }
+  t.innerHTML = '<span>Removed ' + label + '</span>' +
+    '<button onclick="undoRemove()" style="background:#f0a020;border:none;color:#1a1a1a;font-weight:700;font-family:inherit;padding:5px 13px;border-radius:6px;cursor:pointer">Undo</button>';
+  t.style.display = 'flex';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function () { t.style.display = 'none'; lastRemoved = null; }, 7000);
 }
 
 // ── INSERT POSITION ───────────────────────────────────────────────────────────
@@ -373,7 +427,7 @@ async function downloadQuiz() {
   if (!quizQuestions.length) return;
   const testMode = isTestMode();
   const html = buildQuizHTML(quizQuestions, testMode);
-  const fname = testMode ? 'hsc-economics-quiz-selfstudy.html' : 'hsc-economics-quiz.html';
+  const fname = testMode ? 'economics-quiz-selfstudy.html' : 'economics-quiz.html';
   if (window.showSaveFilePicker) {
     try {
       const handle = await window.showSaveFilePicker({
@@ -410,74 +464,4 @@ function importCSV() {
 function downloadCSVTemplate() {
   const csv = [
     'Question,A,B,C,D,Correct',
-    '"Which of the following is a function of money?","Medium of exchange","Store of debt","Unit of weight","Source of income",A',
-    '"A fall in consumer income for a normal good will:","Increase demand","Decrease demand","Increase supply","Decrease supply",B',
-  ].join('\r\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-  a.download = 'quiz-import-template.csv';
-  a.click();
-}
-
-function handleCSVFile(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const rows      = parseCSV(e.target.result);
-    const imported  = [];
-    const correctMap = { A:0, B:1, C:2, D:3, '0':0, '1':1, '2':2, '3':3 };
-
-    rows.forEach((cols, i) => {
-      if (i === 0) return;  // skip header row
-      const c = cols.map(s => (s || '').trim());
-      if (c.length < 6 || !c[0]) return;
-      const correctKey = c[5].toUpperCase();
-      const correctIndex = correctMap.hasOwnProperty(correctKey) ? correctMap[correctKey] : -1;
-      imported.push({
-        type: 'plain',
-        questionText: c[0],
-        answers:      [c[1], c[2], c[3], c[4]],
-        correctIndex
-      });
-    });
-
-    imported.forEach(q => quizQuestions.push(q));
-    updateMenu();
-
-    const info = document.getElementById('menuInfo');
-    info.textContent = imported.length
-      ? `✓ Imported ${imported.length} question${imported.length !== 1 ? 's' : ''} — use ✏ Edit to add a diagram or upgrade the type.`
-      : '⚠ No valid questions found. Check your CSV matches the template format.';
-    setTimeout(updateMenu, 4500);
-  };
-  reader.readAsText(file);
-  input.value = '';  // allow re-importing the same file
-}
-
-// Parses CSV text into a 2D array of strings. Handles quoted fields,
-// escaped double-quotes (""), and \r\n / \n / \r line endings.
-function parseCSV(text) {
-  const rows = [];
-  let row = [], cell = '', inQuote = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i], next = text[i + 1];
-    if (inQuote) {
-      if (ch === '"' && next === '"') { cell += '"'; i++; }
-      else if (ch === '"')            { inQuote = false; }
-      else                            { cell += ch; }
-    } else {
-      if      (ch === '"')                   { inQuote = true; }
-      else if (ch === ',')                   { row.push(cell); cell = ''; }
-      else if (ch === '\n' || ch === '\r')   {
-        row.push(cell); cell = '';
-        if (row.some(c => c.trim())) rows.push(row);
-        row = [];
-        if (ch === '\r' && next === '\n') i++;
-      } else { cell += ch; }
-    }
-  }
-  row.push(cell);
-  if (row.some(c => c.trim())) rows.push(row);
-  return rows;
-}
+    '"Which of the following is a function of money?","M

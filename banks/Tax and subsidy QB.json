@@ -24,7 +24,8 @@
       "$10",
       "$12"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The per-unit tax is the vertical distance between the original supply curve and the S+tax curve — $4 per packet."
   },
   {
     "type": "tax",
@@ -52,7 +53,8 @@
       "$160",
       "$80"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "Government revenue is the tax per unit times the quantity sold after the tax: $4 x 40 = $160."
   },
   {
     "type": "tax",
@@ -80,7 +82,8 @@
       "$320",
       "$480"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "Producer revenue is the price producers keep (after handing over the tax) times the quantity sold: $8 x 40 = $320."
   },
   {
     "type": "tax",
@@ -108,7 +111,8 @@
       "$160",
       "$200"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "The consumer's share is the rise in the price they pay times the quantity: a $2 rise x 40 packets = $80."
   },
   {
     "type": "tax",
@@ -133,7 +137,8 @@
       "$30",
       "$40"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "Consumer spending falls from $10 x 50 = $500 before the tax to $12 x 40 = $480 after — a reduction of $20."
   },
   {
     "type": "tax",
@@ -158,7 +163,8 @@
       "The government spends money to subsidise the solar panel",
       "Firms benefit from increased profits due to higher demand for solar panels"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The positive externality is the benefit to third parties — cleaner air for the wider community — not the private savings of the owner or the firm's profit."
   },
   {
     "type": "tax",
@@ -185,7 +191,8 @@
       "$30",
       "$40"
     ],
-    "correctIndex": 1
+    "correctIndex": 1,
+    "explanation": "The per-unit subsidy is the vertical distance between the original supply curve and the subsidised supply curve — $20 per panel."
   },
   {
     "type": "tax",
@@ -213,7 +220,8 @@
       "$240",
       "$250"
     ],
-    "correctIndex": 0
+    "correctIndex": 0,
+    "explanation": "Government spending is the subsidy per unit times the quantity sold after the subsidy, which the diagram gives as $120."
   },
   {
     "type": "tax",
@@ -242,6 +250,7 @@
       "$3,600,000",
       "$4,200,000"
     ],
-    "correctIndex": 2
+    "correctIndex": 2,
+    "explanation": "Producer revenue is the price producers receive (the consumer price plus the subsidy) times the quantity sold — $3,600,000."
   }
 ]

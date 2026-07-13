@@ -151,4 +151,65 @@ function trReset() {
   document.getElementById('trHideGrid').checked = false;
   document.getElementById('trHideNums').checked = false;
   trClearAnswers();
-  trSetMode('tariff');   // sets
+  trSetMode('tariff');   // sets the policy input default + labels, then draws
+}
+
+function trClearAnswers() {
+  document.getElementById('trQText').value = '';
+  for (var i = 0; i < 4; i++) document.getElementById('trA' + i).value = '';
+  var r = document.querySelector('input[name="trC"]:checked');
+  if (r) r.checked = false;
+  var msg = document.getElementById('trMsg');
+  if (msg) msg.textContent = '';
+}
+
+function trAddQ() {
+  var q = trGet();
+  q.questionText = document.getElementById('trQText').value;
+  q.answers = [0, 1, 2, 3].map(function (i) { return document.getElementById('trA' + i).value; });
+  var r = document.querySelector('input[name="trC"]:checked');
+  q.correctIndex = r ? parseInt(r.value) : -1;
+  addToQuiz(q, 'trMsg', trClearAnswers);
+}
+
+function trLoad(q) {
+  document.getElementById('trVUnit').value = q.vUnit != null ? q.vUnit : 10;
+  document.getElementById('trHUnit').value = q.hUnit != null ? q.hUnit : 10;
+  document.getElementById('trTitle').value = q.title || '';
+  document.getElementById('trYLbl').value = q.yLbl || 'Price ($)';
+  document.getElementById('trXLbl').value = q.xLbl || 'Quantity';
+  document.getElementById('trDCol').value = q.dCol || '#185FA5';
+  document.getElementById('trSCol').value = q.sCol || '#0F6E56';
+  document.getElementById('trWorld').value = q.worldPrice != null ? q.worldPrice : 20;
+  trSetMode(q.mode === 'quota' ? 'quota' : (q.mode === 'subsidy' ? 'subsidy' : 'tariff'));   // relabels + sets default input
+  // then override the input with the saved value
+  if (q.mode === 'quota')        document.getElementById('trTariff').value = q.quota   != null ? q.quota   : 40;
+  else if (q.mode === 'subsidy') document.getElementById('trTariff').value = q.subsidy != null ? q.subsidy : 20;
+  else                           document.getElementById('trTariff').value = q.tariff  != null ? q.tariff  : 20;
+  var rv = q.reveals || [];
+  document.getElementById('trRevTariff').checked  = rv.indexOf('tariffrev') >= 0;
+  document.getElementById('trRevDomProd').checked = rv.indexOf('domprod')   >= 0;
+  document.getElementById('trRevImports').checked = rv.indexOf('imports')   >= 0;
+  document.getElementById('trRevProdInc').checked = rv.indexOf('prodinc')   >= 0;
+  document.getElementById('trRevConsDec').checked = rv.indexOf('consdec')   >= 0;
+  document.getElementById('trHideGrid').checked = !!q.hideGrid;
+  document.getElementById('trHideNums').checked = !!q.hideNums;
+  document.getElementById('trQText').value = q.questionText || '';
+  for (var i = 0; i < 4; i++) document.getElementById('trA' + i).value = (q.answers && q.answers[i]) || '';
+  if (q.correctIndex >= 0) { var r = document.querySelector('input[name="trC"][value="' + q.correctIndex + '"]'); if (r) r.checked = true; }
+  trDraw();
+}
+
+function trPreview() {
+  var q = trGet();
+  q.questionText = document.getElementById('trQText').value || '(preview)';
+  var raw = [0, 1, 2, 3].map(function (i) { return document.getElementById('trA' + i).value; });
+  var r = document.querySelector('input[name="trC"]:checked');
+  var chosen = r ? parseInt(r.value) : 0;
+  var filled = [], nc = -1;
+  raw.forEach(function (a, i) { if (a && a.trim()) { if (i === chosen) nc = filled.length; filled.push(a.trim()); } });
+  if (filled.length < 2) { filled = ['Option A', 'Option B']; nc = 0; }
+  q.answers = filled;
+  q.correctIndex = nc < 0 ? 0 : nc;
+  window.open(URL.createObjectURL(new Blob([buildQuizHTML([q])], { type: 'text/html' })), '_blank');
+}

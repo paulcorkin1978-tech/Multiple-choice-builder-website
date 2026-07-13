@@ -340,4 +340,44 @@ function pmClearForm() {
   document.getElementById('pmPriceSlider').value = 7;
   document.getElementById('pmPriceVal').textContent = '7';
   document.getElementById('pmQText').value = '';
-  [0,1,2,3].forEach(i => docume
+  [0,1,2,3].forEach(i => document.getElementById('pmA' + i).value = '');
+  document.querySelectorAll('input[name="pmC"]').forEach(r => r.checked = false);
+  pmDraw();
+}
+
+function pmLoad(q) {
+  document.getElementById('pmQText').value = q.questionText || '';
+  [0,1,2,3].forEach(i => {
+    document.getElementById('pmA' + i).value = (q.answers && q.answers[i] != null) ? q.answers[i] : '';
+  });
+  document.querySelectorAll('input[name="pmC"]').forEach(r => {
+    r.checked = parseInt(r.value) === q.correctIndex;
+  });
+  if (q.type === 'pm') {
+    document.getElementById('pmVUnit').value     = q.vUnit  || 1;
+    document.getElementById('pmHUnit').value     = q.hUnit  || 5;
+    document.getElementById('pmTitle').value     = q.title  || '';
+    document.getElementById('pmYLbl').value      = q.yLabel || 'Price ($)';
+    document.getElementById('pmXLbl').value      = q.xLabel || 'Quantity';
+    document.getElementById('pmDCol').value      = q.dColor || '#185FA5';
+    document.getElementById('pmSCol').value      = q.sColor || '#0F6E56';
+    document.getElementById('pmShowEq').checked    = q.showEqLines !== false;
+    document.getElementById('pmHideGrid').checked  = !!q.hideGrid;
+    document.getElementById('pmHideNums').checked  = !!q.hideNums;
+    pmSetPolicy(q.policy || 'none');
+    document.getElementById('pmAnimatePrice').checked = q.animatePrice !== false;
+    pmDS = q.dShift || 0; pmSS = q.sShift || 0;
+    pmDA = pmDS; pmSA = pmSS;
+    pmPrice = q.startPrice || 7;
+    document.getElementById('pmPriceSlider').value = pmPrice;
+    document.getElementById('pmPriceVal').textContent = pmPrice;
+    pmDraw();
+  }
+  document.getElementById('pmMsg').textContent = '✏ Editing — update settings if needed, then click Update Question.';
+}
+
+function pmPreview() {
+  const q = pmBuildQ();
+  if (!q.questionText.trim()) { document.getElementById('pmMsg').textContent = '⚠ Enter a question to preview.'; return; }
+  window.open(URL.createObjectURL(new Blob([buildQuizHTML([q])], {type:'text/html'})), '_blank');
+}

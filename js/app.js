@@ -464,4 +464,76 @@ function importCSV() {
 function downloadCSVTemplate() {
   const csv = [
     'Question,A,B,C,D,Correct',
-    '"Which of the following is a function of money?","M
+    '"Which of the following is a function of money?","Medium of exchange","Store of debt","Unit of weight","Source of income",A',
+    '"A fall in consumer income for a normal good will:","Increase demand","Decrease demand","Increase supply","Decrease supply",B',
+  ].join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = 'quiz-import-template.csv';
+  a.click();
+}
+
+function handleCSVFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const rows      = parseCSV(e.target.result);
+    const imported  = [];
+    const correctMap = { A:0, B:1, C:2, D:3, '0':0, '1':1, '2':2, '3':3 };
+
+    rows.forEach((cols, i) => {
+      if (i === 0) return;  // skip header row
+      const c = cols.map(s => (s || '').trim());
+      if (c.length < 6 || !c[0]) return;
+      const correctKey = c[5].toUpperCase();
+      const correctIndex = correctMap.hasOwnProperty(correctKey) ? correctMap[correctKey] : -1;
+      imported.push({
+        type: 'plain',
+        questionText: c[0],
+        answers:      [c[1], c[2], c[3], c[4]],
+        correctIndex
+      });
+    });
+
+    imported.forEach(q => quizQuestions.push(q));
+    updateMenu();
+
+    const info = document.getElementById('menuInfo');
+    info.textContent = imported.length
+      ? `✓ Imported ${imported.length} question${imported.length !== 1 ? 's' : ''} — use ✏ Edit to add a diagram or upgrade the type.`
+      : '⚠ No valid questions found. Check your CSV matches the template format.';
+    setTimeout(updateMenu, 4500);
+  };
+  reader.readAsText(file);
+  input.value = '';  // allow re-importing the same file
+}
+
+// Parses CSV text into a 2D array of strings. Handles quoted fields,
+// escaped double-quotes (""), and \r\n / \n / \r line endings.
+function parseCSV(text) {
+  const rows = [];
+  let row = [], cell = '', inQuote = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i], next = text[i + 1];
+    if (inQuote) {
+      if (ch === '"' && next === '"') { cell += '"'; i++; }
+      else if (ch === '"')            { inQuote = false; }
+      else                            { cell += ch; }
+    } else {
+      if      (ch === '"')                   { inQuote = true; }
+      else if (ch === ',')                   { row.push(cell); cell = ''; }
+      else if (ch === '\n' || ch === '\r')   {
+        row.push(cell); cell = '';
+        if (row.some(c => c.trim())) rows.push(row);
+        row = [];
+        if (ch === '\r' && next === '\n') i++;
+      } else { cell += ch; }
+    }
+  }
+  row.push(cell);
+  if (row.some(c => c.trim())) rows.push(row);
+  return rows;
+}
+
+// build tag: edit/delete controls + undo (v3)

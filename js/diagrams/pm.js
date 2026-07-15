@@ -18,6 +18,17 @@ function pmSetPolicy(m) {
   pmPolicy = m;
   const row = document.getElementById('pmPolicyRow');
   if (row) row.querySelectorAll('[data-p]').forEach(b => b.classList.toggle('btn-primary', b.getAttribute('data-p') === m));
+  if (m === 'union') {   // labour-market preset: a union wage acts as a floor above equilibrium
+    const yl = document.getElementById('pmYLbl'), xl = document.getElementById('pmXLbl');
+    if (yl) yl.value = 'Wage';
+    if (xl) xl.value = 'Quantity of labour';
+    const eq = getEq(pmDS, pmSS);
+    if (pmPrice <= eq.p) {   // make sure the union wage binds (sits above equilibrium)
+      pmPrice = 7;
+      const sl = document.getElementById('pmPriceSlider'), pv = document.getElementById('pmPriceVal');
+      if (sl) sl.value = 7; if (pv) pv.textContent = '7';
+    }
+  }
   pmDraw();
 }
 
@@ -107,12 +118,13 @@ function buildPMSVGInner(cfg) {
   // Price-control policy. A floor binds only above eq (→ surplus); a ceiling binds
   // only below eq (→ shortage). Otherwise the control is non-binding and the market
   // clears at equilibrium. With policy 'none' the display keys off atEq as before.
-  const policyActive = policy === 'floor' || policy === 'ceiling';
-  const binds        = policy === 'floor'   ? currentPrice > eq.p + 0.06
+  const isFloor      = policy === 'floor' || policy === 'union';   // a union wage behaves as a floor
+  const policyActive = isFloor || policy === 'ceiling';
+  const binds        = isFloor            ? currentPrice > eq.p + 0.06
                      : policy === 'ceiling' ? currentPrice < eq.p - 0.06
                      : false;
   const showDiseq    = policyActive ? binds : !atEq;
-  const policyLbl    = policy === 'floor' ? 'Price floor' : policy === 'ceiling' ? 'Price ceiling' : '';
+  const policyLbl    = policy === 'union' ? 'Union wage' : policy === 'floor' ? 'Price floor' : policy === 'ceiling' ? 'Price ceiling' : '';
 
   // Bracket opacity fades from 1→0 as price approaches eq
   const totalDist = Math.abs((startPrice || currentPrice) - eq.p);
@@ -120,7 +132,7 @@ function buildPMSVGInner(cfg) {
   const fadeFrac  = totalDist > 0.01 ? Math.min(curDist / totalDist, 1) : 1;
 
   const bracketCol = hasSurplus ? '#D85A30' : '#7B2FA8';
-  const label      = hasSurplus ? 'SURPLUS'  : 'SHORTAGE';
+  const label      = policy === 'union' ? '' : (hasSurplus ? 'SURPLUS' : 'SHORTAGE');   // union: unlabelled gap (students identify the unemployment)
 
   // ── Arrow marker ──────────────────────────────────────────────────────────
   let s = `<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
@@ -170,7 +182,8 @@ function buildPMSVGInner(cfg) {
     const s1 = clipLine(QS, sPf(QS, 0), QE, sPf(QE, 0), pad, W, H);
     if (s1) s += `<line x1="${s1.x1}" y1="${s1.y1}" x2="${s1.x2}" y2="${s1.y2}" stroke="${sCol}" stroke-width="2" stroke-linecap="round"/><text x="${s1.x2+4}" y="${Math.min(s1.y1,s1.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${sCol}" font-weight="bold">S1</text>`;
   }
-  const dLbl = dA !== 0 ? 'D2' : 'D', sLbl = sA !== 0 ? 'S2' : 'S';
+  const dBase = policy === 'union' ? 'DL' : 'D', sBase = policy === 'union' ? 'SL' : 'S';
+  const dLbl = dA !== 0 ? dBase + '2' : dBase, sLbl = sA !== 0 ? sBase + '2' : sBase;
   const cd = clipLine(QS, dPf(QS, dA), QE, dPf(QE, dA), pad, W, H, 1);
   const cs = clipLine(QS, sPf(QS, sA), QE, sPf(QE, sA), pad, W, H);
   if (cd) s += `<line x1="${cd.x1}" y1="${cd.y1}" x2="${cd.x2}" y2="${cd.y2}" stroke="${dCol}" stroke-width="2.5" stroke-linecap="round"/><text x="${cd.x2+4}" y="${cd.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${dCol}" font-weight="bold">${dLbl}</text>`;
@@ -194,7 +207,7 @@ function buildPMSVGInner(cfg) {
     if (policyActive && !atEq) {
       const lpy = gy(currentPrice);
       s += `<line x1="${pad.l}" y1="${lpy}" x2="${W-pad.r}" y2="${lpy}" stroke="#999" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.75"/>`;
-      s += `<text x="${W-pad.r-2}" y="${lpy + (policy==='floor' ? 12 : -5)}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#999" font-weight="bold">${policyLbl} (non-binding)</text>`;
+      s += `<text x="${W-pad.r-2}" y="${lpy + (isFloor ? 12 : -5)}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#999" font-weight="bold">${policyLbl} (non-binding)</text>`;
     }
   } else {
     // ── Not at equilibrium — price mechanism display ───────────────────────
@@ -213,7 +226,7 @@ function buildPMSVGInner(cfg) {
     // Horizontal dashed price line (solid-red style when it is a binding control)
     s += `<line x1="${pad.l}" y1="${py}" x2="${W-pad.r}" y2="${py}" stroke="${policyActive ? '#b23a00' : '#555'}" stroke-width="${policyActive ? 1.6 : 1.2}" stroke-dasharray="6,4" opacity="0.85"/>`;
     if (policyActive)
-      s += `<text x="${W-pad.r-2}" y="${py + (policy==='floor' ? -5 : 13)}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#b23a00" font-weight="bold">${policyLbl}</text>`;
+      s += `<text x="${W-pad.r-2}" y="${py + (isFloor ? -5 : 13)}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#b23a00" font-weight="bold">${policyLbl}</text>`;
 
     // Vertical dotted lines from Qd / Qs down to x-axis
     if (qd >= QS && qd <= QE)

@@ -40,16 +40,22 @@ function trSetMode(m) {
     if (consLbl) consLbl.textContent = 'Bracket: fall in consumption';
     input.value = 20;
   }
+  var s2Row = document.getElementById('trRevS2Row');   // the hide-until-revealed shift only applies to a subsidy
+  if (s2Row) s2Row.style.display = (m === 'subsidy') ? 'flex' : 'none';
   trStepPolicy(0);   // clamp the default to the current world price + redraw
 }
 
 // Reads the controls into a question-shaped object.
 function trGet() {
   var reveals = [];
+  var s2El = document.getElementById('trRevS2');
+  if (s2El && s2El.checked && trMode === 'subsidy') reveals.push('s2');   // supply shift stays hidden until revealed (drawn first, before any bracket)
   if (document.getElementById('trRevTariff').checked)   reveals.push('tariffrev');
   if (document.getElementById('trRevDomProd').checked)  reveals.push('domprod');
   if (document.getElementById('trRevImports').checked)  reveals.push('imports');
   if (document.getElementById('trRevProdInc').checked)  reveals.push('prodinc');
+  var plEl = document.getElementById('trRevProdLvl'); if (plEl && plEl.checked) reveals.push('prodlvl');
+  var ilEl = document.getElementById('trRevImpLvl');  if (ilEl && ilEl.checked) reveals.push('implvl');
   if (document.getElementById('trRevConsDec').checked)  reveals.push('consdec');
   var vU = parseFloat(document.getElementById('trVUnit').value);
   var hU = parseFloat(document.getElementById('trHUnit').value);
@@ -147,7 +153,7 @@ function trReset() {
   document.getElementById('trSCol').value = '#000000';
   document.getElementById('trWorld').value = 20;
   ['trRevTariff', 'trRevDomProd', 'trRevImports'].forEach(function (id) { document.getElementById(id).checked = true; });
-  ['trRevProdInc', 'trRevConsDec'].forEach(function (id) { document.getElementById(id).checked = false; });
+  ['trRevProdInc', 'trRevConsDec', 'trRevS2', 'trRevProdLvl', 'trRevImpLvl'].forEach(function (id) { var e = document.getElementById(id); if (e) e.checked = false; });
   document.getElementById('trHideGrid').checked = false;
   document.getElementById('trHideNums').checked = false;
   trClearAnswers();
@@ -191,7 +197,10 @@ function trLoad(q) {
   document.getElementById('trRevDomProd').checked = rv.indexOf('domprod')   >= 0;
   document.getElementById('trRevImports').checked = rv.indexOf('imports')   >= 0;
   document.getElementById('trRevProdInc').checked = rv.indexOf('prodinc')   >= 0;
+  var plEl = document.getElementById('trRevProdLvl'); if (plEl) plEl.checked = rv.indexOf('prodlvl') >= 0;
+  var ilEl = document.getElementById('trRevImpLvl');  if (ilEl) ilEl.checked = rv.indexOf('implvl')  >= 0;
   document.getElementById('trRevConsDec').checked = rv.indexOf('consdec')   >= 0;
+  var s2El = document.getElementById('trRevS2'); if (s2El) s2El.checked = rv.indexOf('s2') >= 0;
   document.getElementById('trHideGrid').checked = !!q.hideGrid;
   document.getElementById('trHideNums').checked = !!q.hideNums;
   document.getElementById('trQText').value = q.questionText || '';

@@ -1,0 +1,200 @@
+[
+  {
+    "type": "plain",
+    "questionText": "What is a production subsidy, and who pays for it?",
+    "answers": ["A payment from domestic producers to the government, funded by taxpayers", "A tax on imported goods, collected by the government from foreign producers", "A payment from the government to domestic producers, funded by taxpayers", "A payment from consumers to domestic producers to boost their revenue"],
+    "correctIndex": 2
+  },
+
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for solar panels", "yLbl": "Price ($ per panel)", "xLbl": "Quantity (000 panels)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 0,
+    "reveals": ["imports"], "hideGrid": false, "hideNums": false,
+    "questionText": "The diagram shows the domestic market for solar panels, which trades at the world price of $200 per panel. What quantity of panels is imported?",
+    "answers": ["40,000 panels", "50,000 panels", "60,000 panels", "70,000 panels"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for solar panels", "yLbl": "Price ($ per panel)", "xLbl": "Quantity (000 panels)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 0,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "At the world price of $200, how many panels are made by domestic producers?",
+    "answers": ["10,000 panels", "20,000 panels", "30,000 panels", "40,000 panels"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for solar panels", "yLbl": "Price ($ per panel)", "xLbl": "Quantity (000 panels)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "subsidy": 200,
+    "reveals": ["prodinc"], "hideGrid": false, "hideNums": false,
+    "questionText": "The government introduces a $200 subsidy per panel paid to domestic producers. By how much does domestic production rise?",
+    "answers": ["10,000 panels", "20,000 panels", "30,000 panels", "40,000 panels"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for solar panels", "yLbl": "Price ($ per panel)", "xLbl": "Quantity (000 panels)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "subsidy": 200,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "With the $200 subsidy in place, by how much do imports fall?",
+    "answers": ["10,000 panels", "20,000 panels", "30,000 panels", "40,000 panels"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for solar panels", "yLbl": "Price ($ per panel)", "xLbl": "Quantity (000 panels)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "subsidy": 200,
+    "reveals": ["tariffrev"], "hideGrid": false, "hideNums": false,
+    "questionText": "How much does the $200 subsidy cost the government?",
+    "answers": ["$4 million", "$6 million", "$8 million", "$12 million"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for solar panels", "yLbl": "Price ($ per panel)", "xLbl": "Quantity (000 panels)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "subsidy": 200,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "After the $200 subsidy, what price do domestic buyers now pay per panel?",
+    "answers": ["$100", "$200", "$300", "$400"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for solar panels", "yLbl": "Price ($ per panel)", "xLbl": "Quantity (000 panels)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "subsidy": 200,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "After the subsidy, what price do domestic producers effectively receive per panel?",
+    "answers": ["$200", "$300", "$400", "$500"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for solar panels", "yLbl": "Price ($ per panel)", "xLbl": "Quantity (000 panels)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "subsidy": 400,
+    "reveals": ["s2", "consdec"], "hideGrid": false, "hideNums": false,
+    "questionText": "Starting from free trade, what size subsidy per panel would be needed to reduce imports to 20,000?",
+    "answers": ["$200", "$300", "$400", "$600"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for solar panels", "yLbl": "Price ($ per panel)", "xLbl": "Quantity (000 panels)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "subsidy": 600,
+    "reveals": ["s2", "consdec"], "hideGrid": false, "hideNums": false,
+    "questionText": "Starting from free trade, what size subsidy per panel would be needed to eliminate imports entirely?",
+    "answers": ["$400", "$500", "$600", "$800"],
+    "correctIndex": 2
+  },
+
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "tariff": 0,
+    "reveals": ["imports"], "hideGrid": false, "hideNums": false,
+    "questionText": "This is the domestic market for bicycles, which trade at the world price of $100 per bike. What quantity of bikes is imported?",
+    "answers": ["40,000 bikes", "50,000 bikes", "60,000 bikes", "70,000 bikes"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "tariff": 0,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "At the world price of $100, how many bikes are made by domestic producers?",
+    "answers": ["10,000 bikes", "20,000 bikes", "30,000 bikes", "40,000 bikes"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "subsidy": 200,
+    "reveals": ["prodinc"], "hideGrid": false, "hideNums": false,
+    "questionText": "The government introduces a large $200 subsidy per bike paid to domestic producers. By how much does domestic production rise?",
+    "answers": ["20,000 bikes", "30,000 bikes", "40,000 bikes", "50,000 bikes"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "subsidy": 200,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "With the $200 subsidy in place, by how much do imports fall?",
+    "answers": ["20,000 bikes", "30,000 bikes", "40,000 bikes", "50,000 bikes"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "subsidy": 200,
+    "reveals": ["tariffrev"], "hideGrid": false, "hideNums": false,
+    "questionText": "How much does the $200 subsidy cost the government?",
+    "answers": ["$6 million", "$9 million", "$12 million", "$18 million"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "subsidy": 200,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "After the subsidy, what price do domestic producers effectively receive per bike?",
+    "answers": ["$100", "$200", "$300", "$400"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "subsidy": 200,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "How much do domestic consumers spend on domestically-produced bikes (valued at the price they pay)?",
+    "answers": ["$3 million", "$6 million", "$12 million", "$18 million"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "subsidy": 200,
+    "reveals": ["domprod", "tariffrev"], "hideGrid": false, "hideNums": false,
+    "questionText": "Adding the government subsidy to that consumer spending, what is the total revenue received by domestic bike producers?",
+    "answers": ["$6 million", "$12 million", "$18 million", "$24 million"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "subsidy": 100,
+    "reveals": ["s2", "consdec"], "hideGrid": false, "hideNums": false,
+    "questionText": "Starting from free trade, what size subsidy per bike would be needed to reduce imports to 40,000?",
+    "answers": ["$50", "$100", "$150", "$200"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "subsidy",
+    "title": "Market for bicycles", "yLbl": "Price ($ per bike)", "xLbl": "Quantity (000 bikes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 50, "hUnit": 10, "worldPrice": 100, "subsidy": 300,
+    "reveals": ["s2", "consdec"], "hideGrid": false, "hideNums": false,
+    "questionText": "Starting from free trade, what size subsidy per bike would be needed to eliminate imports entirely?",
+    "answers": ["$100", "$200", "$300", "$400"],
+    "correctIndex": 2
+  }
+]

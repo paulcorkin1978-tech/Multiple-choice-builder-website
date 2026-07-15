@@ -643,11 +643,17 @@ function tradeInner(q, nRev){
     };
     brackets={ prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol}, consdec:{a:Qdt,b:Qd0,lbl:'Fall in consumption',col:dCol} };
   }
+  brackets.prodlvl={a:0, b:Qst, lbl:'Domestic production', col:sCol};   // quantity bracket: level of domestic production (not the $ revenue box)
+  brackets.implvl ={a:Qst, b:Qdt, lbl:'Imports', col:dCol};             // quantity bracket: level of imports (not the $ spending box)
   var order=[], seen={};
-  for(i=0;i<reveals.length;i++){ var rk=reveals[i]; if((areas[rk]||brackets[rk])&&!seen[rk]){order.push(rk);seen[rk]=1;} }
+  for(i=0;i<reveals.length;i++){ var rk=reveals[i]; if((rk==='s2'||areas[rk]||brackets[rk])&&!seen[rk]){order.push(rk);seen[rk]=1;} }
+  var s2Pos=order.indexOf('s2');
+  var shiftShown=(mode!=='subsidy')?false:(s2Pos<0?true:(nRev>s2Pos));   // 's2' reveal: supply shift hidden until revealed (reverse questions)
+  var QstDraw=(mode==='subsidy'&&!shiftShown)?gPw:Qst;                   // production sits at free-trade level until the shift is revealed
   var brk='', alab='';   // brackets and box labels are deferred so they draw in front of the curves
   for(var r=0;r<Math.min(nRev,order.length);r++){
     var key=order[r];
+    if(key==='s2') continue;   // the supply shift is drawn with the curves, not as a shaded area
     if(areas[key]){
       var a=areas[key];
       if(Math.abs(a.r[1]-a.r[0])<0.05 || Math.abs(a.r[3]-a.r[2])<0.05) continue;   // skip zero-area (prohibitive tariff)
@@ -692,8 +698,8 @@ function tradeInner(q, nRev){
   // -- domestic supply & demand (inset one grid square, cross at 5,5) --
   var C0=1, C1=GRID-1;
   s+='<line x1="'+gx(C0)+'" y1="'+gy(C0)+'" x2="'+gx(C1)+'" y2="'+gy(C1)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
-  s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+(mode==='subsidy'?'S1':'S')+'</text>';
-  if(mode==='subsidy'){ var gsub=gPt-gPw;   // per-unit subsidy shifts supply right/down: S -> S2 (meets Pw at the higher output)
+  s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+((mode==='subsidy'&&shiftShown)?'S1':'S')+'</text>';
+  if(mode==='subsidy'&&shiftShown){ var gsub=gPt-gPw;   // per-unit subsidy shifts supply right/down: S -> S2 (meets Pw at the higher output)
     s+='<line x1="'+gx(C0+gsub)+'" y1="'+gy(C0)+'" x2="'+gx(C1)+'" y2="'+gy(C1-gsub)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
     s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1-gsub)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">S2</text>';
   }
@@ -702,7 +708,7 @@ function tradeInner(q, nRev){
   // -- world-price and tariff-price lines --
   s+='<line x1="'+padl+'" y1="'+gy(gPw)+'" x2="'+(W-padr)+'" y2="'+gy(gPw)+'" stroke="#444" stroke-width="1.5" stroke-dasharray="7 4"/>';
   s+='<text x="'+(W-padr+3)+'" y="'+(gy(gPw)+3.5)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#444">Pw</text>';
-  if(mode!=='subsidy'){
+  if(mode!=='subsidy' && gPt-gPw>0.05){   // hide the policy price line on a free-trade diagram (tariff/quota = 0)
     s+='<line x1="'+padl+'" y1="'+gy(gPt)+'" x2="'+gx(Qdt)+'" y2="'+gy(gPt)+'" stroke="#b23a00" stroke-width="1.5" stroke-dasharray="7 4"/>';
     s+='<text x="'+(gx(Qdt)+3)+'" y="'+(gy(gPt)-3)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#b23a00">'+(mode==='quota'?'Pq':'Pw+t')+'</text>';
   }
@@ -712,6 +718,62 @@ function tradeInner(q, nRev){
   var qline=function(Q,col){
     s+='<line x1="'+gx(Q)+'" y1="'+(H-padb)+'" x2="'+gx(Q)+'" y2="'+gy(Q<5?Q:GRID-Q)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
   };
-  qline(Qst,sCol); qline(Qdt,dCol);
+  if(mode==='subsidy'){   // subsidy: output and consumption both sit on the world-price line (Pw), so guides stop there
+    s+='<line x1="'+gx(QstDraw)+'" y1="'+(H-padb)+'" x2="'+gx(QstDraw)+'" y2="'+gy(gPw)+'" stroke="'+sCol+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+    s+='<line x1="'+gx(Qdt)+'" y1="'+(H-padb)+'" x2="'+gx(Qdt)+'" y2="'+gy(gPw)+'" stroke="'+dCol+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+  } else { qline(QstDraw,sCol); qline(Qdt,dCol); }
   return s+alab+brk;
+}
+
+// ── COPY DIAGRAM TO CLIPBOARD ────────────────────────────────────────────────
+// Rasterises a builder's inline SVG preview to a PNG and writes it to the
+// clipboard, so a clean diagram can be pasted straight into an exam paper
+// (no snipping tool). Pairs with the "hide gridlines / hide numbers" toggles.
+
+// Renders an <svg> element to a PNG Blob at `scale`x its viewBox size.
+function svgToPngBlob(svg, scale) {
+  return new Promise(function (resolve, reject) {
+    var vb = (svg.getAttribute('viewBox') || '0 0 400 340').trim().split(/[\s,]+/);
+    var w = parseFloat(vb[2]) || 400, h = parseFloat(vb[3]) || 340;
+    var clone = svg.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('width', w);            // explicit size: the preview uses width="100%"
+    clone.setAttribute('height', h);
+    var url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)],
+                                           { type: 'image/svg+xml;charset=utf-8' }));
+    var img = new Image();
+    img.onload = function () {
+      var c = document.createElement('canvas');
+      c.width = Math.round(w * scale); c.height = Math.round(h * scale);
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff';                  // white background, else the PNG is transparent
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(function (b) { b ? resolve(b) : reject(new Error('toBlob failed')); }, 'image/png');
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('svg load failed')); };
+    img.src = url;
+  });
+}
+
+// Briefly swaps the button label to give feedback, then restores it.
+function copyFlash(btn, msg) {
+  if (!btn) return;
+  if (!btn.getAttribute('data-lbl')) btn.setAttribute('data-lbl', btn.textContent);
+  btn.textContent = msg;
+  setTimeout(function () { btn.textContent = btn.getAttribute('data-lbl'); }, 1600);
+}
+
+// Copies the named chart to the clipboard as a 3x PNG. The Blob is handed to
+// ClipboardItem as a promise so the click's user activation isn't lost while
+// the canvas renders (required by Safari, tolerated by Chrome/Edge).
+function copyDiagram(chartId, btn) {
+  var el = document.getElementById(chartId);
+  var svg = (el && el.tagName && el.tagName.toLowerCase() === 'svg') ? el : (el && el.querySelector('svg'));
+  if (!svg) return;
+  if (!navigator.clipboard || !window.ClipboardItem) return copyFlash(btn, 'Not supported in this browser');
+  navigator.clipboard.write([new ClipboardItem({ 'image/png': svgToPngBlob(svg, 3) })])
+    .then(function () { copyFlash(btn, '✓ Copied — paste into Word'); })
+    .catch(function () { copyFlash(btn, '✗ Copy failed'); });
 }

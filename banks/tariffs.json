@@ -1,0 +1,200 @@
+[
+  {
+    "type": "plain",
+    "questionText": "What is a tariff, and who pays it?",
+    "answers": ["A tax on imported goods, paid by importers and passed on to domestic buyers", "A subsidy paid by the government to domestic producers", "A limit on the quantity of imports, paid by foreign producers", "A tax on exports, paid by domestic producers"],
+    "correctIndex": 0
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 0,
+    "reveals": ["imports"], "hideGrid": false, "hideNums": false,
+    "questionText": "The diagram shows the domestic market for steel. The country can trade at the world price of $200 per tonne. What quantity of steel is imported?",
+    "answers": ["20,000 tonnes", "40,000 tonnes", "60,000 tonnes", "80,000 tonnes"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 0,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "At the world price of $200 per tonne, how much steel is supplied by domestic producers?",
+    "answers": ["10,000 tonnes", "20,000 tonnes", "30,000 tonnes", "40,000 tonnes"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 0,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "At the world price of $200 per tonne, what is the total quantity of steel demanded by domestic buyers?",
+    "answers": ["60,000 tonnes", "70,000 tonnes", "80,000 tonnes", "100,000 tonnes"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 200,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "The government now imposes a tariff of $200 per tonne on imported steel. What price do domestic buyers now pay?",
+    "answers": ["$200", "$300", "$400", "$500"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 200,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "With the $200 tariff in place, how much steel is now produced domestically?",
+    "answers": ["20,000 tonnes", "30,000 tonnes", "40,000 tonnes", "60,000 tonnes"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 200,
+    "reveals": ["prodinc"], "hideGrid": false, "hideNums": false,
+    "questionText": "By how much does domestic steel production rise as a result of the tariff?",
+    "answers": ["10,000 tonnes", "20,000 tonnes", "40,000 tonnes", "60,000 tonnes"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 200,
+    "reveals": ["imports"], "hideGrid": false, "hideNums": false,
+    "questionText": "With the $200 tariff in place, what quantity of steel is now imported?",
+    "answers": ["0", "20,000 tonnes", "40,000 tonnes", "60,000 tonnes"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 200,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "By how much do steel imports fall as a result of the tariff?",
+    "answers": ["10,000 tonnes", "20,000 tonnes", "40,000 tonnes", "60,000 tonnes"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 200,
+    "reveals": ["consdec"], "hideGrid": false, "hideNums": false,
+    "questionText": "By how much does the total quantity of steel bought fall as a result of the tariff?",
+    "answers": ["10,000 tonnes", "20,000 tonnes", "40,000 tonnes", "60,000 tonnes"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for steel", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 100, "hUnit": 10, "worldPrice": 200, "tariff": 200,
+    "reveals": ["tariffrev"], "hideGrid": false, "hideNums": false,
+    "questionText": "How much tariff revenue does the government collect?",
+    "answers": ["$2 million", "$4 million", "$8 million", "$12 million"],
+    "correctIndex": 1
+  },
+
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for wheat", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 5, "worldPrice": 60, "tariff": 0,
+    "reveals": ["imports"], "hideGrid": false, "hideNums": false,
+    "questionText": "The diagram shows the domestic market for wheat, which trades at the world price of $60 per tonne. What quantity of wheat is imported?",
+    "answers": ["10,000 tonnes", "15,000 tonnes", "20,000 tonnes", "30,000 tonnes"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for wheat", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 5, "worldPrice": 60, "tariff": 0,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "The government wants to cut wheat imports from 20,000 to 10,000 tonnes. What per-unit tariff is required?",
+    "answers": ["$20", "$40", "$60", "$80"],
+    "correctIndex": 0
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for wheat", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 5, "worldPrice": 60, "tariff": 20,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "With the $20 tariff in place, what price do domestic wheat buyers now pay?",
+    "answers": ["$60", "$70", "$80", "$100"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for wheat", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 5, "worldPrice": 60, "tariff": 20,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "After the tariff, what is the total revenue earned by domestic wheat producers?",
+    "answers": ["$0.9 million", "$1.2 million", "$1.6 million", "$2.4 million"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for wheat", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 5, "worldPrice": 60, "tariff": 20,
+    "reveals": ["tariffrev"], "hideGrid": false, "hideNums": false,
+    "questionText": "How much tariff revenue does the government collect on imported wheat?",
+    "answers": ["$200,000", "$400,000", "$600,000", "$1.2 million"],
+    "correctIndex": 0
+  },
+
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 5, "hUnit": 10, "worldPrice": 15, "tariff": 0,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "The diagram shows the domestic market for cars, which trades at the world price of $15,000. Before any tariff, what is the total revenue of domestic car producers? (domestic output x price)",
+    "answers": ["$300 million", "$450 million", "$600 million", "$800 million"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 5, "hUnit": 10, "worldPrice": 15, "tariff": 0,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "What size tariff per car would the government need to impose to eliminate car imports entirely?",
+    "answers": ["$5,000", "$10,000", "$15,000", "$25,000"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 5, "hUnit": 10, "worldPrice": 15, "tariff": 5,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "The government instead imposes a $5,000 tariff per car, raising the price to $20,000. What is the total revenue of domestic car producers now? (domestic output x price)",
+    "answers": ["$450 million", "$600 million", "$800 million", "$1,200 million"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 5, "hUnit": 10, "worldPrice": 15, "tariff": 5,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "By how much has the revenue of domestic car producers changed as a result of the $5,000 tariff?",
+    "answers": ["+$150 million", "+$200 million", "+$350 million", "+$450 million"],
+    "correctIndex": 2
+  }
+]

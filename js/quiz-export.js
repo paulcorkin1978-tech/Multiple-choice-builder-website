@@ -303,8 +303,9 @@ function surRegions(mode,Qt,Pc,Ps){
     [[0,Dm],[0,Pst],[Qt,Pst],[Qt,dm(Qt)]], [[0,Pst],[Qt,Pst],[Qt,Pc],[0,Pc]], [[0,Pc],[Qt,Pc],[0,0]],
     [[Qt,dm(Qt)],[Qe,Pst],[Qt,Pst]], [[Qt,Pst],[Qe,Pst],[Qt,Pc]] ];
 }
-function tradeInner(q, nRev){
+function tradeInner(q, nRev, stagger){
   var W=400,H=340,padl=48,padr=44,padt=26,padb=46,GRID=10;
+  var adel=function(idx){ return stagger?(' style="animation:labelFadeIn .6s ease-out both;animation-delay:'+((idx+1)*0.25).toFixed(2)+'s"'):''; };
   var gx=function(Q){return padl+Q*(W-padl-padr)/GRID;};
   var gy=function(P){return padt+(GRID-P)*(H-padt-padb)/GRID;};
   var esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
@@ -334,8 +335,8 @@ function tradeInner(q, nRev){
   var fs=12, fs2=9;
   var Qs0=gPw, Qd0=GRID-gPw, Qst=gPt, Qdt=(mode==='subsidy')?Qd0:(GRID-gPt);   // subsidy: consumers still pay Pw, so consumption unchanged
   var poly=function(pts){return pts.map(function(p){return gx(p[0]).toFixed(1)+','+gy(p[1]).toFixed(1);}).join(' ');};
-  var rect=function(x0,x1,y0,y1,fill,stroke){
-    return '<polygon class="tr-fade" points="'+poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]])+'" fill="'+fill+'"'+(stroke?' stroke="'+stroke+'" stroke-width="1.2"':'')+'/>';
+  var rect=function(x0,x1,y0,y1,fill,stroke,extra){
+    return '<polygon class="tr-fade"'+(extra||'')+' points="'+poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]])+'" fill="'+fill+'"'+(stroke?' stroke="'+stroke+'" stroke-width="1.2"':'')+'/>';
   };
   var s='';
   if(q.title) s+='<text x="'+(W/2)+'" y="16" text-anchor="middle" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(q.title)+'</text>';
@@ -379,36 +380,43 @@ function tradeInner(q, nRev){
     };
     brackets={ prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol}, consdec:{a:Qdt,b:Qd0,lbl:'Fall in consumption',col:dCol} };
   }
+  brackets.prodlvl={a:0, b:Qst, lbl:'Domestic production', col:sCol};
+  brackets.implvl ={a:Qst, b:Qdt, lbl:'Imports', col:dCol};
   var order=[], seen={};
-  for(i=0;i<reveals.length;i++){ var rk=reveals[i]; if((areas[rk]||brackets[rk])&&!seen[rk]){order.push(rk);seen[rk]=1;} }
+  for(i=0;i<reveals.length;i++){ var rk=reveals[i]; if((rk==='s2'||areas[rk]||brackets[rk])&&!seen[rk]){order.push(rk);seen[rk]=1;} }
+  var s2Pos=order.indexOf('s2');
+  var shiftShown=(mode!=='subsidy')?false:(s2Pos<0?true:(nRev>s2Pos));
+  var QstDraw=(mode==='subsidy'&&!shiftShown)?gPw:Qst;
   var brk='', alab='';   // brackets and box labels are deferred so they draw in front of the curves
   for(var r=0;r<Math.min(nRev,order.length);r++){
     var key=order[r];
+    if(key==='s2') continue;
     if(areas[key]){
       var a=areas[key];
       if(Math.abs(a.r[1]-a.r[0])<0.05 || Math.abs(a.r[3]-a.r[2])<0.05) continue;   // skip zero-area (prohibitive tariff)
-      s+=rect(a.r[0],a.r[1],a.r[2],a.r[3],a.fill,a.stroke);
+      s+=rect(a.r[0],a.r[1],a.r[2],a.r[3],a.fill,a.stroke,adel(r));
       var cx=gx((a.r[0]+a.r[1])/2), cy=gy((a.r[2]+a.r[3])/2);
       var words=a.lbl.split(' '), lh=fs2+1, y0=cy-(words.length-1)*lh/2;
-      alab+='<text x="'+cx.toFixed(1)+'" y="'+y0.toFixed(1)+'" text-anchor="middle" dominant-baseline="central" font-size="'+fs2+'" font-family="Verdana" font-weight="bold" fill="#1a1a1a" stroke="#fff" stroke-width="3" paint-order="stroke">';
+      alab+='<text'+adel(r)+' x="'+cx.toFixed(1)+'" y="'+y0.toFixed(1)+'" text-anchor="middle" dominant-baseline="central" font-size="'+fs2+'" font-family="Verdana" font-weight="bold" fill="#1a1a1a" stroke="#fff" stroke-width="3" paint-order="stroke">';
       for(var wi=0;wi<words.length;wi++){ alab+='<tspan x="'+cx.toFixed(1)+'" dy="'+(wi===0?0:lh)+'">'+words[wi]+'</tspan>'; }
       alab+='</text>';
     } else {
-      var bk=brackets[key];
+      var bk=brackets[key], bg='';
       if(bk.vert){   // vertical bracket (per-unit subsidy = price gap Pw..Pw+s), drawn just right of the domestic-output line
         var vx=gx(bk.x)+10, vy0=gy(bk.y0), vy1=gy(bk.y1);
-        brk+='<line x1="'+vx+'" y1="'+vy0.toFixed(1)+'" x2="'+vx+'" y2="'+vy1.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
-        brk+='<line x1="'+vx+'" y1="'+vy0.toFixed(1)+'" x2="'+(vx-5)+'" y2="'+vy0.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
-        brk+='<line x1="'+vx+'" y1="'+vy1.toFixed(1)+'" x2="'+(vx-5)+'" y2="'+vy1.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
-        brk+='<text x="'+(vx+4)+'" y="'+((vy0+vy1)/2).toFixed(1)+'" dominant-baseline="central" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
+        bg+='<line x1="'+vx+'" y1="'+vy0.toFixed(1)+'" x2="'+vx+'" y2="'+vy1.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<line x1="'+vx+'" y1="'+vy0.toFixed(1)+'" x2="'+(vx-5)+'" y2="'+vy0.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<line x1="'+vx+'" y1="'+vy1.toFixed(1)+'" x2="'+(vx-5)+'" y2="'+vy1.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<text x="'+(vx+4)+'" y="'+((vy0+vy1)/2).toFixed(1)+'" dominant-baseline="central" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
       } else {
         if(Math.abs(bk.b-bk.a)<0.05) continue;
         var xa=gx(bk.a), xb=gx(bk.b), by=(H-padb)+20, mid=(xa+xb)/2;
-        brk+='<line x1="'+xa.toFixed(1)+'" y1="'+by+'" x2="'+xb.toFixed(1)+'" y2="'+by+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
-        brk+='<line x1="'+xa.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xa.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
-        brk+='<line x1="'+xb.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xb.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
-        brk+='<text x="'+mid.toFixed(1)+'" y="'+(by+12)+'" text-anchor="middle" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
+        bg+='<line x1="'+xa.toFixed(1)+'" y1="'+by+'" x2="'+xb.toFixed(1)+'" y2="'+by+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<line x1="'+xa.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xa.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<line x1="'+xb.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xb.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<text x="'+mid.toFixed(1)+'" y="'+(by+12)+'" text-anchor="middle" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
       }
+      brk+='<g'+adel(r)+'>'+bg+'</g>';
     }
   }
   // -- axes with arrowheads --
@@ -428,17 +436,20 @@ function tradeInner(q, nRev){
   // -- domestic supply & demand (inset one grid square, cross at 5,5) --
   var C0=1, C1=GRID-1;
   s+='<line x1="'+gx(C0)+'" y1="'+gy(C0)+'" x2="'+gx(C1)+'" y2="'+gy(C1)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
-  s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+(mode==='subsidy'?'S1':'S')+'</text>';
-  if(mode==='subsidy'){ var gsub=gPt-gPw;   // per-unit subsidy shifts supply right/down: S -> S2 (meets Pw at the higher output)
+  s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+((mode==='subsidy'&&shiftShown)?'S1':'S')+'</text>';
+  if(mode==='subsidy'&&shiftShown){ var gsub=gPt-gPw;   // per-unit subsidy shifts supply right/down: S -> S2 (meets Pw at the higher output)
+    var s2anim=(s2Pos>=0)?adel(s2Pos):'';   // fade the shift in only when it is a reveal step (reverse questions)
+    s+='<g'+s2anim+'>';
     s+='<line x1="'+gx(C0+gsub)+'" y1="'+gy(C0)+'" x2="'+gx(C1)+'" y2="'+gy(C1-gsub)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
     s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1-gsub)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">S2</text>';
+    s+='</g>';
   }
   s+='<line x1="'+gx(C0)+'" y1="'+gy(C1)+'" x2="'+gx(C1)+'" y2="'+gy(C0)+'" stroke="'+dCol+'" stroke-width="2.5"/>';
   s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C0)-3)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+dCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">D</text>';
   // -- world-price and tariff-price lines --
   s+='<line x1="'+padl+'" y1="'+gy(gPw)+'" x2="'+(W-padr)+'" y2="'+gy(gPw)+'" stroke="#444" stroke-width="1.5" stroke-dasharray="7 4"/>';
   s+='<text x="'+(W-padr+3)+'" y="'+(gy(gPw)+3.5)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#444">Pw</text>';
-  if(mode!=='subsidy'){
+  if(mode!=='subsidy' && gPt-gPw>0.05){   // hide the policy price line on a free-trade diagram (tariff/quota = 0)
     s+='<line x1="'+padl+'" y1="'+gy(gPt)+'" x2="'+gx(Qdt)+'" y2="'+gy(gPt)+'" stroke="#b23a00" stroke-width="1.5" stroke-dasharray="7 4"/>';
     s+='<text x="'+(gx(Qdt)+3)+'" y="'+(gy(gPt)-3)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#b23a00">'+(mode==='quota'?'Pq':'Pw+t')+'</text>';
   }
@@ -448,11 +459,15 @@ function tradeInner(q, nRev){
   var qline=function(Q,col){
     s+='<line x1="'+gx(Q)+'" y1="'+(H-padb)+'" x2="'+gx(Q)+'" y2="'+gy(Q<5?Q:GRID-Q)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
   };
-  qline(Qst,sCol); qline(Qdt,dCol);
+  if(mode==='subsidy'){
+    s+='<line x1="'+gx(QstDraw)+'" y1="'+(H-padb)+'" x2="'+gx(QstDraw)+'" y2="'+gy(gPw)+'" stroke="'+sCol+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+    s+='<line x1="'+gx(Qdt)+'" y1="'+(H-padb)+'" x2="'+gx(Qdt)+'" y2="'+gy(gPw)+'" stroke="'+dCol+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+  } else { qline(QstDraw,sCol); qline(Qdt,dCol); }
   return s+alab+brk;
 }
-function surInner(q,nRev){
+function surInner(q,nRev,stagger){
   var W=400,H=340,L=52,T=28,B=292,QMAX=100;
+  var adel=function(idx){ return stagger?(' style="animation:labelFadeIn .6s ease-out both;animation-delay:'+((idx+1)*0.25).toFixed(2)+'s"'):''; };
   var Dmax=100,Qeq=50,Peq=50, dem=function(Q){return Dmax-Q;}, sup=function(Q){return Q;};
   var mode=q.mode||'eq', param=(q.param==null?20:q.param);
   var isExt=surIsExt(mode), policy=(isExt && !!q.showPolicy);
@@ -495,7 +510,7 @@ function surInner(q,nRev){
     if(isExt){ if(kk==='DWL'&&policy) continue; if(kk==='POL'&&!policy) continue; if(!areaPoly[kk]) continue; }
     else { if(kk==='DWL' && !(Qt<Qeq)) continue; if(kk==='TAX' && mode!=='tax') continue; if((kk==='LOSSCS'||kk==='LOSSPS') && lossIdx(kk).length===0) continue; }
     effReveals.push(kk); }
-  for(var r=0;r<Math.min(nRev,effReveals.length);r++){ var key=effReveals[r]; if(areaPoly[key]){ s+='<polygon class="sur-fade" points="'+poly(areaPoly[key])+'" fill="'+areaFill[key]+'"/>'; } else if(lossFill[key]){ var li=lossIdx(key); for(var mi=0;mi<li.length;mi++){ s+='<polygon class="sur-fade" points="'+poly(elem[li[mi]])+'" fill="'+lossFill[key]+'" stroke="'+(key==='LOSSCS'?'#185FA5':'#0F6E56')+'" stroke-width="1.2" stroke-opacity="0.7"/>'; } } }
+  for(var r=0;r<Math.min(nRev,effReveals.length);r++){ var key=effReveals[r]; if(areaPoly[key]){ s+='<polygon class="sur-fade"'+adel(r)+' points="'+poly(areaPoly[key])+'" fill="'+areaFill[key]+'"/>'; } else if(lossFill[key]){ var li=lossIdx(key); for(var mi=0;mi<li.length;mi++){ s+='<polygon class="sur-fade"'+adel(r)+' points="'+poly(elem[li[mi]])+'" fill="'+lossFill[key]+'" stroke="'+(key==='LOSSCS'?'#185FA5':'#0F6E56')+'" stroke-width="1.2" stroke-opacity="0.7"/>'; } } }
   s+='<line x1="'+L+'" y1="'+(B+6)+'" x2="'+L+'" y2="'+(T-6)+'" stroke="#444" stroke-width="1.5" marker-end="url(#surarr)" opacity="0.8"/>';
   s+='<line x1="'+(L-6)+'" y1="'+B+'" x2="'+(R+6)+'" y2="'+B+'" stroke="#444" stroke-width="1.5" marker-end="url(#surarr)" opacity="0.8"/>';
   s+='<text x="'+(L-38)+'" y="'+((T+B)/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle" transform="rotate(-90 '+(L-38)+' '+((T+B)/2)+')">'+esc(q.yLbl||'Price ($)')+'</text>';
@@ -580,8 +595,8 @@ function shiftTrail(o){
 function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStaticBracket=false){
   if(q.type==='plain')return'';
   if(q.type==='ped')return '<svg width="100%" viewBox="0 0 400 340">'+pedInner(q)+'</svg>';
-  if(q.type==='sur')return '<svg width="100%" viewBox="0 0 400 340">'+surInner(q,fpA)+'</svg>';
-  if(q.type==='trade')return '<svg width="100%" viewBox="0 0 400 340">'+tradeInner(q,fpA)+'</svg>';
+  if(q.type==='sur')return '<svg width="100%" viewBox="0 0 400 340">'+surInner(q,fpA,isAnimating)+'</svg>';
+  if(q.type==='trade')return '<svg width="100%" viewBox="0 0 400 340">'+tradeInner(q,fpA,isAnimating)+'</svg>';
   if(q.type==='table'){
     const xe=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     let t=\`<div class="quiz-tbl-wrap">\`;
@@ -614,22 +629,52 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const col=q.color||'#185FA5';
     s+=\`<text x="\${pad.l+(W-pad.l-pad.r)/2}" y="\${H-2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#666">\${q.xLabel||'Good A'}</text>\`;
     s+=\`<text x="9" y="\${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#666" transform="rotate(-90,9,\${pad.t+(H-pad.t-pad.b)/2})">\${q.yLabel||'Good B'}</text>\`;
-    if(q.ppfType==='curved'){
+    if(q.ppfType==='linear'){
+      // Straight frontier, constant opportunity cost. y-intercept = xInt*oc, so the
+      // line always crosses a grid corner at every x gridline.
+      const xI=q.xInt||6, yI=q.yInt||9;
+      const gcd_=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t;}return a||1;};
+      const vU=(q.vUnit==null?10:q.vUnit), hU=(q.hUnit==null?10:q.hUnit);
+      const rnd_=n=>Math.round(n*100)/100;
+      if(!q.hideNums){
+        for(let i=1;i<=GRID;i++){
+          s+=\`<text x="\${pad.l-4}" y="\${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="\${fs2}" font-family="Verdana" fill="#888">\${rnd_(i*vU)}</text>\`;
+          s+=\`<text x="\${gx(i)}" y="\${H-pad.b+13}" text-anchor="middle" font-size="\${fs2}" font-family="Verdana" fill="#888">\${rnd_(i*hU)}</text>\`;
+        }
+        s+=\`<text x="\${pad.l-4}" y="\${H-pad.b+13}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
+      }
+      const front_=(xA,yA,c,r)=>{
+        let o=\`<line x1="\${gx(0)}" y1="\${gy(yA)}" x2="\${gx(xA)}" y2="\${gy(0)}" stroke="\${c}" stroke-width="2.5" stroke-linecap="round"/>\`;
+        const g2=gcd_(xA,yA);
+        for(let k=0;k<=g2;k++){ const px=k*xA/g2, py=yA-k*yA/g2;
+          o+=\`<circle cx="\${gx(px).toFixed(1)}" cy="\${gy(py).toFixed(1)}" r="\${r}" fill="\${c}" stroke="#fff" stroke-width="1.4"/>\`; }
+        return o;
+      };
+      const flbl_=(xA,yA,t,txt,c)=>\`<text x="\${(gx(xA*t)+7).toFixed(1)}" y="\${(gy(yA*(1-t))-7).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${c}" font-weight="bold" stroke="#fff" stroke-width="3" paint-order="stroke">\${txt}</text>\`;
+      if(q.linShift){
+        const xI2=q.xInt2||xI, yI2=q.yInt2||yI;
+        s+=front_(xI,yI,'#999',3.4)+front_(xI2,yI2,col,4);
+        s+=flbl_(xI,yI,0.70,'PPF1','#999')+flbl_(xI2,yI2,0.35,'PPF2',col);
+      } else {
+        s+=front_(xI,yI,col,4)+flbl_(xI,yI,0.5,'PPF',col);
+      }
+    } else if(q.ppfType==='curved'){
       if(!q.hideNums) s+=\`<text x="\${pad.l-4}" y="\${H-pad.b+11}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#888">0</text>\`;
-      if(Math.abs(dA)>0.05){
+      const shifted_=Math.abs(dA)>0.05||Math.abs(sA)>0.05;
+      if(shifted_){
         const r0=PPF_BASE;
         const rx0=(r0*cW_/GRID).toFixed(1),ry0=(r0*cH_/GRID).toFixed(1);
         s+=\`<path d="M \${gx(0).toFixed(1)} \${gy(r0).toFixed(1)} A \${rx0} \${ry0} 0 0 1 \${gx(r0).toFixed(1)} \${gy(0).toFixed(1)}" stroke="\${col}" fill="none" stroke-width="2" stroke-linecap="round" opacity="1"/>\`;
-        const lx0=r0*0.72,ly0=Math.sqrt(Math.max(0,r0*r0-lx0*lx0));
-        s+=\`<text x="\${(gx(lx0)+5).toFixed(1)}" y="\${gy(ly0).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${col}" opacity="1" font-weight="bold">PPF1</text>\`;
+        const lx0=r0*0.88, ly0=r0*0.475;   // PPF1 low, active curve high — never collide on a pivot
+        s+=\`<text x="\${(gx(lx0)+5).toFixed(1)}" y="\${gy(ly0).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${col}" opacity="1" font-weight="bold" stroke="#fff" stroke-width="3" paint-order="stroke">PPF1</text>\`;
       }
-      const r=PPF_BASE+dA*PPF_STEP;
-      if(r>0.3){
-        const rx=(r*cW_/GRID).toFixed(1),ry=(r*cH_/GRID).toFixed(1);
-        s+=\`<path d="M \${gx(0).toFixed(1)} \${gy(r).toFixed(1)} A \${rx} \${ry} 0 0 1 \${gx(r).toFixed(1)} \${gy(0).toFixed(1)}" stroke="\${col}" fill="none" stroke-width="2.5" stroke-linecap="round"/>\`;
-        const lbl=Math.abs(dA)>0.05?'PPF2':'PPF1';
-        const lx=r*0.72,ly=Math.sqrt(Math.max(0,r*r-lx*lx));
-        s+=\`<text x="\${(gx(lx)+5).toFixed(1)}" y="\${gy(ly).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${col}" font-weight="bold">\${lbl}</text>\`;
+      const rX_=PPF_BASE+dA*PPF_STEP, rY_=PPF_BASE+sA*PPF_STEP;
+      if(rX_>0.3&&rY_>0.3){
+        const rxp=(rX_*cW_/GRID).toFixed(1),ryp=(rY_*cH_/GRID).toFixed(1);
+        s+=\`<path d="M \${gx(0).toFixed(1)} \${gy(rY_).toFixed(1)} A \${rxp} \${ryp} 0 0 1 \${gx(rX_).toFixed(1)} \${gy(0).toFixed(1)}" stroke="\${col}" fill="none" stroke-width="2.5" stroke-linecap="round"/>\`;
+        const lbl=shifted_?'PPF2':'PPF1';
+        const lx=rX_*0.45, ly=rY_*0.893;
+        s+=\`<text x="\${(gx(lx)+5).toFixed(1)}" y="\${gy(ly).toFixed(1)}" font-size="\${fs}" font-family="Verdana" fill="\${col}" font-weight="bold" stroke="#fff" stroke-width="3" paint-order="stroke">\${lbl}</text>\`;
       }
     } else {
       const xM=q.xMax||9,yM=q.yMax||9;
@@ -732,11 +777,12 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const qd_=dQf(fpA,dA),qs_=sQf(fpA,sA);
     const hasSurplus_=fpA>eq_.p+0.06;
     const bracketCol_=hasSurplus_?'#D85A30':'#7B2FA8';
-    const lbl_=hasSurplus_?'SURPLUS':'SHORTAGE';
-    const policyActive_=q.policy==='floor'||q.policy==='ceiling';
-    const binds_=q.policy==='floor'?fpA>eq_.p+0.06:q.policy==='ceiling'?fpA<eq_.p-0.06:false;
+    const isFloor_=q.policy==='floor'||q.policy==='union';
+    const lbl_=q.policy==='union'?'':(hasSurplus_?'SURPLUS':'SHORTAGE');
+    const policyActive_=isFloor_||q.policy==='ceiling';
+    const binds_=isFloor_?fpA>eq_.p+0.06:q.policy==='ceiling'?fpA<eq_.p-0.06:false;
     const showDiseq_=policyActive_?binds_:!atEq_;
-    const policyLbl_=q.policy==='floor'?'Price floor':q.policy==='ceiling'?'Price ceiling':'';
+    const policyLbl_=q.policy==='union'?'Union wage':q.policy==='floor'?'Price floor':q.policy==='ceiling'?'Price ceiling':'';
     const sp_=q.startPrice||fpA,td_=Math.abs(sp_-eq_.p),cd_2=Math.abs(fpA-eq_.p);
     const fade_=td_>0.01?Math.min(cd_2/td_,1):1;
     // Axis tick labels — suppress values that clash with price/eq/Qd/Qs
@@ -764,7 +810,8 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       const s1P_=clip(QS,sPf(QS,0),QE,sPf(QE,0),pad,W,H,1);
       if(s1P_) s+=\`<line x1="\${s1P_.x1}" y1="\${s1P_.y1}" x2="\${s1P_.x2}" y2="\${s1P_.y2}" stroke="\${q.sColor}" stroke-width="2" stroke-linecap="round"/><text x="\${s1P_.x2+5}" y="\${Math.min(s1P_.y1,s1P_.y2)}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.sColor}" font-weight="bold">S1</text>\`;
     }
-    const dLblP_=dA!==0?'D2':'D', sLblP_=sA!==0?'S2':'S';
+    const dBaseP_=q.policy==='union'?'DL':'D', sBaseP_=q.policy==='union'?'SL':'S';
+    const dLblP_=dA!==0?dBaseP_+'2':dBaseP_, sLblP_=sA!==0?sBaseP_+'2':sBaseP_;
     const cdP_=clip(QS,dPf(QS,dA),QE,dPf(QE,dA),pad,W,H,1);
     const csP_=clip(QS,sPf(QS,sA),QE,sPf(QE,sA),pad,W,H,1);
     if(cdP_) s+=\`<line x1="\${cdP_.x1}" y1="\${cdP_.y1}" x2="\${cdP_.x2}" y2="\${cdP_.y2}" stroke="\${q.dColor}" stroke-width="2.5" stroke-linecap="round"/><text x="\${cdP_.x2+5}" y="\${cdP_.y2}" dominant-baseline="central" font-size="\${fs}" font-family="Verdana" fill="\${q.dColor}" font-weight="bold">\${dLblP_}</text>\`;
@@ -786,7 +833,7 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       if(policyActive_&&!atEq_){
         const lpy_=gy(fpA);
         s+=\`<line x1="\${pad.l}" y1="\${lpy_}" x2="\${W-pad.r}" y2="\${lpy_}" stroke="#999" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.75"/>\`;
-        s+=\`<text x="\${W-pad.r-2}" y="\${lpy_+(q.policy==='floor'?12:-5)}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#999" font-weight="bold">\${policyLbl_} (non-binding)</text>\`;
+        s+=\`<text x="\${W-pad.r-2}" y="\${lpy_+(isFloor_?12:-5)}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#999" font-weight="bold">\${policyLbl_} (non-binding)</text>\`;
       }
     } else {
       const py_=gy(fpA);
@@ -798,7 +845,7 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
         s+=\`<circle cx="\${gx(eq_.q)}" cy="\${gy(eq_.p)}" r="4" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.2"/>\`;
       // Dashed price line (red style + label when it is a binding control)
       s+=\`<line x1="\${pad.l}" y1="\${py_}" x2="\${W-pad.r}" y2="\${py_}" stroke="\${policyActive_?'#b23a00':'#555'}" stroke-width="\${policyActive_?1.6:1.2}" stroke-dasharray="6,4" opacity="0.85"/>\`;
-      if(policyActive_) s+=\`<text x="\${W-pad.r-2}" y="\${py_+(q.policy==='floor'?-5:13)}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#b23a00" font-weight="bold">\${policyLbl_}</text>\`;
+      if(policyActive_) s+=\`<text x="\${W-pad.r-2}" y="\${py_+(isFloor_?-5:13)}" text-anchor="end" font-size="\${fs2}" font-family="Verdana" fill="#b23a00" font-weight="bold">\${policyLbl_}</text>\`;
       // Vertical dotted lines from intersections
       if(qd_>=QS&&qd_<=QE) s+=\`<line x1="\${xQd_}" y1="\${py_}" x2="\${xQd_}" y2="\${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>\`;
       if(qs_>=QS&&qs_<=QE) s+=\`<line x1="\${xQs_}" y1="\${py_}" x2="\${xQs_}" y2="\${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>\`;
@@ -1213,12 +1260,14 @@ function showQ(i){
   const fpA_=isStaticPM_?(q.startPrice||5):pos.fpA;
   document.getElementById('diagWrap').innerHTML=mkSVG(q,dA_,sA_,fpA_,false,0,0,0,isStaticPM_);
   const rb=document.getElementById('replayBtn');
-  if(rb) rb.style.display=(q.type==='plain'||q.type==='table'||q.type==='ped'||q.type==='sur'||q.type==='trade')?'none':'';
+  if(rb){
+    let hideRep=(q.type==='plain'||q.type==='table'||q.type==='ped');
+    if(q.type==='trade') hideRep=!(attempted(i)&&(q.reveals||[]).length>0);
+    else if(q.type==='sur') hideRep=!(attempted(i)&&surEff(q).length>0);
+    rb.style.display=hideRep?'none':'';
+  }
   const rb2=document.getElementById('revealBtn');
-  const txRArr2=txRev(q);
-  let showRev2=(q.type==='tax'&&attempted(i)&&curPos[i].fpA>=0&&curPos[i].fpA<txRArr2.length);
-  if(q.type==='trade') showRev2=(attempted(i)&&curPos[i].fpA>=0&&curPos[i].fpA<(q.reveals||[]).length);
-  if(rb2) rb2.style.display=showRev2?'':'none';
+  if(rb2) rb2.style.display='none';   // reveals now auto-play on answering (no manual stepping)
   const abtns=document.getElementById('abtns');
   abtns.innerHTML=q.answers.map((ans,ai)=>{
     const l=String.fromCharCode(65+ai);
@@ -1305,35 +1354,38 @@ function anim(qi,animDur=700){
     return;
   }
   if(q.type==='tax'){
-    // Both S1 and S2 visible from the start — no shift animation.
-    // "Answering" just reveals price labels (fpA: -1 → 0) and shows the Reveal button.
-    const txPn=txPos(q);
+    // Reveal auto-plays: price labels first (fpA 0), then each area steps in one at a time.
+    const txPn=txPos(q), txR=txRev(q), gapT=animDur>=2000?1600:1000;
     curPos[qi]={dA:txPn.dA,sA:txPn.sA,fpA:0};
     el.innerHTML=mkSVG(q,txPn.dA,txPn.sA,0,false);
-    const rb2=document.getElementById('revealBtn');
-    if(rb2&&qi===cur)rb2.style.display=txRev(q).length>0?'':'none';
+    let stT=0;
+    if(txR.length>0)setTimeout(function pT(){ if(qi!==cur)return; stT++;
+      curPos[qi]={dA:txPn.dA,sA:txPn.sA,fpA:stT}; el.innerHTML=mkSVG(q,txPn.dA,txPn.sA,stT,false);
+      if(stT<txR.length)setTimeout(pT,gapT); },600);
     return;
   }
   if(q.type==='sur'){
-    // Reveal all chosen areas immediately when the correct answer is chosen (no button).
+    // Reveal renders the full state once; CSS fades each area in on a 0.25s stagger.
     const nAll=surEff(q).length;
     curPos[qi]={dA:0,sA:0,fpA:nAll};
-    el.innerHTML=mkSVG(q,0,0,nAll,false);
+    el.innerHTML=mkSVG(q,0,0,nAll,true);
     return;
   }
   if(q.type==='trade'){
-    // Answering shows the Reveal button; areas step in one at a time (fpA: -1 -> 0 -> N).
-    curPos[qi]={dA:0,sA:0,fpA:0};
-    el.innerHTML=mkSVG(q,0,0,0,false);
-    const rb2=document.getElementById('revealBtn');
-    if(rb2&&qi===cur)rb2.style.display=(q.reveals||[]).length>0?'':'none';
+    // Reveal renders the full state once; CSS fades the shift / each area in on a 0.25s stagger.
+    const trR=q.reveals||[];
+    curPos[qi]={dA:0,sA:0,fpA:trR.length};
+    el.innerHTML=mkSVG(q,0,0,trR.length,true);
     return;
   }
   let tD,tS,fromD,fromS;
   if(q.type==='sd'){
     tD=q.ansDS||0;tS=q.ansSS||0;fromD=q.startDS||0;fromS=q.startSS||0;
   } else if(q.type==='ppf'){
-    tD=q.ansShift||0;tS=0;fromD=0;fromS=0;
+    // dA drives the x-intercept, sA the y-intercept, so the frontier can pivot.
+    tD=(q.ansShiftX!=null?q.ansShiftX:(q.ansShift||0));
+    tS=(q.ansShiftY!=null?q.ansShiftY:(q.ansShift||0));
+    fromD=0;fromS=0;
   } else {
     // sc: put shift in correct field based on curve type
     if(q.curve==='demand'){tD=q.ansCS||0;tS=0;fromD=q.startCS||0;fromS=0;}
@@ -1355,7 +1407,8 @@ function anim(qi,animDur=700){
 }
 function replayAnim(){
   const q=qs[cur];
-  if(q.type==='plain'||q.type==='table'||q.type==='ped'||q.type==='sur'||q.type==='trade')return;
+  if(q.type==='plain'||q.type==='table'||q.type==='ped')return;
+  if(q.type==='trade'||q.type==='sur'||q.type==='tax'){ if(attempted(cur))anim(cur,3000); return; }
   if(q.type==='sd') curPos[cur]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
   else if(q.type==='sc') curPos[cur]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
   else if(q.type==='pm') curPos[cur]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};

@@ -118,6 +118,7 @@
   <div class="diag-panel">
     <button class="btn-back" onclick="goMenu()">← Back to menu</button>
     <svg id="sdChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <button class="btn" style="margin-top:6px;font-size:12px;padding:5px 12px" onclick="copyDiagram('sdChart',this)">Copy image</button>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">Shift Demand</div>
       <div class="btn-row">
@@ -224,6 +225,7 @@
   <div class="diag-panel">
     <button class="btn-back" onclick="goMenu()">← Back to menu</button>
     <svg id="scChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <button class="btn" style="margin-top:6px;font-size:12px;padding:5px 12px" onclick="copyDiagram('scChart',this)">Copy image</button>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">Curve Type</div>
       <div class="btn-row">
@@ -337,15 +339,56 @@
   <div class="diag-panel">
     <button class="btn-back" onclick="goMenu()">← Back to menu</button>
     <svg id="ppfChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <button class="btn" style="margin-top:6px;font-size:12px;padding:5px 12px" onclick="copyDiagram('ppfChart',this)">Copy image</button>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">Diagram Mode</div>
       <div class="btn-row">
-        <button class="btn btn-primary" id="ppfBtnCurved" onclick="ppfSetMode('curved')">Curved</button>
+        <button class="btn btn-primary" id="ppfBtnLinear" onclick="ppfSetMode('linear')">Linear</button>
+        <button class="btn"             id="ppfBtnCurved" onclick="ppfSetMode('curved')">Curved</button>
         <button class="btn"             id="ppfBtnSched"  onclick="ppfSetMode('schedule')">Schedule</button>
       </div>
     </div>
-    <div class="diag-ctrl-group" id="ppfShiftControls">
-      <div class="diag-ctrl-label">Shift Curve</div>
+    <div class="diag-ctrl-group" id="ppfLinearControls">
+      <div class="diag-ctrl-label">Maximum of X (x-intercept)</div>
+      <div class="btn-row">
+        <button class="btn" onclick="ppfStepXInt(-1)">−</button>
+        <span id="ppfXIntVal" style="min-width:26px;text-align:center;font-weight:800;align-self:center">6</span>
+        <button class="btn" onclick="ppfStepXInt(1)">+</button>
+      </div>
+      <div class="diag-ctrl-label" style="margin-top:8px">Maximum of Y (y-intercept)</div>
+      <div class="btn-row">
+        <button class="btn" onclick="ppfStepYInt(-1)">−</button>
+        <span id="ppfYIntVal" style="min-width:26px;text-align:center;font-weight:800;align-self:center">9</span>
+        <button class="btn" onclick="ppfStepYInt(1)">+</button>
+      </div>
+      <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a;margin-top:10px">
+        <input type="checkbox" id="ppfLinShift" onchange="ppfToggleLinShift()" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer;flex-shrink:0">Show a shift (PPF1 &rarr; PPF2)
+      </label>
+      <div id="ppfLinShiftControls" style="display:none">
+        <div class="diag-ctrl-label" style="margin-top:8px">PPF2 &mdash; maximum of X</div>
+        <div class="btn-row">
+          <button class="btn" onclick="ppfStepXInt2(-1)">&minus;</button>
+          <span id="ppfXInt2Val" style="min-width:26px;text-align:center;font-weight:800;align-self:center">9</span>
+          <button class="btn" onclick="ppfStepXInt2(1)">+</button>
+        </div>
+        <div class="diag-ctrl-label" style="margin-top:8px">PPF2 &mdash; maximum of Y</div>
+        <div class="btn-row">
+          <button class="btn" onclick="ppfStepYInt2(-1)">&minus;</button>
+          <span id="ppfYInt2Val" style="min-width:26px;text-align:center;font-weight:800;align-self:center">9</span>
+          <button class="btn" onclick="ppfStepYInt2(1)">+</button>
+        </div>
+        <div style="margin-top:6px;font-size:11px;color:#888">Move just one intercept for a single-axis pivot.</div>
+      </div>
+      <div id="ppfLinInfo" style="margin-top:8px;font-size:12px;color:#6c5ce7;font-weight:700"></div>
+    </div>
+    <div class="diag-ctrl-group" id="ppfShiftControls" style="display:none">
+      <div class="diag-ctrl-label">Shift which intercept?</div>
+      <div class="btn-row" id="ppfAxisRow">
+        <button class="btn btn-primary" id="ppfAxis_both" onclick="ppfSetShiftAxis('both')">Both</button>
+        <button class="btn"             id="ppfAxis_x"    onclick="ppfSetShiftAxis('x')">X only</button>
+        <button class="btn"             id="ppfAxis_y"    onclick="ppfSetShiftAxis('y')">Y only</button>
+      </div>
+      <div class="diag-ctrl-label" style="margin-top:8px">Shift Curve</div>
       <div class="btn-row">
         <button class="btn" id="ppfIn"  onclick="ppfShiftCurve(-1)">◀ Inward</button>
         <button class="btn" id="ppfOut" onclick="ppfShiftCurve( 1)">Outward ▶</button>
@@ -368,6 +411,8 @@
           <div class="field"><label>X-axis</label>     <input type="text"   id="ppfXLbl"    value="Good A"                   oninput="ppfDraw()"></div>
           <div class="field"><label>Y-axis</label>     <input type="text"   id="ppfYLbl"    value="Good B"                   oninput="ppfDraw()"></div>
           <div class="field"><label>Colour</label>     <input type="color"  id="ppfCol"     value="#000000"                  oninput="ppfDraw()"></div>
+          <div class="field"><label>X interval</label> <input type="number" id="ppfHUnit" value="10" min="0.01" step="any" oninput="ppfDraw()"></div>
+          <div class="field"><label>Y interval</label> <input type="number" id="ppfVUnit" value="10" min="0.01" step="any" oninput="ppfDraw()"></div>
           <div class="field"><label>Faded PPF1</label> <input type="checkbox" id="ppfShowFaded" checked style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="ppfDraw()"></div>
           <div class="field"><label>Hide grid</label>   <input type="checkbox" id="ppfHideGrid" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="ppfDraw()"></div>
           <div class="field"><label>Hide numbers</label> <input type="checkbox" id="ppfHideNums" style="width:16px;height:16px;accent-color:#6c5ce7;cursor:pointer" onchange="ppfDraw()"></div>
@@ -378,7 +423,12 @@
       <div class="form-col-wide">
 
         <div class="info-card">
-          <p id="ppfInfoCurved">
+          <p id="ppfInfoLinear">
+            <span class="step">1</span>Set the axis labels and the <strong>X / Y intervals</strong> (units per gridline)<br>
+            <span class="step">2</span>Set the <strong>maximum of X</strong> and the <strong>opportunity cost</strong> — the frontier always lands on grid corners, so students can read it<br>
+            <span class="step">3</span>Write your question &amp; answers, then add to quiz
+          </p>
+          <p id="ppfInfoCurved" style="display:none">
             <span class="step">1</span>Set axis labels &amp; choose Curved mode<br>
             <span class="step">2</span>Shift the PPF <strong>inward or outward</strong> to the correct answer<br>
             <span class="step">3</span>Hit <strong>Capture Answer</strong> — diagram auto-resets<br>
@@ -518,6 +568,7 @@
   <div class="diag-panel">
     <button class="btn-back" onclick="goMenu()">← Back to menu</button>
     <svg id="pmChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <button class="btn" style="margin-top:6px;font-size:12px;padding:5px 12px" onclick="copyDiagram('pmChart',this)">Copy image</button>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">Shift Demand</div>
       <div class="btn-row">
@@ -588,6 +639,7 @@
             <button class="btn btn-primary" data-p="none"    onclick="pmSetPolicy('none')">No control</button>
             <button class="btn"             data-p="floor"   onclick="pmSetPolicy('floor')">Price floor</button>
             <button class="btn"             data-p="ceiling" onclick="pmSetPolicy('ceiling')">Price ceiling</button>
+            <button class="btn"             data-p="union"   onclick="pmSetPolicy('union')">Trade union</button>
           </div>
           <div id="pmEqInfo" style="font-size:12px;line-height:1.5;padding:8px 10px;background:#f5f4f0;border-radius:6px;color:#888"></div>
         </div>
@@ -629,6 +681,7 @@
   <div class="diag-panel">
     <button class="btn-back" onclick="goMenu()">← Back to menu</button>
     <svg id="txChart" width="100%" viewBox="0 0 300 270" style="display:block"></svg>
+    <button class="btn" style="margin-top:6px;font-size:12px;padding:5px 12px" onclick="copyDiagram('txChart',this)">Copy image</button>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">Type</div>
       <div class="btn-row">
@@ -805,6 +858,7 @@
   <div class="diag-panel">
     <button class="btn-back" onclick="goMenu()">← Back to menu</button>
     <svg id="pedChart" width="100%" viewBox="0 0 400 340" style="display:block"></svg>
+    <button class="btn" style="margin-top:6px;font-size:12px;padding:5px 12px" onclick="copyDiagram('pedChart',this)">Copy image</button>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">Elasticity (drag: 0 = perfectly inelastic → 2 = elastic → ∞ = perfectly elastic)</div>
       <input type="range" id="pedSlider" min="0" max="2.1" step="0.1" value="0.5" oninput="pedDraw()" style="width:100%">
@@ -907,6 +961,7 @@
   <div class="diag-panel">
     <button class="btn-back" onclick="goMenu()">← Back to menu</button>
     <svg id="surChart" width="100%" viewBox="0 0 400 340" style="display:block"></svg>
+    <button class="btn" style="margin-top:6px;font-size:12px;padding:5px 12px" onclick="copyDiagram('surChart',this)">Copy image</button>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">Distortion</div>
       <div class="btn-row" id="surModeRow">
@@ -1018,6 +1073,7 @@
   <div class="diag-panel">
     <button class="btn-back" onclick="goMenu()">← Back to menu</button>
     <svg id="trChart" width="100%" viewBox="0 0 400 340" style="display:block"></svg>
+    <button class="btn" style="margin-top:6px;font-size:12px;padding:5px 12px" onclick="copyDiagram('trChart',this)">Copy image</button>
     <div class="diag-ctrl-group">
       <div class="diag-ctrl-label">Policy</div>
       <div class="btn-row" id="trModeRow">
@@ -1074,7 +1130,10 @@
             <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevDomProd" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Domestic producer revenue</label>
             <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevImports" checked onchange="trDraw()" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer;flex-shrink:0">Import spending</label>
             <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevProdInc" onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Bracket: rise in production</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevProdLvl" onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Bracket: domestic production (quantity)</label>
+            <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevImpLvl" onchange="trDraw()" style="width:15px;height:15px;accent-color:#185FA5;cursor:pointer;flex-shrink:0">Bracket: imports (quantity)</label>
             <label id="trRevConsDecRow" style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevConsDec" onchange="trDraw()" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer;flex-shrink:0"><span id="trRevConsDecLabel">Bracket: fall in consumption</span></label>
+            <label id="trRevS2Row" style="display:none;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a"><input type="checkbox" id="trRevS2" onchange="trDraw()" style="width:15px;height:15px;accent-color:#0F6E56;cursor:pointer;flex-shrink:0">Hide supply shift until revealed (S&rarr;S2)</label>
           </div>
         </div>
       </div>

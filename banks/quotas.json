@@ -1,0 +1,193 @@
+[
+  {
+    "type": "plain",
+    "questionText": "What is an import quota?",
+    "answers": ["A tax charged on each unit of a good that is imported", "A payment the government makes to domestic producers", "A limit on the quantity of a good that may be imported", "A minimum price that domestic producers may charge"],
+    "correctIndex": 2
+  },
+  {
+    "type": "plain",
+    "questionText": "If the government increases the size of an import quota, what does this mean?",
+    "answers": ["A smaller quantity of the good may now be imported", "A greater quantity of the good may now be imported", "Domestic producers must now lower their prices", "A tariff is charged on the good instead of a quota"],
+    "correctIndex": 1
+  },
+
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 50, "worldPrice": 40, "tariff": 0,
+    "reveals": ["prodlvl"], "hideGrid": false, "hideNums": false,
+    "questionText": "The diagram shows the domestic market for cars, which trades at the world price of $40,000. How many cars are produced domestically?",
+    "answers": ["50,000 cars", "100,000 cars", "150,000 cars", "200,000 cars"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 50, "worldPrice": 40, "tariff": 0,
+    "reveals": ["implvl"], "hideGrid": false, "hideNums": false,
+    "questionText": "At the world price of $40,000, how many cars are imported?",
+    "answers": ["200,000 cars", "300,000 cars", "400,000 cars", "500,000 cars"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 50, "worldPrice": 40, "quota": 200,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "The government now imposes a quota limiting car imports to 200,000. What is the new market price of cars?",
+    "answers": ["$40,000", "$50,000", "$60,000", "$80,000"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 50, "worldPrice": 40, "quota": 200,
+    "reveals": ["prodinc"], "hideGrid": false, "hideNums": false,
+    "questionText": "With the quota in place, by how much has domestic car production increased?",
+    "answers": ["50,000 cars", "100,000 cars", "150,000 cars", "200,000 cars"],
+    "correctIndex": 0
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 50, "worldPrice": 40, "quota": 200,
+    "reveals": ["consdec"], "hideGrid": false, "hideNums": false,
+    "questionText": "With the quota in place, by how much has the quantity of cars demanded fallen?",
+    "answers": ["50,000 cars", "100,000 cars", "150,000 cars", "250,000 cars"],
+    "correctIndex": 0
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 50, "worldPrice": 40, "quota": 200,
+    "reveals": ["domprod"], "hideGrid": false, "hideNums": false,
+    "questionText": "With the quota in place, what is the total revenue earned by domestic car producers?",
+    "answers": ["$6 billion", "$9 billion", "$12 billion", "$15 billion"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 50, "worldPrice": 40, "tariff": 0,
+    "reveals": ["imports"], "hideGrid": false, "hideNums": false,
+    "questionText": "Before the quota, what is the total revenue earned by importers from selling cars in this market?",
+    "answers": ["$8 billion", "$10 billion", "$12 billion", "$16 billion"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for cars", "yLbl": "Price ($'000)", "xLbl": "Quantity (000 cars)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 20, "hUnit": 50, "worldPrice": 40, "quota": 200,
+    "reveals": ["imports"], "hideGrid": false, "hideNums": false,
+    "questionText": "After the quota, what is the total revenue earned by importers from selling cars?",
+    "answers": ["$8 billion", "$10 billion", "$12 billion", "$16 billion"],
+    "correctIndex": 2
+  },
+  {
+    "type": "plain",
+    "questionText": "In this case importer revenue was $12 billion both before and after the quota. Does imposing a quota necessarily reduce the total revenue earned by importers?",
+    "answers": ["Yes, allowing fewer imports always reduces the revenue importers earn", "No, importer revenue always stays the same or rises because the price is higher", "No, it depends: the higher price may not fully offset the smaller quantity, so importer revenue could rise, fall or stay the same", "Yes, importers still sell at the world price, so their revenue always falls"],
+    "correctIndex": 2
+  },
+
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for sugar", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 200, "hUnit": 20, "worldPrice": 200, "tariff": 0,
+    "reveals": ["implvl"], "hideGrid": false, "hideNums": false,
+    "questionText": "This is the domestic market for sugar, which trades at the world price of $200 per tonne. What quantity of sugar is imported?",
+    "answers": ["120,000 tonnes", "140,000 tonnes", "160,000 tonnes", "180,000 tonnes"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for sugar", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 200, "hUnit": 20, "worldPrice": 200, "quota": 80,
+    "reveals": ["tariffrev"], "hideGrid": false, "hideNums": false,
+    "questionText": "The government imposes a quota that raises the price of sugar to $600 per tonne. What is the size of the quota?",
+    "answers": ["40,000 tonnes", "80,000 tonnes", "120,000 tonnes", "160,000 tonnes"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for sugar", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 200, "hUnit": 20, "worldPrice": 200, "quota": 80,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "The diagram shows a quota on imported sugar. If the government increases the size of the quota, what happens to the market price and to total consumption of sugar?",
+    "answers": ["The price rises and total consumption falls", "The price rises and total consumption rises", "The price falls and total consumption rises", "The price falls and total consumption falls"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for sugar", "yLbl": "Price ($/tonne)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 200, "hUnit": 20, "worldPrice": 200, "quota": 120,
+    "reveals": ["tariffrev"], "hideGrid": false, "hideNums": false,
+    "questionText": "The diagram shows a quota that has raised the price of sugar to $400 per tonne. What is the size of this quota?",
+    "answers": ["40,000 tonnes", "80,000 tonnes", "100,000 tonnes", "120,000 tonnes"],
+    "correctIndex": 3
+  },
+
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for beef", "yLbl": "Price ($/kg)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 2, "hUnit": 20, "worldPrice": 4, "quota": 80,
+    "reveals": ["tariffrev"], "hideGrid": false, "hideNums": false,
+    "questionText": "The diagram shows a quota on imported beef. What is the size of the quota currently in place?",
+    "answers": ["40,000 tonnes", "80,000 tonnes", "120,000 tonnes", "160,000 tonnes"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for beef", "yLbl": "Price ($/kg)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 2, "hUnit": 20, "worldPrice": 4, "quota": 80,
+    "reveals": ["imports"], "hideGrid": false, "hideNums": false,
+    "questionText": "Before the quota, importers sold beef at the world price. By how much does the total revenue earned by importers change as a result of the quota?",
+    "answers": ["It rises by $160 million", "It falls by $160 million", "It does not change", "It rises by $480 million"],
+    "correctIndex": 2
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for beef", "yLbl": "Price ($/kg)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 2, "hUnit": 20, "worldPrice": 4, "quota": 140,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "The government increases the beef quota to 140,000 tonnes. What is the new market price of beef?",
+    "answers": ["$3 per kg", "$4 per kg", "$6 per kg", "$8 per kg"],
+    "correctIndex": 1
+  },
+  {
+    "type": "trade", "mode": "quota",
+    "title": "Market for beef", "yLbl": "Price ($/kg)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 2, "hUnit": 20, "worldPrice": 4, "quota": 140,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "A quota of 140,000 tonnes might suggest a price of $3, yet the price stays at $4. Why can a quota not push the price below $4?",
+    "answers": ["Because the government has fixed the price of beef at $4", "Because domestic producers refuse to supply beef for less than $4", "Because importers have agreed not to charge less than $4", "A quota can only limit imports and raise the price; it can never push the price below the world price"],
+    "correctIndex": 3
+  },
+  {
+    "type": "trade", "mode": "tariff",
+    "title": "Market for beef", "yLbl": "Price ($/kg)", "xLbl": "Quantity (000 tonnes)",
+    "dCol": "#000000", "sCol": "#000000",
+    "vUnit": 2, "hUnit": 20, "worldPrice": 4, "tariff": 0,
+    "reveals": [], "hideGrid": false, "hideNums": false,
+    "questionText": "The government sets the beef import quota to zero. What does this mean for the market?",
+    "answers": ["Beef imports become unlimited and the price falls to the world price", "The price stays at the world price while imports continue unchanged", "Beef may still be imported, but only at the world price", "No beef may be imported, so the price rises to the domestic equilibrium and local producers supply the entire market"],
+    "correctIndex": 3
+  }
+]

@@ -181,4 +181,32 @@ textarea::placeholder{color:#b9b6cf;font-weight:600}
 .qtype-tag{font-size:10px;font-weight:900;color:#6c5ce7;background:#efecff;border:1px solid #cfc8f5;border-radius:6px;padding:1px 5px;flex-shrink:0;font-style:normal}
 
 /* ── DICTATION MIC (added to each Question Text header by js/dictate.js) ── */
-.mic
+.mic-btn{font-family:'Nunito','Verdana',sans-serif;font-size:12px;line-height:1;padding:5px 9px;border:2px solid #e4e2f4;background:#fff;border-radius:10px;cursor:pointer;color:#2d2a4a;transition:all .15s;flex-shrink:0;text-transform:none;letter-spacing:normal}
+.mic-btn:hover:not(:disabled){background:#efecff;border-color:#6c5ce7}
+.mic-btn.rec{background:#ffe6ef;border-color:#EC3C78;color:#c2185b;font-weight:900}
+.mic-btn:disabled{opacity:.4;cursor:not-allowed}
+/* The box currently receiving dictated speech */
+.dictating{border-color:#EC3C78 !important;box-shadow:0 0 0 3px rgba(236,60,120,0.15)}
+
+/* ── IMPORT AREA ── */
+.import-hint{font-size:11px;color:#7b7894;font-weight:600;text-align:center;margin-top:-8px}
+.import-hint a{color:#6c5ce7}
+
+/* ── QUIZ PAGE (student view) ── */
+.quiz-body{font-family:'Nunito','Verdana',sans-serif;background:#fffdf5;padding:24px;color:#2d2a4a}
+.quiz-h1{font-size:20px;font-weight:900;text-align:center;margin-bottom:28px}
+.quiz-wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.qcard{background:#fff;border-radius:18px;border:2.5px solid #2d2a4a;padding:24px;display:flex;gap:24px;align-items:flex-start;box-shadow:6px 6px 0 #efecff}
+.qdiag{flex-shrink:0;width:400px}
+.qright{flex:1;display:flex;flex-direction:column;gap:12px}
+.qnum{font-size:11px;color:#6c5ce7;text-transform:uppercase;letter-spacing:.06em;font-weight:900}
+.qtext{font-size:15px;line-height:1.7;font-weight:800}
+.abtns{display:flex;flex-direction:column;gap:8px}
+.abtn{font-family:'Nunito','Verdana',sans-serif;font-size:13px;font-weight:700;padding:11px 15px;border:2px solid #e4e2f4;border-radius:12px;background:#fff;cursor:pointer;text-align:left;color:#2d2a4a;transition:all .2s;line-height:1.4;box-shadow:0 2px 0 #e4e2f4}
+.abtn:hover{background:#efecff;border-color:#6c5ce7;box-shadow:0 2px 0 #cfc8f5}
+.abtn.wrong{background:#ffe6ef;border-color:#EC3C78;color:#c2185b;pointer-events:none;box-shadow:none}
+.abtn.correct{background:#e0f7f1;border-color:#00b894;color:#00795f;font-weight:800;pointer-events:none;box-shadow:none}
+.fb{font-size:13px;font-weight:800;min-height:20px}
+.fb.c{color:#00997e}
+.fb.w{color:#c2185b}
+.score-card{background:#fff;border-radius:18px;border:2.5px solid #2d2a4a;padding:28px;text-align:center;font-size:20px;font-weight:900;display:none;max-width:900px;margin:0 auto;box-shadow:6px 6px 0 #e0f7f1}

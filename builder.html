@@ -1175,4 +1175,106 @@
       <div class="form-col-wide">
         <div class="info-card">
           <p>
-            <span class="step">1</
+            <span class="step">1</span>Set the <strong>world price</strong> and <strong>tariff</strong> with the sliders<br>
+            <span class="step">2</span>Set <strong>title, axis labels</strong>, colours and the price/qty scale<br>
+            <span class="step">3</span>Tick which <strong>areas &amp; brackets reveal</strong> (left panel) — they appear as soon as the student answers correctly<br>
+            <span class="step">4</span>Write your question &amp; four answers and mark the correct one
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Question Text</div>
+          <textarea id="trQText" placeholder="e.g. On the diagram, which shaded area represents the revenue the government collects from the tariff?"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Answer Options</div>
+          <p class="correct-hint">Select the radio button next to the correct answer</p>
+          <div class="arow"><input type="radio" name="trC" value="0"><span class="alabel">A</span><input type="text" id="trA0" placeholder="Answer A"></div>
+          <div class="arow"><input type="radio" name="trC" value="1"><span class="alabel">B</span><input type="text" id="trA1" placeholder="Answer B"></div>
+          <div class="arow"><input type="radio" name="trC" value="2"><span class="alabel">C</span><input type="text" id="trA2" placeholder="Answer C"></div>
+          <div class="arow"><input type="radio" name="trC" value="3"><span class="alabel">D</span><input type="text" id="trA3" placeholder="Answer D"></div>
+        </div>
+
+        <div class="add-bar">
+          <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-success" id="trAddBtn" onclick="trAddQ()">+ Add to Quiz</button>
+            <button class="btn" onclick="trPreview()">Preview this ↗</button>
+          </div>
+          <div class="msg" id="trMsg"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ PLAIN TEXT BUILDER ══ -->
+<div class="builder" id="plainBuilder">
+  <div class="plain-form-panel">
+    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
+
+    <div class="info-card" style="margin:12px 0 14px">
+      <p>
+        <span class="step">1</span>Write your question text below<br>
+        <span class="step">2</span>Fill in all four answer options<br>
+        <span class="step">3</span>Select the radio button next to the <strong>correct answer</strong><br>
+        <span class="step">4</span>Click <strong>Add to Quiz</strong>
+      </p>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Question Text</div>
+      <textarea id="plainQText" style="min-height:100px" placeholder="Type your question here — e.g. Which of the following is NOT a function of money?"></textarea>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Answer Options</div>
+      <p class="correct-hint">Select the radio button next to the correct answer</p>
+      <div class="arow"><input type="radio" name="plainC" value="0"><span class="alabel">A</span><input type="text" id="plainA0" placeholder="Answer A"></div>
+      <div class="arow"><input type="radio" name="plainC" value="1"><span class="alabel">B</span><input type="text" id="plainA1" placeholder="Answer B"></div>
+      <div class="arow"><input type="radio" name="plainC" value="2"><span class="alabel">C</span><input type="text" id="plainA2" placeholder="Answer C"></div>
+      <div class="arow"><input type="radio" name="plainC" value="3"><span class="alabel">D</span><input type="text" id="plainA3" placeholder="Answer D"></div>
+    </div>
+
+    <div class="add-bar">
+      <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
+        <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
+        <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-success" id="plainAddBtn" onclick="plainAddQ()">+ Add to Quiz</button>
+        <button class="btn" onclick="plainPreview()">Preview this ↗</button>
+      </div>
+      <div class="msg" id="plainMsg"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══
+     Load order matters: utils first, then diagram modules, then quiz export, then app.
+     To add a new diagram type, add its <script> tag here alongside the others.
+-->
+<script src="js/utils.js?v=3"></script>
+<script src="js/diagrams/sd.js?v=3"></script>
+<script src="js/diagrams/sc.js?v=3"></script>
+<script src="js/diagrams/ppf.js?v=3"></script>
+<script src="js/diagrams/table.js?v=3"></script>
+<script src="js/diagrams/pm.js?v=3"></script>
+<script src="js/diagrams/tax.js?v=3"></script>
+<script src="js/diagrams/ped.js?v=3"></script>
+<script src="js/diagrams/sur.js?v=3"></script>
+<script src="js/diagrams/trade.js?v=3"></script>
+<script src="js/diagrams/plain.js?v=3"></script>
+<script src="js/quiz-export.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
+<script src="js/dictate.js"></script>
+<script src="js/autocap.js"></script>
+
+</body>
+</html>

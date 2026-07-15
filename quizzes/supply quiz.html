@@ -4,59 +4,62 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Economics Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#fafaf8;height:100vh;height:100dvh;overflow:hidden;color:#33343c;display:flex;flex-direction:column}
-#topbar{background:#0A0C56;padding:9px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+body{font-family:'Nunito','Segoe UI',system-ui,-apple-system,sans-serif;background:#fffdf5;height:100vh;height:100dvh;overflow:hidden;color:#2d2a4a;display:flex;flex-direction:column}
+#topbar{background:#2d2a4a;padding:9px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 #brand{display:flex;align-items:center}
 #brand svg{height:19px;width:auto;display:block}
-#progline{height:3px;background:#1b1e63;flex-shrink:0}
-#progfill{height:3px;background:#EC3C78;width:0%;transition:width .3s}
+#progline{height:3px;background:#3d3960;flex-shrink:0}
+#progfill{height:3px;background:#ff9f43;width:0%;transition:width .3s}
 #app{display:flex;flex:1;min-height:0}
-#diag-panel{flex:1.2;background:#fff;border-right:1px solid #ecebe4;display:flex;align-items:center;justify-content:center;padding:32px;overflow:hidden}
+#diag-panel{flex:1.2;background:#fff;border-right:1px solid #efecff;display:flex;align-items:center;justify-content:center;padding:32px;overflow:hidden}
 #diagWrap{width:100%}
 #diagWrap svg{width:100%;max-height:86dvh;display:block}
 #q-panel{flex:1;display:flex;flex-direction:column;padding:36px 32px;padding-bottom:max(36px,env(safe-area-inset-bottom));gap:18px;min-width:280px;overflow-y:auto}
-.qnum{font-size:12px;color:#9a9a92;letter-spacing:.02em;font-weight:400}
-.qtext{font-size:19px;line-height:1.6;font-weight:600;color:#2f3038}
+.qnum{font-size:12px;color:#6c5ce7;letter-spacing:.02em;font-weight:800}
+.qtext{font-size:19px;line-height:1.6;font-weight:800;color:#2d2a4a}
 .abtns{display:flex;flex-direction:column;gap:10px}
-.abtn{font-family:inherit;font-size:18px;padding:15px 19px;border:1px solid #e0e0da;border-radius:10px;background:#fff;cursor:pointer;text-align:left;color:#3a3a44;transition:all .15s;line-height:1.5}
-.abtn:hover{border-color:#c3c2b9;background:#fdfdfb}
-.abtn.wrong{background:#fdecec;border-color:#a32d2d;color:#a32d2d;pointer-events:none;font-weight:600}
-.abtn.correct{background:#eef5f1;border-color:#0F6E56;color:#0F6E56;font-weight:600;pointer-events:none}
+.abtn{font-family:inherit;font-size:18px;font-weight:600;padding:15px 19px;border:2px solid #e4e2f4;border-radius:14px;background:#fff;cursor:pointer;text-align:left;color:#2d2a4a;transition:all .15s;line-height:1.5;box-shadow:0 2px 0 #e4e2f4}
+.abtn:hover{border-color:#6c5ce7;background:#f7f5ff;box-shadow:0 2px 0 #cfc8f5}
+.abtn.wrong{background:#ffe6ef;border-color:#EC3C78;color:#c2185b;pointer-events:none;font-weight:700;box-shadow:none}
+.abtn.correct{background:#e0f7f1;border-color:#00b894;color:#00795f;font-weight:700;pointer-events:none;box-shadow:none}
 .abtn.used{pointer-events:none;opacity:0.5}
-.fb{font-size:14px;font-weight:600;min-height:20px}
-.fb.c{color:#0F6E56}.fb.w{color:#a32d2d}
-.nav{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:16px;border-top:1px solid #ecebe4;flex-shrink:0}
-.nbtn{font-family:inherit;font-size:14px;font-weight:500;padding:10px 22px;border-radius:8px;cursor:pointer;border:1px solid #e0e0da;background:transparent;color:#5c5c66;transition:all .15s;white-space:nowrap}
-.nbtn:hover:not(:disabled){background:#f4f3ef;border-color:#c3c2b9}
+.fb{font-size:14px;font-weight:800;min-height:20px}
+.fb.c{color:#00997e}.fb.w{color:#c2185b}
+.fb-exp{display:block;margin-top:6px;font-weight:500;font-size:13px;line-height:1.45;color:#4a4766}
+.nav{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:16px;border-top:2px dashed #e4e2f4;flex-shrink:0}
+.nbtn{font-family:inherit;font-size:14px;font-weight:700;padding:10px 22px;border-radius:12px;cursor:pointer;border:2px solid #e4e2f4;background:transparent;color:#7b7894;transition:all .15s;white-space:nowrap}
+.nbtn:hover:not(:disabled){background:#efecff;border-color:#6c5ce7;color:#2d2a4a}
 .nbtn:disabled{opacity:0.3;cursor:not-allowed}
-.nbtn.pri{background:#0A0C56;color:#fff;border-color:#0A0C56;font-weight:600}
-.nbtn.pri:hover:not(:disabled){background:#151875;border-color:#151875}
-#replayBtn{font-family:'Verdana',sans-serif;font-size:16px;font-weight:600;padding:10px 14px;border-radius:8px;cursor:pointer;border:1.5px solid #d3d1c7;background:#fff;color:#5f5e5a;transition:all .15s;white-space:nowrap}
-#replayBtn:hover{background:#f1efe8;border-color:#888780;color:#2c2c2a}
-#revealBtn{font-family:'Verdana',sans-serif;font-size:13px;font-weight:600;padding:10px 16px;border-radius:8px;cursor:pointer;border:1.5px solid #C47D00;background:#fff8ed;color:#C47D00;transition:all .15s;white-space:nowrap}
-#revealBtn:hover{background:#fef0cc;border-color:#9a5f00;color:#9a5f00}
-.prog{font-size:12px;color:#888780;flex:1;text-align:center;line-height:1.5}
-#score-screen{display:none;position:fixed;inset:0;background:rgba(250,250,248,0.97);align-items:center;justify-content:center;flex-direction:column;gap:24px}
+.nbtn.pri{background:#6c5ce7;color:#fff;border-color:#6c5ce7;font-weight:800;box-shadow:0 3px 0 #5346c4}
+.nbtn.pri:hover:not(:disabled){background:#5b4bd5;border-color:#5b4bd5}
+#replayBtn{font-family:inherit;font-size:16px;font-weight:700;padding:10px 14px;border-radius:12px;cursor:pointer;border:2px solid #e4e2f4;background:#fff;color:#7b7894;transition:all .15s;white-space:nowrap}
+#replayBtn:hover{background:#efecff;border-color:#6c5ce7;color:#2d2a4a}
+#revealBtn{font-family:inherit;font-size:13px;font-weight:800;padding:10px 16px;border-radius:12px;cursor:pointer;border:2px solid #ff9f43;background:#fff1e0;color:#c96f00;transition:all .15s;white-space:nowrap}
+#revealBtn:hover{background:#ffd6a3;border-color:#e08528;color:#9a5f00}
+.prog{font-size:12px;color:#7b7894;font-weight:700;flex:1;text-align:center;line-height:1.5}
+#score-screen{display:none;position:fixed;inset:0;background:rgba(255,253,245,0.97);align-items:center;justify-content:center;flex-direction:column;gap:24px}
 #score-screen.show{display:flex}
-.sbox{background:#fff;border:1.5px solid #d3d1c7;border-radius:16px;padding:52px 72px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
-.sbox h2{font-size:22px;font-weight:700;margin-bottom:6px}
-.snum{font-size:56px;font-weight:700;color:#0A0C56;margin:16px 0 8px}
-.sbox p{font-size:14px;color:#5f5e5a}
-.rbtn{font-family:inherit;font-size:13px;font-weight:600;padding:12px 32px;background:#0A0C56;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background .15s}
-.rbtn:hover{background:#151875}
+.sbox{background:#fff;border:3px solid #2d2a4a;border-radius:24px;padding:52px 72px;text-align:center;box-shadow:8px 8px 0 #e0f7f1}
+.sbox h2{font-size:22px;font-weight:900;margin-bottom:6px}
+.snum{font-size:56px;font-weight:900;color:#6c5ce7;margin:16px 0 8px}
+.sbox p{font-size:14px;color:#7b7894;font-weight:700}
+.rbtn{font-family:inherit;font-size:13px;font-weight:900;padding:12px 32px;background:#00b894;color:#fff;border:none;border-radius:12px;cursor:pointer;box-shadow:0 4px 0 #00997e;transition:all .15s}
+.rbtn:hover{transform:translateY(2px);box-shadow:0 2px 0 #00997e}
 .quiz-tbl-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding:32px;width:100%}
-.quiz-tbl-title{font-size:20px;font-weight:700;color:#2c2c2a;text-align:center}
-.quiz-tbl{border-collapse:collapse;font-size:18px;font-family:'Verdana',sans-serif;border:2px solid #EC3C78}
-.quiz-tbl th{background:#0A0C56;color:#fff;padding:14px 28px;font-size:17px;font-weight:600;text-align:center}
-.quiz-tbl td{padding:13px 28px;border:1px solid rgba(236,60,120,0.30);text-align:center;color:#2c2c2a;background:#fff}
-.quiz-tbl tbody tr:nth-child(even) td{background:#f5f4f0}
+.quiz-tbl-title{font-size:20px;font-weight:900;color:#2d2a4a;text-align:center}
+.quiz-tbl{border-collapse:collapse;font-size:18px;font-family:'Verdana',sans-serif;border:2px solid #6c5ce7;border-radius:8px}
+.quiz-tbl th{background:#6c5ce7;color:#fff;padding:14px 28px;font-size:17px;font-weight:600;text-align:center}
+.quiz-tbl td{padding:13px 28px;border:1px solid #e4e2f4;text-align:center;color:#2d2a4a;background:#fff}
+.quiz-tbl tbody tr:nth-child(even) td{background:#fbfaff}
 #app.plain-q #diag-panel{display:none}
 #app.plain-q #q-panel{max-width:700px;margin:0 auto;flex:none;width:100%}
 @media (max-width:680px) and (orientation:portrait){
   #app{flex-direction:column}
-  #diag-panel{flex:none;height:42dvh;border-right:none;border-bottom:2px solid #d3d1c7;padding:10px;justify-content:center}
+  #diag-panel{flex:none;height:42dvh;border-right:none;border-bottom:2px solid #e4e2f4;padding:10px;justify-content:center}
   #diagWrap svg{max-height:40dvh}
   #q-panel{flex:1;padding:10px 14px;padding-bottom:max(10px,env(safe-area-inset-bottom));gap:6px;min-width:0;overflow-y:auto}
   .qtext{font-size:14px;line-height:1.5}
@@ -144,7 +147,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#fafaf
 </div>
 <script>
 const GRID=9,QS=1,QE=9;
-const qs=[{"type":"sc","curve":"supply","title":"Supply of coffee","yLabel":"Price ($kg)","xLabel":"Quantity","color":"#a06e03","vUnit":2,"hUnit":20,"startFP":3,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":0,"questionText":"Suppose that the price of coffee increases from $6 per kg to $8 per kg. What should happen to supply?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":2},{"type":"sc","curve":"supply","title":"Supply of manufactured goods","yLabel":"Price ($)","xLabel":"Quantity","color":"#9886f3","vUnit":10,"hUnit":30,"startFP":3,"startCS":0,"showEqLines":false,"ansFP":3,"ansCS":-1,"questionText":"An increase in the minimum wage for a manufacturing firm raises the cost of labour for the firm. How would this likely impact the supply of the manufactured good?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":1},{"type":"sc","curve":"supply","title":"Supply of wheat","yLabel":"Price ($kg)","xLabel":"Quantity","color":"#0d8005","vUnit":1,"hUnit":25,"startFP":3,"startCS":0,"showEqLines":false,"ansFP":3,"ansCS":1,"questionText":"Suppose that wheat and rice are related goods that can be substituted in production. If the price of rice was to decrease on global markets, how would this impact the supply of wheat?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":0},{"type":"sc","curve":"supply","title":"Supply of oil","yLabel":"Price ($ barrel)","xLabel":"Quantity","color":"#959994","vUnit":20,"hUnit":40,"startFP":3,"startCS":0,"showEqLines":false,"ansFP":3,"ansCS":1,"questionText":"Suppose that new fracking technology opens up new oil reserves. How would this likely impact the supply of oil?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":0},{"type":"plain","questionText":"The cost of fertiliser purchased and used by the agricultural industry falls, increasing the supply of crops. Which factor best explains this shift?","answers":["A fall in the price of crops","The provision of a subsidy","Improvement in technology","A decrease in the cost of factors of production"],"correctIndex":3},{"type":"sc","curve":"supply","title":"Supply of tea","yLabel":"Price ($kg)","xLabel":"Quantity","color":"#0f6e56","vUnit":1,"hUnit":40,"startFP":3,"startCS":-1,"showEqLines":false,"ansFP":3,"ansCS":-1,"questionText":"Which of the following factors could explain the shift in the supply of tea from S1 to S2?","answers":["Selective breeding resulting in disease resistant tea plants","An increase in land rents on tea plantations","A decrease in the price of tea","An increase in the number of tea plantations"],"correctIndex":1},{"type":"plain","questionText":"Suppose that an economy decides to subsidise its agricultural sector by giving payments to farmers who produce beef. How would this likely affect the supply of beef?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":0},{"type":"table","title":"","headers":["Time","Coal ($ / tonne)","Gas ($ / GJ)"],"rows":[["Today","150","15"],["Five years' time","150","10"]],"questionText":"Study the table below showing the expected real price of coal and gas. In five years' time, what would likely happen to the supply of coal?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":0},{"type":"table","title":"","headers":["Time","Coal ($ / tonne)","Gas ($ / GJ)"],"rows":[["Today","150","15"],["Five years' time","165","16.5"]],"questionText":"Consider the same energy sources, but this time both are expected to increase in price by 10% over the next 5 years. Ceteris paribus, what would likely happen to the supply of gas?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be no change in supply"],"correctIndex":3},{"type":"sc","curve":"supply","title":"Supply of bananas","yLabel":"Price ($kg)","xLabel":"Quantity","color":"#B8860B","vUnit":1,"hUnit":40,"startFP":3,"startCS":0,"showEqLines":false,"ansFP":3,"ansCS":-1,"questionText":"Suppose that a tropical cyclone damages the banana crop of an economy. What is the likely impact on supply?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":1},{"type":"sc","curve":"supply","title":"Supply of petrol cars","yLabel":"Price ($000s)","xLabel":"Quantity","color":"#121212","vUnit":5000,"hUnit":25,"startFP":3,"startCS":-1,"showEqLines":false,"ansFP":3,"ansCS":-1,"questionText":"What could explain the change in the supply of petrol cars from S1 to S2?","answers":["Increased use of robotics in the production of petrol cars","Introduction of a tax on petrol cars","An increase in the number of petrol car manufacturing firms","A reduction in public transport costs"],"correctIndex":1},{"type":"plain","questionText":"In the quest to reduce global CO2 emissions, more firms enter the mining sector to extract lithium for battery production. How would this affect the supply of lithium on global markets?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":0},{"type":"table","title":"","headers":["Year","Cigarette tax (as % of retail price)"],"rows":[["1","70"],["2","80"]],"questionText":"Consider the table below which shows changes to the tax placed on cigarettes. How would this likely impact the supply of cigarettes in year 2?","answers":["There will be an increase in supply","There will be a decrease in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":1},{"type":"plain","questionText":"Which of the following changes in the factors of production would increase supply?","answers":["A decrease in the productivity of labour","A rise in the price of raw materials","An improvement in new technology","A reduction in the size of the workforce"],"correctIndex":2},{"type":"sc","curve":"supply","title":"Supply of mobile phones","yLabel":"Price ($)","xLabel":"Quantity","color":"#f50511","vUnit":200,"hUnit":40,"startFP":5,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":0,"questionText":"Suppose that the price of mobile phones fell by 20%. Given the curve shown, what would be the result in the supply of mobile phones?","answers":["A decrease in supply 40 mobile phones","An increase in supply 40 mobile phones","A contraction in supply 40 mobile phones","An expansion in supply of 40 mobile phones"],"correctIndex":2}];
+const qs=[{"type":"sc","curve":"supply","title":"Supply of coffee","yLabel":"Price ($/kg)","xLabel":"Quantity","color":"#000000","vUnit":2,"hUnit":20,"startFP":3,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":0,"questionText":"Suppose that the price of coffee increases from $6 per kg to $8 per kg. What should happen to supply?","answers":["There will be an increase in supply","There will be an expansion in supply","There will be a decrease in supply","There will be a contraction in supply"],"correctIndex":1,"explanation":"A change in the good's own price moves us along the supply curve. A higher price makes production more profitable, so quantity supplied rises — an expansion."},{"type":"sc","curve":"supply","title":"Supply of wheat","yLabel":"Price ($/kg)","xLabel":"Quantity (tonnes)","color":"#000000","vUnit":1,"hUnit":25,"startFP":3,"startCS":0,"showEqLines":true,"ansFP":5,"ansCS":0,"questionText":"Consider the supply of wheat. Suppose the price of wheat rises from $3 to $5 per kg. What happens to the supply of wheat?","answers":["There will be an increase in supply, from 75 to 125 tonnes","There will be a contraction in supply, from 125 to 75 tonnes","There will be an expansion in supply, from 75 to 125 tonnes","There will be a decrease in supply, from 125 to 75 tonnes"],"correctIndex":2,"explanation":"A higher own price is a movement along the supply curve. Producers offer more — an expansion — from 75 to 125 tonnes."},{"type":"sc","curve":"supply","title":"Supply of wheat","yLabel":"Price ($/kg)","xLabel":"Quantity (tonnes)","color":"#000000","vUnit":1,"hUnit":25,"startFP":3,"startCS":1,"showEqLines":true,"ansFP":3,"ansCS":1,"questionText":"Wheat and rice are related goods that can be substituted in production. The price of rice falls on global markets, shifting the supply of wheat from S1 to S2. At a price of $3 per kg, what has happened to the supply of wheat?","answers":["An increase in supply, from 75 to 125 tonnes","An expansion in supply, from 75 to 125 tonnes","A decrease in supply, from 125 to 75 tonnes","A contraction in supply, from 125 to 75 tonnes"],"correctIndex":0,"explanation":"Wheat and rice are substitutes in production. Cheaper rice makes wheat relatively more attractive to grow, so the whole wheat supply curve shifts right — an increase from 75 to 125 tonnes."},{"type":"plain","questionText":"Which of the following would cause a movement along the supply curve for wheat, rather than a shift of the whole curve?","answers":["A fall in the price of the fertiliser used to grow wheat","An improvement in harvesting technology","A government subsidy paid to wheat farmers","A rise in the price of wheat"],"correctIndex":3,"explanation":"Only a change in the good's own price moves us along the supply curve. Cheaper fertiliser, better technology and subsidies all shift the whole curve."},{"type":"sc","curve":"supply","title":"Supply of manufactured goods","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":10,"hUnit":30,"startFP":3,"startCS":0,"showEqLines":false,"ansFP":3,"ansCS":-1,"questionText":"An increase in the minimum wage for a manufacturing firm raises the cost of labour for the firm. How would this likely impact the supply of the manufactured good?","answers":["There will be a decrease in supply","There will be an increase in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":0,"explanation":"A higher minimum wage raises the cost of production, shifting the whole supply curve left — a decrease in supply."},{"type":"sc","curve":"supply","title":"Supply of oil","yLabel":"Price ($ per barrel)","xLabel":"Quantity","color":"#000000","vUnit":20,"hUnit":40,"startFP":3,"startCS":0,"showEqLines":false,"ansFP":3,"ansCS":2,"questionText":"Suppose that new fracking technology opens up new oil reserves. How would this likely impact the supply of oil?","answers":["There will be a decrease in supply","There will be an expansion in supply","There will be an increase in supply","There will be a contraction in supply"],"correctIndex":2,"explanation":"New fracking technology and reserves lower extraction costs and expand capacity, shifting supply right — an increase."},{"type":"plain","questionText":"In the quest to reduce global CO2 emissions, more firms enter the mining sector to extract lithium for battery production. How would this affect the supply of lithium on global markets?","answers":["There will be a decrease in supply","There will be an increase in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":1,"explanation":"More producers entering the market shifts the whole supply curve right — an increase in supply."},{"type":"plain","questionText":"The cost of fertiliser purchased and used by the agricultural industry falls, increasing the supply of crops. Which factor best explains this shift?","answers":["A fall in the price of crops","The provision of a subsidy","Improvement in technology","A decrease in the cost of factors of production"],"correctIndex":3,"explanation":"Fertiliser is an input, so cheaper fertiliser is a fall in the cost of the factors of production, which increases supply."},{"type":"plain","questionText":"Suppose that an economy decides to subsidise its agricultural sector by giving payments to farmers who produce beef. How would this likely affect the supply of beef?","answers":["There will be a decrease in supply","There will be a contraction in supply","There will be an increase in supply","There will be an expansion in supply"],"correctIndex":2,"explanation":"A subsidy lowers producers' effective costs, shifting the supply curve right — an increase in supply."},{"type":"plain","questionText":"Which of the following changes would increase the supply of a good?","answers":["An improvement in production technology","A decrease in the productivity of labour","A rise in the price of raw materials","A reduction in the size of the workforce"],"correctIndex":0,"explanation":"Better production technology lowers unit costs and raises output, increasing supply. The other options all reduce supply."},{"type":"table","title":"","headers":["Year","Cigarette tax (as % of retail price)"],"rows":[["1","70"],["2","80"]],"questionText":"Consider the table below which shows changes to the tax placed on cigarettes. How would this likely impact the supply of cigarettes in year 2?","answers":["There will be an increase in supply","There will be an expansion in supply","There will be a contraction in supply","There will be a decrease in supply"],"correctIndex":3,"explanation":"A higher tax raises producers' costs, shifting supply left — a decrease in supply."},{"type":"sc","curve":"supply","title":"Supply of bananas","yLabel":"Price ($/kg)","xLabel":"Quantity","color":"#000000","vUnit":1,"hUnit":40,"startFP":3,"startCS":0,"showEqLines":false,"ansFP":3,"ansCS":-1,"questionText":"Suppose that a tropical cyclone damages the banana crop of an economy. What is the likely impact on supply?","answers":["There will be a decrease in supply","There will be an increase in supply","There will be an expansion in supply","There will be a contraction in supply"],"correctIndex":0,"explanation":"Destroying part of the crop reduces what can be produced, shifting supply left — a decrease."},{"type":"sc","curve":"supply","title":"Supply of solar panels","yLabel":"Price ($)","xLabel":"Quantity (panels)","color":"#000000","vUnit":200,"hUnit":50,"startFP":3,"startCS":1,"showEqLines":true,"ansFP":3,"ansCS":1,"questionText":"An improvement in manufacturing technology shifts the supply of solar panels from S1 to S2. At a price of $600, by how much has the supply of solar panels increased?","answers":["By 50 panels","By 100 panels","By 150 panels","By 200 panels"],"correctIndex":1,"explanation":"Read the horizontal gap between S1 and S2 at $600: quantity supplied rises by 100 panels."},{"type":"sc","curve":"supply","title":"Supply of steel","yLabel":"Price ($ per tonne)","xLabel":"Quantity (tonnes)","color":"#000000","vUnit":100,"hUnit":30,"startFP":6,"startCS":-2,"showEqLines":true,"ansFP":6,"ansCS":-2,"questionText":"A sharp rise in the cost of iron ore shifts the supply of steel from S1 to S2. At a price of $600 per tonne, by how much has the supply of steel decreased?","answers":["By 60 tonnes","By 90 tonnes","By 150 tonnes","By 120 tonnes"],"correctIndex":3,"explanation":"A dearer input (iron ore) shifts steel supply left. Reading the gap at $600 per tonne, quantity supplied falls by 120 tonnes."},{"type":"sc","curve":"supply","title":"Supply of milk","yLabel":"Price ($ per litre)","xLabel":"Quantity (litres)","color":"#000000","vUnit":0.5,"hUnit":40,"startFP":4,"startCS":2,"showEqLines":true,"ansFP":4,"ansCS":2,"questionText":"A government subsidy shifts the supply of milk from S1 to S2. At a price of $2 per litre, what quantity is now supplied, and how should the change be described?","answers":["160 litres, an increase of 160","320 litres, an increase of 160","320 litres, an expansion of 160","160 litres, an expansion of 160"],"correctIndex":1,"explanation":"The subsidy shifts supply right — an increase (a shift), not an expansion. At $2, S2 gives 320 litres, up 160 from 160."},{"type":"sc","curve":"supply","title":"Supply of tea","yLabel":"Price ($/kg)","xLabel":"Quantity","color":"#000000","vUnit":1,"hUnit":40,"startFP":3,"startCS":-1,"showEqLines":false,"ansFP":3,"ansCS":-1,"questionText":"Which of the following factors could explain the shift in the supply of tea from S1 to S2?","answers":["An increase in land rents on tea plantations","Selective breeding resulting in disease resistant tea plants","A decrease in the price of tea","An increase in the number of tea plantations"],"correctIndex":0,"explanation":"The leftward shift is a decrease in supply, caused by higher costs — an increase in land rents. The other options would raise supply or move along the curve."},{"type":"sc","curve":"supply","title":"Supply of petrol cars","yLabel":"Price ($000s)","xLabel":"Quantity","color":"#000000","vUnit":5000,"hUnit":25,"startFP":3,"startCS":2,"showEqLines":false,"ansFP":3,"ansCS":2,"questionText":"What could explain the change in the supply of petrol cars from S1 to S2?","answers":["The introduction of a tax on petrol cars","A rise in the wages of car factory workers","Increased use of robotics in the production of petrol cars","An increase in consumer demand for petrol cars"],"correctIndex":2,"explanation":"The rightward shift is an increase in supply from lower production costs — robotics. A tax or higher wages would decrease supply, and higher demand shifts demand, not supply."},{"type":"plain","questionText":"Smartphones and tablets are substitutes in production: a contract manufacturer can assemble either on the same line, using the same workers and many of the same components. A surge in demand pushes the price of smartphones up sharply, while the price of tablets is unchanged. What happens to the supply of tablets?","answers":["A contraction in supply, as producers move along the tablet supply curve","A decrease in supply, as the tablet supply curve shifts to the left","An increase in supply, as the tablet supply curve shifts to the right","No change in supply, because the price of tablets has not changed"],"correctIndex":1,"explanation":"Tablets and phones are substitutes in production. With phones now more profitable, the manufacturer switches its line to phones, shifting tablet supply left — a decrease."},{"type":"plain","questionText":"Finished tablets can be held in warehouses and released at any time. Manufacturers now expect the price of tablets to fall sharply next quarter, when a new model launches. What is the most likely effect on the supply of tablets this quarter?","answers":["A decrease in supply, as manufacturers hold stock back to sell next quarter","An expansion in supply, as producers move along the tablet supply curve","An increase in supply, as manufacturers release stock ahead of the price fall","No change in supply, because the price of tablets has not actually fallen yet"],"correctIndex":2,"explanation":"Expecting a price fall next quarter, producers release stored stock now to sell before prices drop, increasing current supply."},{"type":"sc","curve":"supply","title":"Supply of mobile phones","yLabel":"Price ($)","xLabel":"Quantity","color":"#000000","vUnit":200,"hUnit":40,"startFP":5,"startCS":0,"showEqLines":true,"ansFP":4,"ansCS":0,"questionText":"Suppose that the price of mobile phones fell by 20%. Given the curve shown, what would be the result in the supply of mobile phones?","answers":["A decrease in supply of 40 mobile phones","An expansion in supply of 40 mobile phones","An increase in supply of 40 mobile phones","A contraction in supply of 40 mobile phones"],"correctIndex":3,"explanation":"A fall in the good's own price is a movement along the curve. Lower price makes production less profitable, so quantity supplied contracts by 40."}];
 const TESTMODE=false;
 let cur=0;
 const done=new Array(qs.length).fill(false);
@@ -156,12 +159,13 @@ const curPos=qs.map(q=>{
   if(q.type==='pm') return{dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
   if(q.type==='tax') return Object.assign(txPos(q),{fpA:-1});
   if(q.type==='sur') return{dA:0,sA:0,fpA:0};
+  if(q.type==='trade') return{dA:0,sA:0,fpA:-1};
   return{dA:0,sA:0,fpA:q.startFP||5};
 });
 // ── tax / subsidy / externality helpers (mirrored from utils.js) ──────────────
-function txIsExt(t){ return t==='negext'||t==='posext'; }
+function txIsExt(t){ return t==='negext'||t==='posext'||t==='posprod'; }
 function txLabels(t){
-  if(t==='negext') return {d1:'MSB', d2:'MSB', s1:'MPC', s2:'MSC'};
+  if(t==='negext'||t==='posprod') return {d1:'MSB', d2:'MSB', s1:'MPC', s2:'MSC'};
   if(t==='posext') return {d1:'MPB', d2:'MSB', s1:'MSC', s2:'MSC'};
   return {d1:'D1', d2:'D2', s1:'S1', s2:'S2'};
 }
@@ -291,8 +295,171 @@ function surRegions(mode,Qt,Pc,Ps){
     [[0,Dm],[0,Pst],[Qt,Pst],[Qt,dm(Qt)]], [[0,Pst],[Qt,Pst],[Qt,Pc],[0,Pc]], [[0,Pc],[Qt,Pc],[0,0]],
     [[Qt,dm(Qt)],[Qe,Pst],[Qt,Pst]], [[Qt,Pst],[Qe,Pst],[Qt,Pc]] ];
 }
-function surInner(q,nRev){
+function tradeInner(q, nRev, stagger){
+  var W=400,H=340,padl=48,padr=44,padt=26,padb=46,GRID=10;
+  var adel=function(idx){ return stagger?(' style="animation:labelFadeIn .6s ease-out both;animation-delay:'+((idx+1)*0.25).toFixed(2)+'s"'):''; };
+  var gx=function(Q){return padl+Q*(W-padl-padr)/GRID;};
+  var gy=function(P){return padt+(GRID-P)*(H-padt-padb)/GRID;};
+  var esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var vU=(q.vUnit==null?10:q.vUnit), hU=(q.hUnit==null?10:q.hUnit);
+  var f=function(n){return Math.round(n*100)/100;};
+  var fmt=function(n){n=Math.round(n*100)/100; return (''+n);};
+  var Pw=(q.worldPrice==null?20:q.worldPrice);      // world price in dollars (typed)
+  var tar=(q.tariff==null?20:q.tariff);             // tariff in dollars (typed)
+  var gPw=Math.round(Pw/vU); if(gPw<1)gPw=1; if(gPw>4)gPw=4;   // snap world price to a gridline (multiple of the price interval), below autarky (5)
+  var mode=q.mode||'tariff';
+  var gPt;                                          // policy price (grid): tariff/quota => domestic price; subsidy => effective producer price Pw+s
+  if(mode==='quota'){
+    var Qq=(q.quota==null?40:q.quota), gQq=Math.round(Qq/hU);   // snap quota to a whole number of quantity intervals
+    var freeImp=10-2*gPw; if(freeImp<0)freeImp=0;   // free-trade import quantity (grid)
+    if(gQq>freeImp)gQq=freeImp; if(gQq<0)gQq=0;     // cannot allow more than free-trade imports
+    gPt=(10-gQq)/2;                                 // price where the demand-supply gap == quota
+  } else if(mode==='subsidy'){
+    var sub=(q.subsidy==null?20:q.subsidy);         // subsidy ($ per unit): producers receive Pw+s
+    gPt=gPw+Math.round(sub/vU);                     // snap subsidy to whole price intervals
+  } else {
+    gPt=gPw+Math.round(tar/vU);                     // snap tariff to whole price intervals
+  }
+  var cap=(mode==='subsidy')?(GRID-gPw):5;          // subsidy caps at self-sufficiency (imports=0); tariff/quota at autarky (5)
+  if(gPt>cap)gPt=cap; if(gPt<gPw)gPt=gPw;           // prohibitive policy clamp
+  var dCol=q.dCol||'#185FA5', sCol=q.sCol||'#0F6E56';
+  var reveals=q.reveals||[]; if(nRev==null)nRev=reveals.length;
+  var fs=12, fs2=9;
+  var Qs0=gPw, Qd0=GRID-gPw, Qst=gPt, Qdt=(mode==='subsidy')?Qd0:(GRID-gPt);   // subsidy: consumers still pay Pw, so consumption unchanged
+  var poly=function(pts){return pts.map(function(p){return gx(p[0]).toFixed(1)+','+gy(p[1]).toFixed(1);}).join(' ');};
+  var rect=function(x0,x1,y0,y1,fill,stroke,extra){
+    return '<polygon class="tr-fade"'+(extra||'')+' points="'+poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]])+'" fill="'+fill+'"'+(stroke?' stroke="'+stroke+'" stroke-width="1.2"':'')+'/>';
+  };
+  var s='';
+  if(q.title) s+='<text x="'+(W/2)+'" y="16" text-anchor="middle" font-size="'+fs+'" font-family="Verdana" font-weight="bold" fill="#2c2c2a">'+esc(q.title)+'</text>';
+  // -- grid squares --
+  var i;
+  if(!q.hideGrid){
+    for(i=1;i<=GRID;i++) s+='<line x1="'+padl+'" y1="'+gy(i).toFixed(1)+'" x2="'+(W-padr)+'" y2="'+gy(i).toFixed(1)+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
+    for(i=1;i<=GRID;i++) s+='<line x1="'+gx(i).toFixed(1)+'" y1="'+padt+'" x2="'+gx(i).toFixed(1)+'" y2="'+(H-padb)+'" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>';
+  }
+  // -- shaded areas (stepped) --
+  var areas, brackets;
+  if(mode==='quota'){
+    // No separate 'quota rents' box (not used at this level): import spending is one tall
+    // box from 0 up to the quota price Pq. The quota size shows as a bracket.
+    areas={
+      domprod:{r:[0,Qst,0,gPt],   fill:'rgba(15,110,86,.22)', stroke:'#0F6E56', lbl:'Domestic producer revenue'},
+      imports:{r:[Qst,Qdt,0,gPt], fill:'rgba(24,95,165,.24)', stroke:'#185FA5', lbl:'Import spending'}
+    };
+    brackets={
+      tariffrev:{a:Qst,b:Qdt,lbl:'Quota',col:'#C47D00'},
+      prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol},
+      consdec:{a:Qdt,b:Qd0,lbl:'Fall in consumption',col:dCol}
+    };
+  } else if(mode==='subsidy'){
+    // Production subsidy: consumers keep paying Pw (consumption unchanged). Producers
+    // get Pw+s, so output rises to Qst. Subsidy cost sits above Pw over domestic output.
+    areas={
+      tariffrev:{r:[0,Qst,gPw,gPt], fill:'rgba(196,125,0,.34)', stroke:'#C47D00', lbl:'Subsidy cost'},
+      domprod:  {r:[0,Qst,0,gPw],   fill:'rgba(15,110,86,.22)', stroke:'#0F6E56', lbl:'Domestic producer revenue'},
+      imports:  {r:[Qst,Qd0,0,gPw], fill:'rgba(24,95,165,.24)', stroke:'#185FA5', lbl:'Import spending'}
+    };
+    brackets={
+      prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol},
+      consdec:{vert:true, x:Qst, y0:gPw, y1:gPt, lbl:'Subsidy', col:'#C47D00'}   // vertical bracket = per-unit subsidy
+    };
+  } else {
+    areas={
+      tariffrev:{r:[Qst,Qdt,gPw,gPt], fill:'rgba(196,125,0,.34)', stroke:'#C47D00', lbl:'Tariff revenue'},
+      domprod:  {r:[0,Qst,0,gPt],     fill:'rgba(15,110,86,.22)', stroke:'#0F6E56', lbl:'Domestic producer revenue'},
+      imports:  {r:[Qst,Qdt,0,gPw],   fill:'rgba(24,95,165,.24)', stroke:'#185FA5', lbl:'Import spending'}
+    };
+    brackets={ prodinc:{a:Qs0,b:Qst,lbl:'Rise in production',col:sCol}, consdec:{a:Qdt,b:Qd0,lbl:'Fall in consumption',col:dCol} };
+  }
+  brackets.prodlvl={a:0, b:Qst, lbl:'Domestic production', col:sCol};
+  brackets.implvl ={a:Qst, b:Qdt, lbl:'Imports', col:dCol};
+  var order=[], seen={};
+  for(i=0;i<reveals.length;i++){ var rk=reveals[i]; if((rk==='s2'||areas[rk]||brackets[rk])&&!seen[rk]){order.push(rk);seen[rk]=1;} }
+  var s2Pos=order.indexOf('s2');
+  var shiftShown=(mode!=='subsidy')?false:(s2Pos<0?true:(nRev>s2Pos));
+  var QstDraw=(mode==='subsidy'&&!shiftShown)?gPw:Qst;
+  var brk='', alab='';   // brackets and box labels are deferred so they draw in front of the curves
+  for(var r=0;r<Math.min(nRev,order.length);r++){
+    var key=order[r];
+    if(key==='s2') continue;
+    if(areas[key]){
+      var a=areas[key];
+      if(Math.abs(a.r[1]-a.r[0])<0.05 || Math.abs(a.r[3]-a.r[2])<0.05) continue;   // skip zero-area (prohibitive tariff)
+      s+=rect(a.r[0],a.r[1],a.r[2],a.r[3],a.fill,a.stroke,adel(r));
+      var cx=gx((a.r[0]+a.r[1])/2), cy=gy((a.r[2]+a.r[3])/2);
+      var words=a.lbl.split(' '), lh=fs2+1, y0=cy-(words.length-1)*lh/2;
+      alab+='<text'+adel(r)+' x="'+cx.toFixed(1)+'" y="'+y0.toFixed(1)+'" text-anchor="middle" dominant-baseline="central" font-size="'+fs2+'" font-family="Verdana" font-weight="bold" fill="#1a1a1a" stroke="#fff" stroke-width="3" paint-order="stroke">';
+      for(var wi=0;wi<words.length;wi++){ alab+='<tspan x="'+cx.toFixed(1)+'" dy="'+(wi===0?0:lh)+'">'+words[wi]+'</tspan>'; }
+      alab+='</text>';
+    } else {
+      var bk=brackets[key], bg='';
+      if(bk.vert){   // vertical bracket (per-unit subsidy = price gap Pw..Pw+s), drawn just right of the domestic-output line
+        var vx=gx(bk.x)+10, vy0=gy(bk.y0), vy1=gy(bk.y1);
+        bg+='<line x1="'+vx+'" y1="'+vy0.toFixed(1)+'" x2="'+vx+'" y2="'+vy1.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<line x1="'+vx+'" y1="'+vy0.toFixed(1)+'" x2="'+(vx-5)+'" y2="'+vy0.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<line x1="'+vx+'" y1="'+vy1.toFixed(1)+'" x2="'+(vx-5)+'" y2="'+vy1.toFixed(1)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<text x="'+(vx+4)+'" y="'+((vy0+vy1)/2).toFixed(1)+'" dominant-baseline="central" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
+      } else {
+        if(Math.abs(bk.b-bk.a)<0.05) continue;
+        var xa=gx(bk.a), xb=gx(bk.b), by=(H-padb)+20, mid=(xa+xb)/2;
+        bg+='<line x1="'+xa.toFixed(1)+'" y1="'+by+'" x2="'+xb.toFixed(1)+'" y2="'+by+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<line x1="'+xa.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xa.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<line x1="'+xb.toFixed(1)+'" y1="'+(by-5)+'" x2="'+xb.toFixed(1)+'" y2="'+(by+3)+'" stroke="'+bk.col+'" stroke-width="1.6"/>';
+        bg+='<text x="'+mid.toFixed(1)+'" y="'+(by+12)+'" text-anchor="middle" font-size="9" font-family="Verdana" font-weight="700" fill="#1a1a1a" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+bk.lbl+'</text>';
+      }
+      brk+='<g'+adel(r)+'>'+bg+'</g>';
+    }
+  }
+  // -- axes with arrowheads --
+  s+='<defs><marker id="trarr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
+  s+='<line x1="'+padl+'" y1="'+((H-padb)+6)+'" x2="'+padl+'" y2="'+(padt-6)+'" stroke="#444" stroke-width="1.5" marker-end="url(#trarr)" opacity="0.8"/>';
+  s+='<line x1="'+(padl-6)+'" y1="'+(H-padb)+'" x2="'+(W-padr+6)+'" y2="'+(H-padb)+'" stroke="#444" stroke-width="1.5" marker-end="url(#trarr)" opacity="0.8"/>';
+  // -- tick labels (dollars on P axis, units on Q axis) --
+  if(!q.hideNums){
+    for(i=1;i<=GRID;i++){
+      s+='<text x="'+(padl-5)+'" y="'+gy(i).toFixed(1)+'" text-anchor="end" dominant-baseline="central" font-size="'+fs2+'" font-family="Verdana" fill="#888">'+fmt(i*vU)+'</text>';
+      s+='<text x="'+gx(i).toFixed(1)+'" y="'+((H-padb)+11)+'" text-anchor="middle" font-size="'+fs2+'" font-family="Verdana" fill="#888">'+fmt(i*hU)+'</text>';
+    }
+    s+='<text x="'+(padl-6)+'" y="'+((H-padb)+11)+'" text-anchor="end" font-size="'+fs2+'" font-family="Verdana" fill="#888">0</text>';
+  }
+  s+='<text x="'+(padl-34)+'" y="'+((padt+(H-padb))/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle" transform="rotate(-90 '+(padl-34)+' '+((padt+(H-padb))/2)+')">'+esc(q.yLbl||'Price ($)')+'</text>';
+  s+='<text x="'+((padl+(W-padr))/2)+'" y="'+((H-padb)+40)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle">'+esc(q.xLbl||'Quantity')+'</text>';
+  // -- domestic supply & demand (inset one grid square, cross at 5,5) --
+  var C0=1, C1=GRID-1;
+  s+='<line x1="'+gx(C0)+'" y1="'+gy(C0)+'" x2="'+gx(C1)+'" y2="'+gy(C1)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
+  s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">'+((mode==='subsidy'&&shiftShown)?'S1':'S')+'</text>';
+  if(mode==='subsidy'&&shiftShown){ var gsub=gPt-gPw;   // per-unit subsidy shifts supply right/down: S -> S2 (meets Pw at the higher output)
+    var s2anim=(s2Pos>=0)?adel(s2Pos):'';   // fade the shift in only when it is a reveal step (reverse questions)
+    s+='<g'+s2anim+'>';
+    s+='<line x1="'+gx(C0+gsub)+'" y1="'+gy(C0)+'" x2="'+gx(C1)+'" y2="'+gy(C1-gsub)+'" stroke="'+sCol+'" stroke-width="2.5"/>';
+    s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C1-gsub)+4)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+sCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">S2</text>';
+    s+='</g>';
+  }
+  s+='<line x1="'+gx(C0)+'" y1="'+gy(C1)+'" x2="'+gx(C1)+'" y2="'+gy(C0)+'" stroke="'+dCol+'" stroke-width="2.5"/>';
+  s+='<text x="'+(gx(C1)+4)+'" y="'+(gy(C0)-3)+'" font-size="10" font-family="Verdana" font-weight="700" fill="'+dCol+'" stroke="#fff" stroke-width="2.5" paint-order="stroke">D</text>';
+  // -- world-price and tariff-price lines --
+  s+='<line x1="'+padl+'" y1="'+gy(gPw)+'" x2="'+(W-padr)+'" y2="'+gy(gPw)+'" stroke="#444" stroke-width="1.5" stroke-dasharray="7 4"/>';
+  s+='<text x="'+(W-padr+3)+'" y="'+(gy(gPw)+3.5)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#444">Pw</text>';
+  if(mode!=='subsidy' && gPt-gPw>0.05){   // hide the policy price line on a free-trade diagram (tariff/quota = 0)
+    s+='<line x1="'+padl+'" y1="'+gy(gPt)+'" x2="'+gx(Qdt)+'" y2="'+gy(gPt)+'" stroke="#b23a00" stroke-width="1.5" stroke-dasharray="7 4"/>';
+    s+='<text x="'+(gx(Qdt)+3)+'" y="'+(gy(gPt)-3)+'" font-size="9" font-family="Verdana" font-weight="700" fill="#b23a00">'+(mode==='quota'?'Pq':'Pw+t')+'</text>';
+  }
+  // -- quantity guide lines (tariff state) + faint free-trade markers --
+  var fguide=function(Q){ s+='<line x1="'+gx(Q)+'" y1="'+(H-padb)+'" x2="'+gx(Q)+'" y2="'+gy(gPw)+'" stroke="#aaa" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>'; };
+  fguide(Qs0); fguide(Qd0);
+  var qline=function(Q,col){
+    s+='<line x1="'+gx(Q)+'" y1="'+(H-padb)+'" x2="'+gx(Q)+'" y2="'+gy(Q<5?Q:GRID-Q)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+  };
+  if(mode==='subsidy'){
+    s+='<line x1="'+gx(QstDraw)+'" y1="'+(H-padb)+'" x2="'+gx(QstDraw)+'" y2="'+gy(gPw)+'" stroke="'+sCol+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+    s+='<line x1="'+gx(Qdt)+'" y1="'+(H-padb)+'" x2="'+gx(Qdt)+'" y2="'+gy(gPw)+'" stroke="'+dCol+'" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>';
+  } else { qline(QstDraw,sCol); qline(Qdt,dCol); }
+  return s+alab+brk;
+}
+function surInner(q,nRev,stagger){
   var W=400,H=340,L=52,T=28,B=292,QMAX=100;
+  var adel=function(idx){ return stagger?(' style="animation:labelFadeIn .6s ease-out both;animation-delay:'+((idx+1)*0.25).toFixed(2)+'s"'):''; };
   var Dmax=100,Qeq=50,Peq=50, dem=function(Q){return Dmax-Q;}, sup=function(Q){return Q;};
   var mode=q.mode||'eq', param=(q.param==null?20:q.param);
   var isExt=surIsExt(mode), policy=(isExt && !!q.showPolicy);
@@ -335,7 +502,7 @@ function surInner(q,nRev){
     if(isExt){ if(kk==='DWL'&&policy) continue; if(kk==='POL'&&!policy) continue; if(!areaPoly[kk]) continue; }
     else { if(kk==='DWL' && !(Qt<Qeq)) continue; if(kk==='TAX' && mode!=='tax') continue; if((kk==='LOSSCS'||kk==='LOSSPS') && lossIdx(kk).length===0) continue; }
     effReveals.push(kk); }
-  for(var r=0;r<Math.min(nRev,effReveals.length);r++){ var key=effReveals[r]; if(areaPoly[key]){ s+='<polygon class="sur-fade" points="'+poly(areaPoly[key])+'" fill="'+areaFill[key]+'"/>'; } else if(lossFill[key]){ var li=lossIdx(key); for(var mi=0;mi<li.length;mi++){ s+='<polygon class="sur-fade" points="'+poly(elem[li[mi]])+'" fill="'+lossFill[key]+'" stroke="'+(key==='LOSSCS'?'#185FA5':'#0F6E56')+'" stroke-width="1.2" stroke-opacity="0.7"/>'; } } }
+  for(var r=0;r<Math.min(nRev,effReveals.length);r++){ var key=effReveals[r]; if(areaPoly[key]){ s+='<polygon class="sur-fade"'+adel(r)+' points="'+poly(areaPoly[key])+'" fill="'+areaFill[key]+'"/>'; } else if(lossFill[key]){ var li=lossIdx(key); for(var mi=0;mi<li.length;mi++){ s+='<polygon class="sur-fade"'+adel(r)+' points="'+poly(elem[li[mi]])+'" fill="'+lossFill[key]+'" stroke="'+(key==='LOSSCS'?'#185FA5':'#0F6E56')+'" stroke-width="1.2" stroke-opacity="0.7"/>'; } } }
   s+='<line x1="'+L+'" y1="'+(B+6)+'" x2="'+L+'" y2="'+(T-6)+'" stroke="#444" stroke-width="1.5" marker-end="url(#surarr)" opacity="0.8"/>';
   s+='<line x1="'+(L-6)+'" y1="'+B+'" x2="'+(R+6)+'" y2="'+B+'" stroke="#444" stroke-width="1.5" marker-end="url(#surarr)" opacity="0.8"/>';
   s+='<text x="'+(L-38)+'" y="'+((T+B)/2)+'" font-size="'+fs2+'" font-family="Verdana" fill="#555" text-anchor="middle" transform="rotate(-90 '+(L-38)+' '+((T+B)/2)+')">'+esc(q.yLbl||'Price ($)')+'</text>';
@@ -379,19 +546,19 @@ function surInner(q,nRev){
   }
   return s;
 }
+// Tracer dots anchored to fixed PRICES, so their motion is unambiguously horizontal.
+// A vertical and a horizontal translation of a straight line are identical frame by
+// frame, so the eye needs features to track (the aperture problem). See utils.js.
 function shiftTrail(o){
   var d = o.cur - o.from;
   if(Math.abs(d) < 0.0015) return '';
   var total = (o.to == null || Math.abs(o.to - o.from) < 0.0015) ? d : (o.to - o.from);
   var prog  = Math.min(1, Math.abs(d / total));
-  // ease-in-out: speed peaks at the half-way point and dies at both ends
   var speed = Math.min(1, 2 * Math.min(prog, 1 - prog) + 0.06);
   var dir   = d > 0 ? 1 : -1;
   var N = 6, step = 0.17 * speed * Math.abs(total);
   var s = '';
   var qAt = function(p, ds){ return (o.kind === 'd') ? dQf(p, ds, o.dm, o.dsc) : sQf(p, ds, o.ssc); };
-  // A curve leaves the grid at the low prices when it shifts right (and at the high
-  // prices when it shifts left), so those rows must fade rather than blink out.
   var edge = function(q){
     var m = Math.min(q - QS, QE - q);
     return m <= 0 ? 0 : (m < 0.6 ? m / 0.6 : 1);
@@ -402,12 +569,12 @@ function shiftTrail(o){
     for(var j = 0; j < N; j++){
       var d0 = o.cur - dir * step * j;
       var d1 = o.cur - dir * step * (j + 1);
-      if(dir > 0){ if(d0 < o.from) continue; if(d1 < o.from) d1 = o.from; }   // never trail behind D1/S1
+      if(dir > 0){ if(d0 < o.from) continue; if(d1 < o.from) d1 = o.from; }
       else       { if(d0 > o.from) continue; if(d1 > o.from) d1 = o.from; }
       var q0 = qAt(p, d0), q1 = qAt(p, d1);
       if(q0 < QS || q0 > QE || q1 < QS || q1 > QE) continue;
       if(Math.abs(q0 - q1) < 0.004) continue;
-      var a = 0.7 * Math.pow(1 - j / N, 1.6) * ef;   // opaque at the head, thinning back
+      var a = 0.7 * Math.pow(1 - j / N, 1.6) * ef;
       var w = 2.6 * (1 - j / N) + 0.4;
       s += '<line x1="' + o.gx(q1).toFixed(1) + '" y1="' + o.gy(p).toFixed(1) +
            '" x2="' + o.gx(q0).toFixed(1) + '" y2="' + o.gy(p).toFixed(1) +
@@ -420,7 +587,8 @@ function shiftTrail(o){
 function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStaticBracket=false){
   if(q.type==='plain')return'';
   if(q.type==='ped')return '<svg width="100%" viewBox="0 0 400 340">'+pedInner(q)+'</svg>';
-  if(q.type==='sur')return '<svg width="100%" viewBox="0 0 400 340">'+surInner(q,fpA)+'</svg>';
+  if(q.type==='sur')return '<svg width="100%" viewBox="0 0 400 340">'+surInner(q,fpA,isAnimating)+'</svg>';
+  if(q.type==='trade')return '<svg width="100%" viewBox="0 0 400 340">'+tradeInner(q,fpA,isAnimating)+'</svg>';
   if(q.type==='table'){
     const xe=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     let t=`<div class="quiz-tbl-wrap">`;
@@ -441,7 +609,7 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
   const hDisp=hU>=1000?hU/1000:hU;
   let s=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><clipPath id="plotclip"><rect x="${pad.l}" y="${pad.t}" width="${W-pad.l-pad.r}" height="${H-pad.t-pad.b}"/></clipPath></defs>`;
   if(q.title) s+=`<text x="${W/2}" y="16" text-anchor="middle" font-size="${fs}" font-family="Verdana" font-weight="bold" fill="#2c2c2a">${q.title}</text>`;
-  if(q.type!=='ppf'||q.ppfType!=='schedule'){
+  if(!q.hideGrid && (q.type!=='ppf'||q.ppfType!=='schedule')){
     for(let i=1;i<=GRID;i++) s+=`<line x1="${pad.l}" y1="${gy(i)}" x2="${W-pad.r}" y2="${gy(i)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
     for(let i=1;i<=GRID;i++) s+=`<line x1="${gx(i)}" y1="${pad.t}" x2="${gx(i)}" y2="${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.5"/>`;
   }
@@ -453,36 +621,70 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const col=q.color||'#185FA5';
     s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${q.xLabel||'Good A'}</text>`;
     s+=`<text x="9" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666" transform="rotate(-90,9,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel||'Good B'}</text>`;
-    if(q.ppfType==='curved'){
-      s+=`<text x="${pad.l-4}" y="${H-pad.b+11}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
-      if(Math.abs(dA)>0.05){
+    if(q.ppfType==='linear'){
+      // Straight frontier, constant opportunity cost. y-intercept = xInt*oc, so the
+      // line always crosses a grid corner at every x gridline.
+      const xI=q.xInt||6, yI=q.yInt||9;
+      const gcd_=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t;}return a||1;};
+      const vU=(q.vUnit==null?10:q.vUnit), hU=(q.hUnit==null?10:q.hUnit);
+      const rnd_=n=>Math.round(n*100)/100;
+      if(!q.hideNums){
+        for(let i=1;i<=GRID;i++){
+          s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${rnd_(i*vU)}</text>`;
+          s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${rnd_(i*hU)}</text>`;
+        }
+        s+=`<text x="${pad.l-4}" y="${H-pad.b+13}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+      }
+      const front_=(xA,yA,c,r)=>{
+        let o=`<line x1="${gx(0)}" y1="${gy(yA)}" x2="${gx(xA)}" y2="${gy(0)}" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/>`;
+        const g2=gcd_(xA,yA);
+        for(let k=0;k<=g2;k++){ const px=k*xA/g2, py=yA-k*yA/g2;
+          o+=`<circle cx="${gx(px).toFixed(1)}" cy="${gy(py).toFixed(1)}" r="${r}" fill="${c}" stroke="#fff" stroke-width="1.4"/>`; }
+        return o;
+      };
+      const flbl_=(xA,yA,t,txt,c)=>`<text x="${(gx(xA*t)+7).toFixed(1)}" y="${(gy(yA*(1-t))-7).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${c}" font-weight="bold" stroke="#fff" stroke-width="3" paint-order="stroke">${txt}</text>`;
+      if(q.linShift){
+        const xI2=q.xInt2||xI, yI2=q.yInt2||yI;
+        s+=front_(xI,yI,'#999',3.4)+front_(xI2,yI2,col,4);
+        s+=flbl_(xI,yI,0.70,'PPF1','#999')+flbl_(xI2,yI2,0.35,'PPF2',col);
+      } else {
+        s+=front_(xI,yI,col,4)+flbl_(xI,yI,0.5,'PPF',col);
+      }
+    } else if(q.ppfType==='curved'){
+      if(!q.hideNums) s+=`<text x="${pad.l-4}" y="${H-pad.b+11}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
+      const shifted_=Math.abs(dA)>0.05||Math.abs(sA)>0.05;
+      if(shifted_){
         const r0=PPF_BASE;
         const rx0=(r0*cW_/GRID).toFixed(1),ry0=(r0*cH_/GRID).toFixed(1);
         s+=`<path d="M ${gx(0).toFixed(1)} ${gy(r0).toFixed(1)} A ${rx0} ${ry0} 0 0 1 ${gx(r0).toFixed(1)} ${gy(0).toFixed(1)}" stroke="${col}" fill="none" stroke-width="2" stroke-linecap="round" opacity="1"/>`;
-        const lx0=r0*0.72,ly0=Math.sqrt(Math.max(0,r0*r0-lx0*lx0));
-        s+=`<text x="${(gx(lx0)+5).toFixed(1)}" y="${gy(ly0).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" opacity="1" font-weight="bold">PPF1</text>`;
+        const lx0=r0*0.88, ly0=r0*0.475;   // PPF1 low, active curve high — never collide on a pivot
+        s+=`<text x="${(gx(lx0)+5).toFixed(1)}" y="${gy(ly0).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" opacity="1" font-weight="bold" stroke="#fff" stroke-width="3" paint-order="stroke">PPF1</text>`;
       }
-      const r=PPF_BASE+dA*PPF_STEP;
-      if(r>0.3){
-        const rx=(r*cW_/GRID).toFixed(1),ry=(r*cH_/GRID).toFixed(1);
-        s+=`<path d="M ${gx(0).toFixed(1)} ${gy(r).toFixed(1)} A ${rx} ${ry} 0 0 1 ${gx(r).toFixed(1)} ${gy(0).toFixed(1)}" stroke="${col}" fill="none" stroke-width="2.5" stroke-linecap="round"/>`;
-        const lbl=Math.abs(dA)>0.05?'PPF2':'PPF1';
-        const lx=r*0.72,ly=Math.sqrt(Math.max(0,r*r-lx*lx));
-        s+=`<text x="${(gx(lx)+5).toFixed(1)}" y="${gy(ly).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" font-weight="bold">${lbl}</text>`;
+      const rX_=PPF_BASE+dA*PPF_STEP, rY_=PPF_BASE+sA*PPF_STEP;
+      if(rX_>0.3&&rY_>0.3){
+        const rxp=(rX_*cW_/GRID).toFixed(1),ryp=(rY_*cH_/GRID).toFixed(1);
+        s+=`<path d="M ${gx(0).toFixed(1)} ${gy(rY_).toFixed(1)} A ${rxp} ${ryp} 0 0 1 ${gx(rX_).toFixed(1)} ${gy(0).toFixed(1)}" stroke="${col}" fill="none" stroke-width="2.5" stroke-linecap="round"/>`;
+        const lbl=shifted_?'PPF2':'PPF1';
+        const lx=rX_*0.45, ly=rY_*0.893;
+        s+=`<text x="${(gx(lx)+5).toFixed(1)}" y="${gy(ly).toFixed(1)}" font-size="${fs}" font-family="Verdana" fill="${col}" font-weight="bold" stroke="#fff" stroke-width="3" paint-order="stroke">${lbl}</text>`;
       }
     } else {
       const xM=q.xMax||9,yM=q.yMax||9;
       (q.xTicks||[]).forEach(v=>{
         const gxP=gx(v*9/xM);
-        s+=`<line x1="${gxP.toFixed(1)}" y1="${pad.t}" x2="${gxP.toFixed(1)}" y2="${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
-        s+=`<line x1="${gxP.toFixed(1)}" y1="${H-pad.b}" x2="${gxP.toFixed(1)}" y2="${H-pad.b+5}" stroke="#999" stroke-width="1"/>`;
-        s+=`<text x="${gxP.toFixed(1)}" y="${H-pad.b+15}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+        if(!q.hideGrid) s+=`<line x1="${gxP.toFixed(1)}" y1="${pad.t}" x2="${gxP.toFixed(1)}" y2="${H-pad.b}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
+        if(!q.hideNums){
+          s+=`<line x1="${gxP.toFixed(1)}" y1="${H-pad.b}" x2="${gxP.toFixed(1)}" y2="${H-pad.b+5}" stroke="#999" stroke-width="1"/>`;
+          s+=`<text x="${gxP.toFixed(1)}" y="${H-pad.b+15}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+        }
       });
       (q.yTicks||[]).forEach(v=>{
         const gyP=gy(v*9/yM);
-        s+=`<line x1="${pad.l}" y1="${gyP.toFixed(1)}" x2="${W-pad.r}" y2="${gyP.toFixed(1)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
-        s+=`<line x1="${pad.l-5}" y1="${gyP.toFixed(1)}" x2="${pad.l}" y2="${gyP.toFixed(1)}" stroke="#999" stroke-width="1"/>`;
-        s+=`<text x="${pad.l-8}" y="${gyP.toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+        if(!q.hideGrid) s+=`<line x1="${pad.l}" y1="${gyP.toFixed(1)}" x2="${W-pad.r}" y2="${gyP.toFixed(1)}" stroke="#B4B2A9" stroke-width="0.5" opacity="0.6"/>`;
+        if(!q.hideNums){
+          s+=`<line x1="${pad.l-5}" y1="${gyP.toFixed(1)}" x2="${pad.l}" y2="${gyP.toFixed(1)}" stroke="#999" stroke-width="1"/>`;
+          s+=`<text x="${pad.l-8}" y="${gyP.toFixed(1)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#666">${v}</text>`;
+        }
       });
       const pts=(q.schedulePoints||[]).filter(p=>p.x>=0&&p.x<=GRID&&p.y>=0&&p.y<=GRID).sort((a,b)=>a.x-b.x);
       if(pts.length>=2){
@@ -495,13 +697,15 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     }
   } else if(q.type==='sd'){
     const eq=getEq(dA,sA);
-    for(let i=1;i<=GRID;i++){
-      const eP=q.showEqLines!==false&&Math.abs(i-eq.p)<0.05;
-      const eQ=q.showEqLines!==false&&Math.abs(i-eq.q)<0.05;
-      if(!eP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
-      if(!eQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+    if(!q.hideNums){
+      for(let i=1;i<=GRID;i++){
+        const eP=q.showEqLines!==false&&Math.abs(i-eq.p)<0.05;
+        const eQ=q.showEqLines!==false&&Math.abs(i-eq.q)<0.05;
+        if(!eP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+        if(!eQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+      }
+      s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     }
-    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
     s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
     // Faded D1/S1 always at origin — visible whenever the active curve is shifted
@@ -540,9 +744,10 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       s+=`<line x1="${(sAx1+sAt0*sAdx).toFixed(1)}" y1="${(sAy1+sAt0*sAdy).toFixed(1)}" x2="${(sAx1+sAt1*sAdx).toFixed(1)}" y2="${(sAy1+sAt1*sAdy).toFixed(1)}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/>`;
       if(sALbl) s+=`<text x="${(sALbl.x2+5).toFixed(1)}" y="${Math.min(sALbl.y1,sALbl.y2).toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${sl}</text>`;
     }
+    // Tracer dots — make the shift read as horizontal
     if(isAnimating){
-      if(shiftDirD!==0) s+=shiftTrail({kind:"d",from:(q.startDS||0),cur:animDS,to:dA,dm:1,dsc:2,gx:gx,gy:gy,col:q.dColor});
-      if(shiftDirS!==0) s+=shiftTrail({kind:"s",from:(q.startSS||0),cur:animSS,to:sA,ssc:2,gx:gx,gy:gy,col:q.sColor});
+      if(shiftDirD!==0) s+=shiftTrail({kind:'d',from:(q.startDS||0),cur:animDS,to:dA,dm:1,dsc:2,gx:gx,gy:gy,col:q.dColor});
+      if(shiftDirS!==0) s+=shiftTrail({kind:'s',from:(q.startSS||0),cur:animSS,to:sA,ssc:2,gx:gx,gy:gy,col:q.sColor});
     }
     if(eq.q>=QS&&eq.q<=QE&&eq.p>=1&&eq.p<=GRID){
       const ex=gx(eq.q),ey=gy(eq.p);
@@ -564,29 +769,47 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const qd_=dQf(fpA,dA),qs_=sQf(fpA,sA);
     const hasSurplus_=fpA>eq_.p+0.06;
     const bracketCol_=hasSurplus_?'#D85A30':'#7B2FA8';
-    const lbl_=hasSurplus_?'SURPLUS':'SHORTAGE';
+    const isFloor_=q.policy==='floor'||q.policy==='union';
+    const lbl_=q.policy==='union'?'':(hasSurplus_?'SURPLUS':'SHORTAGE');
+    const policyActive_=isFloor_||q.policy==='ceiling';
+    const binds_=isFloor_?fpA>eq_.p+0.06:q.policy==='ceiling'?fpA<eq_.p-0.06:false;
+    const showDiseq_=policyActive_?binds_:!atEq_;
+    const policyLbl_=q.policy==='union'?'Union wage':q.policy==='floor'?'Price floor':q.policy==='ceiling'?'Price ceiling':'';
     const sp_=q.startPrice||fpA,td_=Math.abs(sp_-eq_.p),cd_2=Math.abs(fpA-eq_.p);
     const fade_=td_>0.01?Math.min(cd_2/td_,1):1;
     // Axis tick labels — suppress values that clash with price/eq/Qd/Qs
-    for(let i=1;i<=GRID;i++){
-      const isCP_=!atEq_&&Math.abs(i-fpA)<0.25;
-      const isEP_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.p)<0.15;
-      const isQd_=!atEq_&&Math.abs(i-qd_)<0.25;
-      const isQs_=!atEq_&&Math.abs(i-qs_)<0.25;
-      const isEQ_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.q)<0.15;
-      if(!isCP_&&!isEP_) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
-      if(!isQd_&&!isQs_&&!isEQ_) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+    if(!q.hideNums){
+      for(let i=1;i<=GRID;i++){
+        const isCP_=!atEq_&&Math.abs(i-fpA)<0.25;
+        const isEP_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.p)<0.15;
+        const isQd_=!atEq_&&Math.abs(i-qd_)<0.25;
+        const isQs_=!atEq_&&Math.abs(i-qs_)<0.25;
+        const isEQ_=q.showEqLines!==false&&atEq_&&Math.abs(i-eq_.q)<0.15;
+        if(!isCP_&&!isEP_) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+        if(!isQd_&&!isQs_&&!isEQ_) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+      }
+      s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     }
-    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
     s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
-    // S & D curves
+    // S & D curves — a shifted curve also shows its original position, so that a
+    // question saying "supply increased" has a curve it visibly increased from
+    if(dA!==0){
+      const d1P_=clip(QS,dPf(QS,0),QE,dPf(QE,0),pad,W,H,1);
+      if(d1P_) s+=`<line x1="${d1P_.x1}" y1="${d1P_.y1}" x2="${d1P_.x2}" y2="${d1P_.y2}" stroke="${q.dColor}" stroke-width="2" stroke-linecap="round"/><text x="${d1P_.x2+5}" y="${d1P_.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">D1</text>`;
+    }
+    if(sA!==0){
+      const s1P_=clip(QS,sPf(QS,0),QE,sPf(QE,0),pad,W,H,1);
+      if(s1P_) s+=`<line x1="${s1P_.x1}" y1="${s1P_.y1}" x2="${s1P_.x2}" y2="${s1P_.y2}" stroke="${q.sColor}" stroke-width="2" stroke-linecap="round"/><text x="${s1P_.x2+5}" y="${Math.min(s1P_.y1,s1P_.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">S1</text>`;
+    }
+    const dBaseP_=q.policy==='union'?'DL':'D', sBaseP_=q.policy==='union'?'SL':'S';
+    const dLblP_=dA!==0?dBaseP_+'2':dBaseP_, sLblP_=sA!==0?sBaseP_+'2':sBaseP_;
     const cdP_=clip(QS,dPf(QS,dA),QE,dPf(QE,dA),pad,W,H,1);
     const csP_=clip(QS,sPf(QS,sA),QE,sPf(QE,sA),pad,W,H,1);
-    if(cdP_) s+=`<line x1="${cdP_.x1}" y1="${cdP_.y1}" x2="${cdP_.x2}" y2="${cdP_.y2}" stroke="${q.dColor}" stroke-width="2.5" stroke-linecap="round"/><text x="${cdP_.x2+5}" y="${cdP_.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">D</text>`;
-    if(csP_) s+=`<line x1="${csP_.x1}" y1="${csP_.y1}" x2="${csP_.x2}" y2="${csP_.y2}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/><text x="${csP_.x2+5}" y="${Math.min(csP_.y1,csP_.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">S</text>`;
-    if(atEq_){
-      // At equilibrium — standard dot
+    if(cdP_) s+=`<line x1="${cdP_.x1}" y1="${cdP_.y1}" x2="${cdP_.x2}" y2="${cdP_.y2}" stroke="${q.dColor}" stroke-width="2.5" stroke-linecap="round"/><text x="${cdP_.x2+5}" y="${cdP_.y2}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.dColor}" font-weight="bold">${dLblP_}</text>`;
+    if(csP_) s+=`<line x1="${csP_.x1}" y1="${csP_.y1}" x2="${csP_.x2}" y2="${csP_.y2}" stroke="${q.sColor}" stroke-width="2.5" stroke-linecap="round"/><text x="${csP_.x2+5}" y="${Math.min(csP_.y1,csP_.y2)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.sColor}" font-weight="bold">${sLblP_}</text>`;
+    if(!showDiseq_){
+      // At equilibrium (or a non-binding control) — standard dot
       if(eq_.q>=QS&&eq_.q<=QE&&eq_.p>=1&&eq_.p<=GRID){
         const ex_=gx(eq_.q),ey_=gy(eq_.p);
         if(q.showEqLines!==false){
@@ -599,6 +822,11 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
           }
         }
       }
+      if(policyActive_&&!atEq_){
+        const lpy_=gy(fpA);
+        s+=`<line x1="${pad.l}" y1="${lpy_}" x2="${W-pad.r}" y2="${lpy_}" stroke="#999" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.75"/>`;
+        s+=`<text x="${W-pad.r-2}" y="${lpy_+(isFloor_?12:-5)}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#999" font-weight="bold">${policyLbl_} (non-binding)</text>`;
+      }
     } else {
       const py_=gy(fpA);
       const qdV_=Math.max(QS,Math.min(QE,qd_)),qsV_=Math.max(QS,Math.min(QE,qs_));
@@ -607,8 +835,9 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       // Faint destination dot
       if(eq_.q>=QS&&eq_.q<=QE&&eq_.p>=1&&eq_.p<=GRID)
         s+=`<circle cx="${gx(eq_.q)}" cy="${gy(eq_.p)}" r="4" fill="#D85A30" stroke="white" stroke-width="1.5" opacity="0.2"/>`;
-      // Dashed price line
-      s+=`<line x1="${pad.l}" y1="${py_}" x2="${W-pad.r}" y2="${py_}" stroke="#555" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.7"/>`;
+      // Dashed price line (red style + label when it is a binding control)
+      s+=`<line x1="${pad.l}" y1="${py_}" x2="${W-pad.r}" y2="${py_}" stroke="${policyActive_?'#b23a00':'#555'}" stroke-width="${policyActive_?1.6:1.2}" stroke-dasharray="6,4" opacity="0.85"/>`;
+      if(policyActive_) s+=`<text x="${W-pad.r-2}" y="${py_+(isFloor_?-5:13)}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#b23a00" font-weight="bold">${policyLbl_}</text>`;
       // Vertical dotted lines from intersections
       if(qd_>=QS&&qd_<=QE) s+=`<line x1="${xQd_}" y1="${py_}" x2="${xQd_}" y2="${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>`;
       if(qs_>=QS&&qs_<=QE) s+=`<line x1="${xQs_}" y1="${py_}" x2="${xQs_}" y2="${H-pad.b}" stroke="#888" stroke-width="1" stroke-dasharray="4,3" opacity="0.45"/>`;
@@ -658,7 +887,12 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const txIsSub=q.taxType==='subsidy';
     // Externality variants. The UNSHIFTED (private) curve gives the market outcome
     // and the SHIFTED (social) curve gives the optimum — the reverse of a tax.
-    const txNeg=q.taxType==='negext',txPosE=q.taxType==='posext',txExt=txNeg||txPosE;
+    const txNeg=q.taxType==='negext',txPosE=q.taxType==='posext',txPosP=q.taxType==='posprod';
+    const txExt=txNeg||txPosE||txPosP;
+    // Which curve carries the externality. negext & posprod split the SUPPLY curve
+    // (MPC → MSC); posext splits DEMAND. The reveal LABELS (cost/benefit, tax/subsidy)
+    // still key off txNeg, so posprod correctly inherits benefit/subsidy wording.
+    const txSupSide=txNeg||txPosP;
     const txLbl=txLabels(q.taxType);
     // Demand slope multiplier: inelastic=2 (2 rise:1 run), elastic=0.5 (1 rise:2 run), normal=1
     // dsc=txDm, ssc=1 → every shift button moves the curve exactly 1 grid square
@@ -685,13 +919,20 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     const trpHigh=Math.max(txPc,txPs),trpLow=Math.min(txPc,txPs);
     const tryT=gy(trpHigh),tryB=gy(trpLow),trH=tryB-tryT,trMY=(tryT+tryB)/2;
     // Axis tick labels — suppress values near special markers when labels are shown
-    for(let i=1;i<=GRID;i++){
-      const txNP=txShowLbls&&(Math.abs(i-txPc)<0.4||(!txExt&&Math.abs(i-txPs)<0.4)||Math.abs(i-txP0)<0.4);
-      const txNQ=txShowLbls&&(Math.abs(i-txQn)<0.4||Math.abs(i-txQ0)<0.4);
-      if(!txNP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
-      if(!txNQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+    // The optimum's price/quantity ticks are only hidden once its Ps/Qs labels are
+    // actually drawn (the 'optq' reveal). For a tax/subsidy those are the headline
+    // labels, always shown; for an externality they wait for the reveal, so until
+    // then the normal axis numbers stay put rather than leaving gaps.
+    const txOptL=!txExt||txShown.has('optq');
+    if(!q.hideNums){
+      for(let i=1;i<=GRID;i++){
+        const txNP=txShowLbls&&((txOptL&&Math.abs(i-txPc)<0.4)||(!txExt&&Math.abs(i-txPs)<0.4)||Math.abs(i-txP0)<0.4);
+        const txNQ=txShowLbls&&((txOptL&&Math.abs(i-txQn)<0.4)||Math.abs(i-txQ0)<0.4);
+        if(!txNP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+        if(!txNQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+      }
+      s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     }
-    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
     s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
     // S1 — original supply at txStartSS. Drawn for tax/subsidy/negative externality.
@@ -850,17 +1091,17 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     if(txExt&&txOnGrid&&txM0){
       // Value of the shifted (social) curve at the market quantity — the third
       // vertex of the deadweight loss triangle.
-      const txSocAtQm=txNeg?sPf(txQ0,sA,txSsc):dPf(txQ0,dA,txDm,txDsc);
+      const txSocAtQm=txSupSide?sPf(txQ0,sA,txSsc):dPf(txQ0,dA,txDm,txDsc);
       // Value of the unshifted (private) curve at the optimal quantity.
-      const txPrivAtQs=txNeg?sPf(txQn,txStartSS,txSsc):dPf(txQn,txStartDS,txDm,txDsc);
+      const txPrivAtQs=txSupSide?sPf(txQn,txStartSS,txSsc):dPf(txQn,txStartDS,txDm,txDsc);
       const txExtCol=txNeg?'#7B2FA8':'#0F6E56';
       const txCorrCol=txNeg?'#C47D00':'#7B2FA8';
 
       // REVEAL: extwedge — band between the private and social curves, 0 → Qm.
       // Its height is the external cost/benefit per unit; its area is the total.
       if(txShown.has('extwedge')){
-        const pv=q=>txNeg?sPf(q,txStartSS,txSsc):dPf(q,txStartDS,txDm,txDsc);
-        const sc=q=>txNeg?sPf(q,sA,txSsc):dPf(q,dA,txDm,txDsc);
+        const pv=q=>txSupSide?sPf(q,txStartSS,txSsc):dPf(q,txStartDS,txDm,txDsc);
+        const sc=q=>txSupSide?sPf(q,sA,txSsc):dPf(q,dA,txDm,txDsc);
         const pts=[[0,pv(0)],[txQ0,pv(txQ0)],[txQ0,sc(txQ0)],[0,sc(0)]]
           .map(p=>gx(p[0]).toFixed(1)+','+gy(p[1]).toFixed(1)).join(' ');
         const wLbl=txNeg?'External cost':'External benefit';
@@ -906,13 +1147,15 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
     }
   } else {
     const fp=fpA,qInt=q.curve==='demand'?dQf(fp,dA):sQf(fp,sA);
-    for(let i=1;i<=GRID;i++){
-      const isFP=q.showEqLines!==false&&Math.abs(i-fp)<0.05;
-      const isIQ=q.showEqLines!==false&&Math.abs(i-qInt)<0.05;
-      if(!isFP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
-      if(!isIQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+    if(!q.hideNums){
+      for(let i=1;i<=GRID;i++){
+        const isFP=q.showEqLines!==false&&Math.abs(i-fp)<0.05;
+        const isIQ=q.showEqLines!==false&&Math.abs(i-qInt)<0.05;
+        if(!isFP) s+=`<text x="${pad.l-4}" y="${gy(i)}" text-anchor="end" dominant-baseline="central" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*vDisp)}</text>`;
+        if(!isIQ) s+=`<text x="${gx(i)}" y="${H-pad.b+13}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${fmt(i*hDisp)}</text>`;
+      }
+      s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     }
-    s+=`<text x="${pad.l-6}" y="${H-pad.b+10}" text-anchor="end" font-size="${fs2}" font-family="Verdana" fill="#888">0</text>`;
     s+=`<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888">${hU>=1000?q.xLabel+' (000s)':q.xLabel}</text>`;
     s+=`<text x="11" y="${pad.t+(H-pad.t-pad.b)/2}" text-anchor="middle" font-size="${fs2}" font-family="Verdana" fill="#888" transform="rotate(-90,11,${pad.t+(H-pad.t-pad.b)/2})">${q.yLabel}</text>`;
     // Faded D1/S1 always at origin — visible whenever the active curve is shifted
@@ -944,9 +1187,10 @@ function mkSVG(q,dA,sA,fpA,isAnimating,shiftDirD=0,shiftDirS=0,animT=0,showStati
       const scLbl=scIsD?clip(QS,dPf(QS,animSC),QE,dPf(QE,animSC),pad,W,H,1):clip(QS,sPf(QS,animSC),QE,sPf(QE,animSC),pad,W,H,1);
       s+=`<line x1="${(scAx1+scAt0*scAdx).toFixed(1)}" y1="${(scAy1+scAt0*scAdy).toFixed(1)}" x2="${(scAx1+scAt1*scAdx).toFixed(1)}" y2="${(scAy1+scAt1*scAdy).toFixed(1)}" stroke="${q.color}" stroke-width="2.5" stroke-linecap="round"/>`;
       if(scLbl){const scLy=scIsD?scLbl.y2:Math.min(scLbl.y1,scLbl.y2);s+=`<text x="${(scLbl.x2+5).toFixed(1)}" y="${scLy.toFixed(1)}" dominant-baseline="central" font-size="${fs}" font-family="Verdana" fill="${q.color}" font-weight="bold">${lbl}</text>`;}
+      // Tracer dots — only when the curve is actually shifting, not on a movement question
       if(isAnimating&&sh) s+=(scIsD
-        ? shiftTrail({kind:"d",from:startSC,cur:animSC,to:finalSC,dm:1,dsc:2,gx:gx,gy:gy,col:q.color})
-        : shiftTrail({kind:"s",from:startSC,cur:animSC,to:finalSC,ssc:2,gx:gx,gy:gy,col:q.color}));
+        ? shiftTrail({kind:'d',from:startSC,cur:animSC,to:finalSC,dm:1,dsc:2,gx:gx,gy:gy,col:q.color})
+        : shiftTrail({kind:'s',from:startSC,cur:animSC,to:finalSC,ssc:2,gx:gx,gy:gy,col:q.color}));
     }
     if(qInt>=QS&&qInt<=QE){
       const ix=gx(qInt),py=gy(fp);
@@ -969,6 +1213,7 @@ function wsPos(q){
   if(q.type==='sc') return{dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
   if(q.type==='pm') return{dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
   if(q.type==='tax') return Object.assign(txPos(q),{fpA:-1});
+  if(q.type==='trade') return{dA:0,sA:0,fpA:0};
   return{dA:0,sA:0,fpA:q.startFP||5};
 }
 function wsEsc(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -1007,11 +1252,14 @@ function showQ(i){
   const fpA_=isStaticPM_?(q.startPrice||5):pos.fpA;
   document.getElementById('diagWrap').innerHTML=mkSVG(q,dA_,sA_,fpA_,false,0,0,0,isStaticPM_);
   const rb=document.getElementById('replayBtn');
-  if(rb) rb.style.display=(q.type==='plain'||q.type==='table'||q.type==='ped'||q.type==='sur')?'none':'';
+  if(rb){
+    let hideRep=(q.type==='plain'||q.type==='table'||q.type==='ped');
+    if(q.type==='trade') hideRep=!(attempted(i)&&(q.reveals||[]).length>0);
+    else if(q.type==='sur') hideRep=!(attempted(i)&&surEff(q).length>0);
+    rb.style.display=hideRep?'none':'';
+  }
   const rb2=document.getElementById('revealBtn');
-  const txRArr2=txRev(q);
-  let showRev2=(q.type==='tax'&&attempted(i)&&curPos[i].fpA>=0&&curPos[i].fpA<txRArr2.length);
-  if(rb2) rb2.style.display=showRev2?'':'none';
+  if(rb2) rb2.style.display='none';   // reveals now auto-play on answering (no manual stepping)
   const abtns=document.getElementById('abtns');
   abtns.innerHTML=q.answers.map((ans,ai)=>{
     const l=String.fromCharCode(65+ai);
@@ -1024,7 +1272,7 @@ function showQ(i){
   const fb=document.getElementById('fb');
   if(TESTMODE&&picked[i]!==null){
     if(done[i]){fb.textContent='✓ Correct!';fb.className='fb c';}
-    else{fb.textContent='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.';fb.className='fb w';}
+    else{fb.innerHTML='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.'+(q.explanation?'<span class="fb-exp">'+q.explanation.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>':'');fb.className='fb w';}
   } else {
     fb.textContent=done[i]?'✓ Correct!':'';
     fb.className=done[i]?'fb c':'fb';
@@ -1047,7 +1295,7 @@ function go(qi,ai){
     btns2.forEach((b,i)=>{ b.classList.add(i===q.correctIndex?'correct':(i===ai?'wrong':'used')); });
     const fb2=document.getElementById('fb');
     if(done[qi]){fb2.textContent='✓ Correct!';fb2.className='fb c';}
-    else{fb2.textContent='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.';fb2.className='fb w';}
+    else{fb2.innerHTML='✗ Incorrect — the answer is '+String.fromCharCode(65+q.correctIndex)+'.'+(q.explanation?'<span class="fb-exp">'+q.explanation.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>':'');fb2.className='fb w';}
     document.getElementById('prog').textContent=(qi+1)+' of '+qs.length+(done[qi]?' · ✓':' · ✗');
     if(q.type==='pm'&&q.animatePrice===false){
       document.getElementById('diagWrap').innerHTML=mkSVG(q,q.dShift||0,q.sShift||0,q.startPrice||5,false,0,0,0,true);
@@ -1098,27 +1346,38 @@ function anim(qi,animDur=700){
     return;
   }
   if(q.type==='tax'){
-    // Both S1 and S2 visible from the start — no shift animation.
-    // "Answering" just reveals price labels (fpA: -1 → 0) and shows the Reveal button.
-    const txPn=txPos(q);
+    // Reveal auto-plays: price labels first (fpA 0), then each area steps in one at a time.
+    const txPn=txPos(q), txR=txRev(q), gapT=animDur>=2000?1600:1000;
     curPos[qi]={dA:txPn.dA,sA:txPn.sA,fpA:0};
     el.innerHTML=mkSVG(q,txPn.dA,txPn.sA,0,false);
-    const rb2=document.getElementById('revealBtn');
-    if(rb2&&qi===cur)rb2.style.display=txRev(q).length>0?'':'none';
+    let stT=0;
+    if(txR.length>0)setTimeout(function pT(){ if(qi!==cur)return; stT++;
+      curPos[qi]={dA:txPn.dA,sA:txPn.sA,fpA:stT}; el.innerHTML=mkSVG(q,txPn.dA,txPn.sA,stT,false);
+      if(stT<txR.length)setTimeout(pT,gapT); },600);
     return;
   }
   if(q.type==='sur'){
-    // Reveal all chosen areas immediately when the correct answer is chosen (no button).
+    // Reveal renders the full state once; CSS fades each area in on a 0.25s stagger.
     const nAll=surEff(q).length;
     curPos[qi]={dA:0,sA:0,fpA:nAll};
-    el.innerHTML=mkSVG(q,0,0,nAll,false);
+    el.innerHTML=mkSVG(q,0,0,nAll,true);
+    return;
+  }
+  if(q.type==='trade'){
+    // Reveal renders the full state once; CSS fades the shift / each area in on a 0.25s stagger.
+    const trR=q.reveals||[];
+    curPos[qi]={dA:0,sA:0,fpA:trR.length};
+    el.innerHTML=mkSVG(q,0,0,trR.length,true);
     return;
   }
   let tD,tS,fromD,fromS;
   if(q.type==='sd'){
     tD=q.ansDS||0;tS=q.ansSS||0;fromD=q.startDS||0;fromS=q.startSS||0;
   } else if(q.type==='ppf'){
-    tD=q.ansShift||0;tS=0;fromD=0;fromS=0;
+    // dA drives the x-intercept, sA the y-intercept, so the frontier can pivot.
+    tD=(q.ansShiftX!=null?q.ansShiftX:(q.ansShift||0));
+    tS=(q.ansShiftY!=null?q.ansShiftY:(q.ansShift||0));
+    fromD=0;fromS=0;
   } else {
     // sc: put shift in correct field based on curve type
     if(q.curve==='demand'){tD=q.ansCS||0;tS=0;fromD=q.startCS||0;fromS=0;}
@@ -1140,7 +1399,8 @@ function anim(qi,animDur=700){
 }
 function replayAnim(){
   const q=qs[cur];
-  if(q.type==='plain'||q.type==='table'||q.type==='ped'||q.type==='sur')return;
+  if(q.type==='plain'||q.type==='table'||q.type==='ped')return;
+  if(q.type==='trade'||q.type==='sur'||q.type==='tax'){ if(attempted(cur))anim(cur,3000); return; }
   if(q.type==='sd') curPos[cur]={dA:q.startDS||0,sA:q.startSS||0,fpA:q.startFP||5};
   else if(q.type==='sc') curPos[cur]={dA:q.curve==='demand'?(q.startCS||0):0,sA:q.curve==='supply'?(q.startCS||0):0,fpA:q.startFP||5};
   else if(q.type==='pm') curPos[cur]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
@@ -1167,6 +1427,15 @@ function reveal(){
     if(rbS)rbS.style.display=pos.fpA>=eff.length?'none':'';
     return;
   }
+  if(q.type==='trade'){
+    const trR=q.reveals||[];
+    if(pos.fpA>=trR.length){document.getElementById('revealBtn').style.display='none';return;}
+    pos.fpA++;
+    document.getElementById('diagWrap').innerHTML=mkSVG(q,0,0,pos.fpA,false);
+    const rbT=document.getElementById('revealBtn');
+    if(rbT)rbT.style.display=pos.fpA>=trR.length?'none':'';
+    return;
+  }
   if(q.type!=='tax')return;
   const reveals=txRev(q);
   if(pos.fpA>=reveals.length){document.getElementById('revealBtn').style.display='none';return;}
@@ -1183,7 +1452,7 @@ function next(){
 function showScore(){
   const n=done.filter(Boolean).length;
   document.getElementById('snum').textContent=n+' / '+qs.length;
-  const msgs=["Keep practising — you'll get there!","Good effort — nearly there!","Great work!","Excellent!","Perfect score!"];
+  const msgs=["Keep practising - you'll get there!","Good effort - nearly there!","Great work!","Excellent!","Perfect score!"];
   document.getElementById('smsg').textContent=msgs[Math.min(Math.floor(n/qs.length*4),4)];
   document.getElementById('score-screen').classList.add('show');
 }
@@ -1196,6 +1465,7 @@ function restart(){
     else if(q.type==='pm') curPos[i]={dA:q.dShift||0,sA:q.sShift||0,fpA:q.startPrice||5};
     else if(q.type==='tax') curPos[i]=Object.assign(txPos(q),{fpA:-1});
     else if(q.type==='sur') curPos[i]={dA:0,sA:0,fpA:0};
+    else if(q.type==='trade') curPos[i]={dA:0,sA:0,fpA:-1};
     else curPos[i]={dA:0,sA:0,fpA:q.startFP||5};
   });
   document.getElementById('score-screen').classList.remove('show');

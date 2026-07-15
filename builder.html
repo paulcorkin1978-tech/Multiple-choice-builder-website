@@ -13,49 +13,82 @@
 <!-- ══ MAIN MENU ══ -->
 <div id="menuScreen">
   <div class="menu">
-    <h2>Economics Quiz Builder</h2>
+
+    <div class="menu-nav">
+      <img class="menu-logo" src="assets/logo.svg" alt="theory2econ">
+      <a href="index.html">← Back to site</a>
+    </div>
+
+    <div class="menu-hero">
+      <div class="menu-hero-text">
+        <h2>Quiz Builder</h2>
+        <p>Set the axis intervals, name your goods, shift a curve — the diagram updates as you type. Export a self-contained quiz that animates the answer, or copy any diagram straight into an exam paper.</p>
+      </div>
+      <div class="menu-hero-video">
+        <video autoplay loop muted playsinline poster="assets/demo-poster.jpg"
+               aria-label="The builder: axis labels and intervals are typed in, the diagram updates live, then a curve is shifted">
+          <source src="assets/demo.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <div class="menu-sec">Diagrams</div>
     <div class="menu-cards">
       <div class="menu-card" onclick="openBuilder('sd')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><line x1="14" y1="6" x2="14" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="14" y1="46" x2="80" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="20" y1="14" x2="74" y2="44" stroke="#ff9f43" stroke-width="2.8" stroke-linecap="round"/><line x1="20" y1="44" x2="74" y2="14" stroke="#6c5ce7" stroke-width="2.8" stroke-linecap="round"/><circle cx="47" cy="29" r="3.6" fill="#00b894"/></svg>
         <h3>Supply &amp; Demand</h3>
-        <p>Both curves, equilibrium shifts, new equilibrium animation</p>
+        <p>Both curves — shift either, animate to the new equilibrium</p>
       </div>
       <div class="menu-card" onclick="openBuilder('sc')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><line x1="14" y1="6" x2="14" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="14" y1="46" x2="80" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="20" y1="12" x2="74" y2="42" stroke="#ff9f43" stroke-width="3" stroke-linecap="round"/><line x1="14" y1="22" x2="72" y2="22" stroke="#7b7894" stroke-width="1.8" stroke-dasharray="4 3"/><circle cx="38" cy="22" r="3.2" fill="#00b894"/></svg>
         <h3>Single Curve</h3>
-        <p>Demand or Supply only, fixed price, expansion &amp; contraction</p>
-      </div>
-      <div class="menu-card" onclick="openBuilder('ppf')">
-        <h3>PPF</h3>
-        <p>Production Possibility Frontier — curved shift or data-point schedule</p>
-      </div>
-      <div class="menu-card" onclick="openBuilder('table')">
-        <h3>Data Table</h3>
-        <p>Custom rows &amp; columns — supply/demand schedules, economic data</p>
-      </div>
-      <div class="menu-card" onclick="openBuilder('plain')">
-        <h3>Text Only</h3>
-        <p>Plain multiple choice question — no diagram or table needed</p>
+        <p>Demand or supply alone — expansion &amp; contraction</p>
       </div>
       <div class="menu-card" onclick="openBuilder('pm')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><line x1="14" y1="6" x2="14" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="14" y1="46" x2="80" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="20" y1="14" x2="74" y2="44" stroke="#ff9f43" stroke-width="2.6" stroke-linecap="round"/><line x1="20" y1="44" x2="74" y2="14" stroke="#6c5ce7" stroke-width="2.6" stroke-linecap="round"/><line x1="14" y1="20" x2="76" y2="20" stroke="#D85A30" stroke-width="2" stroke-dasharray="4 3"/><line x1="32" y1="20" x2="62" y2="20" stroke="#D85A30" stroke-width="3.4"/></svg>
         <h3>Price Mechanism</h3>
-        <p>Starting price above or below equilibrium — surplus / shortage bracket animates to equilibrium</p>
+        <p>Surplus or shortage bracket, animating back to equilibrium</p>
       </div>
       <div class="menu-card" onclick="openBuilder('tax')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><line x1="14" y1="6" x2="14" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="14" y1="46" x2="80" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="20" y1="14" x2="74" y2="44" stroke="#ff9f43" stroke-width="2.6" stroke-linecap="round"/><line x1="20" y1="44" x2="70" y2="16" stroke="#6c5ce7" stroke-width="2.6" stroke-linecap="round"/><line x1="30" y1="46" x2="78" y2="18" stroke="#D85A30" stroke-width="2.6" stroke-linecap="round"/></svg>
         <h3>Tax, Subsidy &amp; Externalities</h3>
-        <p>Tax and subsidy wedges, or negative and positive externalities with MPC/MSC and MPB/MSB — reveals revenue, deadweight loss and the socially optimal quantity step by step</p>
-      </div>
-      <div class="menu-card" onclick="openBuilder('ped')">
-        <h3>Price Elasticity</h3>
-        <p>Price elasticity of demand — set the elasticity with a slider, static diagram for a multiple-choice question</p>
+        <p>Tax revenue, subsidy cost, deadweight loss, socially optimal Q</p>
       </div>
       <div class="menu-card" onclick="openBuilder('sur')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><line x1="14" y1="6" x2="14" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="14" y1="46" x2="80" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><polygon points="14,13 14,29 47,29" fill="#9fe1cb" opacity="0.75"/><polygon points="14,45 14,29 47,29" fill="#cecbf6" opacity="0.75"/><polygon points="38,18 38,34 52,26" fill="#f0997b" opacity="0.9"/><line x1="20" y1="15" x2="74" y2="45" stroke="#ff9f43" stroke-width="2.6" stroke-linecap="round"/><line x1="20" y1="45" x2="74" y2="15" stroke="#6c5ce7" stroke-width="2.6" stroke-linecap="round"/></svg>
         <h3>Surplus &amp; DWL</h3>
-        <p>Consumer &amp; producer surplus and deadweight loss — tax, quota or price control, shaded areas reveal step by step, lettered for identify questions</p>
+        <p>Consumer &amp; producer surplus, deadweight loss — lettered areas</p>
       </div>
       <div class="menu-card" onclick="openBuilder('trade')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><line x1="14" y1="6" x2="14" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="14" y1="46" x2="80" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="20" y1="14" x2="74" y2="44" stroke="#ff9f43" stroke-width="2.6" stroke-linecap="round"/><line x1="20" y1="44" x2="74" y2="14" stroke="#6c5ce7" stroke-width="2.6" stroke-linecap="round"/><rect x="30" y="24" width="34" height="12" fill="#f0997b" opacity="0.55"/><line x1="14" y1="24" x2="70" y2="24" stroke="#993c1d" stroke-width="2.2"/><line x1="14" y1="36" x2="70" y2="36" stroke="#00b894" stroke-width="2.2"/></svg>
         <h3>Trade Protection</h3>
-        <p>Tariff, import quota or production subsidy on a good with a world price — shade the policy area (tariff revenue / quota / subsidy cost), domestic producer revenue and import spending, with quantity brackets</p>
+        <p>Tariff, quota or subsidy against a world price</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('ped')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><line x1="14" y1="6" x2="14" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="14" y1="46" x2="80" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="22" y1="10" x2="70" y2="44" stroke="#e0dcf5" stroke-width="2.4" stroke-linecap="round"/><line x1="18" y1="30" x2="76" y2="38" stroke="#ff9f43" stroke-width="3" stroke-linecap="round"/><line x1="40" y1="8" x2="52" y2="46" stroke="#e0dcf5" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <h3>Price Elasticity</h3>
+        <p>Set elasticity of demand with a slider</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('ppf')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><line x1="14" y1="6" x2="14" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><line x1="14" y1="46" x2="80" y2="46" stroke="#d9d5f0" stroke-width="1.8"/><path d="M20 14 Q 52 18 60 44" fill="none" stroke="#6c5ce7" stroke-width="2.8" stroke-linecap="round"/><path d="M20 8 Q 62 12 72 44" fill="none" stroke="#00b894" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="4 3"/></svg>
+        <h3>PPF</h3>
+        <p>Straight-line or curved — shifts, pivots, opportunity cost</p>
       </div>
       <!-- NEW DIAGRAM TYPES: add a menu card here and a builder section below -->
+    </div>
+
+    <div class="menu-sec">Other question types</div>
+    <div class="menu-cards">
+      <div class="menu-card" onclick="openBuilder('table')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><rect x="17" y="8" width="54" height="40" rx="3" fill="none" stroke="#d9d5f0" stroke-width="1.8"/><rect x="17" y="8" width="54" height="10" rx="3" fill="#efecff"/><line x1="17" y1="18" x2="71" y2="18" stroke="#6c5ce7" stroke-width="2"/><line x1="17" y1="28" x2="71" y2="28" stroke="#d9d5f0" stroke-width="1.5"/><line x1="17" y1="38" x2="71" y2="38" stroke="#d9d5f0" stroke-width="1.5"/><line x1="44" y1="8" x2="44" y2="48" stroke="#d9d5f0" stroke-width="1.5"/></svg>
+        <h3>Data Table</h3>
+        <p>Schedules and economic data — custom rows &amp; columns</p>
+      </div>
+      <div class="menu-card" onclick="openBuilder('plain')">
+        <svg viewBox="0 0 88 56" aria-hidden="true"><line x1="18" y1="12" x2="70" y2="12" stroke="#2d2a4a" stroke-width="2.6" stroke-linecap="round"/><line x1="18" y1="22" x2="58" y2="22" stroke="#d9d5f0" stroke-width="2.2" stroke-linecap="round"/><circle cx="21" cy="33" r="3" fill="#00b894"/><line x1="29" y1="33" x2="66" y2="33" stroke="#d9d5f0" stroke-width="2.2" stroke-linecap="round"/><circle cx="21" cy="43" r="3" fill="#d9d5f0"/><line x1="29" y1="43" x2="61" y2="43" stroke="#d9d5f0" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <h3>Text Only</h3>
+        <p>Plain multiple choice — no diagram needed</p>
+      </div>
     </div>
     <div id="menuQuizSection" style="display:none">
       <div class="menu-quiz">
@@ -63,27 +96,27 @@
         <div id="menuQList" class="menu-qlist"></div>
       </div>
     </div>
-    <div id="menuInfo" class="menu-info">Build questions then download your quiz.</div>
-    <div class="menu-btns">
-      <button class="btn btn-success" id="dlBtnMenu"     onclick="downloadQuiz()" disabled>⬇ Download Quiz HTML</button>
-      <button class="btn btn-primary" id="previewAllBtn" onclick="previewQuiz()"  style="display:none">👁 Preview Quiz</button>
-      <button class="btn"             id="importBtn"     onclick="importCSV()">⬆ Import CSV</button>
-      <button class="btn btn-danger"  id="clearBtn"      onclick="clearQuiz()"   style="display:none">Clear Quiz</button>
-    </div>
-    <div class="menu-btns" style="margin-top:6px">
-      <button class="btn" id="saveBankBtn" onclick="saveBank()" style="display:none">💾 Save Question Bank</button>
-      <button class="btn" id="loadBankBtn" onclick="loadBank()">📂 Load Question Bank</button>
-    </div>
-    <div class="menu-btns" style="margin-top:10px">
-      <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;color:#2d2a4a">
-        <input type="checkbox" id="testModeChk" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer">
+    <div class="menu-tools">
+      <div id="menuInfo" class="menu-info">Build questions then download your quiz.</div>
+      <div class="menu-btns">
+        <button class="btn btn-success" id="dlBtnMenu"     onclick="downloadQuiz()" disabled>⬇ Download Quiz HTML</button>
+        <button class="btn btn-primary" id="previewAllBtn" onclick="previewQuiz()"  style="display:none">👁 Preview Quiz</button>
+        <button class="btn"             id="importBtn"     onclick="importCSV()">⬆ Import CSV</button>
+        <button class="btn btn-danger"  id="clearBtn"      onclick="clearQuiz()"   style="display:none">Clear Quiz</button>
+      </div>
+      <div class="menu-btns">
+        <button class="btn" id="saveBankBtn" onclick="saveBank()" style="display:none">💾 Save Question Bank</button>
+        <button class="btn" id="loadBankBtn" onclick="loadBank()">📂 Load Question Bank</button>
+      </div>
+      <label style="display:flex;align-items:flex-start;gap:9px;font-size:12.5px;cursor:pointer;color:#2d2a4a;line-height:1.5;border-top:2px solid #efecff;padding-top:11px;margin-top:2px">
+        <input type="checkbox" id="testModeChk" style="width:15px;height:15px;accent-color:#6c5ce7;cursor:pointer;flex-shrink:0;margin-top:2px">
         <span><strong>Student self-study mode</strong> — first answer is locked in and scored honestly (no retries). Leave unticked for the classroom version.</span>
       </label>
-    </div>
-    <div class="import-hint">
-      <strong>Save / Load</strong> preserves all question data (diagrams, settings, answers) as a JSON file you can reload later.<br>
-      <strong>Import CSV</strong> adds plain text questions — use ✏ Edit to add diagrams.
-      <a href="#" onclick="downloadCSVTemplate();return false">Download CSV template ↓</a>
+      <div class="import-hint" style="margin-top:0">
+        <strong>Save / Load</strong> preserves all question data (diagrams, settings, answers) as a JSON file you can reload later.<br>
+        <strong>Import CSV</strong> adds plain text questions — use ✏ Edit to add diagrams.
+        <a href="#" onclick="downloadCSVTemplate();return false">Download CSV template ↓</a>
+      </div>
     </div>
     <input type="file" id="csvInput"  accept=".csv,.txt"  style="display:none" onchange="handleCSVFile(this)">
     <input type="file" id="bankInput" accept=".json"       style="display:none" onchange="handleBankFile(this)">
@@ -1142,106 +1175,4 @@
       <div class="form-col-wide">
         <div class="info-card">
           <p>
-            <span class="step">1</span>Set the <strong>world price</strong> and <strong>tariff</strong> with the sliders<br>
-            <span class="step">2</span>Set <strong>title, axis labels</strong>, colours and the price/qty scale<br>
-            <span class="step">3</span>Tick which <strong>areas &amp; brackets reveal</strong> (left panel) — they appear as soon as the student answers correctly<br>
-            <span class="step">4</span>Write your question &amp; four answers and mark the correct one
-          </p>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Question Text</div>
-          <textarea id="trQText" placeholder="e.g. On the diagram, which shaded area represents the revenue the government collects from the tariff?"></textarea>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Answer Options</div>
-          <p class="correct-hint">Select the radio button next to the correct answer</p>
-          <div class="arow"><input type="radio" name="trC" value="0"><span class="alabel">A</span><input type="text" id="trA0" placeholder="Answer A"></div>
-          <div class="arow"><input type="radio" name="trC" value="1"><span class="alabel">B</span><input type="text" id="trA1" placeholder="Answer B"></div>
-          <div class="arow"><input type="radio" name="trC" value="2"><span class="alabel">C</span><input type="text" id="trA2" placeholder="Answer C"></div>
-          <div class="arow"><input type="radio" name="trC" value="3"><span class="alabel">D</span><input type="text" id="trA3" placeholder="Answer D"></div>
-        </div>
-
-        <div class="add-bar">
-          <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-            <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
-            <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-success" id="trAddBtn" onclick="trAddQ()">+ Add to Quiz</button>
-            <button class="btn" onclick="trPreview()">Preview this ↗</button>
-          </div>
-          <div class="msg" id="trMsg"></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- ══ PLAIN TEXT BUILDER ══ -->
-<div class="builder" id="plainBuilder">
-  <div class="plain-form-panel">
-    <button class="btn-back" onclick="goMenu()">← Back to menu</button>
-
-    <div class="info-card" style="margin:12px 0 14px">
-      <p>
-        <span class="step">1</span>Write your question text below<br>
-        <span class="step">2</span>Fill in all four answer options<br>
-        <span class="step">3</span>Select the radio button next to the <strong>correct answer</strong><br>
-        <span class="step">4</span>Click <strong>Add to Quiz</strong>
-      </p>
-    </div>
-
-    <div class="card" style="margin-bottom:14px">
-      <div class="card-title">Question Text</div>
-      <textarea id="plainQText" style="min-height:100px" placeholder="Type your question here — e.g. Which of the following is NOT a function of money?"></textarea>
-    </div>
-
-    <div class="card" style="margin-bottom:14px">
-      <div class="card-title">Answer Options</div>
-      <p class="correct-hint">Select the radio button next to the correct answer</p>
-      <div class="arow"><input type="radio" name="plainC" value="0"><span class="alabel">A</span><input type="text" id="plainA0" placeholder="Answer A"></div>
-      <div class="arow"><input type="radio" name="plainC" value="1"><span class="alabel">B</span><input type="text" id="plainA1" placeholder="Answer B"></div>
-      <div class="arow"><input type="radio" name="plainC" value="2"><span class="alabel">C</span><input type="text" id="plainA2" placeholder="Answer C"></div>
-      <div class="arow"><input type="radio" name="plainC" value="3"><span class="alabel">D</span><input type="text" id="plainA3" placeholder="Answer D"></div>
-    </div>
-
-    <div class="add-bar">
-      <div class="insertPosRow" style="margin-bottom:10px;display:flex;align-items:center;gap:10px">
-        <label style="font-size:12px;color:#7b7894;font-weight:600;white-space:nowrap">Insert at:</label>
-        <select class="insertPosSelect" style="font-size:13px;padding:6px 10px;border:2px solid #e4e2f4;border-radius:8px;background:#fff;color:#2d2a4a;flex:1"><option value="-1">End of quiz</option></select>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-success" id="plainAddBtn" onclick="plainAddQ()">+ Add to Quiz</button>
-        <button class="btn" onclick="plainPreview()">Preview this ↗</button>
-      </div>
-      <div class="msg" id="plainMsg"></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ══ SCRIPTS ══
-     Load order matters: utils first, then diagram modules, then quiz export, then app.
-     To add a new diagram type, add its <script> tag here alongside the others.
--->
-<script src="js/utils.js?v=3"></script>
-<script src="js/diagrams/sd.js?v=3"></script>
-<script src="js/diagrams/sc.js?v=3"></script>
-<script src="js/diagrams/ppf.js?v=3"></script>
-<script src="js/diagrams/table.js?v=3"></script>
-<script src="js/diagrams/pm.js?v=3"></script>
-<script src="js/diagrams/tax.js?v=3"></script>
-<script src="js/diagrams/ped.js?v=3"></script>
-<script src="js/diagrams/sur.js?v=3"></script>
-<script src="js/diagrams/trade.js?v=3"></script>
-<script src="js/diagrams/plain.js?v=3"></script>
-<script src="js/quiz-export.js?v=3"></script>
-<script src="js/app.js?v=3"></script>
-<script src="js/dictate.js"></script>
-<script src="js/autocap.js"></script>
-
-</body>
-</html>
+            <span class="step">1</

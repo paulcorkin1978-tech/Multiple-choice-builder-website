@@ -71,6 +71,10 @@
   #lbl  { color:#5a5a80; font-size:12.5px; font-weight:700; max-width:540px;
           overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
+  /* Repeat needs the step BACK to be instant. Without this the rewind is itself
+     animated, so the replay starts from ~97% done and nothing appears to move. */
+  #stage.noanim, #stage.noanim * { transition:none !important; animation:none !important; }
+
   #hint { position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
           color:#33334d; font-size:13px; font-weight:800; user-select:none; transition:opacity .3s; }
   #hint.hide { opacity:0; }
@@ -139,6 +143,30 @@
     <text x="346" y="764" fill="#ffd43b" font-size="19" font-weight="900" text-anchor="middle"
           transform="rotate(-90 346 764)">PRICE  $200</text>
     <text x="406" y="818" fill="#00e5c0" font-size="19" font-weight="900" text-anchor="middle">QUANTITY  20,000</text>
+  </g>
+
+  <!-- P x Q #2 — the IMPORT box: 132px tall = $200, 516px wide = 60,000 t.
+       Both edges yellow: the height is the world price, the width is imports. -->
+  <path id="pq2v" class="el draw quick" d="M492 830 L492 698" stroke="#ffd43b" stroke-width="12"
+        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <path id="pq2h" class="el draw quick" d="M492 830 L1008 830" stroke="#ffd43b" stroke-width="12"
+        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <g id="pq2lab" class="el">
+    <text x="518" y="764" fill="#ffd43b" font-size="19" font-weight="900" text-anchor="middle"
+          transform="rotate(-90 518 764)">PRICE  $200</text>
+    <text x="750" y="818" fill="#ffd43b" font-size="19" font-weight="900" text-anchor="middle">QUANTITY  60,000</text>
+  </g>
+
+  <!-- P x Q #3 — the TARIFF box: 132px tall = the $200 TARIFF (orange, not a price),
+       172px wide = 20,000 t of imports (yellow). -->
+  <path id="pq3v" class="el draw quick" d="M664 698 L664 566" stroke="#ff8c42" stroke-width="12"
+        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <path id="pq3h" class="el draw quick" d="M664 698 L836 698" stroke="#ffd43b" stroke-width="12"
+        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <g id="pq3lab" class="el">
+    <text x="690" y="632" fill="#ff8c42" font-size="19" font-weight="900" text-anchor="middle"
+          transform="rotate(-90 690 632)">TARIFF  $200</text>
+    <text x="750" y="724" fill="#ffd43b" font-size="19" font-weight="900" text-anchor="middle">IMPORTS  20,000</text>
   </g>
 
   <g id="revDom1" class="revbox">
@@ -351,12 +379,13 @@
 
 <div id="bar">
   <button id="prev" title="Back (left arrow)">←</button>
-  <span id="num">0 / 19</span>
+  <span id="num">0 / 21</span>
   <button id="next" title="Next (space / right arrow)">→</button>
+  <button id="rep" title="Repeat this stage (A)">↻</button>
   <span id="lbl"></span>
 </div>
 
-<div id="hint">SPACE / CLICK → next · ← back · R restart · H hide toolbar</div>
+<div id="hint">SPACE / CLICK → next · ← back · A repeat · R restart · H hide toolbar</div>
 
 <script>
 // grid 0..10 both axes. Price unit $100, quantity unit 10,000 tonnes.
@@ -397,9 +426,11 @@ function tweenNum(el, from, to, ms) {
     if (k < 1) requestAnimationFrame(step);
   })(t0);
 }
+let SNAP = false;   // true while repeat() is rewinding
 function setNum(id, v) {
   if (NUMS[id] === v) return;
-  tweenNum(document.getElementById(id), NUMS[id], v, 900);
+  if (SNAP) document.getElementById(id).textContent = v.toLocaleString('en-US');
+  else      tweenNum(document.getElementById(id), NUMS[id], v, 900);
   NUMS[id] = v;
 }
 
@@ -422,6 +453,9 @@ const STAGES = [
 
   { cap:'Import spending: $200 × 60,000 = $12 million.', show:[] },
 
+  { cap:'Again — price × quantity: $200 tall, 60,000 wide.',
+    show:['pq2v','pq2h','pq2lab'], replay:['pq2v','pq2h'] },
+
   { cap:'A $200 tariff is imposed. The price rises to $400.',
     show:['pt'], set:{'v-price':'$400'} },
 
@@ -440,6 +474,9 @@ const STAGES = [
   { cap:'Tariff revenue: $200 × 20,000 = $4 million.',
     show:[], rows:['r-rev'] },
 
+  { cap:'Same again — but this box is $200 of TARIFF tall, and 20,000 wide.',
+    show:['pq3v','pq3h','pq3lab'], replay:['pq3v','pq3h'] },
+
   { cap:'Domestic producer revenue quadruples: $400 × 40,000 = $16 million.', show:[] },
 
   { cap:'Importers keep just $4 million — the tariff takes the rest.', show:[] },
@@ -456,13 +493,13 @@ const STAGES = [
 // revenue boxes. A window isn't enough: stages 15-16 clear every box to leave
 // just the curves, then the tariff box returns alone on 17.
 const BOXVIS = {
-  revDom1: t => t >= 4 && t <= 6,
-  revImp1: t => t === 6,
-  revDom2: t => t >= 13 && t <= 14,
-  revTar : t => (t >= 12 && t <= 14) || t === 17 || t === 18,
-  revImp2: t => t === 14,
+  revDom1: t => t >= 4 && t <= 7,
+  revImp1: t => t >= 6 && t <= 7,
+  revDom2: t => t >= 15 && t <= 16,
+  revTar : t => (t >= 13 && t <= 16) || t === 19 || t === 20,
+  revImp2: t => t === 16,
 };
-const BOXHOT = { revDom1:[4], revImp1:[6], revDom2:[13], revTar:[12,17], revImp2:[14] };
+const BOXHOT = { revDom1:[4], revImp1:[6], revDom2:[15], revTar:[13,19], revImp2:[16] };
 
 let cur = -1;
 
@@ -498,57 +535,63 @@ function render(target) {
   }
 
   // closing tracers live only on their own stage
-  document.getElementById('trace5').style.opacity = (target === 15) ? 1 : 0;
-  document.getElementById('trace6').style.opacity = (target === 16) ? 1 : 0;
+  document.getElementById('trace5').style.opacity = (target === 17) ? 1 : 0;
+  document.getElementById('trace6').style.opacity = (target === 18) ? 1 : 0;
 
   // P x Q edges: a quick beat, gone once the point has landed
   ['pq1v','pq1h','pqlab'].forEach(id => {
     document.getElementById(id).style.opacity = (target === 5) ? 1 : 0;
   });
+  ['pq2v','pq2h','pq2lab'].forEach(id => {
+    document.getElementById(id).style.opacity = (target === 7) ? 1 : 0;
+  });
+  ['pq3v','pq3h','pq3lab'].forEach(id => {
+    document.getElementById(id).style.opacity = (target === 14) ? 1 : 0;
+  });
 
   // the tariff-size highlight burns on its own stage and again for government, then fades
-  document.getElementById('tvert').style.opacity = (target === 8 || target === 17) ? 1 : 0;
+  document.getElementById('tvert').style.opacity = (target === 9 || target === 19) ? 1 : 0;
 
-  document.getElementById('pwtick').classList.toggle('lit', target >= 1 && target <= 6);
-  document.getElementById('pttick').classList.toggle('lit', target >= 7);
+  document.getElementById('pwtick').classList.toggle('lit', target >= 1 && target <= 7);
+  document.getElementById('pttick').classList.toggle('lit', target >= 8);
 
   // ── below-axis bars ──
   // stage 6 (the tariff) clears green + yellow but keeps pink;
   // stage 13+ clears the lot for the summary cards.
-  const SUM = target >= 15;
-  const showDs  = !SUM && ((target >= 2 && target <= 6) || target >= 9);
-  const showImp = !SUM && ((target >= 3 && target <= 6) || target >= 11);
+  const SUM = target >= 17;
+  const showDs  = !SUM && ((target >= 2 && target <= 7) || target >= 10);
+  const showImp = !SUM && ((target >= 3 && target <= 7) || target >= 12);
   const showDm  = !SUM && target >= 3;
 
   const ds = document.getElementById('dsbar');
   ds.style.opacity = showDs ? 1 : 0;
   ds.style.strokeDasharray = 344;
-  ds.style.strokeDashoffset = target <= 6 ? 172 : (target === 7 ? 344 : 0);
+  ds.style.strokeDashoffset = target <= 7 ? 172 : (target === 8 ? 344 : 0);
 
   const ib = document.getElementById('impbar');
   ib.style.opacity = showImp ? 1 : 0;
-  ib.style.strokeDasharray = target >= 11 ? '0 344 172 9999' : '0 172 516 9999';
+  ib.style.strokeDasharray = target >= 12 ? '0 344 172 9999' : '0 172 516 9999';
 
   const dm = document.getElementById('dmbar');
   dm.style.opacity = showDm ? 1 : 0;
-  dm.style.strokeDasharray  = target >= 10 ? '516 9999' : '688 9999';
+  dm.style.strokeDasharray  = target >= 11 ? '516 9999' : '688 9999';
   dm.style.strokeDashoffset = target >= 3 ? 0 : 688;
 
   const dsl = document.getElementById('dslab');
   dsl.style.opacity = showDs ? 1 : 0;
-  dsl.style.transform = target >= 9 ? 'translateX(86px)' : 'translateX(0)';
+  dsl.style.transform = target >= 10 ? 'translateX(86px)' : 'translateX(0)';
   document.getElementById('implab').style.opacity = showImp ? 1 : 0;
   const dml = document.getElementById('dmlab');
   dml.style.opacity = showDm ? 1 : 0;
-  dml.style.transform = target >= 10 ? 'translateX(-86px)' : 'translateX(0)';
+  dml.style.transform = target >= 11 ? 'translateX(-86px)' : 'translateX(0)';
 
-  setNum('dsval',  target >= 9 ? 40000 : 20000);
-  setNum('dmval',  target >= 10 ? 60000 : 80000);
-  setNum('impval', target >= 11 ? 20000 : 60000);
+  setNum('dsval',  target >= 10 ? 40000 : 20000);
+  setNum('dmval',  target >= 11 ? 60000 : 80000);
+  setNum('impval', target >= 12 ? 20000 : 60000);
 
   // the squeeze — both ends close in on the tariff box
   const sq = document.getElementById('impsqueeze');
-  if (target === 18) {
+  if (target === 20) {
     sq.style.opacity = 1;
     sq.style.transition = 'none';
     sq.style.strokeDasharray = '0 172 516 9999';   // 492 -> 1008  (60,000)
@@ -561,15 +604,15 @@ function render(target) {
     sq.style.transition = 'opacity .5s ease';
     sq.style.opacity = 0;
   }
-  document.getElementById('sumImp').style.opacity = target === 18 ? 1 : 0;
+  document.getElementById('sumImp').style.opacity = target === 20 ? 1 : 0;
 
   // final slide: black the diagram out entirely and give the impacts the screen
-  document.getElementById('blackout').style.opacity = target === 19 ? 0.94 : 0;
-  document.getElementById('impact').style.opacity   = target === 19 ? 1 : 0;
+  document.getElementById('blackout').style.opacity = target === 21 ? 0.94 : 0;
+  document.getElementById('impact').style.opacity   = target === 21 ? 1 : 0;
 
-  document.getElementById('sumPrice').style.opacity  = target === 15 ? 1 : 0;
-  document.getElementById('sumDemand').style.opacity = target === 16 ? 1 : 0;
-  document.getElementById('sumRev').style.opacity    = target === 17 ? 1 : 0;
+  document.getElementById('sumPrice').style.opacity  = target === 17 ? 1 : 0;
+  document.getElementById('sumDemand').style.opacity = target === 18 ? 1 : 0;
+  document.getElementById('sumRev').style.opacity    = target === 19 ? 1 : 0;
 
   for (const [id, v] of Object.entries(vals)) {
     const el = document.getElementById(id);
@@ -581,7 +624,7 @@ function render(target) {
 
   const cap = STAGES[target] ? STAGES[target].cap : '';   // toolbar only — no on-screen caption
 
-  const LBL = { 15:'EFFECT — higher price', 16:'EFFECT — demand contracts', 17:'EFFECT — tariff revenue', 18:'EFFECT — reduction in imports', 19:'CLOSING — impact by group' };
+  const LBL = { 17:'EFFECT — higher price', 18:'EFFECT — demand contracts', 19:'EFFECT — tariff revenue', 20:'EFFECT — reduction in imports', 21:'CLOSING — impact by group' };
   document.getElementById('num').textContent = target + ' / ' + (STAGES.length - 1);
   document.getElementById('lbl').textContent = LBL[target] || cap || '(opening frame — axes only)';
   document.getElementById('prev').disabled = (target === 0);
@@ -597,12 +640,37 @@ function go(n) {
 
 document.getElementById('prev').addEventListener('click', e => { e.stopPropagation(); go(cur - 1); });
 document.getElementById('next').addEventListener('click', e => { e.stopPropagation(); go(cur + 1); });
+// Repeat this stage's animation.
+//   1. kill all transitions, render the PREVIOUS stage -> snaps back instantly
+//   2. force a reflow so the browser commits that state
+//   3. restore transitions, render THIS stage -> everything animates in again
+// Doing it via render() means bars, boxes, counters and tracers all replay —
+// not just the elements listed in `show`.
+function repeat() {
+  if (cur <= 0) return;
+  const t = cur, stage = document.getElementById('stage');
+
+  stage.classList.add('noanim');
+  SNAP = true;
+  render(t - 1);
+  void stage.getBoundingClientRect();
+  SNAP = false;
+
+  requestAnimationFrame(() => {
+    stage.classList.remove('noanim');
+    void stage.getBoundingClientRect();
+    render(t);
+  });
+}
+document.getElementById('rep').addEventListener('click', e => { e.stopPropagation(); repeat(); });
+
 document.addEventListener('click', () => go(cur + 1));
 
 document.addEventListener('keydown', e => {
   if (e.code === 'Space' || e.code === 'ArrowRight' || e.code === 'Enter') { e.preventDefault(); go(cur + 1); }
   else if (e.code === 'ArrowLeft' || e.code === 'Backspace') { e.preventDefault(); go(cur - 1); }
   else if (e.key === 'r' || e.key === 'R') { cur = -1; NUMS.dsval=20000; NUMS.impval=60000; NUMS.dmval=80000; go(0); }
+  else if (e.key === 'a' || e.key === 'A') { e.preventDefault(); repeat(); }
   else if (e.key === 'h' || e.key === 'H') {
     document.getElementById('hint').classList.toggle('hide');
     document.getElementById('bar').classList.toggle('hide');

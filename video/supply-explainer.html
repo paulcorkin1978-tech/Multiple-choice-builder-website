@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Supply Explainer — Theory2Econ</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#000; height:100%; overflow:hidden; font-family:'VT323',monospace; }
+
+  #stage {
+    position:absolute; top:50%; left:50%;
+    width:1920px; height:1080px;
+    transform:translate(-50%,-50%) scale(var(--s,1));
+    transform-origin:center center;
+  }
+  svg { display:block; width:1920px; height:1080px; }
+
+  .el     { opacity:0; transition:opacity .7s ease; }
+  .el.on  { opacity:.6; }
+  .el.hot { opacity:1; }
+  .keep.on{ opacity:.85; }
+
+  /* Every filter is filterUnits="userSpaceOnUse". With the default, a HORIZONTAL
+     line has a zero-height bbox, the filter region collapses, and the element
+     renders completely invisible. */
+  .draw    { transition:stroke-dashoffset 1.4s cubic-bezier(.3,.5,.35,1); }
+  .draw.on { stroke-dashoffset:0 !important; }
+
+  /* Only the SHIFT slides animate movement. Everywhere else the inline
+     transition is narrowed to opacity, so positions snap. */
+  .sq     { opacity:0; transition:opacity .5s ease, transform 2.2s cubic-bezier(.45,.05,.2,1); }
+  #dsWrap { transition:transform 2.2s cubic-bezier(.45,.05,.2,1); }
+
+  /* ── THE TRACKING CROSSHAIR ────────────────────────────────────────
+     Neither line can just translate — each has to change LENGTH as well
+     as move, because one end is pinned to an axis. So each is drawn once
+     at full extent and revealed by dasharray, with transform doing the
+     move. Both properties are transitionable, so they travel together.
+     The PROBE slides override all of this inline — see probe(). */
+  #pt, #hline, #vline, #oldV, #incArrow, #decArrow {
+    transition:transform 2.2s cubic-bezier(.45,.05,.2,1),
+               stroke-dasharray 2.2s cubic-bezier(.45,.05,.2,1),
+               opacity .5s ease;
+  }
+  #qInc, #qDec { opacity:0; }
+  #ghostA, #ghostB, #oldSq { opacity:0; transition:opacity .5s ease; }
+  #expArrow, #conArrow, #dsLab { opacity:0; transition:opacity .6s ease; }
+  #table, #quiz { opacity:0; transition:opacity .6s ease; }
+  #dShift { opacity:0; transition:opacity .5s ease; }
+
+  /* the two quantity ticks a probe lands on blink, then settle amber */
+  @keyframes qflash {
+    0%   { fill:#33ff33; }
+    14%  { fill:#ffe08a; }
+    28%  { fill:#2f8f3f; }
+    42%  { fill:#ffe08a; }
+    58%  { fill:#2f8f3f; }
+    100% { fill:#ffe08a; }
+  }
+
+  /* Cursors blink via animation, which owns opacity — so show/hide them with
+     display, or the animation just overrides the inline opacity. */
+  #cursor, #lawCur, #axPCur, #axQCur { animation:blink 1.06s step-end infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+
+  #bar { position:fixed; left:16px; bottom:14px; z-index:5; display:flex; align-items:center; gap:10px;
+         background:#080f08; border:1.5px solid #1d4a24; border-radius:10px; padding:7px 10px;
+         font-family:'Share Tech Mono',monospace; transition:opacity .3s; }
+  #bar.hide { opacity:0; pointer-events:none; }
+  #bar button { width:36px; height:32px; border:1.5px solid #2a6b33; background:#0d1a0d; color:#7bd98a;
+                border-radius:6px; font-size:15px; cursor:pointer; font-family:inherit; }
+  #bar button:hover:not(:disabled) { background:#14301a; color:#c9ffd4; }
+  #bar button:disabled { opacity:.28; cursor:default; }
+  #num { color:#ffb000; font-size:15px; min-width:56px; text-align:center; }
+  #lbl { color:#3f7a48; font-size:12.5px; max-width:520px; overflow:hidden;
+         text-overflow:ellipsis; white-space:nowrap; }
+
+  #stage.noanim, #stage.noanim * { transition:none !important; animation:none !important; }
+
+  #hint { position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+          color:#1f4a26; font-size:13px; font-family:'Share Tech Mono',monospace;
+          user-select:none; transition:opacity .3s; }
+  #hint.hide { opacity:0; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="bloomG" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="bloomSoft" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <clipPath id="plotclip"><rect x="318" y="148" width="924" height="684"/></clipPath>
+
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="1.9" fill="#000" opacity="0.30"/>
+    </pattern>
+    <radialGradient id="crt" cx="50%" cy="47%" r="76%">
+      <stop offset="56%"  stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.8"/>
+    </radialGradient>
+
+    <!-- markerUnits defaults to strokeWidth, so this same head comes out 24px
+         on the 6px plot arrows and 16px on the 4px axis ones. One marker. -->
+    <marker id="arY" viewBox="0 0 10 10" refX="8" refY="5"
+            markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ffe08a"/>
+    </marker>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#050b05"/>
+
+  <g id="grid" class="el keep" stroke="#12331a" stroke-width="1.5"></g>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TWO PHOSPHORS, ONE RULE — same as the demand explainer:
+         GREEN #33ff33 = the market — the curve, the axes, quantity
+         AMBER #ffb000 = price, and everything price causes
+         PALE  #ffe08a = the move itself — arrows, and the words for them
+       ═══════════════════════════════════════════════════════════ -->
+
+  <g id="axes" class="el keep">
+    <line x1="320" y1="830" x2="1250" y2="830" stroke="#2f8f3f" stroke-width="3" filter="url(#bloomSoft)"/>
+    <line x1="320" y1="830" x2="320"  y2="150" stroke="#2f8f3f" stroke-width="3" filter="url(#bloomSoft)"/>
+
+    <!-- ── the axis labels finish themselves on slide 3 ──────────────
+         THE GAP IS GEOMETRY, NOT A CHARACTER. VT323 has no glyph for a
+         non-breaking space and SVG collapses an ordinary leading one, so
+         no space character can survive here. Instead the typed part is
+         anchored START 16px along from where "PRICE" is anchored END.
+         In the rotated frame, "along the label" is unrotated X — so the
+         gap has to be an x-offset (196 vs 180), never a y-offset.
+
+         The joins (521 / 772) are NOT the axis midpoints — they are set so
+         the FINISHED label lands centred, and they depend on the length of
+         the typed part. "OF WHEAT" is shorter than the demand video's
+         "OF CONSOLES", so both joins move. -->
+    <g transform="rotate(-90 180 521)">
+      <text x="180" y="521" text-anchor="end" fill="#ffb000" font-size="36" filter="url(#bloomSoft)">PRICE</text>
+      <text id="axPTxt" x="196" y="521" text-anchor="start" fill="#ffb000" font-size="36" filter="url(#bloomSoft)"></text>
+      <rect id="axPCur" x="202" y="491" width="16" height="34" fill="#ffb000" filter="url(#bloomSoft)" style="display:none"/>
+    </g>
+
+    <text x="772" y="940" text-anchor="end" fill="#33ff33" font-size="36" filter="url(#bloomSoft)">QUANTITY</text>
+    <text id="axQTxt" x="788" y="940" text-anchor="start" fill="#33ff33" font-size="36" filter="url(#bloomSoft)"></text>
+    <rect id="axQCur" x="794" y="910" width="16" height="34" fill="#33ff33" filter="url(#bloomSoft)" style="display:none"/>
+
+    <!-- Tick numbers: full brightness + glow. VT323 is a single-weight pixel
+         font, so font-weight:bold either does nothing or smears it. On a CRT
+         brightness IS weight — so they're lit rather than bolded. -->
+    <g id="ticks" font-size="32"></g>
+  </g>
+
+  <!-- Centred on the DIAGRAM (plot runs 320..1240, so 780) — not on the page.
+       Backspaces and retypes at slide 3 ("SUPPLY OF WHEAT", as the axes name
+       the good) and again at slide 20 ("EXAMPLES"). -->
+  <g id="lawHead" class="el">
+    <text id="lawTxt" x="780" y="102" fill="#33ff33" font-size="54" text-anchor="middle"
+          filter="url(#bloomSoft)"></text>
+    <rect id="lawCur" x="780" y="64" width="20" height="46" fill="#33ff33" filter="url(#bloomSoft)"/>
+  </g>
+
+  <!-- ── the observations. $200/20 · $400/40 · $600/60 · $800/80 ──
+       All four sit exactly on P = Q (in $100s), so the curve drawn on slide 3
+       passes dead through them. Supply climbs, so slide 2 plots them from the
+       BOTTOM up — still left to right along the curve.
+       On slides 2-6 the $400 square is #pt, the moving crosshair square.
+       From slide 8 it's sq4, a static one, so that #pt is free and slides
+       8/14 can be bare. -->
+  <rect id="sq2" class="sq" x="483" y="689" width="18" height="18" fill="#ffb000" filter="url(#bloomG)"/>
+  <rect id="sq4" class="sq" x="655" y="557" width="18" height="18" fill="#ffb000" filter="url(#bloomG)"/>
+  <rect id="sq6" class="sq" x="827" y="425" width="18" height="18" fill="#ffb000" filter="url(#bloomG)"/>
+  <rect id="sq8" class="sq" x="999" y="293" width="18" height="18" fill="#ffb000" filter="url(#bloomG)"/>
+
+  <!-- bottom-left to top-right. dashoffset reveals from the path START, so it
+       draws uphill — which is how you'd draw a supply curve by hand. -->
+  <path id="scurve" class="el keep draw" d="M406 764 L1094 236" fill="none"
+        stroke="#33ff33" stroke-width="5" stroke-linecap="square" filter="url(#bloomG)"/>
+  <g id="slab" class="el keep">
+    <text id="sTxt" x="1108" y="230" fill="#33ff33" font-size="40" filter="url(#bloomSoft)">S</text>
+  </g>
+
+  <!-- ── ONE shifted curve, reused by every shift in the video. It sits exactly
+       on top of S1 whenever shift is 0 — same green, same width, so it cannot
+       be seen — then travels. Clipped, because it runs past the plot at both
+       extremes. -->
+  <g clip-path="url(#plotclip)">
+    <g id="dsWrap">
+      <path id="dShift" d="M406 764 L1094 236" fill="none"
+            stroke="#33ff33" stroke-width="5" stroke-linecap="square" filter="url(#bloomG)"/>
+    </g>
+  </g>
+  <g id="dsLab">
+    <text id="dsTxt" x="1252" y="250" fill="#33ff33" font-size="40" filter="url(#bloomSoft)">S2</text>
+  </g>
+
+  <!-- ── THE GUIDELINES ────────────────────────────────────────────
+       NOT equilibrium — there's no demand curve here, so nothing is in
+       equilibrium. These just mark a price/quantity pair we've left.
+       Drawn BEFORE the live crosshair so they sit underneath it, and each
+       switches on at the exact moment the bright crosshair is sitting on
+       top of it. Nothing ever fades in on open ground.
+       ghostA = $400/40 (slides 4-5)   ghostB = $600/60 (slides 5-6) -->
+  <g id="ghostA">
+    <path d="M320 566 L664 566" fill="none" stroke="#ffb000" stroke-width="2.5" stroke-dasharray="9 9"/>
+    <path d="M664 566 L664 830" fill="none" stroke="#ffb000" stroke-width="2.5" stroke-dasharray="9 9"/>
+    <rect x="656" y="558" width="16" height="16" fill="none" stroke="#ffb000" stroke-width="2"/>
+  </g>
+  <g id="ghostB">
+    <path d="M320 434 L836 434" fill="none" stroke="#ffb000" stroke-width="2.5" stroke-dasharray="9 9"/>
+    <path d="M836 434 L836 830" fill="none" stroke="#ffb000" stroke-width="2.5" stroke-dasharray="9 9"/>
+    <rect x="828" y="426" width="16" height="16" fill="none" stroke="#ffb000" stroke-width="2"/>
+  </g>
+
+  <!-- the four squares left behind by both shifts. Same trick: they switch on
+       under the solid ones on slides 8 and 14, and are revealed when those
+       travel on 9 and 15. -->
+  <g id="oldSq">
+    <rect x="484"  y="690" width="16" height="16" fill="none" stroke="#ffb000" stroke-width="2"/>
+    <rect x="656"  y="558" width="16" height="16" fill="none" stroke="#ffb000" stroke-width="2"/>
+    <rect x="828"  y="426" width="16" height="16" fill="none" stroke="#ffb000" stroke-width="2"/>
+    <rect x="1000" y="294" width="16" height="16" fill="none" stroke="#ffb000" stroke-width="2"/>
+  </g>
+
+  <!-- ── the crosshair. Drawn once at full extent, revealed by dasharray. ──
+       hline base : M320 566 L1240 566   (translateY moves it to any price)
+       vline base : M664 150 L664 830    (translateX moves it to any quantity)
+       oldV       : the dashed twin of vline, parked at the OLD quantity -->
+  <path id="oldV"  d="M664 150 L664 830" fill="none" stroke="#ffb000"
+        stroke-width="2.5" stroke-dasharray="9 9" opacity="0"/>
+  <path id="hline" d="M320 566 L1240 566" fill="none" stroke="#ffb000"
+        stroke-width="4" filter="url(#bloomG)" opacity="0"/>
+  <path id="vline" d="M664 150 L664 830" fill="none" stroke="#ffb000"
+        stroke-width="3" filter="url(#bloomSoft)" opacity="0"/>
+  <rect id="pt" x="655" y="557" width="18" height="18" fill="#ffb000"
+        filter="url(#bloomG)" opacity="0"/>
+
+  <!-- the jump, drawn ON the price line — which is correct, it happens along
+       it. Both are 172px, so the decrease is a true mirror of the increase
+       and only the arrowhead differs. Inset 8px at each end. -->
+  <path id="incArrow" d="M500 698 L656 698" fill="none" stroke="#ffe08a" stroke-width="6"
+        stroke-linecap="round" marker-end="url(#arY)" filter="url(#bloomG)" opacity="0"/>
+  <path id="decArrow" d="M484 698 L328 698" fill="none" stroke="#ffe08a" stroke-width="6"
+        stroke-linecap="round" marker-end="url(#arY)" filter="url(#bloomG)" opacity="0"/>
+
+  <!-- the same jump again, small, down on the quantity axis between the two
+       tick numbers. Base is drawn for oldX=492; translateX carries it to any
+       pair. Inset 32px each side clears even the widest label ("100"). -->
+  <path id="qInc" d="M524 871 L632 871" fill="none" stroke="#ffe08a" stroke-width="4"
+        stroke-linecap="round" marker-end="url(#arY)" filter="url(#bloomSoft)" opacity="0"/>
+  <path id="qDec" d="M460 871 L352 871" fill="none" stroke="#ffe08a" stroke-width="4"
+        stroke-linecap="round" marker-end="url(#arY)" filter="url(#bloomSoft)" opacity="0"/>
+
+  <!-- ── the two moves ALONG the curve, parallel to it and offset 30px so it
+       stays legible underneath. Both are the same line — the arrowhead is
+       the only thing that differs, which is exactly the point.
+       Note the direction is the OPPOSITE of demand: for supply an expansion
+       climbs the curve. -->
+  <g id="expArrow">
+    <path d="M682 590 L854 458" fill="none" stroke="#ffe08a" stroke-width="6"
+          stroke-linecap="round" marker-end="url(#arY)" filter="url(#bloomG)"/>
+    <text x="780" y="540" fill="#ffe08a" font-size="30" text-anchor="middle"
+          transform="rotate(-37.5 780 540)" filter="url(#bloomSoft)">EXPANSION</text>
+  </g>
+  <g id="conArrow">
+    <path d="M854 458 L510 722" fill="none" stroke="#ffe08a" stroke-width="6"
+          stroke-linecap="round" marker-end="url(#arY)" filter="url(#bloomG)"/>
+    <text x="694" y="606" fill="#ffe08a" font-size="30" text-anchor="middle"
+          transform="rotate(-37.5 694 606)" filter="url(#bloomSoft)">CONTRACTION</text>
+  </g>
+
+  <!-- ══ right-hand panel — deliberately thin. The animation does the teaching.
+       Slides 10-13 and 16-19 carry NO panel text at all. ══ -->
+  <g id="invLab" class="el">
+    <text x="1590" y="344" fill="#33ff33" font-size="40" text-anchor="middle" filter="url(#bloomSoft)">A DIRECT RELATIONSHIP</text>
+    <text x="1590" y="400" font-size="40" text-anchor="middle" filter="url(#bloomSoft)"><tspan fill="#33ff33">between </tspan><tspan fill="#ffb000">price</tspan><tspan fill="#33ff33"> and </tspan><tspan fill="#ffb000">quantity</tspan></text>
+  </g>
+
+  <g id="expLab" class="el">
+    <text x="1590" y="310" fill="#ffe08a" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">EXPANSION</text>
+    <text x="1590" y="370" font-size="50" text-anchor="middle" filter="url(#bloomSoft)"><tspan fill="#33ff33">an </tspan><tspan fill="#ffe08a">UPWARD</tspan><tspan fill="#33ff33"> movement</tspan></text>
+    <text x="1590" y="430" fill="#33ff33" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">along the curve</text>
+  </g>
+  <g id="conLab" class="el">
+    <text x="1590" y="550" fill="#ffe08a" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">CONTRACTION</text>
+    <text x="1590" y="610" font-size="50" text-anchor="middle" filter="url(#bloomSoft)"><tspan fill="#33ff33">a </tspan><tspan fill="#ffe08a">DOWNWARD</tspan><tspan fill="#33ff33"> movement</tspan></text>
+    <text x="1590" y="670" fill="#33ff33" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">along the curve</text>
+  </g>
+
+  <g id="incLab" class="el">
+    <text x="1590" y="390" fill="#ffe08a" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">INCREASE IN SUPPLY</text>
+    <text x="1590" y="450" fill="#33ff33" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">MORE is supplied</text>
+    <text x="1590" y="510" font-size="50" text-anchor="middle" filter="url(#bloomSoft)"><tspan fill="#33ff33">at </tspan><tspan fill="#ffb000">EVERY price</tspan></text>
+  </g>
+  <g id="decLab" class="el">
+    <text x="1590" y="390" fill="#ffe08a" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">DECREASE IN SUPPLY</text>
+    <text x="1590" y="450" fill="#33ff33" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">LESS is supplied</text>
+    <text x="1590" y="510" font-size="50" text-anchor="middle" filter="url(#bloomSoft)"><tspan fill="#33ff33">at </tspan><tspan fill="#ffb000">EVERY price</tspan></text>
+  </g>
+
+  <!-- ══ the two worked examples ══
+       Both are chosen because a student who pattern-matched from the DEMAND
+       video gets them wrong. Both land on a decrease, and both end with the
+       same flag. -->
+  <g id="exLab1" class="el">
+    <text x="1590" y="250" fill="#2f8f3f" font-size="36" text-anchor="middle">EXAMPLE 1</text>
+    <text x="1590" y="322" fill="#33ff33" font-size="44" text-anchor="middle" filter="url(#bloomSoft)">The price of canola rises.</text>
+    <text x="1590" y="394" fill="#7bd98a" font-size="34" text-anchor="middle">Farmers grow wheat OR canola</text>
+    <text x="1590" y="436" fill="#7bd98a" font-size="34" text-anchor="middle">on the same land.</text>
+  </g>
+  <g id="exAns1" class="el">
+    <text x="1590" y="560" fill="#ffe08a" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">DECREASE IN SUPPLY</text>
+    <text x="1590" y="625" fill="#2f8f3f" font-size="34" text-anchor="middle">land switches to canola,</text>
+    <text x="1590" y="667" fill="#2f8f3f" font-size="34" text-anchor="middle">so less wheat at EVERY price</text>
+    <text x="1590" y="742" fill="#ffe08a" font-size="36" text-anchor="middle">the OPPOSITE of demand</text>
+  </g>
+
+  <g id="exLab2" class="el">
+    <text x="1590" y="250" fill="#2f8f3f" font-size="36" text-anchor="middle">EXAMPLE 2</text>
+    <text x="1590" y="322" fill="#33ff33" font-size="44" text-anchor="middle" filter="url(#bloomSoft)">Farmers expect the price</text>
+    <text x="1590" y="372" fill="#33ff33" font-size="44" text-anchor="middle" filter="url(#bloomSoft)">to jump next month.</text>
+    <text x="1590" y="440" fill="#7bd98a" font-size="34" text-anchor="middle">Wheat stores well.</text>
+  </g>
+  <g id="exAns2" class="el">
+    <text x="1590" y="560" fill="#ffe08a" font-size="50" text-anchor="middle" filter="url(#bloomSoft)">DECREASE IN SUPPLY</text>
+    <text x="1590" y="625" fill="#2f8f3f" font-size="34" text-anchor="middle">they hold grain back NOW</text>
+    <text x="1590" y="667" fill="#2f8f3f" font-size="34" text-anchor="middle">to sell at the higher price</text>
+    <text x="1590" y="742" fill="#ffe08a" font-size="36" text-anchor="middle">the OPPOSITE of demand</text>
+  </g>
+
+  <!-- ══ slide 7 — no graph. Blackout first, then the card on top of it. ══
+       Left column is price, so it's amber. Right column is everything else,
+       so it's green. "caused by a change in" reads straight into every item
+       below it — and it dodges "non-price", which is untrue the moment you
+       list the price of a related good. -->
+  <rect id="blackout" width="1920" height="1080" fill="#050b05" opacity="0"
+        style="transition:opacity .6s ease" pointer-events="none"/>
+  <g id="table">
+    <g stroke="#1d4a24" stroke-width="2.5">
+      <line x1="260" y1="160" x2="1660" y2="160"/>
+      <line x1="260" y1="280" x2="1660" y2="280"/>
+      <line x1="260" y1="398" x2="1660" y2="398"/>
+      <line x1="260" y1="886" x2="1660" y2="886"/>
+      <line x1="260"  y1="160" x2="260"  y2="886"/>
+      <line x1="960"  y1="160" x2="960"  y2="886"/>
+      <line x1="1660" y1="160" x2="1660" y2="886"/>
+    </g>
+
+    <text x="610"  y="238" fill="#ffb000" font-size="44" text-anchor="middle" filter="url(#bloomSoft)">EXPANSION / CONTRACTION</text>
+    <text x="1310" y="238" fill="#33ff33" font-size="44" text-anchor="middle" filter="url(#bloomSoft)">INCREASE / DECREASE</text>
+
+    <text x="300"  y="352" fill="#ffe08a" font-size="44" filter="url(#bloomSoft)">a movement ALONG the curve</text>
+    <text x="1000" y="352" fill="#ffe08a" font-size="44" filter="url(#bloomSoft)">a movement OF the curve</text>
+
+    <text x="300"  y="468" fill="#2f8f3f" font-size="44">caused by a change in</text>
+    <text x="1000" y="468" fill="#2f8f3f" font-size="44">caused by a change in</text>
+
+    <text x="330"  y="536" fill="#ffb000" font-size="44" filter="url(#bloomSoft)">the price of the good itself</text>
+
+    <text x="1030" y="536" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">costs of factors of production</text>
+    <text x="1030" y="594" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">the price of related goods</text>
+    <text x="1030" y="652" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">indirect taxes and subsidies</text>
+    <text x="1030" y="710" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">future price expectations</text>
+    <text x="1030" y="768" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">technology</text>
+    <text x="1030" y="826" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">the number of firms</text>
+  </g>
+
+  <!-- ══ slide 24 — five to try ══
+       Every question is the SAME green. Colouring the price words amber would
+       hand over the answer, so nothing here is colour-coded. -->
+  <g id="quiz">
+    <text x="960" y="152" fill="#33ff33" font-size="54" text-anchor="middle" filter="url(#bloomSoft)">WHICH IS IT?</text>
+    <text x="960" y="214" fill="#2f8f3f" font-size="34" text-anchor="middle">own price? / costs? / taxes? / technology? / number of firms?</text>
+    <line x1="260" y1="252" x2="1660" y2="252" stroke="#1d4a24" stroke-width="2.5"/>
+
+    <text x="300" y="340" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">1.   The price of wheat rises from $200 to $800.</text>
+    <text x="300" y="430" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">2.   The price of fertiliser doubles.</text>
+    <text x="300" y="520" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">3.   The government pays farmers a subsidy per tonne.</text>
+    <text x="300" y="610" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">4.   A new drought-resistant seed lifts yields.</text>
+    <text x="300" y="700" fill="#33ff33" font-size="44" filter="url(#bloomSoft)">5.   Many farms leave the industry.</text>
+
+    <line x1="260" y1="762" x2="1660" y2="762" stroke="#1d4a24" stroke-width="2.5"/>
+    <text x="960" y="834" fill="#ffe08a" font-size="44" text-anchor="middle" filter="url(#bloomSoft)">EXPANSION / CONTRACTION / INCREASE / DECREASE</text>
+  </g>
+
+  <g id="term" class="el keep">
+    <text id="cmd" x="60" y="1030" fill="#ffb000" font-size="34"
+          font-family="'Share Tech Mono',monospace" filter="url(#bloomSoft)">&gt; RUN</text>
+    <rect id="cursor" x="60" y="1006" width="16" height="30" fill="#ffb000" filter="url(#bloomSoft)"/>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#scan)" pointer-events="none"/>
+  <rect width="1920" height="1080" fill="url(#crt)" pointer-events="none"/>
+</svg>
+</div>
+
+<div id="bar">
+  <button id="prev">&#8592;</button>
+  <span id="num">0 / 24</span>
+  <button id="next">&#8594;</button>
+  <button id="rep">&#8635;</button>
+  <span id="lbl"></span>
+</div>
+
+<div id="hint">SPACE / CLICK &#8594; next &#183; &#8592; back &#183; A repeat &#183; R restart &#183; H hide toolbar</div>
+
+<script>
+// WHEAT.  86px = 10,000 tonnes  ·  66px = $100/tonne
+//   S1: P = Q  (in $100s) — climbs left to right
+//     $200->20 (492,698)  $400->40 (664,566)  $600->60 (836,434)  $800->80 (1008,302)
+//
+//   INCREASE  S1 + 172px  (+20,000).  $200->40  $400->60  $600->80  $800->100
+//   DECREASE  S1 - 172px  (-20,000).  $200-> 0  $400->20  $600->40  $800->60
+//
+//   Mirror of the demand file throughout, with the sign of everything flipped:
+//   an EXPANSION climbs the curve, the decrease bottoms out at ZERO on the
+//   CHEAPEST price ($200) rather than the dearest, and both worked examples
+//   are cases where the demand answer is the wrong one.
+const gx = q => 320 + q * 86;
+const gy = p => 830 - p * 66;
+
+let g = '';
+for (let i = 0; i <= 10; i++) {
+  g += `<line x1="${gx(i)}" y1="${gy(0)}" x2="${gx(i)}" y2="${gy(10)}"/>`;
+  g += `<line x1="${gx(0)}" y1="${gy(i)}" x2="${gx(10)}" y2="${gy(i)}"/>`;
+}
+document.getElementById('grid').innerHTML = g;
+
+// Lit, not bolded: VT323 has one weight, so brightness + glow is what "bold"
+// means on a phosphor screen. Price ticks amber, quantity ticks green.
+// The quantity ticks are id'd so a probe can flash the two it lands on, and
+// they start at 0 because the decrease at $200 lands there.
+let t = '';
+for (let i = 2; i <= 10; i += 2)
+  t += `<text x="292" y="${gy(i) + 11}" fill="#ffb000" text-anchor="end" filter="url(#bloomSoft)">$${i * 100}</text>`;
+for (let i = 0; i <= 10; i += 2)
+  t += `<text id="qt${i}" x="${gx(i)}" y="882" fill="#33ff33" text-anchor="middle" filter="url(#bloomSoft)">${i * 10}</text>`;
+document.getElementById('ticks').innerHTML = t;
+
+document.querySelectorAll('.draw').forEach(el => {
+  const len = el.getTotalLength();
+  el.style.strokeDasharray = len;
+  el.style.strokeDashoffset = len;
+});
+
+const STAGES = [
+  { cmd:'&gt; RUN', cap:'Boot — price up the side, quantity along the bottom.',
+    show:['grid','axes','term'] },
+
+  { cmd:'&gt; PRINT "LAW OF SUPPLY"', cap:'The title types itself in, centred on the diagram.',
+    show:['lawHead'] },
+
+  { cmd:'&gt; PLOT 200,20 : 400,40 : 600,60 : 800,80', cap:'Four observations, from the bottom up. The pattern IS the point.',
+    show:['invLab'] },
+
+  { cmd:'&gt; DRAW SUPPLY', cap:'Join them — uphill. The title and both axes name the good.',
+    show:['scurve','slab'] },
+
+  { cmd:'&gt; MARK 400,40', cap:'Keep $400. The other three dissolve into the line.',
+    show:[] },
+
+  { cmd:'&gt; SET PRICE 600', cap:'EXPANSION — $400 to $600, UP the curve. The opposite of demand.',
+    show:['expLab'] },
+
+  { cmd:'&gt; SET PRICE 200', cap:'CONTRACTION — $600 to $200, back down. Both stay on the panel.',
+    show:['conLab'] },
+
+  { cmd:'&gt; COMPARE', cap:'The table — its own price, versus anything else.',
+    show:[] },
+
+  { cmd:'&gt; RESTORE', cap:'The curve and the four squares. No crosshair.',
+    show:[] },
+
+  { cmd:'&gt; COSTS DOWN', cap:'INCREASE IN SUPPLY — every square slides right by the same 20,000.',
+    show:['incLab'] },
+
+  { cmd:'&gt; PROBE 200', cap:'The $200 line runs out and drops at each curve. 20,000 -> 40,000.', show:[] },
+  { cmd:'&gt; PROBE 400', cap:'At $400 — 40,000 -> 60,000.', show:[] },
+  { cmd:'&gt; PROBE 600', cap:'At $600 — 60,000 -> 80,000.', show:[] },
+  { cmd:'&gt; PROBE 800', cap:'At $800 — 80,000 -> 100,000. The same gap, every time.', show:[] },
+
+  { cmd:'&gt; RESTORE', cap:'Back to S. Four squares, no crosshair.',
+    show:[] },
+
+  { cmd:'&gt; COSTS UP', cap:'DECREASE IN SUPPLY — every square slides left by the same 20,000.',
+    show:['decLab'] },
+
+  { cmd:'&gt; PROBE 200', cap:'At $200 — the line drops the instant it leaves the axis. 20,000 -> 0.', show:[] },
+  { cmd:'&gt; PROBE 400', cap:'At $400 — 40,000 -> 20,000.', show:[] },
+  { cmd:'&gt; PROBE 600', cap:'At $600 — 60,000 -> 40,000.', show:[] },
+  { cmd:'&gt; PROBE 800', cap:'At $800 — 80,000 -> 60,000. The same gap, every time.', show:[] },
+
+  { cmd:'&gt; EXAMPLE 1', cap:'EXAMPLE 1 — the price of canola rises. Competitive supply.',
+    show:['exLab1'] },
+  { cmd:'&gt; ANSWER', cap:'DECREASE — land switches. In demand a substitute rise INCREASES it.',
+    show:['exAns1'] },
+
+  { cmd:'&gt; EXAMPLE 2', cap:'EXAMPLE 2 — farmers expect a higher price next month.',
+    show:['exLab2'] },
+  { cmd:'&gt; ANSWER', cap:'DECREASE now — they withhold. Buyers would have bought MORE now.',
+    show:['exAns2'] },
+
+  { cmd:'&gt; YOUR TURN', cap:'Five to try. Nothing colour-coded — that would give it away.',
+    show:[] },
+];
+
+const LATER = [8,9,10,11,12,13,14,15,16,17,18,19];
+const SQ = {
+  sq2: [2, 3, ...LATER],
+  sq4: [...LATER],          // $400 is #pt on slides 2-6
+  sq6: [2, 3, ...LATER],
+  sq8: [2, 3, ...LATER],
+};
+// slide 2 plots them up the curve, one at a time. $400 is #pt, at 0.45s.
+const STAGGER = { sq2:'0s', sq4:'0s', sq6:'0.9s', sq8:'1.35s' };
+// how far the curve has travelled. 21 and 23 are the two worked examples,
+// both of which are decreases.
+const shiftFor = t => (t >= 9 && t <= 13) ? 172
+                    : ((t >= 15 && t <= 19) || t === 21 || t === 23) ? -172 : 0;
+
+// [px, py] of the live point.
+const POS = { 2:[664,566], 3:[664,566], 4:[664,566], 5:[836,434], 6:[492,698],
+              10:[664,698], 11:[836,566], 12:[1008,434], 13:[1180,302],
+              16:[320,698], 17:[492,566], 18:[664,434], 19:[836,302] };
+
+const TITLE = t => t >= 20 ? 'EXAMPLES' : t >= 3 ? 'SUPPLY OF WHEAT' : 'LAW OF SUPPLY';
+const RETYPE = [1, 3, 20];
+
+// probe timings
+const RUN = 1.4, DROP = 0.4, ARROW = RUN + DROP + 0.15;
+const tickId = x => 'qt' + Math.round((x - 320) / 86);
+
+let cur = -1;
+
+// ── typewriters ───────────────────────────────────────────────────
+// A stale timer from a stage you've already left will happily keep typing
+// over the top of the next one, so every call kills the last one first.
+let typeTimer = null, axTimer = null;
+const OFW = 'OF WHEAT';   // no leading space — the gap is the 16px x-offset
+
+// Backspaces whatever is there before typing the new title — which is what a
+// terminal would do, and it reads as the machine correcting itself.
+function typeTitle(str, run) {
+  clearInterval(typeTimer);
+  const txt = document.getElementById('lawTxt'), cr = document.getElementById('lawCur');
+  // centred text grows both ways, so the cursor rides the RIGHT edge: mid + half
+  const park = () => cr.setAttribute('x', 780 + txt.getComputedTextLength() / 2 + 12);
+  if (!run) { txt.textContent = str; park(); return; }
+
+  const typeIn = () => {
+    let j = 0;
+    txt.textContent = ''; park();
+    typeTimer = setInterval(() => {
+      txt.textContent = str.slice(0, ++j);
+      park();
+      if (j >= str.length) clearInterval(typeTimer);
+    }, 85);
+  };
+
+  const from = txt.textContent;
+  if (from && from !== str) {
+    let i = from.length;
+    typeTimer = setInterval(() => {
+      txt.textContent = from.slice(0, --i);
+      park();
+      if (i <= 0) { clearInterval(typeTimer); typeIn(); }
+    }, 35);
+  } else typeIn();
+}
+
+function setAxis(mode) {
+  clearInterval(axTimer);
+  const pT = document.getElementById('axPTxt'), pC = document.getElementById('axPCur');
+  const qT = document.getElementById('axQTxt'), qC = document.getElementById('axQCur');
+  const parkP = () => pC.setAttribute('x', 202 + pT.getComputedTextLength());
+  const parkQ = () => qC.setAttribute('x', 794 + qT.getComputedTextLength());
+
+  if (mode !== 'type') {
+    const s = (mode === 'full') ? OFW : '';
+    pT.textContent = s; qT.textContent = s;
+    pC.style.display = 'none'; qC.style.display = 'none';
+    parkP(); parkQ();
+    return;
+  }
+  const run = (txt, cr, park, done) => {
+    let i = 0;
+    txt.textContent = ''; cr.style.display = ''; park();
+    axTimer = setInterval(() => {
+      txt.textContent = OFW.slice(0, ++i);
+      park();
+      if (i >= OFW.length) { clearInterval(axTimer); cr.style.display = 'none'; if (done) done(); }
+    }, 85);
+  };
+  qT.textContent = ''; qC.style.display = 'none';
+  run(pT, pC, parkP, () => run(qT, qC, parkQ));
+}
+
+// ══ THE PROBE — slides 10-13 and 16-19 ════════════════════════════
+// The price line runs out from the axis and drops a vertical the instant it
+// crosses each curve. The two drops are the two quantities at that one price;
+// the gap between them is the whole point.
+//
+// LINEAR easing on the run is not a style choice. Each drop's delay is
+// computed from its DISTANCE along the line, so with any easing the line
+// would be somewhere other than the intersection when its vertical falls,
+// and the effect would be a lie. Each tick number flashes on the same beat.
+//
+// The line always travels left to right, so on an increase it meets S1 first
+// and on a decrease it meets S2 first. Nothing special-cases that — each
+// vertical simply drops when the line reaches its own x.
+function probe(py, oldX, px, shift) {
+  const reach = Math.max(oldX, px), L = reach - 320;
+  const gapTop = py - 150, span = 830 - py;
+  const hl = document.getElementById('hline'), vl = document.getElementById('vline');
+  const ov = document.getElementById('oldV');
+  const ia = document.getElementById('incArrow'), da = document.getElementById('decArrow');
+  const qi = document.getElementById('qInc'),     qd = document.getElementById('qDec');
+  const arrow = shift > 0 ? ia : da, idle = shift > 0 ? da : ia;
+  const qArr  = shift > 0 ? qi : qd, qIdle = shift > 0 ? qd : qi;
+
+  [idle, qIdle].forEach(e => { e.style.transition = 'none'; e.style.opacity = 0; });
+
+  hl.style.transition = 'none';
+  hl.style.transform = `translateY(${py - 566}px)`;
+  hl.style.strokeDasharray = `${L} 9999`;
+  hl.style.strokeDashoffset = L;          // pattern pushed off the start: nothing shows
+  hl.style.opacity = 1;
+
+  const drops = [[vl, px], [ov, oldX]];
+  drops.forEach(([e, x]) => {
+    e.style.transition = 'none';
+    e.style.transform = `translateX(${x - 664}px)`;
+    e.style.strokeDasharray = `0 ${gapTop} 0 9999`;   // zero-length: parked at the curve
+    e.style.opacity = 1;
+  });
+
+  arrow.style.transition = 'none';
+  arrow.style.transform = shift > 0
+    ? `translate(${px - 664}px, ${py - 698}px)`
+    : `translate(${px - 320}px, ${py - 698}px)`;
+  arrow.style.opacity = 0;
+
+  qArr.style.transition = 'none';
+  qArr.style.transform = `translateX(${oldX - 492}px)`;
+  qArr.style.opacity = 0;
+
+  // clear any flash left over from the last probe
+  document.querySelectorAll('#ticks text').forEach(e => e.style.animation = 'none');
+
+  void hl.getBoundingClientRect();
+
+  requestAnimationFrame(() => {
+    hl.style.transition = `stroke-dashoffset ${RUN}s linear`;
+    hl.style.strokeDashoffset = 0;
+    drops.forEach(([e, x]) => {
+      const at = (RUN * (x - 320) / L).toFixed(3);     // when the line gets here
+      e.style.transition = `stroke-dasharray ${DROP}s cubic-bezier(.3,.7,.3,1) ${at}s`;
+      e.style.strokeDasharray = `0 ${gapTop} ${span} 9999`;
+      const tk = document.getElementById(tickId(x));   // ...and its number lights up
+      if (tk) tk.style.animation = `qflash .7s ease ${at}s forwards`;
+    });
+    arrow.style.transition = `opacity .45s ease ${ARROW}s`;
+    arrow.style.opacity = 1;
+    qArr.style.transition = `opacity .45s ease ${ARROW}s`;
+    qArr.style.opacity = 1;
+  });
+}
+
+function render(target) {
+  document.getElementById('invLab').style.transitionDelay = (target === 2) ? '2.1s' : '0s';
+
+  const shown = new Set();
+  for (let i = 0; i <= target; i++) (STAGES[i].show || []).forEach(id => shown.add(id));
+  const hot = new Set(STAGES[target] ? (STAGES[target].show || []) : []);
+
+  document.querySelectorAll('.el').forEach(el => {
+    const on = shown.has(el.id);
+    el.classList.toggle('on', on);
+    el.classList.toggle('hot', hot.has(el.id));
+    el.querySelectorAll('.draw').forEach(d => d.classList.toggle('on', on));
+  });
+
+  typeTitle(TITLE(target), RETYPE.includes(target));
+  setAxis(target < 3 ? 'empty' : target === 3 ? 'type' : 'full');
+
+  const ANIM = [9, 15, 21, 23].includes(target);
+  const SNAP = 'opacity .5s ease';
+
+  if (target !== 2) document.getElementById('invLab').classList.remove('on', 'hot');
+  const PANEL = { expLab:[5,6], conLab:[6], incLab:[9], decLab:[15],
+                  exLab1:[20,21], exAns1:[21], exLab2:[22,23], exAns2:[23] };
+  for (const [id, live] of Object.entries(PANEL))
+    document.getElementById(id).style.opacity = live.includes(target) ? 1 : 0;
+
+  const ea = document.getElementById('expArrow'), ca = document.getElementById('conArrow');
+  ea.style.opacity = (target === 5) ? 1 : 0;
+  ea.style.transitionDelay = (target === 5) ? '2.3s' : '0s';
+  ca.style.opacity = (target === 6) ? 1 : 0;
+  ca.style.transitionDelay = (target === 6) ? '2.3s' : '0s';
+
+  // ── the squares travel with the curve ──
+  //    `transition` is a SHORTHAND: assigning it resets transition-delay to 0.
+  //    So the stagger MUST be set after it, or slide 2's reveal collapses.
+  const shift = shiftFor(target);
+  for (const [id, live] of Object.entries(SQ)) {
+    const e = document.getElementById(id);
+    e.style.transition = ANIM ? '' : SNAP;
+    e.style.transitionDelay = (target === 2) ? STAGGER[id] : '0s';
+    e.style.opacity = live.includes(target) ? 1 : 0;
+    e.style.transform = `translateX(${shift}px)`;
+  }
+
+  // ── the shifted curve. Parked on S1 (invisible) whenever shift is 0. ──
+  const sc = document.getElementById('scurve'), sl = document.getElementById('slab');
+  const dw = document.getElementById('dsWrap'), ds = document.getElementById('dsLab');
+  document.getElementById('dShift').style.opacity = (target >= 8) ? 1 : 0;
+  dw.style.transition = ANIM ? '' : 'none';
+  dw.style.transform = `translateX(${shift}px)`;
+  ds.style.opacity = shift ? 1 : 0;
+  ds.style.transitionDelay = ANIM ? '1.6s' : '0s';
+  // the new curve's label follows it: past the right edge for the increase,
+  // tucked in beside S1 for the decrease
+  const dsT = document.getElementById('dsTxt');
+  dsT.setAttribute('x', shift > 0 ? 1252 : 936);
+  dsT.setAttribute('y', shift > 0 ? 250 : 230);
+  document.getElementById('sTxt').textContent = shift ? 'S1' : 'S';
+  sc.style.opacity = shift ? '0.3' : '';   // '' hands control back to .el.on
+  sl.style.opacity = shift ? '0.3' : '';
+
+  // ── the guidelines and the squares left behind ──
+  const gA = document.getElementById('ghostA'), gB = document.getElementById('ghostB');
+  gA.style.opacity = [4, 5].includes(target) ? 0.32 : 0;
+  gA.style.transitionDelay = '0s';
+  gB.style.opacity = [5, 6].includes(target) ? 0.32 : 0;
+  gB.style.transitionDelay = (target === 5) ? '2.3s' : '0s';
+  document.getElementById('oldSq').style.opacity = LATER.includes(target) ? 0.4 : 0;
+
+  // ── the crosshair ──
+  const [px, py] = POS[target] || [664, 566];
+  const oldX = px - shift;
+  const hl = document.getElementById('hline'), vl = document.getElementById('vline');
+  const pt = document.getElementById('pt'),    ov = document.getElementById('oldV');
+  const ia = document.getElementById('incArrow'), da = document.getElementById('decArrow');
+  const qi = document.getElementById('qInc'),     qd = document.getElementById('qDec');
+
+  const CHECK = (target >= 10 && target <= 13) || (target >= 16 && target <= 19);
+  pt.style.transform = `translate(${px - 664}px, ${py - 566}px)`;
+
+  if (CHECK) {
+    probe(py, oldX, px, shift);
+    pt.style.opacity = 0;                  // the squares already mark both points
+  } else {
+    document.querySelectorAll('#ticks text').forEach(e => e.style.animation = 'none');
+    // The crosshair must never TRAVEL on a slide where it is appearing — with a
+    // live transition it animates its own length on the way in. Slide 4 is the
+    // only place it arrives from hidden.
+    const FRESH = (target === 4);
+    [hl, vl, ov, ia, da, pt, qi, qd].forEach(e => e.style.transition = FRESH ? SNAP : '');
+    hl.style.transform = `translateY(${py - 566}px)`;
+    hl.style.strokeDasharray = `${Math.max(px, oldX) - 320} 9999`;
+    hl.style.strokeDashoffset = 0;         // undo the probe's parked offset
+    vl.style.transform = `translateX(${px - 664}px)`;
+    vl.style.strokeDasharray = `0 ${py - 150} ${830 - py} 9999`;
+    ov.style.transform = `translateX(${oldX - 664}px)`;
+    ov.style.strokeDasharray = `0 ${py - 150} ${830 - py} 9999`;
+    ia.style.transform = `translate(${px - 664}px, ${py - 698}px)`;
+    da.style.transform = `translate(${px - 320}px, ${py - 698}px)`;
+
+    const XH = (target >= 4 && target <= 6);
+    [hl, vl].forEach(e => { e.style.opacity = XH ? 1 : 0; e.style.transitionDelay = '0s'; });
+    [ov, ia, da, qi, qd].forEach(e => e.style.opacity = 0);
+
+    const PT = (target >= 2 && target <= 6);
+    pt.style.opacity = PT ? 1 : 0;
+    pt.style.transitionDelay = (target === 2) ? '0.45s' : '0s';
+  }
+
+  // ── the two full-screen cards ──
+  const TABLE = target === 7, QUIZ = target === 24;
+  document.getElementById('blackout').style.opacity = (TABLE || QUIZ) ? 1 : 0;
+  document.getElementById('table').style.opacity = TABLE ? 1 : 0;
+  document.getElementById('table').style.transitionDelay = TABLE ? '0.35s' : '0s';
+  document.getElementById('quiz').style.opacity = QUIZ ? 1 : 0;
+  document.getElementById('quiz').style.transitionDelay = QUIZ ? '0.35s' : '0s';
+
+  document.getElementById('cmd').innerHTML = STAGES[target].cmd;
+  const w = document.getElementById('cmd').getComputedTextLength();
+  document.getElementById('cursor').setAttribute('x', 60 + w + 10);
+
+  document.getElementById('num').textContent = target + ' / ' + (STAGES.length - 1);
+  document.getElementById('lbl').textContent = STAGES[target].cap;
+  document.getElementById('prev').disabled = (target === 0);
+  document.getElementById('next').disabled = (target === STAGES.length - 1);
+}
+
+function go(n) {
+  n = Math.max(0, Math.min(STAGES.length - 1, n));
+  if (n === cur) return;
+  cur = n; render(cur);
+}
+
+function repeat() {
+  if (cur <= 0) return;
+  const t = cur, st = document.getElementById('stage');
+  st.classList.add('noanim');
+  render(t - 1);
+  void st.getBoundingClientRect();
+  requestAnimationFrame(() => {
+    st.classList.remove('noanim');
+    void st.getBoundingClientRect();
+    render(t);
+  });
+}
+
+document.getElementById('prev').addEventListener('click', e => { e.stopPropagation(); go(cur - 1); });
+document.getElementById('next').addEventListener('click', e => { e.stopPropagation(); go(cur + 1); });
+document.getElementById('rep').addEventListener('click',  e => { e.stopPropagation(); repeat(); });
+document.addEventListener('click', () => go(cur + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'ArrowRight' || e.code === 'Enter') { e.preventDefault(); go(cur + 1); }
+  else if (e.code === 'ArrowLeft' || e.code === 'Backspace') { e.preventDefault(); go(cur - 1); }
+  else if (e.key === 'a' || e.key === 'A') { e.preventDefault(); repeat(); }
+  else if (e.key === 'r' || e.key === 'R') { cur = -1; go(0); }
+  else if (e.key === 'h' || e.key === 'H') {
+    document.getElementById('hint').classList.toggle('hide');
+    document.getElementById('bar').classList.toggle('hide');
+  }
+});
+
+function fit() {
+  document.getElementById('stage').style.setProperty('--s', Math.min(innerWidth / 1920, innerHeight / 1080));
+}
+addEventListener('resize', fit);
+fit();
+go(0);
+</script>
+
+</body>
+</html>

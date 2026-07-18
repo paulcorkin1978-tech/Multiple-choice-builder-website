@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Subsidy Explainer — Theory2Econ</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#05050c; height:100%; overflow:hidden; font-family:'Nunito',system-ui,sans-serif; }
+
+  #stage {
+    position:absolute; top:50%; left:50%;
+    width:1920px; height:1080px;
+    transform:translate(-50%,-50%) scale(var(--s,1));
+    transform-origin:center center;
+  }
+  svg { display:block; width:1920px; height:1080px; }
+
+  .el     { opacity:0; transition:opacity .75s ease; }
+  .el.on  { opacity:.62; }
+  .el.hot { opacity:1; }
+  .keep.on{ opacity:.85; }
+
+  /* Every glow filter is filterUnits="userSpaceOnUse". With the default, a
+     HORIZONTAL or VERTICAL line has a zero-thickness bbox, the filter region
+     collapses, and the element renders completely invisible. */
+  .draw    { transition:stroke-dashoffset 1.15s cubic-bezier(.22,.61,.36,1); }
+  .draw.on { stroke-dashoffset:0 !important; }
+  .trace.on{ transition:stroke-dashoffset 1.6s cubic-bezier(.4,.2,.2,1); }
+  .quick.on{ transition:stroke-dashoffset .7s cubic-bezier(.3,.7,.3,1); }
+  .slow.on { transition:stroke-dashoffset 2.3s cubic-bezier(.42,.1,.25,1); }
+
+  /* the subsidy: supply slides DOWN 132px = $4/kg */
+  #s2wrap        { transform:translateY(0); transition:transform 2.8s cubic-bezier(.4,.05,.25,1); }
+  #s2wrap.shifted{ transform:translateY(132px); }
+
+  #dsbar  { transition:stroke-dashoffset 1.4s cubic-bezier(.3,.7,.3,1), opacity .55s; }
+  #impbar { transition:stroke-dasharray  1.4s cubic-bezier(.3,.7,.3,1), opacity .55s; }
+  #dmbar  { transition:stroke-dashoffset 1.1s cubic-bezier(.22,.61,.36,1), opacity .55s; }
+  .barlab { opacity:0; transition:opacity .55s ease, transform .9s cubic-bezier(.3,.7,.3,1); }
+  .revbox { opacity:0; transition:opacity .8s ease; }
+  .sumbox { opacity:0; transition:opacity .6s ease; }
+
+  #pwtick { transition:fill .7s ease, filter .7s ease; }
+  #pwtick.lit { fill:#ffd43b; filter:drop-shadow(0 0 7px rgba(255,212,59,.9)); }
+
+  .row    { opacity:0; transform:translateX(18px); transition:opacity .45s ease, transform .45s ease; }
+  .row.on { opacity:1; transform:translateX(0); }
+  .flash  { animation:flash 1.1s ease-out; }
+  @keyframes flash { 0%{opacity:.2} 30%{opacity:1} 100%{opacity:1} }
+
+  #bar { position:fixed; left:16px; bottom:14px; z-index:5; display:flex; align-items:center; gap:10px;
+         background:#0d0d1c; border:1.5px solid #23233f; border-radius:12px; padding:7px 10px;
+         font-family:'Nunito',sans-serif; transition:opacity .3s; }
+  #bar.hide { opacity:0; pointer-events:none; }
+  #bar button { width:36px; height:32px; border:1.5px solid #2e2e52; background:#15152a; color:#c9c9e8;
+                border-radius:8px; font-size:15px; font-weight:900; cursor:pointer; font-family:inherit;
+                transition:background .15s, border-color .15s, color .15s; }
+  #bar button:hover:not(:disabled) { background:#23233f; color:#fff; border-color:#4a4a7a; }
+  #bar button:disabled { opacity:.28; cursor:default; }
+  #num  { color:#ffd43b; font-size:16px; font-weight:900; min-width:60px; text-align:center; }
+  #lbl  { color:#5a5a80; font-size:12.5px; font-weight:700; max-width:520px;
+          overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  /* Repeat needs the step BACK to be instant, or the rewind animates too. */
+  #stage.noanim, #stage.noanim * { transition:none !important; animation:none !important; }
+
+  #hint { position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+          color:#33334d; font-size:13px; font-weight:800; user-select:none; transition:opacity .3s; }
+  #hint.hide { opacity:0; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowSoft" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowBig" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+      <feGaussianBlur stdDeviation="14" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <clipPath id="plotclip"><rect x="318" y="148" width="924" height="684"/></clipPath>
+
+    <pattern id="hatchG" width="13" height="13" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="13" height="13" fill="rgba(0,229,192,0.12)"/>
+      <line x1="0" y1="0" x2="0"  y2="13" stroke="#00e5c0" stroke-width="1.6" opacity="0.8"/>
+      <line x1="0" y1="0" x2="13" y2="0"  stroke="#00e5c0" stroke-width="1.6" opacity="0.8"/>
+    </pattern>
+    <pattern id="hatchY" width="13" height="13" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="13" height="13" fill="rgba(255,212,59,0.12)"/>
+      <line x1="0" y1="0" x2="0"  y2="13" stroke="#ffd43b" stroke-width="1.6" opacity="0.8"/>
+      <line x1="0" y1="0" x2="13" y2="0"  stroke="#ffd43b" stroke-width="1.6" opacity="0.8"/>
+    </pattern>
+    <pattern id="hatchO" width="13" height="13" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="13" height="13" fill="rgba(255,140,66,0.13)"/>
+      <line x1="0" y1="0" x2="0"  y2="13" stroke="#ff8c42" stroke-width="1.7" opacity="0.85"/>
+      <line x1="0" y1="0" x2="13" y2="0"  stroke="#ff8c42" stroke-width="1.7" opacity="0.85"/>
+    </pattern>
+
+    <radialGradient id="vig" cx="50%" cy="45%" r="78%">
+      <stop offset="62%"  stop-color="#05050c" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000"    stop-opacity="0.8"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#05050c"/>
+
+  <g id="grid" class="el keep" stroke="#15152c" stroke-width="1.5"></g>
+
+  <!-- ══ boxes — 86px = 20,000 t · 66px = $2/kg · world price $6 · subsidy $4 ══
+       revDom1  258x198 =  60,000 t x $6 = $360m
+       revImp1  344x198 =  80,000 t x $6 = $480m
+       revDom2  430x198 = 100,000 t x $6 = $600m   (what consumers pay)
+       revSub   430x132 = 100,000 t x $4 = $400m   (govt adds — STACKS on revDom2)
+       revImp2  172x198 =  40,000 t x $6 = $240m
+       Five different numbers, deliberately: $6 and $4 break the symmetry that
+       made every box identical. -->
+
+  <path id="pq1v" class="el draw quick" d="M320 830 L320 632" stroke="#ffd43b" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <path id="pq1h" class="el draw quick" d="M320 830 L578 830" stroke="#00e5c0" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <g id="pq1lab" class="el">
+    <text x="346" y="731" fill="#ffd43b" font-size="18" font-weight="900" text-anchor="middle" transform="rotate(-90 346 731)">PRICE  $6</text>
+    <text x="449" y="818" fill="#00e5c0" font-size="18" font-weight="900" text-anchor="middle">QUANTITY  60,000 t</text>
+  </g>
+
+  <path id="pq2v" class="el draw quick" d="M578 830 L578 632" stroke="#ffd43b" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <path id="pq2h" class="el draw quick" d="M578 830 L922 830" stroke="#ffd43b" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <g id="pq2lab" class="el">
+    <text x="604" y="731" fill="#ffd43b" font-size="18" font-weight="900" text-anchor="middle" transform="rotate(-90 604 731)">PRICE  $6</text>
+    <text x="750" y="818" fill="#ffd43b" font-size="18" font-weight="900" text-anchor="middle">QUANTITY  80,000 t</text>
+  </g>
+
+  <path id="pq3v" class="el draw quick" d="M320 830 L320 632" stroke="#ffd43b" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <path id="pq3h" class="el draw quick" d="M320 830 L750 830" stroke="#00e5c0" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <g id="pq3lab" class="el">
+    <text x="346" y="731" fill="#ffd43b" font-size="18" font-weight="900" text-anchor="middle" transform="rotate(-90 346 731)">PRICE  $6</text>
+    <text x="535" y="818" fill="#00e5c0" font-size="18" font-weight="900" text-anchor="middle">QUANTITY  100,000 t</text>
+  </g>
+
+  <g id="revDom1" class="revbox">
+    <rect x="320" y="632" width="258" height="198" fill="url(#hatchG)" stroke="#00e5c0" stroke-width="3.5"/>
+    <rect x="409" y="715" width="80" height="36" rx="9" fill="#05050c" opacity="0.85"/>
+    <text x="449" y="740" fill="#7dffe8" font-size="23" font-weight="900" text-anchor="middle">$360m</text>
+  </g>
+  <g id="revImp1" class="revbox">
+    <rect x="578" y="632" width="344" height="198" fill="url(#hatchY)" stroke="#ffd43b" stroke-width="3.5"/>
+    <rect x="710" y="715" width="80" height="36" rx="9" fill="#05050c" opacity="0.85"/>
+    <text x="750" y="740" fill="#ffe680" font-size="23" font-weight="900" text-anchor="middle">$480m</text>
+  </g>
+  <g id="revDom2" class="revbox">
+    <rect x="320" y="632" width="430" height="198" fill="url(#hatchG)" stroke="#00e5c0" stroke-width="3.5"/>
+    <rect x="495" y="715" width="80" height="36" rx="9" fill="#05050c" opacity="0.85"/>
+    <text x="535" y="740" fill="#7dffe8" font-size="23" font-weight="900" text-anchor="middle">$600m</text>
+  </g>
+  <g id="revSub" class="revbox">
+    <rect x="320" y="500" width="430" height="132" fill="url(#hatchO)" stroke="#ff8c42" stroke-width="4"/>
+    <rect x="495" y="548" width="80" height="36" rx="9" fill="#05050c" opacity="0.85"/>
+    <text x="535" y="573" fill="#ffb37a" font-size="23" font-weight="900" text-anchor="middle">$400m</text>
+  </g>
+  <g id="revImp2" class="revbox">
+    <rect x="750" y="632" width="172" height="198" fill="url(#hatchY)" stroke="#ffd43b" stroke-width="3.5"/>
+    <rect x="796" y="715" width="80" height="36" rx="9" fill="#05050c" opacity="0.85"/>
+    <text x="836" y="740" fill="#ffe680" font-size="23" font-weight="900" text-anchor="middle">$240m</text>
+  </g>
+
+  <g id="axes" class="el keep">
+    <line x1="320" y1="830" x2="1250" y2="830" stroke="#3a3a5e" stroke-width="3"/>
+    <line x1="320" y1="830" x2="320"  y2="150" stroke="#3a3a5e" stroke-width="3"/>
+    <text x="132" y="500" fill="#8b8bb0" font-size="24" font-weight="800"
+          text-anchor="middle" transform="rotate(-90 132 500)">Price ($ per kg)</text>
+    <text x="1196" y="812" fill="#8b8bb0" font-size="22" font-weight="800">Quantity (000 tonnes)</text>
+    <g id="ticks" fill="#61618a" font-size="21" font-weight="700"></g>
+  </g>
+
+  <g id="title" class="el keep">
+    <text x="960" y="66" fill="#e8e8ff" font-size="38" font-weight="900" text-anchor="middle"
+          filter="url(#glowSoft)">The market for <tspan fill="#00e5c0">beef</tspan></text>
+  </g>
+
+  <path id="scurve" class="el keep draw" d="M406 764 L1094 236" stroke="#00e5c0" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <path id="dcurve" class="el keep draw" d="M406 236 L1094 764" stroke="#ff5c8a" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <path id="pwline" class="el keep draw" d="M320 632 L1240 632" fill="none" stroke="#ffd43b" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+  <g id="curvelabs" class="el keep">
+    <text x="1110" y="230" fill="#00e5c0" font-size="30" font-weight="900" filter="url(#glowSoft)">S</text>
+    <text x="1110" y="774" fill="#ff5c8a" font-size="30" font-weight="900" filter="url(#glowSoft)">D</text>
+    <text x="1252" y="640" fill="#ffd43b" font-size="24" font-weight="900" filter="url(#glowSoft)">World price</text>
+  </g>
+
+  <!-- ══ THE SUBSIDY: a copy of S sliding down $4. Clipped — below the axis it
+       would leave the plot. It re-enters at Q=2 (x=492), which is correct. ══ -->
+  <g clip-path="url(#plotclip)">
+    <g id="s2wrap">
+      <path id="scurve2" class="el" d="M406 764 L1094 236" stroke="#00e5c0" stroke-width="6"
+            fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+    </g>
+  </g>
+  <g id="s2lab" class="el">
+    <text x="1110" y="374" fill="#00e5c0" font-size="28" font-weight="900" filter="url(#glowSoft)">S₂</text>
+  </g>
+
+  <!-- THE SUBSIDY IS THIS VERTICAL GAP. Measured at Q=8: S y=302, S2 y=434 —
+       132px = $4/kg, and well clear of the demand curve at y=698. -->
+  <path id="subvert" class="el draw slow" d="M1008 302 L1008 434" stroke="#ff8c42" stroke-width="12"
+        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <g id="subgap" class="el">
+    <path d="M1024 302 L1040 302 L1040 434 L1024 434" fill="none" stroke="#ff8c42" stroke-width="3"/>
+    <text x="1054" y="360" fill="#ff8c42" font-size="25" font-weight="900" filter="url(#glowSoft)">$4</text>
+    <text x="1054" y="388" fill="#ff8c42" font-size="20" font-weight="800" opacity="0.85">subsidy</text>
+  </g>
+
+  <!-- climbs S from its bottom up to the world price -->
+  <path id="trace1" class="el draw trace" d="M406 764 L578 632" stroke="#00e5c0" stroke-width="11" fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <g id="dom1" class="el">
+    <circle cx="578" cy="632" r="10" fill="#00e5c0" filter="url(#glow)"/>
+    <line x1="578" y1="632" x2="578" y2="830" stroke="#00e5c0" stroke-width="3" stroke-dasharray="7 6"/>
+  </g>
+
+  <path id="trace2" class="el draw trace" d="M578 632 L922 632" fill="none" stroke="#ffd43b" stroke-width="11" stroke-linecap="round" filter="url(#glowBig)"/>
+  <g id="dem1" class="el">
+    <circle cx="922" cy="632" r="10" fill="#ff5c8a" filter="url(#glow)"/>
+    <line x1="922" y1="632" x2="922" y2="830" stroke="#ff5c8a" stroke-width="3" stroke-dasharray="7 6"/>
+  </g>
+
+  <!-- climbs S2 ITSELF — from where the shifted curve enters the plot (Q=2, P=0)
+       up to where it meets the world price (Q=5, $6). Parallel to S, so it reads
+       as movement ALONG a supply curve. -->
+  <path id="trace3" class="el draw trace" d="M492 830 L750 632" stroke="#00e5c0" stroke-width="11" fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
+  <g id="dom2" class="el">
+    <circle cx="750" cy="632" r="10" fill="#00e5c0" filter="url(#glow)"/>
+    <line x1="750" y1="632" x2="750" y2="830" stroke="#00e5c0" stroke-width="3" stroke-dasharray="7 6"/>
+  </g>
+  <path id="trace4" class="el draw trace" d="M750 632 L922 632" fill="none" stroke="#ffd43b" stroke-width="11" stroke-linecap="round" filter="url(#glowBig)"/>
+
+  <!-- ══ below the axis: production + imports = total demand ══ -->
+  <path id="impbar" d="M320 876 L922 876" fill="none" stroke="#ffd43b" stroke-width="8" stroke-linecap="butt" filter="url(#glow)" opacity="0"/>
+  <path id="dsbar"  d="M320 876 L750 876" fill="none" stroke="#00e5c0" stroke-width="8" stroke-linecap="butt" filter="url(#glow)" opacity="0"/>
+  <path id="dmbar"  d="M320 972 L922 972" fill="none" stroke="#ff5c8a" stroke-width="8" stroke-linecap="butt" filter="url(#glow)" opacity="0"/>
+
+  <g id="dslab" class="barlab">
+    <text id="dsval" x="449" y="904" fill="#00e5c0" font-size="22" font-weight="900" text-anchor="middle">60,000</text>
+    <text x="449" y="928" fill="#00e5c0" font-size="18" font-weight="800" text-anchor="middle" opacity="0.75">Domestic production</text>
+  </g>
+  <g id="implab" class="barlab">
+    <text id="impval" x="750" y="904" fill="#ffd43b" font-size="22" font-weight="900" text-anchor="middle">80,000</text>
+    <text x="750" y="928" fill="#ffd43b" font-size="18" font-weight="800" text-anchor="middle" opacity="0.75">Imports</text>
+  </g>
+  <g id="dmlab" class="barlab">
+    <text x="621" y="1000" fill="#ff5c8a" font-size="22" font-weight="900" text-anchor="middle">140,000</text>
+    <text x="621" y="1024" fill="#ff5c8a" font-size="18" font-weight="800" text-anchor="middle" opacity="0.75">Total demand — never moves</text>
+  </g>
+
+  <!-- ══ the four effects ══ -->
+  <g id="sumProd" class="sumbox">
+    <text x="750" y="944" fill="#00e5c0" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)">1.  INCREASED DOMESTIC PRODUCTION</text>
+  </g>
+  <g id="sumImp" class="sumbox">
+    <text x="750" y="944" fill="#ffd43b" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)">2.  A REDUCTION IN IMPORTS</text>
+  </g>
+  <g id="sumCons" class="sumbox">
+    <text x="750" y="944" fill="#ff5c8a" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)">3.  CONSUMERS PAY THE SAME PRICE FOR THE SAME BEEF</text>
+  </g>
+  <g id="sumGov" class="sumbox">
+    <text x="750" y="944" fill="#ff8c42" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)">4.  THE TAXPAYER PAYS $400 MILLION</text>
+  </g>
+
+  <!-- ══ readout panel ══ -->
+  <g id="panel">
+    <g id="r-price" class="row">
+      <text x="1480" y="212" fill="#61618a" font-size="20" font-weight="800">PRICE TO BUYERS</text>
+      <text id="v-price" x="1480" y="256" fill="#ffd43b" font-size="34" font-weight="900" filter="url(#glowSoft)">$6 / kg</text>
+    </g>
+    <g id="r-dom" class="row">
+      <text x="1480" y="336" fill="#61618a" font-size="20" font-weight="800">DOMESTIC PRODUCTION</text>
+      <text id="v-dom" x="1480" y="380" fill="#00e5c0" font-size="34" font-weight="900" filter="url(#glowSoft)">60,000 t</text>
+    </g>
+    <g id="r-imp" class="row">
+      <text x="1480" y="460" fill="#61618a" font-size="20" font-weight="800">IMPORTS</text>
+      <text id="v-imp" x="1480" y="504" fill="#ffd43b" font-size="34" font-weight="900" filter="url(#glowSoft)">80,000 t</text>
+    </g>
+    <g id="r-dem" class="row">
+      <text x="1480" y="584" fill="#61618a" font-size="20" font-weight="800">TOTAL DEMAND</text>
+      <text id="v-dem" x="1480" y="628" fill="#ff5c8a" font-size="34" font-weight="900" filter="url(#glowSoft)">140,000 t</text>
+    </g>
+    <g id="r-gov" class="row">
+      <text x="1480" y="708" fill="#61618a" font-size="20" font-weight="800">COST TO GOVERNMENT</text>
+      <text id="v-gov" x="1480" y="752" fill="#ff8c42" font-size="34" font-weight="900" filter="url(#glowSoft)">$400 million</text>
+      <text x="1480" y="788" fill="#7a7aa8" font-size="20" font-weight="800">$4 × 100,000 tonnes</text>
+    </g>
+  </g>
+
+  <!-- ══ closing — AFTER the panel so the blackout covers it ══ -->
+  <rect id="blackout" width="1920" height="1080" fill="#05050c" opacity="0" style="transition:opacity .8s ease" pointer-events="none"/>
+  <g id="impact" class="sumbox">
+    <text x="960" y="176" font-size="52" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#e8e8ff">The impact of a </tspan><tspan fill="#ff8c42">subsidy</tspan></text>
+
+    <line x1="380" y1="248" x2="1540" y2="248" stroke="#23233f" stroke-width="2"/>
+
+    <text x="420" y="360" fill="#ff5c8a" font-size="34" font-weight="900" filter="url(#glowSoft)">HOUSEHOLDS</text>
+    <text x="880" y="360" fill="#ff5c8a" font-size="34" font-weight="800" filter="url(#glowSoft)">Same price — but they pay as taxpayers</text>
+
+    <line x1="380" y1="430" x2="1540" y2="430" stroke="#23233f" stroke-width="2"/>
+
+    <text x="420" y="574" fill="#00e5c0" font-size="34" font-weight="900" filter="url(#glowSoft)">FIRMS</text>
+    <path d="M866 490 L850 490 L850 592 L866 592" fill="none" stroke="#8b8bb0" stroke-width="3"/>
+    <text x="832" y="550" fill="#e8e8ff" font-size="24" font-weight="900" text-anchor="end" filter="url(#glowSoft)">DOMESTIC</text>
+    <text x="884" y="520" fill="#00e5c0" font-size="34" font-weight="800" filter="url(#glowSoft)">Import-competing firms — higher revenue</text>
+    <text x="884" y="582" fill="#e8e8ff" font-size="34" font-weight="800" filter="url(#glowSoft)">Firms using it as an input — unaffected</text>
+    <text x="832" y="662" fill="#e8e8ff" font-size="24" font-weight="900" text-anchor="end" filter="url(#glowSoft)">FOREIGN</text>
+    <path d="M866 638 L850 638 L850 674 L866 674" fill="none" stroke="#8b8bb0" stroke-width="3"/>
+    <text x="884" y="662" fill="#ffd43b" font-size="34" font-weight="800" filter="url(#glowSoft)">Foreign firms — fewer sales, same price</text>
+
+    <line x1="380" y1="720" x2="1540" y2="720" stroke="#23233f" stroke-width="2"/>
+
+    <text x="420" y="820" fill="#ff8c42" font-size="34" font-weight="900" filter="url(#glowSoft)">GOVERNMENT</text>
+    <text x="880" y="820" fill="#ff8c42" font-size="34" font-weight="800" filter="url(#glowSoft)">A cost to the government</text>
+
+    <line x1="380" y1="884" x2="1540" y2="884" stroke="#23233f" stroke-width="2"/>
+
+    <text x="960" y="954" fill="#c9c9e8" font-size="26" font-weight="800" text-anchor="middle">A tariff and a quota make the buyer pay.</text>
+    <text x="960" y="1000" font-size="30" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#e8e8ff">A subsidy makes the </tspan><tspan fill="#ff8c42">taxpayer</tspan><tspan fill="#e8e8ff"> pay.</tspan></text>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#vig)" pointer-events="none"/>
+</svg>
+</div>
+
+<div id="bar">
+  <button id="prev" title="Back (left arrow)">←</button>
+  <span id="num">0 / 20</span>
+  <button id="next" title="Next (space / right arrow)">→</button>
+  <button id="rep" title="Repeat this stage (A)">↻</button>
+  <span id="lbl"></span>
+</div>
+
+<div id="hint">SPACE / CLICK → next · ← back · A repeat · R restart · H hide toolbar</div>
+
+<script>
+// BEEF — world price $6/kg, $4/kg production subsidy.
+//   86px = 20,000 tonnes  ·  66px = $2/kg
+//   free trade : dom  60,000 t | demand 140,000 t | imports 80,000 t  @ $6
+//   subsidised : dom 100,000 t | demand 140,000 t | imports 40,000 t  @ $6  <- price UNCHANGED
+//   producers receive $10/kg: $600m from consumers + $400m from the government = $1,000m
+//   consumers: price, quantity and spending ALL unchanged. The taxpayer pays.
+//   $6 and $4 are chosen so every box is a DIFFERENT number:
+//     $360m · $480m · $600m · $400m · $240m
+const gx = q => 320 + q * 86;
+const gy = p => 830 - p * 66;
+
+let g = '';
+for (let i = 0; i <= 10; i++) {
+  g += `<line x1="${gx(i)}" y1="${gy(0)}" x2="${gx(i)}" y2="${gy(10)}"/>`;
+  g += `<line x1="${gx(0)}" y1="${gy(i)}" x2="${gx(10)}" y2="${gy(i)}"/>`;
+}
+document.getElementById('grid').innerHTML = g;
+
+let t = '';
+for (let i = 1; i <= 10; i++) {
+  t += `<text ${i === 3 ? 'id="pwtick" ' : ''}x="300" y="${gy(i) + 7}" text-anchor="end">$${i * 2}</text>`;
+  t += `<text x="${gx(i)}" y="858" text-anchor="middle">${i * 20}</text>`;
+}
+document.getElementById('ticks').innerHTML = t;
+
+document.querySelectorAll('.draw').forEach(el => {
+  const len = el.getTotalLength();
+  el.style.strokeDasharray = len;
+  el.style.strokeDashoffset = len;
+});
+
+const NUMS = { dsval:60000, impval:80000 };
+function tweenNum(el, from, to, ms) {
+  const t0 = performance.now();
+  (function step(now) {
+    const k = Math.min(1, (now - t0) / ms);
+    const e = 1 - Math.pow(1 - k, 3);
+    el.textContent = (Math.round((from + (to - from) * e) / 1000) * 1000).toLocaleString('en-US');
+    if (k < 1) requestAnimationFrame(step);
+  })(t0);
+}
+let SNAP = false;
+function setNum(id, v, ms) {
+  if (NUMS[id] === v) return;
+  if (SNAP) document.getElementById(id).textContent = v.toLocaleString('en-US');
+  else      tweenNum(document.getElementById(id), NUMS[id], v, ms || 900);
+  NUMS[id] = v;
+}
+
+const STAGES = [
+  { cap:'', show:['grid','axes','title'] },
+
+  { cap:'Beef: domestic supply, domestic demand, and a world price of $6 a kilo.',
+    show:['scurve','dcurve','pwline','curvelabs'], set:{'v-price':'$6 / kg'}, rows:['r-price'] },
+
+  { cap:'At $6, domestic farmers produce 60,000 tonnes.',
+    show:['trace1','dom1'], rows:['r-dom'] },
+
+  { cap:'Buyers want 140,000 tonnes — the 80,000 gap is imported.',
+    show:['trace2','dem1'], set:{'v-dem':'140,000 t'}, rows:['r-imp','r-dem'] },
+
+  { cap:'Domestic producer revenue: $6 × 60,000 t = $360 million.', show:[] },
+  { cap:'Price × quantity — the height and the width of that box.',
+    show:['pq1v','pq1h','pq1lab'], replay:['pq1v','pq1h'] },
+
+  { cap:'Import spending: $6 × 80,000 t = $480 million.', show:[] },
+  { cap:'Again — price × quantity.',
+    show:['pq2v','pq2h','pq2lab'], replay:['pq2v','pq2h'] },
+
+  { cap:'A $4 subsidy. Farmers need $4 less from the market — supply slides DOWN.',
+    show:['scurve2','s2lab'] },
+
+  { cap:'The subsidy is the vertical gap between the two supply curves — always.',
+    show:['subvert','subgap'], replay:['subvert'] },
+
+  { cap:'At the same $6, farmers now produce 100,000 tonnes.',
+    show:['trace3','dom2'] },
+
+  { cap:'Imports are pushed out: 80,000 → 40,000 tonnes.',
+    show:['trace4'] },
+
+  { cap:'Consumers spend $6 × 100,000 t = $600 million on domestic beef.', show:[] },
+  { cap:'Price × quantity — a wider box, same height.',
+    show:['pq3v','pq3h','pq3lab'], replay:['pq3v','pq3h'] },
+
+  { cap:'The government adds $4 a kilo on top — farmers receive $1 billion.', show:[] },
+
+  { cap:'Import spending: $6 × 40,000 t = $240 million.', show:[] },
+
+  { cap:'', show:['trace3','dom2'], replay:['trace3'] },
+  { cap:'', show:['trace4'], replay:['trace4'] },
+  { cap:'', show:[] },
+  { cap:'', show:['subvert','subgap'], replay:['subvert'], rows:['r-gov'] },
+  { cap:'', show:[] },
+];
+
+const BOXVIS = {
+  revDom1: t => t >= 4 && t <= 7,
+  revImp1: t => t >= 6 && t <= 7,
+  revDom2: t => t >= 12 && t <= 15,     // NOT on effect 4 — that slide is the subsidy alone
+  revSub : t => (t >= 14 && t <= 15) || t === 19,
+  revImp2: t => t === 15,
+};
+const BOXHOT = { revDom1:[4], revImp1:[6], revDom2:[12], revSub:[14,19], revImp2:[15] };
+
+let cur = -1;
+
+function render(target) {
+  const shown = new Set(), rows = new Set(), vals = {};
+  for (let i = 0; i <= target; i++) {
+    const s = STAGES[i];
+    (s.show || []).forEach(id => shown.add(id));
+    (s.rows || []).forEach(id => rows.add(id));
+    Object.assign(vals, s.set || {});
+  }
+  const hot = new Set(STAGES[target] ? (STAGES[target].show || []) : []);
+
+  // the $4 label waits for the vertical to finish drawing
+  document.getElementById('subgap').style.transitionDelay = (target === 9) ? '2.3s' : '0s';
+
+  document.querySelectorAll('.el').forEach(el => {
+    const on = shown.has(el.id);
+    el.classList.toggle('on', on);
+    el.classList.toggle('hot', hot.has(el.id));
+    el.querySelectorAll('.draw').forEach(d => d.classList.toggle('on', on));
+  });
+  document.querySelectorAll('.row').forEach(el => el.classList.toggle('on', rows.has(el.id)));
+
+  // Replay. The rewind MUST be instant — otherwise the line animates backwards
+  // too and the redraw starts from ~1% along, so nothing appears to move.
+  (STAGES[target] && STAGES[target].replay || []).forEach(id => {
+    const e = document.getElementById(id);
+    e.style.transition = 'none';
+    e.classList.remove('on');
+    void e.getBoundingClientRect();
+    requestAnimationFrame(() => {
+      e.style.transition = '';
+      void e.getBoundingClientRect();
+      e.classList.add('on');
+    });
+  });
+
+  for (const [id, vis] of Object.entries(BOXVIS)) {
+    const on = vis(target);
+    document.getElementById(id).style.opacity = on ? (BOXHOT[id].includes(target) ? 1 : 0.7) : 0;
+  }
+
+  const PQ = { 5:'pq1', 7:'pq2', 13:'pq3' };
+  ['pq1','pq2','pq3'].forEach(n => {
+    const on = PQ[target] === n;
+    [n+'v', n+'h', n+'lab'].forEach(id => document.getElementById(id).style.opacity = on ? 1 : 0);
+  });
+
+  document.getElementById('s2wrap').classList.toggle('shifted', target >= 8);
+  ['subvert','subgap'].forEach(id =>
+    document.getElementById(id).style.opacity = (target === 9 || target === 19) ? 1 : 0);
+
+  document.getElementById('pwtick').classList.toggle('lit', target >= 1);
+
+  // ── below-axis bars. Stage 8 clears green + yellow; PINK NEVER MOVES. ──
+  const SUM = target >= 16;
+  const showDs  = !SUM && ((target >= 2 && target <= 7) || target >= 10);
+  const showImp = !SUM && ((target >= 3 && target <= 7) || target >= 11);
+  const showDm  = !SUM && target >= 3;
+
+  const ds = document.getElementById('dsbar');
+  ds.style.opacity = showDs ? 1 : 0;
+  ds.style.strokeDasharray = 430;
+  ds.style.strokeDashoffset = target <= 7 ? 172 : (target === 8 || target === 9 ? 430 : 0);
+
+  const ib = document.getElementById('impbar');
+  ib.style.opacity = showImp ? 1 : 0;
+  ib.style.strokeDasharray = target >= 11 ? '0 430 172 9999' : '0 258 344 9999';
+
+  const dm = document.getElementById('dmbar');
+  dm.style.opacity = showDm ? 1 : 0;
+  dm.style.strokeDasharray  = 602;               // 140,000 t — never changes
+  dm.style.strokeDashoffset = target >= 3 ? 0 : 602;
+
+  const dsl = document.getElementById('dslab');
+  dsl.style.opacity = showDs ? 1 : 0;
+  dsl.style.transform = target >= 10 ? 'translateX(86px)' : 'translateX(0)';
+  const ibl = document.getElementById('implab');
+  ibl.style.opacity = showImp ? 1 : 0;
+  ibl.style.transform = target >= 11 ? 'translateX(86px)' : 'translateX(0)';
+  document.getElementById('dmlab').style.opacity = showDm ? 1 : 0;
+
+  setNum('dsval',  target >= 10 ? 100000 : 60000, 1400);
+  setNum('impval', target >= 11 ? 40000  : 80000, 1400);
+  if (!SNAP) {
+    document.getElementById('v-dom').textContent = (target >= 10 ? '100,000 t' : '60,000 t');
+    document.getElementById('v-imp').textContent = (target >= 11 ? '40,000 t'  : '80,000 t');
+  }
+
+  document.getElementById('sumProd').style.opacity = target === 16 ? 1 : 0;
+  document.getElementById('sumImp').style.opacity  = target === 17 ? 1 : 0;
+  document.getElementById('sumCons').style.opacity = target === 18 ? 1 : 0;
+  document.getElementById('sumGov').style.opacity  = target === 19 ? 1 : 0;
+  document.getElementById('blackout').style.opacity = target === 20 ? 0.94 : 0;
+  document.getElementById('impact').style.opacity   = target === 20 ? 1 : 0;
+
+  for (const [id, v] of Object.entries(vals)) {
+    const el = document.getElementById(id);
+    if (el.textContent !== v) {
+      el.textContent = v;
+      el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+    }
+  }
+
+  const cap = STAGES[target] ? STAGES[target].cap : '';
+  const LBL = { 16:'EFFECT — more made at home', 17:'EFFECT — fewer imports',
+                18:'EFFECT — consumers untouched', 19:'EFFECT — the taxpayer pays',
+                20:'CLOSING — impact by group' };
+  document.getElementById('num').textContent = target + ' / ' + (STAGES.length - 1);
+  document.getElementById('lbl').textContent = LBL[target] || cap || '(opening frame — axes only)';
+  document.getElementById('prev').disabled = (target === 0);
+  document.getElementById('next').disabled = (target === STAGES.length - 1);
+}
+
+function go(n) {
+  n = Math.max(0, Math.min(STAGES.length - 1, n));
+  if (n === cur) return;
+  cur = n;
+  render(cur);
+}
+
+function repeat() {
+  if (cur <= 0) return;
+  const t = cur, stage = document.getElementById('stage');
+  stage.classList.add('noanim');
+  SNAP = true;
+  render(t - 1);
+  void stage.getBoundingClientRect();
+  SNAP = false;
+  requestAnimationFrame(() => {
+    stage.classList.remove('noanim');
+    void stage.getBoundingClientRect();
+    render(t);
+  });
+}
+
+document.getElementById('prev').addEventListener('click', e => { e.stopPropagation(); go(cur - 1); });
+document.getElementById('next').addEventListener('click', e => { e.stopPropagation(); go(cur + 1); });
+document.getElementById('rep').addEventListener('click',  e => { e.stopPropagation(); repeat(); });
+document.addEventListener('click', () => go(cur + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'ArrowRight' || e.code === 'Enter') { e.preventDefault(); go(cur + 1); }
+  else if (e.code === 'ArrowLeft' || e.code === 'Backspace') { e.preventDefault(); go(cur - 1); }
+  else if (e.key === 'a' || e.key === 'A') { e.preventDefault(); repeat(); }
+  else if (e.key === 'r' || e.key === 'R') { cur = -1; NUMS.dsval=60000; NUMS.impval=80000; go(0); }
+  else if (e.key === 'h' || e.key === 'H') {
+    document.getElementById('hint').classList.toggle('hide');
+    document.getElementById('bar').classList.toggle('hide');
+  }
+});
+
+function fit() {
+  document.getElementById('stage').style.setProperty('--s', Math.min(innerWidth / 1920, innerHeight / 1080));
+}
+addEventListener('resize', fit);
+fit();
+go(0);
+</script>
+
+</body>
+</html>

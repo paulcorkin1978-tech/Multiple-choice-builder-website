@@ -149,8 +149,8 @@ function trReset() {
   document.getElementById('trTitle').value = '';
   document.getElementById('trYLbl').value = 'Price ($)';
   document.getElementById('trXLbl').value = 'Quantity';
-  document.getElementById('trDCol').value = '#000000';
-  document.getElementById('trSCol').value = '#000000';
+  document.getElementById('trDCol').value = '#e8447a';
+  document.getElementById('trSCol').value = '#00a98a';
   document.getElementById('trWorld').value = 20;
   ['trRevTariff', 'trRevDomProd', 'trRevImports'].forEach(function (id) { document.getElementById(id).checked = true; });
   ['trRevProdInc', 'trRevConsDec', 'trRevS2', 'trRevProdLvl', 'trRevImpLvl'].forEach(function (id) { var e = document.getElementById(id); if (e) e.checked = false; });
@@ -184,8 +184,8 @@ function trLoad(q) {
   document.getElementById('trTitle').value = q.title || '';
   document.getElementById('trYLbl').value = q.yLbl || 'Price ($)';
   document.getElementById('trXLbl').value = q.xLbl || 'Quantity';
-  document.getElementById('trDCol').value = q.dCol || '#185FA5';
-  document.getElementById('trSCol').value = q.sCol || '#0F6E56';
+  document.getElementById('trDCol').value = q.dCol || '#e8447a';
+  document.getElementById('trSCol').value = q.sCol || '#00a98a';
   document.getElementById('trWorld').value = q.worldPrice != null ? q.worldPrice : 20;
   trSetMode(q.mode === 'quota' ? 'quota' : (q.mode === 'subsidy' ? 'subsidy' : 'tariff'));   // relabels + sets default input
   // then override the input with the saved value

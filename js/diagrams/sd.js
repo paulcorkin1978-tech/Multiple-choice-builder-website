@@ -177,8 +177,8 @@ function sdLoad(q) {
     document.getElementById('sdTitle').value    = q.title  || '';
     document.getElementById('sdYLbl').value     = q.yLabel || 'Price ($)';
     document.getElementById('sdXLbl').value     = q.xLabel || 'Quantity';
-    document.getElementById('sdDCol').value     = q.dColor || '#185FA5';
-    document.getElementById('sdSCol').value     = q.sColor || '#0F6E56';
+    document.getElementById('sdDCol').value     = q.dColor || '#e8447a';
+    document.getElementById('sdSCol').value     = q.sColor || '#00a98a';
     document.getElementById('sdShowEq').checked = q.showEqLines !== false;
     document.getElementById('sdHideGrid').checked = !!q.hideGrid;
     document.getElementById('sdHideNums').checked = !!q.hideNums;

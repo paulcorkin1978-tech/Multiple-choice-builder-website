@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Draw-the-box practice — prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#05050c;font-family:'Nunito',sans-serif;overflow:hidden}
+  #stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  svg{width:100%;height:100%;touch-action:none}
+  .draw-area{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2760%27%20height%3D%2760%27%20viewBox%3D%270%200%2032%2032%27%3E%3Cg%20transform%3D%27rotate%2840%2016%2016%29%27%20stroke%3D%27%232b2b2b%27%20stroke-width%3D%271.4%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%2712%27%20y%3D%273%27%20width%3D%278%27%20height%3D%275%27%20rx%3D%271.5%27%20fill%3D%27%23ff9bb0%27%2F%3E%3Crect%20x%3D%2712%27%20y%3D%277.5%27%20width%3D%278%27%20height%3D%272.2%27%20fill%3D%27%23dfe3e6%27%2F%3E%3Crect%20x%3D%2712%27%20y%3D%279.5%27%20width%3D%278%27%20height%3D%2712.5%27%20fill%3D%27%23ffd23f%27%2F%3E%3Cpolygon%20points%3D%2712%2C22%2020%2C22%2016%2C29%27%20fill%3D%27%23f2c078%27%2F%3E%3Cpolygon%20points%3D%2714.6%2C25.6%2017.4%2C25.6%2016%2C29%27%20fill%3D%27%23333%27%20stroke%3D%27none%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 14 48, crosshair}
+  #draw{transition:x .22s ease,y .22s ease,width .22s ease,height .22s ease;transform-box:fill-box;transform-origin:center}
+  @keyframes boxSnap{0%{transform:scale(1.09) rotate(1.7deg)}26%{transform:scale(.95) rotate(-1.4deg)}48%{transform:scale(1.045) rotate(.8deg)}70%{transform:scale(.985) rotate(-.4deg)}100%{transform:scale(1) rotate(0)}}
+  #draw.snap{animation:boxSnap .6s ease-out both}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="vig" cx="42%" cy="45%" r="75%">
+      <stop offset="0%" stop-color="#0b0b1a" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.6"/>
+    </radialGradient>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="-40" y="-40" width="2000" height="1160">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="hatchG" width="14" height="14" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <rect width="14" height="14" fill="#00e5c0" fill-opacity="0.10"/>
+      <line x1="0" y1="0" x2="0" y2="14" stroke="#00e5c0" stroke-width="2" stroke-opacity="0.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#05050c"/>
+  <g id="grid" stroke="#15152c" stroke-width="1.5"></g>
+
+  <!-- axes -->
+  <line x1="240" y1="120" x2="240" y2="820" stroke="#8a8ac0" stroke-width="3"/>
+  <line x1="240" y1="820" x2="1240" y2="820" stroke="#8a8ac0" stroke-width="3"/>
+  <text x="150" y="470" fill="#b8b8dc" font-size="26" font-weight="800" text-anchor="middle"
+        transform="rotate(-90 150 470)">Price ($ per tonne)</text>
+  <text x="740" y="892" fill="#b8b8dc" font-size="26" font-weight="800" text-anchor="middle">Quantity (tonnes)</text>
+  <g id="ticks"></g>
+
+  <!-- curves -->
+  <path d="M304 750 L816 190" stroke="#00e5c0" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="836" y="196" fill="#00e5c0" font-size="30" font-weight="900">S</text>
+  <path d="M560 120 L1136 750" stroke="#ff5c8a" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="1150" y="756" fill="#ff5c8a" font-size="30" font-weight="900">D</text>
+
+  <!-- world price -->
+  <line x1="240" y1="645" x2="1200" y2="645" stroke="#ffd43b" stroke-width="5" stroke-dasharray="2 14"
+        stroke-linecap="round" filter="url(#glow)"/>
+  <text x="1206" y="653" fill="#ffd43b" font-size="26" font-weight="800">World price $5</text>
+
+  <!-- the box the student is aiming for (revealed on answer) -->
+  <rect id="target" x="240" y="645" width="160" height="175" fill="url(#hatchG)"
+        stroke="#00e5c0" stroke-width="4" stroke-dasharray="10 8" opacity="0"/>
+
+  <!-- the student's rubber-band box -->
+  <rect id="draw" x="0" y="0" width="0" height="0" fill="#e8e8ff" fill-opacity="0.12"
+        stroke="#e8e8ff" stroke-width="4" opacity="0"/>
+
+  <!-- transparent capture surface over the plot -->
+  <rect id="area" class="draw-area" x="240" y="120" width="1000" height="700"
+        fill="transparent" pointer-events="all"/>
+
+  <!-- right-hand panel -->
+  <text x="1660" y="230" fill="#8a8ac0" font-size="26" font-weight="800" text-anchor="middle">SUGAR MARKET · FREE TRADE</text>
+  <text id="q1" x="1660" y="330" fill="#e8e8ff" font-size="42" font-weight="900" text-anchor="middle">Draw the box for</text>
+  <text id="q2" x="1660" y="386" fill="#00e5c0" font-size="42" font-weight="900" text-anchor="middle">domestic producer revenue</text>
+  <text id="q3" x="1660" y="440" fill="#8a8ac0" font-size="26" font-weight="700" text-anchor="middle">at the world price</text>
+
+  <text id="fb" x="1660" y="620" fill="#e8e8ff" font-size="52" font-weight="900" text-anchor="middle" opacity="0"></text>
+  <text id="fb2" x="1660" y="686" fill="#8a8ac0" font-size="30" font-weight="700" text-anchor="middle" opacity="0"></text>
+
+  <!-- controls -->
+  <g id="snapBtn" style="cursor:pointer">
+    <rect x="1470" y="770" width="380" height="60" rx="12" fill="#12122a" stroke="#3a3a68" stroke-width="2"/>
+    <rect id="snapDot" x="1486" y="786" width="28" height="28" rx="6" fill="#00e5c0"/>
+    <text x="1530" y="808" fill="#e8e8ff" font-size="26" font-weight="800">Snap to grid: ON</text>
+  </g>
+  <g id="resetBtn" style="cursor:pointer">
+    <rect x="1470" y="850" width="180" height="60" rx="12" fill="#12122a" stroke="#3a3a68" stroke-width="2"/>
+    <text x="1560" y="890" fill="#e8e8ff" font-size="26" font-weight="800" text-anchor="middle">Reset</text>
+  </g>
+  <g id="ansBtn" style="cursor:pointer">
+    <rect x="1670" y="850" width="180" height="60" rx="12" fill="#12122a" stroke="#3a3a68" stroke-width="2"/>
+    <text x="1760" y="890" fill="#ffd43b" font-size="26" font-weight="800" text-anchor="middle">Show answer</text>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#vig)" pointer-events="none"/>
+</svg>
+</div>
+
+<script>
+  const svg = document.getElementById('svg');
+  const OX = 240, OY = 820, SX = 32, SY = 35;        // origin px + px per unit
+  const gx = q => OX + q * SX;
+  const gy = p => OY - p * SY;
+  const QMAX = 30, PMAX = 20;
+  const ACCEPT = 0.70;                                // IoU threshold for "roughly right"
+  let snap = true, drawing = false, sx0, sy0;
+
+  // target: domestic producer revenue = $5 x 5t  -> q 0..5, p 0..5
+  const target = { x: gx(0), y: gy(5), w: gx(5) - gx(0), h: gy(0) - gy(5) };
+
+  // gridlines + ticks
+  let g = '';
+  for (let q = 0; q <= QMAX; q += 5) g += `<line x1="${gx(q)}" y1="120" x2="${gx(q)}" y2="820"/>`;
+  for (let p = 0; p <= PMAX; p += 5) g += `<line x1="240" y1="${gy(p)}" x2="1240" y2="${gy(p)}"/>`;
+  document.getElementById('grid').innerHTML = g;
+  let t = '';
+  for (let q = 0; q <= QMAX; q += 5) t += `<text x="${gx(q)}" y="858" fill="#8a8ac0" font-size="24" font-weight="700" text-anchor="middle">${q}</text>`;
+  for (let p = 0; p <= PMAX; p += 5) t += `<text x="222" y="${gy(p)+8}" fill="#8a8ac0" font-size="24" font-weight="700" text-anchor="end">$${p}</text>`;
+  document.getElementById('ticks').innerHTML = t;
+
+  const draw = document.getElementById('draw');
+  const targetEl = document.getElementById('target');
+  const fb = document.getElementById('fb'), fb2 = document.getElementById('fb2');
+
+  function toSvg(evt) {
+    const pt = svg.createSVGPoint();
+    pt.x = evt.clientX; pt.y = evt.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return { x: p.x, y: p.y };
+  }
+  function clampPlot(x, y) {
+    return { x: Math.max(gx(0), Math.min(gx(QMAX), x)),
+             y: Math.max(gy(PMAX), Math.min(gy(0), y)) };
+  }
+  function maybeSnap(x, y) {
+    if (!snap) return { x, y };
+    const q = Math.round((x - OX) / SX), p = Math.round((OY - y) / SY);
+    return { x: gx(q), y: gy(p) };
+  }
+  function iou(a, b) {
+    const ix = Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x));
+    const iy = Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+    const inter = ix * iy;
+    const uni = a.w * a.h + b.w * b.h - inter;
+    return uni <= 0 ? 0 : inter / uni;
+  }
+
+  const area = document.getElementById('area');
+  area.addEventListener('pointerdown', e => {
+    e.preventDefault(); area.setPointerCapture(e.pointerId);
+    fb.setAttribute('opacity', 0); fb2.setAttribute('opacity', 0);
+    let s = clampPlot(...Object.values(toSvg(e))); s = maybeSnap(s.x, s.y);
+    sx0 = s.x; sy0 = s.y; drawing = true;
+    draw.classList.remove('snap');
+    draw.setAttribute('opacity', 1);
+    draw.setAttribute('fill', '#e8e8ff'); draw.setAttribute('stroke', '#e8e8ff');
+    update(s.x, s.y);
+  });
+  area.addEventListener('pointermove', e => {
+    if (!drawing) return;
+    let s = clampPlot(...Object.values(toSvg(e))); s = maybeSnap(s.x, s.y);
+    update(s.x, s.y);
+  });
+  area.addEventListener('pointerup', e => {
+    if (!drawing) return; drawing = false;
+    grade();
+  });
+  function update(x, y) {
+    draw.setAttribute('x', Math.min(sx0, x)); draw.setAttribute('y', Math.min(sy0, y));
+    draw.setAttribute('width', Math.abs(x - sx0)); draw.setAttribute('height', Math.abs(y - sy0));
+  }
+  function grade() {
+    const r = { x: +draw.getAttribute('x'), y: +draw.getAttribute('y'),
+                w: +draw.getAttribute('width'), h: +draw.getAttribute('height') };
+    if (r.w < 8 || r.h < 8) return;
+    const score = iou(r, target), pct = Math.round(score * 100);
+    const ok = score >= ACCEPT;
+    const col = ok ? '#00e5c0' : '#ff5c8a';
+    draw.setAttribute('fill', col); draw.setAttribute('stroke', col);
+    draw.setAttribute('fill-opacity', 0.18);
+    if (ok) {                               // accepted -> lock onto the exact box
+      draw.setAttribute('x', target.x); draw.setAttribute('y', target.y);
+      draw.setAttribute('width', target.w); draw.setAttribute('height', target.h);
+      draw.classList.remove('snap'); draw.getBoundingClientRect(); draw.classList.add('snap');
+    }
+    fb.textContent = ok ? '✓ Correct!' : 'Not quite — try again';
+    fb.setAttribute('fill', col); fb.setAttribute('opacity', 1);
+    fb2.textContent = ok ? '$5 × 5 t = $25   (match ' + pct + '%)' : 'match ' + pct + '%  ·  need ' + Math.round(ACCEPT*100) + '%';
+    fb2.setAttribute('opacity', 1);
+  }
+
+  document.getElementById('snapBtn').addEventListener('click', () => {
+    snap = !snap;
+    document.querySelector('#snapBtn text').textContent = 'Snap to grid: ' + (snap ? 'ON' : 'OFF');
+    document.getElementById('snapDot').setAttribute('fill', snap ? '#00e5c0' : '#333');
+  });
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    draw.classList.remove('snap'); draw.setAttribute('opacity', 0); targetEl.setAttribute('opacity', 0);
+    fb.setAttribute('opacity', 0); fb2.setAttribute('opacity', 0);
+  });
+  document.getElementById('ansBtn').addEventListener('click', () => {
+    targetEl.setAttribute('opacity', 1);
+  });
+</script>
+</body>
+</html>

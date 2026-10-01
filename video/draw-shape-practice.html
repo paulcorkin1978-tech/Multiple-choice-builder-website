@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Freehand draw practice — prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#05050c;font-family:'Nunito',sans-serif;overflow:hidden}
+  #stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  svg{width:100%;height:100%;touch-action:none}
+  .draw-area{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2760%27%20height%3D%2760%27%20viewBox%3D%270%200%2032%2032%27%3E%3Cg%20transform%3D%27rotate%2840%2016%2016%29%27%20stroke%3D%27%232b2b2b%27%20stroke-width%3D%271.4%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%2712%27%20y%3D%273%27%20width%3D%278%27%20height%3D%275%27%20rx%3D%271.5%27%20fill%3D%27%23ff9bb0%27/%3E%3Crect%20x%3D%2712%27%20y%3D%277.5%27%20width%3D%278%27%20height%3D%272.2%27%20fill%3D%27%23dfe3e6%27/%3E%3Crect%20x%3D%2712%27%20y%3D%279.5%27%20width%3D%278%27%20height%3D%2712.5%27%20fill%3D%27%23ffd23f%27/%3E%3Cpolygon%20points%3D%2712%2C22%2020%2C22%2016%2C29%27%20fill%3D%27%23f2c078%27/%3E%3Cpolygon%20points%3D%2714.6%2C25.6%2017.4%2C25.6%2016%2C29%27%20fill%3D%27%23333%27%20stroke%3D%27none%27/%3E%3C/g%3E%3C/svg%3E") 14 48, crosshair}
+  #draw{transform-box:fill-box;transform-origin:center}
+  @keyframes shapeSnap{0%{transform:scale(1.08) rotate(1.4deg)}26%{transform:scale(.95) rotate(-1.2deg)}50%{transform:scale(1.04) rotate(.7deg)}72%{transform:scale(.985) rotate(-.3deg)}100%{transform:scale(1) rotate(0)}}
+  #draw.snap{animation:shapeSnap .6s ease-out both}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="vig" cx="42%" cy="45%" r="75%">
+      <stop offset="0%" stop-color="#0b0b1a" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.6"/>
+    </radialGradient>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="-40" y="-40" width="2000" height="1160">
+      <feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="hatch" width="16" height="16" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <rect width="16" height="16" fill="#ff5c8a" fill-opacity="0.12"/>
+      <line x1="0" y1="0" x2="0" y2="16" stroke="#ff5c8a" stroke-width="2" stroke-opacity="0.55"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#05050c"/>
+  <g id="grid" stroke="#15152c" stroke-width="1.5"></g>
+  <line x1="320" y1="120" x2="320" y2="840" stroke="#8a8ac0" stroke-width="3"/>
+  <line x1="320" y1="840" x2="1560" y2="840" stroke="#8a8ac0" stroke-width="3"/>
+  <text x="230" y="480" fill="#b8b8dc" font-size="26" font-weight="800" text-anchor="middle" transform="rotate(-90 230 480)">Price</text>
+  <text x="940" y="912" fill="#b8b8dc" font-size="26" font-weight="800" text-anchor="middle">Quantity</text>
+  <g id="ticks"></g>
+
+  <!-- market: demand (pink), supply (green), equilibrium + price line -->
+  <path d="M320 192 L1040 840" stroke="#ff5c8a" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="1052" y="846" fill="#ff5c8a" font-size="30" font-weight="900">D</text>
+  <path d="M320 840 L960 264" stroke="#00e5c0" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="972" y="258" fill="#00e5c0" font-size="30" font-weight="900">S</text>
+  <line x1="320" y1="516" x2="680" y2="516" stroke="#ffd43b" stroke-width="3" stroke-dasharray="2 12" opacity="0.8"/>
+  <line x1="680" y1="516" x2="680" y2="840" stroke="#ffd43b" stroke-width="3" stroke-dasharray="2 12" opacity="0.8"/>
+  <circle cx="680" cy="516" r="9" fill="#ffd43b" filter="url(#glow)"/>
+  <text x="300" y="524" fill="#ffd43b" font-size="24" font-weight="800" text-anchor="end">Pₑ</text>
+
+  <!-- the exact answer (revealed on success / show answer) -->
+  <polygon id="target" points="320,192 320,516 680,516" fill="url(#hatch)" stroke="#ff5c8a" stroke-width="4" stroke-dasharray="10 8" opacity="0"/>
+  <!-- the student's freehand drawing -->
+  <path id="draw" d="" fill="#e8e8ff" fill-opacity="0.12" stroke="#e8e8ff" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" opacity="0"/>
+
+  <rect id="area" class="draw-area" x="320" y="120" width="1240" height="720" fill="transparent" pointer-events="all"/>
+
+  <text x="1660" y="250" fill="#8a8ac0" font-size="26" font-weight="800" text-anchor="middle">DRAW THE AREA</text>
+  <text x="1660" y="330" fill="#ff5c8a" font-size="44" font-weight="900" text-anchor="middle">Consumer surplus</text>
+  <text x="1660" y="384" fill="#8a8ac0" font-size="24" font-weight="700" text-anchor="middle">sketch it freehand with the pencil</text>
+  <text id="fb"  x="1660" y="560" fill="#e8e8ff" font-size="50" font-weight="900" text-anchor="middle" opacity="0"></text>
+  <text id="fb2" x="1660" y="622" fill="#8a8ac0" font-size="28" font-weight="700" text-anchor="middle" opacity="0"></text>
+
+  <g id="resetBtn" style="cursor:pointer"><rect x="1470" y="760" width="180" height="60" rx="12" fill="#12122a" stroke="#3a3a68" stroke-width="2"/><text x="1560" y="800" fill="#e8e8ff" font-size="26" font-weight="800" text-anchor="middle">Reset</text></g>
+  <g id="ansBtn" style="cursor:pointer"><rect x="1670" y="760" width="200" height="60" rx="12" fill="#12122a" stroke="#3a3a68" stroke-width="2"/><text x="1770" y="800" fill="#ffd43b" font-size="26" font-weight="800" text-anchor="middle">Show answer</text></g>
+
+  <rect width="1920" height="1080" fill="url(#vig)" pointer-events="none"/>
+</svg>
+</div>
+
+<script>
+  const svg=document.getElementById('svg');
+  const gx=q=>320+q*40, gy=p=>840-p*36, QMAX=30, PMAX=20;
+  const TARGET=[{x:320,y:192},{x:320,y:516},{x:680,y:516}];   // consumer-surplus triangle
+  const ACCEPT=0.62;
+  let g='';
+  for(let q=5;q<=QMAX;q+=5) g+=`<line x1="${gx(q)}" y1="120" x2="${gx(q)}" y2="840"/>`;
+  for(let p=5;p<=PMAX;p+=5) g+=`<line x1="320" y1="${gy(p)}" x2="1560" y2="${gy(p)}"/>`;
+  document.getElementById('grid').innerHTML=g;
+  let t='';
+  for(let q=5;q<=QMAX;q+=5) t+=`<text x="${gx(q)}" y="878" fill="#8a8ac0" font-size="22" font-weight="700" text-anchor="middle">${q}</text>`;
+  for(let p=5;p<=PMAX;p+=5) t+=`<text x="302" y="${gy(p)+8}" fill="#8a8ac0" font-size="22" font-weight="700" text-anchor="end">$${p}</text>`;
+  document.getElementById('ticks').innerHTML=t;
+
+  const area=document.getElementById('area'), draw=document.getElementById('draw');
+  const targetEl=document.getElementById('target'), fb=document.getElementById('fb'), fb2=document.getElementById('fb2');
+  let drawing=false, pts=[];
+
+  function toSvg(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const m=p.matrixTransform(svg.getScreenCTM().inverse());return{x:m.x,y:m.y};}
+  function render(close){ if(!pts.length){draw.setAttribute('d','');return;}
+    let d='M'+pts[0].x.toFixed(1)+' '+pts[0].y.toFixed(1);
+    for(let i=1;i<pts.length;i++) d+=' L'+pts[i].x.toFixed(1)+' '+pts[i].y.toFixed(1);
+    if(close) d+=' Z'; draw.setAttribute('d',d);
+  }
+  function pip(poly,x,y){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const xi=poly[i].x,yi=poly[i].y,xj=poly[j].x,yj=poly[j].y;if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c;}return c;}
+  function iou(a,b){let lo={x:1e9,y:1e9},hi={x:-1e9,y:-1e9};for(const p of a.concat(b)){lo.x=Math.min(lo.x,p.x);lo.y=Math.min(lo.y,p.y);hi.x=Math.max(hi.x,p.x);hi.y=Math.max(hi.y,p.y);}
+    let inter=0,uni=0;const st=10;
+    for(let x=lo.x;x<=hi.x;x+=st)for(let y=lo.y;y<=hi.y;y+=st){const ia=pip(a,x,y),ib=pip(b,x,y);if(ia&&ib)inter++;if(ia||ib)uni++;}
+    return uni?inter/uni:0;
+  }
+
+  area.addEventListener('pointerdown',e=>{e.preventDefault();area.setPointerCapture(e.pointerId);
+    fb.setAttribute('opacity',0);fb2.setAttribute('opacity',0);draw.classList.remove('snap');
+    draw.setAttribute('fill','#e8e8ff');draw.setAttribute('stroke','#e8e8ff');draw.setAttribute('opacity',1);
+    pts=[toSvg(e)];drawing=true;render(false);});
+  area.addEventListener('pointermove',e=>{if(!drawing)return;const p=toSvg(e);const l=pts[pts.length-1];
+    if((p.x-l.x)**2+(p.y-l.y)**2>16){pts.push(p);render(false);}});
+  area.addEventListener('pointerup',()=>{if(!drawing)return;drawing=false;render(true);grade();});
+
+  function grade(){
+    if(pts.length<4){draw.setAttribute('opacity',0);return;}
+    const score=iou(pts,TARGET), pct=Math.round(score*100), ok=score>=ACCEPT;
+    const col=ok?'#00e5c0':'#ff5c8a';
+    draw.setAttribute('stroke',col);draw.setAttribute('fill',col);draw.setAttribute('fill-opacity',0.16);
+    if(ok){                                   // settle onto the clean triangle with a wobble
+      draw.setAttribute('d','M320 192 L320 516 L680 516 Z');
+      draw.classList.remove('snap');draw.getBoundingClientRect();draw.classList.add('snap');
+    }
+    fb.textContent=ok?'✓ Nice!':'Not quite — try again';fb.setAttribute('fill',col);fb.setAttribute('opacity',1);
+    fb2.textContent=ok?'that’s consumer surplus  (match '+pct+'%)':'match '+pct+'%  ·  need '+Math.round(ACCEPT*100)+'%';
+    fb2.setAttribute('opacity',1);
+  }
+
+  document.getElementById('resetBtn').addEventListener('click',()=>{pts=[];draw.classList.remove('snap');draw.setAttribute('opacity',0);draw.setAttribute('d','');targetEl.setAttribute('opacity',0);fb.setAttribute('opacity',0);fb2.setAttribute('opacity',0);});
+  document.getElementById('ansBtn').addEventListener('click',()=>targetEl.setAttribute('opacity',1));
+</script>
+</body>
+</html>

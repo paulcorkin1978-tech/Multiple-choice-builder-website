@@ -92,8 +92,8 @@ function surReset() {
   document.getElementById('surTitle').value = '';
   document.getElementById('surYLbl').value = 'Price ($)';
   document.getElementById('surXLbl').value = 'Quantity';
-  document.getElementById('surDCol').value = '#000000';
-  document.getElementById('surSCol').value = '#000000';
+  document.getElementById('surDCol').value = '#e8447a';
+  document.getElementById('surSCol').value = '#00a98a';
   document.getElementById('surLetters').checked = false;
   document.getElementById('surPolicy').checked = false;
   ['surRevCS','surRevPS','surRevDWL','surRevTAX','surRevEXT','surRevPOL'].forEach(function(id){ document.getElementById(id).checked = true; });
@@ -127,8 +127,8 @@ function surLoad(q) {
   document.getElementById('surTitle').value = q.title || '';
   document.getElementById('surYLbl').value = q.yLbl || 'Price ($)';
   document.getElementById('surXLbl').value = q.xLbl || 'Quantity';
-  document.getElementById('surDCol').value = q.dCol || '#185FA5';
-  document.getElementById('surSCol').value = q.sCol || '#0F6E56';
+  document.getElementById('surDCol').value = q.dCol || '#e8447a';
+  document.getElementById('surSCol').value = q.sCol || '#00a98a';
   document.getElementById('surLetters').checked = !!q.showLetters;
   document.getElementById('surPolicy').checked  = !!q.showPolicy;
   var rv = q.reveals || [];

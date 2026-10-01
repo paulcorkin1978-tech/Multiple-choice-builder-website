@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Shift supply to hit a target price — prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#05050c;font-family:'Nunito',sans-serif;overflow:hidden}
+  #stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  svg{width:100%;height:100%;touch-action:none}
+  .draw-area{cursor:crosshair}
+  #line{transition:x1 .18s ease,y1 .18s ease,x2 .18s ease,y2 .18s ease}
+  .eq{transition:all .18s ease}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="vig" cx="42%" cy="45%" r="75%">
+      <stop offset="0%" stop-color="#0b0b1a" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.6"/>
+    </radialGradient>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="-40" y="-40" width="2000" height="1160">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#05050c"/>
+  <g id="grid" stroke="#15152c" stroke-width="1.5"></g>
+
+  <line x1="240" y1="120" x2="240" y2="820" stroke="#8a8ac0" stroke-width="3"/>
+  <line x1="240" y1="820" x2="1240" y2="820" stroke="#8a8ac0" stroke-width="3"/>
+  <text x="150" y="470" fill="#b8b8dc" font-size="26" font-weight="800" text-anchor="middle"
+        transform="rotate(-90 150 470)">Price ($ per tonne)</text>
+  <text x="740" y="892" fill="#b8b8dc" font-size="26" font-weight="800" text-anchor="middle">Quantity (tonnes)</text>
+  <g id="ticks"></g>
+
+  <!-- original supply S1 (faint reference: the gradient to match) -->
+  <path d="M304 750 L816 190" stroke="#00e5c0" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.30"/>
+  <text x="820" y="196" fill="#00e5c0" font-size="26" font-weight="900" opacity="0.5">S&#8321;</text>
+  <circle cx="720" cy="295" r="8" fill="#8a8ac0" opacity="0.5"/>
+
+  <!-- demand (fixed) -->
+  <path d="M560 120 L1136 750" stroke="#ff5c8a" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="1150" y="756" fill="#ff5c8a" font-size="30" font-weight="900">D</text>
+
+  <!-- target price marker $10 -->
+  <line x1="240" y1="470" x2="360" y2="470" stroke="#ffd43b" stroke-width="4" stroke-dasharray="2 10" opacity="0.8"/>
+  <text x="270" y="450" fill="#ffd43b" font-size="24" font-weight="800">$10 target</text>
+
+  <!-- equilibrium shown on success -->
+  <line id="eqVX" class="eq" x1="0" y1="0" x2="0" y2="820" stroke="#ffd43b" stroke-width="3" stroke-dasharray="2 12" opacity="0"/>
+  <line id="eqHY" class="eq" x1="240" y1="0" x2="0" y2="0" stroke="#ffd43b" stroke-width="3" stroke-dasharray="2 12" opacity="0"/>
+  <circle id="eqDot" class="eq" cx="0" cy="0" r="11" fill="#ffd43b" filter="url(#glow)" opacity="0"/>
+
+  <!-- the student's drawn supply line -->
+  <line id="line" x1="0" y1="0" x2="0" y2="0" stroke="#00e5c0" stroke-width="6" stroke-linecap="round" filter="url(#glow)" opacity="0"/>
+
+  <rect id="area" class="draw-area" x="240" y="120" width="1000" height="700" fill="transparent" pointer-events="all"/>
+
+  <!-- right-hand panel -->
+  <text x="1660" y="210" fill="#8a8ac0" font-size="26" font-weight="800" text-anchor="middle">SUPPLY &amp; DEMAND · SHIFTS</text>
+  <text x="1660" y="292" fill="#e8e8ff" font-size="38" font-weight="900" text-anchor="middle">Draw a new supply curve</text>
+  <text x="1660" y="340" fill="#8a8ac0" font-size="26" font-weight="700" text-anchor="middle">same gradient as S&#8321;</text>
+  <text x="1660" y="392" fill="#00e5c0" font-size="38" font-weight="900" text-anchor="middle">so the price becomes $10</text>
+
+  <text id="fb"  x="1660" y="540" fill="#e8e8ff" font-size="46" font-weight="900" text-anchor="middle" opacity="0"></text>
+  <text id="fb2" x="1660" y="602" fill="#8a8ac0" font-size="28" font-weight="700" text-anchor="middle" opacity="0"></text>
+
+  <g id="snapBtn" style="cursor:pointer">
+    <rect x="1470" y="740" width="380" height="60" rx="12" fill="#12122a" stroke="#3a3a68" stroke-width="2"/>
+    <rect id="snapDot" x="1486" y="756" width="28" height="28" rx="6" fill="#00e5c0"/>
+    <text x="1530" y="778" fill="#e8e8ff" font-size="26" font-weight="800">Snap to grid: ON</text>
+  </g>
+  <g id="resetBtn" style="cursor:pointer">
+    <rect x="1560" y="820" width="200" height="60" rx="12" fill="#12122a" stroke="#3a3a68" stroke-width="2"/>
+    <text x="1660" y="860" fill="#e8e8ff" font-size="26" font-weight="800" text-anchor="middle">Reset</text>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#vig)" pointer-events="none"/>
+</svg>
+</div>
+
+<script>
+  const svg = document.getElementById('svg');
+  const OX = 240, OY = 820, SX = 32, SY = 35;
+  const gx = q => OX + q * SX, gy = p => OY - p * SY;
+  const qAt = x => (x - OX) / SX, pAt = y => (OY - y) / SY;
+  const QMAX = 30, PMAX = 20, TARGET_P = 10;
+
+  let g = '';
+  for (let q = 0; q <= QMAX; q += 5) g += `<line x1="${gx(q)}" y1="120" x2="${gx(q)}" y2="820"/>`;
+  for (let p = 0; p <= PMAX; p += 5) g += `<line x1="240" y1="${gy(p)}" x2="1240" y2="${gy(p)}"/>`;
+  document.getElementById('grid').innerHTML = g;
+  let t = '';
+  for (let q = 0; q <= QMAX; q += 5) t += `<text x="${gx(q)}" y="858" fill="#8a8ac0" font-size="24" font-weight="700" text-anchor="middle">${q}</text>`;
+  for (let p = 0; p <= PMAX; p += 5) t += `<text x="222" y="${gy(p)+8}" fill="#8a8ac0" font-size="24" font-weight="700" text-anchor="end">$${p}</text>`;
+  document.getElementById('ticks').innerHTML = t;
+
+  const line = document.getElementById('line'), fb = document.getElementById('fb'), fb2 = document.getElementById('fb2');
+  const eqDot = document.getElementById('eqDot'), eqVX = document.getElementById('eqVX'), eqHY = document.getElementById('eqHY');
+  const area = document.getElementById('area');
+  let snap = true, drawing = false, x0, y0;
+
+  function toSvg(evt){ const pt=svg.createSVGPoint(); pt.x=evt.clientX; pt.y=evt.clientY;
+    const p=pt.matrixTransform(svg.getScreenCTM().inverse()); return {x:p.x,y:p.y}; }
+  function clampPlot(x,y){ return { x:Math.max(gx(0),Math.min(gx(QMAX),x)), y:Math.max(gy(PMAX),Math.min(gy(0),y)) }; }
+  function maybeSnap(x,y){ if(!snap) return {x,y};
+    return { x:gx(Math.round(qAt(x))), y:gy(Math.round(pAt(y))) }; }
+  function clearEq(){ [eqDot,eqVX,eqHY].forEach(e=>e.setAttribute('opacity',0)); }
+
+  area.addEventListener('pointerdown', e => {
+    e.preventDefault(); area.setPointerCapture(e.pointerId);
+    fb.setAttribute('opacity',0); fb2.setAttribute('opacity',0); clearEq();
+    let s=clampPlot(...Object.values(toSvg(e))); s=maybeSnap(s.x,s.y);
+    x0=s.x; y0=s.y; drawing=true;
+    line.setAttribute('opacity',1); line.setAttribute('stroke','#00e5c0');
+    line.setAttribute('x1',x0); line.setAttribute('y1',y0); line.setAttribute('x2',x0); line.setAttribute('y2',y0);
+  });
+  area.addEventListener('pointermove', e => {
+    if(!drawing) return;
+    let s=clampPlot(...Object.values(toSvg(e))); s=maybeSnap(s.x,s.y);
+    line.setAttribute('x2',s.x); line.setAttribute('y2',s.y);
+  });
+  area.addEventListener('pointerup', () => { if(!drawing) return; drawing=false; grade(); });
+
+  function grade(){
+    const q1=qAt(+line.getAttribute('x1')), p1=pAt(+line.getAttribute('y1'));
+    const q2=qAt(+line.getAttribute('x2')), p2=pAt(+line.getAttribute('y2'));
+    const dq=q2-q1, len=Math.hypot(dq,p2-p1);
+    if(len<4){ line.setAttribute('opacity',0); return; }
+    if(Math.abs(dq)<0.5){ fail('That line is vertical — match the slope of S₁'); return; }
+    const m = (p2-p1)/dq;                              // student's gradient (dP/dQ)
+    const c = p1 - m*q1;                               // intercept
+    // intersection with demand P = 30 - Q
+    const Qx = (30 - c)/(m + 1), Px = 30 - Qx;
+    const slopeOK = Math.abs(m - 1) <= 0.35;           // parallel to S1 (slope 1)
+    const priceOK = Math.abs(Px - TARGET_P) <= 1;      // crosses demand at ~$10
+    const up = m > 0;
+    const ok = slopeOK && priceOK && up;
+    const col = ok ? '#00e5c0' : '#ff5c8a';
+    line.setAttribute('stroke',col);
+    if(ok){                                            // snap to the exact answer: P = Q - 10
+      line.setAttribute('x1',gx(12)); line.setAttribute('y1',gy(2));
+      line.setAttribute('x2',gx(28)); line.setAttribute('y2',gy(18));
+      const x=gx(20), y=gy(10);
+      eqDot.setAttribute('cx',x); eqDot.setAttribute('cy',y);
+      eqVX.setAttribute('x1',x); eqVX.setAttribute('x2',x); eqVX.setAttribute('y1',y);
+      eqHY.setAttribute('x2',x); eqHY.setAttribute('y1',y); eqHY.setAttribute('y2',y);
+      [eqDot,eqVX,eqHY].forEach(e=>e.setAttribute('opacity',1));
+      fb.textContent='✓ Correct!'; fb.setAttribute('fill',col);
+      fb2.textContent='Supply shifted right 10 t — price $10, quantity 20 t';
+    } else {
+      fb.textContent='Not quite'; fb.setAttribute('fill',col);
+      fb2.textContent = !up ? 'Supply slopes upward' :
+                        !slopeOK ? 'Keep the same gradient as S₁' :
+                        `That gives about $${Math.round(Px)} — shift it to reach $10`;
+    }
+    fb.setAttribute('opacity',1); fb2.setAttribute('opacity',1);
+  }
+  function fail(msg){ line.setAttribute('stroke','#ff5c8a'); fb.textContent='Not quite';
+    fb.setAttribute('fill','#ff5c8a'); fb2.textContent=msg;
+    fb.setAttribute('opacity',1); fb2.setAttribute('opacity',1); }
+
+  document.getElementById('snapBtn').addEventListener('click', () => {
+    snap=!snap;
+    document.querySelector('#snapBtn text').textContent='Snap to grid: '+(snap?'ON':'OFF');
+    document.getElementById('snapDot').setAttribute('fill', snap?'#00e5c0':'#333');
+  });
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    line.setAttribute('opacity',0); clearEq(); fb.setAttribute('opacity',0); fb2.setAttribute('opacity',0);
+  });
+</script>
+</body>
+</html>

@@ -293,8 +293,8 @@ function txLoad(q) {
     document.getElementById('txHUnit').value = q.hUnit  || 5;
     document.getElementById('txTitle').value = q.title  || '';
     document.getElementById('txXLbl').value  = q.xLabel || 'Quantity';
-    document.getElementById('txDCol').value  = q.dColor || '#185FA5';
-    document.getElementById('txSCol').value  = q.sColor || '#0F6E56';
+    document.getElementById('txDCol').value  = q.dColor || '#e8447a';
+    document.getElementById('txSCol').value  = q.sColor || '#00a98a';
     document.getElementById('txShowEq').checked = q.showEqLines !== false;
     document.getElementById('txHideGrid').checked = !!q.hideGrid;
     document.getElementById('txHideNums').checked = !!q.hideNums;

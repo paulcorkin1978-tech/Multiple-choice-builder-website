@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Daily question — graph & table preview · Theory2Econ</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:'Nunito','Segoe UI',system-ui,sans-serif;background:#fffdf5;color:#2d2a4a}
+  body{display:flex;flex-direction:column}
+  #topbar{background:#2d2a4a;color:#fff;padding:12px 22px;display:flex;align-items:center;justify-content:space-between}
+  #brand{font-weight:900;font-size:18px;letter-spacing:.02em}
+  #brand span{color:#00e5c0}
+  #brand small{color:#b9b6d6;font-weight:800;font-size:13px;margin-left:8px}
+  .chip{background:#6c5ce7;color:#fff;font-weight:800;font-size:13px;padding:6px 14px;border-radius:999px}
+  #progline{height:3px;background:#efecff}
+  #progfill{height:3px;background:#ff9f43;width:50%;transition:width .3s}
+  #wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:28px}
+  #card{width:100%;max-width:860px;background:#fff;border:2.5px solid #2d2a4a;border-radius:24px;box-shadow:8px 8px 0 #e0f7f1;padding:34px 44px}
+  .meta{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .qnum{font-size:13px;color:#6c5ce7;font-weight:900;letter-spacing:.03em}
+  .daychip{font-size:12px;font-weight:800;color:#7b7894;background:#f3f1ff;border:1.5px solid #e4e2f4;border-radius:999px;padding:4px 11px}
+  h1{font-size:25px;line-height:1.35;font-weight:800;margin:0 0 18px}
+  .figure{display:flex;justify-content:center;margin:6px 0 22px}
+  .figbox{border:2px solid #cfe9e2;border-radius:16px;padding:14px 18px;background:#fcfffe}
+  .quiz-tbl{border-collapse:collapse;font-size:18px;border:2px solid #6c5ce7;border-radius:8px;overflow:hidden}
+  .quiz-tbl th{background:#6c5ce7;color:#fff;padding:12px 30px;font-size:16px;font-weight:800;text-align:center;letter-spacing:.02em}
+  .quiz-tbl td{padding:11px 30px;border:1px solid #e4e2f4;text-align:center;color:#2d2a4a;background:#fff;font-weight:700}
+  .quiz-tbl tbody tr:nth-child(even) td{background:#fbfaff}
+  .opts{display:flex;flex-direction:column;gap:12px}
+  .abtn{font-family:inherit;font-size:17.5px;font-weight:600;padding:14px 18px;border:2px solid #e4e2f4;border-radius:14px;background:#fff;cursor:pointer;text-align:left;color:#2d2a4a;transition:all .15s;box-shadow:0 2px 0 #e4e2f4;display:flex;gap:14px;align-items:baseline}
+  .abtn .ltr{font-weight:900;color:#6c5ce7;flex-shrink:0}
+  .abtn:hover:not(.done){border-color:#6c5ce7;background:#f7f5ff;box-shadow:0 2px 0 #cfc8f5}
+  .abtn.wrong{background:#ffe6ef;border-color:#EC3C78;color:#c2185b;font-weight:700;box-shadow:none}
+  .abtn.wrong .ltr{color:#EC3C78}
+  .abtn.correct{background:#e0f7f1;border-color:#00b894;color:#00795f;font-weight:700;box-shadow:none}
+  .abtn.correct .ltr{color:#00b894}
+  .abtn.done{cursor:default}
+  #expl{margin-top:22px;padding:18px 22px;border-radius:14px;background:#f3f1ff;border:1.5px solid #e4e2f4;font-size:16px;line-height:1.55;color:#3d3960;display:none}
+  #expl.show{display:block}
+  #expl b{color:#00795f}
+  #foot{display:flex;justify-content:space-between;align-items:center;padding:16px 26px;border-top:1px solid #efecff;background:#fffdf5}
+  .nbtn{font-family:inherit;font-size:15px;font-weight:800;padding:11px 26px;border-radius:12px;cursor:pointer;border:2px solid #e4e2f4;background:transparent;color:#7b7894;transition:all .15s}
+  .nbtn:hover:not(:disabled){background:#efecff;border-color:#6c5ce7;color:#2d2a4a}
+  .nbtn:disabled{opacity:.4;cursor:default}
+  .nbtn.pri{background:#6c5ce7;color:#fff;border-color:#6c5ce7;box-shadow:0 3px 0 #5346c4}
+  .nbtn.pri:hover:not(:disabled){background:#5b4bd5;border-color:#5b4bd5}
+  #note{text-align:center;color:#b7b4cc;font-size:12.5px;font-weight:700;padding:6px}
+</style>
+</head>
+<body>
+  <div id="topbar">
+    <div id="brand">theory2<span>Econ</span><small>· Question of the day</small></div>
+    <div class="chip" id="topic">Markets</div>
+  </div>
+  <div id="progline"><div id="progfill"></div></div>
+
+  <div id="wrap">
+    <div id="card">
+      <div class="meta"><span class="qnum" id="qnum">QUESTION 18</span><span class="daychip" id="day">Term 1 · Week 3 · Day 2</span></div>
+      <h1 id="stem"></h1>
+      <div class="figure" id="figure"></div>
+      <div class="opts" id="opts"></div>
+      <div id="expl"></div>
+    </div>
+  </div>
+
+  <div id="foot">
+    <button class="nbtn" id="prev">◀ Back</button>
+    <span id="note">Preview — a graph question and a table question. Click an answer.</span>
+    <button class="nbtn pri" id="next">Next ▶</button>
+  </div>
+
+<script>
+  const GRAPH = `
+    <div class="figbox">
+    <svg width="380" height="300" viewBox="0 0 380 300" xmlns="http://www.w3.org/2000/svg" font-family="Nunito,sans-serif">
+      <text x="70" y="34" fill="#2d2a4a" font-size="15" font-weight="800">Price</text>
+      <line x1="80" y1="44" x2="80" y2="262" stroke="#2d2a4a" stroke-width="3"/>
+      <line x1="80" y1="262" x2="352" y2="262" stroke="#2d2a4a" stroke-width="3"/>
+      <text x="290" y="286" fill="#2d2a4a" font-size="15" font-weight="800">Quantity</text>
+      <!-- demand -->
+      <line x1="108" y1="70" x2="300" y2="240" stroke="#e8447a" stroke-width="3.5" stroke-linecap="round"/>
+      <text x="96" y="66" fill="#e8447a" font-size="18" font-weight="900">D</text>
+      <!-- supply -->
+      <line x1="108" y1="240" x2="300" y2="70" stroke="#00a98a" stroke-width="3.5" stroke-linecap="round"/>
+      <text x="306" y="70" fill="#00a98a" font-size="18" font-weight="900">S</text>
+      <!-- point X, right of the original equilibrium -->
+      <circle cx="322" cy="168" r="5.5" fill="#2d2a4a"/>
+      <text x="330" y="162" fill="#2d2a4a" font-size="17" font-weight="900">X</text>
+    </svg>
+    </div>`;
+
+  const TABLE = `
+    <table class="quiz-tbl">
+      <thead><tr><th>GOOD</th><th>PRICE</th><th>TOTAL REVENUE</th></tr></thead>
+      <tbody>
+        <tr><td>i</td><td>Increase</td><td>Decrease</td></tr>
+        <tr><td>ii</td><td>Decrease</td><td>Decrease</td></tr>
+        <tr><td>iii</td><td>No change</td><td>No change</td></tr>
+      </tbody>
+    </table>`;
+
+  const QS = [
+    { topic:'Markets', day:'Term 1 · Week 3 · Day 2', n:18, fig:GRAPH,
+      stem:'The graph shows the demand and supply for smartphones. Which combination of demand and supply changes would result in a new equilibrium at point X?',
+      opts:[
+        'More smartphone advertising and a rise in the price of a substitute',
+        'An increase in incomes and a decrease in the cost of smartphone components',
+        'Greater expectations that the price of smartphones will fall, and an increase in smartphone production technology',
+        'A reduced population and adverse weather affecting the manufacture of smartphones'],
+      correct:1,
+      expl:'Point X sits to the <i>right</i> of the original equilibrium at a similar price — quantity has risen while price is little changed. That needs <b>both</b> demand and supply to increase. B does exactly this: higher incomes lift demand for this normal good, and cheaper components increase supply, so quantity rises with the price effects offsetting. (A pushes price up; C and D pull quantity the wrong way.)' },
+
+    { topic:'Markets', day:'Term 1 · Week 4 · Day 1', n:5, fig:TABLE,
+      stem:'A firm changed its pricing on three goods (i, ii and iii). The table shows the changes and the outcomes. Which conclusion can be made?',
+      opts:[
+        'Goods ii and iii are substitutes',
+        'The price elasticity of demand for good iii is perfectly inelastic',
+        'The price elasticity of demand for good i exceeds that of good ii',
+        'The price elasticity of demand for good ii is unitary'],
+      correct:2,
+      expl:'Good i: a price <i>rise</i> cut total revenue → demand is <b>elastic</b> (PED &gt; 1). Good ii: a price <i>fall</i> also cut total revenue → demand is <b>inelastic</b> (PED &lt; 1). So good i is more elastic than good ii — <b>C</b>. The price of good iii did not change, so nothing can be said about its elasticity.' },
+  ];
+  const LET = ['A','B','C','D'];
+  let i = 0, locked = [];
+  const $ = id => document.getElementById(id);
+
+  function load(k){
+    i = (k + QS.length) % QS.length;
+    const q = QS[i];
+    $('topic').textContent = q.topic;
+    $('qnum').textContent = 'QUESTION ' + q.n;
+    $('day').textContent = q.day;
+    $('stem').textContent = q.stem;
+    $('figure').innerHTML = q.fig || '';
+    $('figure').style.display = q.fig ? 'flex' : 'none';
+    $('progfill').style.width = ((i+1)/QS.length*100) + '%';
+    const o = $('opts'); o.innerHTML = '';
+    q.opts.forEach((txt,idx)=>{
+      const b = document.createElement('button');
+      b.className = 'abtn';
+      b.innerHTML = '<span class="ltr">'+LET[idx]+'</span><span>'+txt+'</span>';
+      b.onclick = ()=>choose(idx);
+      o.appendChild(b);
+    });
+    $('expl').className=''; $('expl').innerHTML='';
+    if(locked[i]!==undefined) reveal(locked[i]);
+    $('prev').disabled = (i===0);
+    $('next').disabled = (i===QS.length-1);
+  }
+  function choose(idx){ if(locked[i]!==undefined) return; locked[i]=idx; reveal(idx); }
+  function reveal(picked){
+    const q = QS[i], btns = $('opts').children;
+    for(let j=0;j<btns.length;j++){
+      btns[j].classList.add('done');
+      if(j===q.correct) btns[j].classList.add('correct');
+      else if(j===picked) btns[j].classList.add('wrong');
+    }
+    $('expl').innerHTML = q.expl; $('expl').className='show';
+  }
+  $('prev').onclick = ()=>load(i-1);
+  $('next').onclick = ()=>load(i+1);
+  load(0);
+</script>
+</body>
+</html>

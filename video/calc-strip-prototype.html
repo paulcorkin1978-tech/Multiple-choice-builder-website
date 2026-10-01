@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Calculation strip — prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#05050c;font-family:'Nunito',sans-serif;overflow:hidden}
+  #stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  svg{width:100%;height:100%;touch-action:none}
+  rect,line,circle,text{transition:x .6s ease,y .6s ease,width .6s ease,height .6s ease,cx .6s ease,cy .6s ease,x1 .6s ease,x2 .6s ease,y1 .6s ease,y2 .6s ease,opacity .4s ease}
+  .btns{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:5}
+  button{font-family:inherit;font-weight:800;font-size:16px;border:2px solid #3a3a68;border-radius:12px;background:#12122a;color:#e8e8ff;padding:10px 22px;cursor:pointer}
+  button.on{background:#ff8c42;border-color:#ff8c42;color:#1a1000}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="-40" y="-40" width="2000" height="1160">
+      <feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="hg" width="16" height="16" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#00e5c0" fill-opacity="0.10"/><line x1="0" y1="0" x2="0" y2="16" stroke="#00e5c0" stroke-width="2" stroke-opacity="0.5"/></pattern>
+    <pattern id="ho" width="16" height="16" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#ff8c42" fill-opacity="0.14"/><line x1="0" y1="0" x2="0" y2="16" stroke="#ff8c42" stroke-width="2" stroke-opacity="0.6"/></pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#05050c"/>
+  <text x="960" y="60" fill="#e8e8ff" font-size="34" font-weight="900" text-anchor="middle">The market for <tspan fill="#00e5c0">steel</tspan> — with a tariff</text>
+
+  <!-- revenue shading (behind lines) -->
+  <rect id="dprBox" x="300" y="340" width="440" height="560" fill="url(#hg)"/>
+  <rect id="govBox" x="740" y="340" width="220" height="280" fill="url(#ho)" opacity="1"/>
+  <!-- total consumer spending outline -->
+  <rect id="tcsBox" x="300" y="340" width="660" height="560" fill="none" stroke="#e8e8ff" stroke-width="3" stroke-dasharray="10 8" opacity="0.9"/>
+
+  <!-- axes -->
+  <line x1="300" y1="120" x2="300" y2="900" stroke="#8a8ac0" stroke-width="3"/>
+  <line x1="300" y1="900" x2="1450" y2="900" stroke="#8a8ac0" stroke-width="3"/>
+  <text x="200" y="500" fill="#b8b8dc" font-size="24" font-weight="800" text-anchor="middle" transform="rotate(-90 200 500)">Price ($/tonne)</text>
+  <text x="900" y="936" fill="#b8b8dc" font-size="22" font-weight="800" text-anchor="middle">Quantity (tonnes)</text>
+
+  <!-- curves -->
+  <path d="M300 900 L850 200" stroke="#00e5c0" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="864" y="196" fill="#00e5c0" font-size="28" font-weight="900">S</text>
+  <path d="M850 200 L1400 900" stroke="#ff5c8a" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="1410" y="906" fill="#ff5c8a" font-size="28" font-weight="900">D</text>
+  <line x1="300" y1="620" x2="1400" y2="620" stroke="#ffd43b" stroke-width="4" stroke-dasharray="2 12" opacity="0.85"/>
+  <text x="1406" y="628" fill="#ffd43b" font-size="22" font-weight="800">World $200</text>
+  <line id="tarLine" x1="300" y1="340" x2="960" y2="340" stroke="#ff8c42" stroke-width="4" stroke-dasharray="2 12"/>
+  <text id="tarLab" x="966" y="348" fill="#ff8c42" font-size="22" font-weight="800">+ tariff $400</text>
+
+  <!-- price/quantity guide dots -->
+  <circle id="supPt" cx="740" cy="340" r="9" fill="#00e5c0" filter="url(#glow)"/>
+  <circle id="demPt" cx="960" cy="340" r="9" fill="#ff5c8a" filter="url(#glow)"/>
+
+  <!-- ══ CALCULATION STRIP (below the graph) ══ -->
+  <g id="strip">
+    <g><rect x="300" y="962" width="360" height="96" rx="14" fill="#0c0c18" stroke="#00e5c0" stroke-width="2"/>
+       <text x="480" y="992" fill="#00e5c0" font-size="20" font-weight="800" text-anchor="middle">DOMESTIC PRODUCER REVENUE</text>
+       <text id="dprCalc" x="480" y="1032" fill="#7dffe8" font-size="30" font-weight="900" text-anchor="middle">$400 × 40,000 = $16m</text></g>
+    <g><rect x="690" y="962" width="360" height="96" rx="14" fill="#0c0c18" stroke="#ff8c42" stroke-width="2"/>
+       <text x="870" y="992" fill="#ff8c42" font-size="20" font-weight="800" text-anchor="middle">GOVERNMENT (tariff revenue)</text>
+       <text id="govCalc" x="870" y="1032" fill="#ffb37a" font-size="30" font-weight="900" text-anchor="middle">$200 × 20,000 = $4m</text></g>
+    <g><rect x="1080" y="962" width="380" height="96" rx="14" fill="#0c0c18" stroke="#e8e8ff" stroke-width="2"/>
+       <text x="1270" y="992" fill="#e8e8ff" font-size="20" font-weight="800" text-anchor="middle">TOTAL CONSUMER SPENDING</text>
+       <text id="tcsCalc" x="1270" y="1032" fill="#e8e8ff" font-size="30" font-weight="900" text-anchor="middle">$400 × 60,000 = $24m</text></g>
+  </g>
+</svg>
+</div>
+<div class="btns">
+  <button id="bFree">Free trade</button>
+  <button id="bTar" class="on">With tariff</button>
+</div>
+
+<script>
+  // px geometry: gx(q_000)=300+q*11 ; gy($)=900-p*1.4
+  const S={
+    free:{ py:620, supX:520, demX:1180,
+           dpr:'$200 × 20,000 = $4m', gov:'no tariff — $0', tcs:'$200 × 80,000 = $16m',
+           govBox:0, tcsRight:1180 },
+    tar :{ py:340, supX:740, demX:960,
+           dpr:'$400 × 40,000 = $16m', gov:'$200 × 20,000 = $4m', tcs:'$400 × 60,000 = $24m',
+           govBox:1, tcsRight:960 }
+  };
+  const $=id=>document.getElementById(id);
+  function set(mode){
+    const s=S[mode];
+    $('bFree').classList.toggle('on',mode==='free'); $('bTar').classList.toggle('on',mode==='tar');
+    // producer revenue box: origin to (supX, py)
+    $('dprBox').setAttribute('y',s.py); $('dprBox').setAttribute('width',s.supX-300); $('dprBox').setAttribute('height',900-s.py);
+    // tariff revenue box: imports wide × tariff gap tall (only with tariff)
+    $('govBox').setAttribute('x',s.supX); $('govBox').setAttribute('width',Math.max(0,s.demX-s.supX));
+    $('govBox').setAttribute('y',s.py); $('govBox').setAttribute('height',620-s.py);
+    $('govBox').setAttribute('opacity', s.govBox?1:0);
+    // total consumer spending outline
+    $('tcsBox').setAttribute('y',s.py); $('tcsBox').setAttribute('width',s.tcsRight-300); $('tcsBox').setAttribute('height',900-s.py);
+    // tariff price line + dots
+    $('tarLine').setAttribute('opacity',s.govBox?1:0); $('tarLine').setAttribute('x2',s.demX);
+    $('tarLab').setAttribute('opacity',s.govBox?1:0);
+    $('tarLine').setAttribute('y1',s.py); $('tarLine').setAttribute('y2',s.py);
+    $('supPt').setAttribute('cx',s.supX); $('supPt').setAttribute('cy',s.py);
+    $('demPt').setAttribute('cx',s.demX); $('demPt').setAttribute('cy',s.py);
+    // strip text
+    $('dprCalc').textContent=s.dpr; $('govCalc').textContent=s.gov; $('tcsCalc').textContent=s.tcs;
+    $('govCalc').setAttribute('fill', s.govBox?'#ffb37a':'#8a8ac0');
+  }
+  $('bFree').addEventListener('click',()=>set('free'));
+  $('bTar').addEventListener('click',()=>set('tar'));
+  set('tar');
+</script>
+</body>
+</html>

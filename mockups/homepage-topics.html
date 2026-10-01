@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Theory2Econ — by topic (homepage prototype)</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Nunito','Segoe UI',system-ui,sans-serif;background:#fffdf5;color:#2d2a4a}
+  a{text-decoration:none;color:inherit}
+
+  nav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;border-bottom:1px solid #efecff}
+  .logo{font-weight:900;font-size:22px;letter-spacing:.01em}
+  .logo span{color:#00b894}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-links a{color:#7b7894;font-weight:800;font-size:15px}
+  .nav-links a:hover{color:#6c5ce7}
+  .nav-links a.cta{background:#6c5ce7;color:#fff;padding:9px 18px;border-radius:10px;box-shadow:0 3px 0 #5346c4}
+
+  header{max-width:1180px;margin:0 auto;padding:46px 40px 8px;text-align:center}
+  header h1{font-size:40px;font-weight:900;line-height:1.15}
+  header h1 .t{color:#6c5ce7}
+  header h1 .q{color:#00b894}
+  header p{margin:16px auto 0;max-width:640px;color:#7b7894;font-size:17px;font-weight:700;line-height:1.5}
+
+  .band{max-width:1180px;margin:0 auto;padding:30px 40px}
+  .band-head{display:flex;align-items:baseline;gap:14px;margin:14px 0 22px}
+  .band-head h2{font-size:24px;font-weight:900}
+  .band-head .yr{font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:#2d2a4a;padding:5px 12px;border-radius:999px}
+  .band-head .yr.hsc{background:#6c5ce7}
+  .band-head .hint{margin-left:auto;color:#b7b4cc;font-size:13px;font-weight:800}
+
+  .grid{display:grid;gap:26px}
+  .g6{grid-template-columns:repeat(3,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+
+  .card{background:#fff;border:2.5px solid #2d2a4a;border-radius:20px;box-shadow:6px 6px 0 #e0f7f1;overflow:hidden;cursor:pointer;transition:transform .14s,box-shadow .14s}
+  .card:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 #cfeee6}
+  .photo{height:150px;position:relative;display:flex;align-items:center;justify-content:center;border-bottom:2.5px solid #2d2a4a}
+  .photo svg{opacity:.5}
+  .photo .ph{position:absolute;bottom:8px;right:10px;font-size:11px;font-weight:800;color:#5a586f;background:rgba(255,255,255,.75);padding:2px 8px;border-radius:6px}
+  .num{position:absolute;top:10px;left:12px;width:30px;height:30px;border-radius:8px;background:#2d2a4a;color:#fff;font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center}
+  .body{padding:16px 18px 18px}
+  .body h3{font-size:19px;font-weight:900;line-height:1.25}
+  .row{display:flex;align-items:center;gap:8px;margin-top:10px}
+  .hours{font-size:12px;font-weight:800;color:#7b7894;background:#f3f1ff;border:1.5px solid #e4e2f4;border-radius:999px;padding:3px 10px}
+  .count{font-size:12px;font-weight:900;border-radius:999px;padding:3px 10px}
+  .count.on{color:#00795f;background:#e0f7f1;border:1.5px solid #9fe6d4}
+  .count.soon{color:#9a5f00;background:#fff1e0;border:1.5px solid #ffd6a3}
+  .drawer{display:none;border-top:1.5px dashed #e4e2f4;margin-top:14px;padding-top:12px}
+  .card.open .drawer{display:block}
+  .drawer a{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:10px;font-weight:800;font-size:14.5px;color:#2d2a4a;transition:background .12s}
+  .drawer a:hover{background:#f7f5ff;color:#6c5ce7}
+  .drawer a .go{color:#6c5ce7}
+  .drawer .soonmsg{color:#b7b4cc;font-weight:800;font-size:14px;padding:4px 4px 2px}
+
+  footer{max-width:1180px;margin:22px auto 40px;padding:22px 40px 0;border-top:1px solid #efecff;text-align:center;color:#b7b4cc;font-size:13px;font-weight:700}
+
+  @media(max-width:900px){ .g6,.g3{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:600px){ .g6,.g3{grid-template-columns:1fr} header h1{font-size:30px} }
+</style>
+</head>
+<body>
+  <nav>
+    <div class="logo">theory2<span>Econ</span></div>
+    <div class="nav-links">
+      <a href="#y11">Year 11</a>
+      <a href="#y12">Year 12</a>
+      <a class="cta" href="../student.html">All quizzes</a>
+    </div>
+  </nav>
+
+  <header>
+    <h1>Economics, by the <span class="t">syllabus</span>. Practised on the <span class="q">quiz</span>.</h1>
+    <p>Every focus area of the NSW Economics 11–12 course — pick a topic and work through its quizzes, diagrams and daily questions.</p>
+  </header>
+
+  <section class="band" id="y11">
+    <div class="band-head"><span class="yr">Year 11</span><h2>Preliminary course</h2><span class="hint">6 focus areas · 120 hours</span></div>
+    <div class="grid g6" id="grid11"></div>
+  </section>
+
+  <section class="band" id="y12">
+    <div class="band-head"><span class="yr hsc">Year 12</span><h2>HSC course</h2><span class="hint">3 focus areas · 120 hours</span></div>
+    <div class="grid g3" id="grid12"></div>
+  </section>
+
+  <footer>© 2027 Theory2Econ · Aligned to NSW Economics 11–12 (2025) · prototype — photos to be added</footer>
+
+<script>
+  // simple mountain/photo placeholder icon
+  const PH = `<svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#2d2a4a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M4 18l5-5 4 4 3-3 4 4"/></svg>`;
+
+  const Q = f => '../quizzes/' + encodeURIComponent(f);
+  const TOPICS11 = [
+    { n:1, title:'Introduction to economics', hours:25, tint:'#eef3ff', quizzes:[] },
+    { n:2, title:'Markets', hours:35, tint:'#e0f7f1', quizzes:[
+        ['Demand','demand quiz.html'],['Supply','supply quiz.html'],['Equilibrium','equilibrium quiz.html'],
+        ['The price mechanism','price mechanism quiz.html'],['Consumer & producer surplus','consumer producer surplus.html'],
+        ['Surplus — energy drinks','energy drinks surplus.html'],['Positive externalities','positive externalities quiz.html'],
+        ['Taxes & subsidies','Tax subsidy quiz.html'] ] },
+    { n:3, title:'Household and business sector', hours:15, tint:'#fff1e0', quizzes:[] },
+    { n:4, title:'Financial sector', hours:15, tint:'#f3f1ff', quizzes:[] },
+    { n:5, title:'Government sector', hours:15, tint:'#ffe9f1', quizzes:[] },
+    { n:6, title:'International sector', hours:15, tint:'#e8f0ff', quizzes:[
+        ['Tariffs','tariffs quiz.html'],['Quotas','quotas quiz.html'],['Subsidies','subsidies quiz.html'] ] },
+  ];
+  const TOPICS12 = [
+    { n:1, title:'Economic issues in the Australian economy', hours:45, tint:'#e0f7f1', quizzes:[] },
+    { n:2, title:'Economic management of the Australian economy', hours:45, tint:'#f3f1ff', quizzes:[] },
+    { n:3, title:'Australia and the global economy', hours:30, tint:'#fff1e0', quizzes:[] },
+  ];
+
+  function cardHTML(t){
+    const has = t.quizzes.length;
+    const count = has ? `<span class="count on">${has} quiz${has>1?'zes':''}</span>`
+                      : `<span class="count soon">Coming soon</span>`;
+    let drawer = '';
+    if(has){
+      drawer = t.quizzes.map(q=>`<a href="${Q(q[1])}"><span>${q[0]}</span><span class="go">Start →</span></a>`).join('');
+    } else {
+      drawer = `<div class="soonmsg">Quizzes for this focus area are on the way.</div>`;
+    }
+    return `<div class="card" data-has="${has?1:0}">
+      <div class="photo" style="background:${t.tint}">
+        <div class="num">${t.n}</div>${PH}<div class="ph">photo</div>
+      </div>
+      <div class="body">
+        <h3>${t.title}</h3>
+        <div class="row"><span class="hours">${t.hours} hrs</span>${count}</div>
+        <div class="drawer">${drawer}</div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('grid11').innerHTML = TOPICS11.map(cardHTML).join('');
+  document.getElementById('grid12').innerHTML = TOPICS12.map(cardHTML).join('');
+
+  // click a card to reveal its quizzes (links still work)
+  document.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('click', e=>{ if(e.target.closest('a')) return; c.classList.toggle('open'); });
+  });
+</script>
+</body>
+</html>

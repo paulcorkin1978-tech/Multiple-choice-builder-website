@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Subsidy — quantity → revenue progression</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#05050c;font-family:'Nunito',sans-serif;overflow:hidden}
+  #stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  svg{width:100%;height:100%}
+  .lab text{transition:opacity .35s ease}
+  .btns{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:5}
+  button{font-family:inherit;font-weight:800;font-size:16px;border:2px solid #3a3a68;border-radius:12px;background:#12122a;color:#e8e8ff;padding:10px 22px;cursor:pointer}
+  button.on{background:#00e5c0;border-color:#00e5c0;color:#04231d}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="-40" y="-40" width="2000" height="1160"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <pattern id="hg" width="16" height="16" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#00e5c0" fill-opacity="0.10"/><line x1="0" y1="0" x2="0" y2="16" stroke="#00e5c0" stroke-width="2" stroke-opacity="0.5"/></pattern>
+    <pattern id="hy" width="16" height="16" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#ffd43b" fill-opacity="0.12"/><line x1="0" y1="0" x2="0" y2="16" stroke="#ffd43b" stroke-width="2" stroke-opacity="0.55"/></pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#05050c"/>
+  <text x="960" y="60" fill="#e8e8ff" font-size="34" font-weight="900" text-anchor="middle">The market for <tspan fill="#00e5c0">beef</tspan> — free trade at $6</text>
+
+  <!-- revenue boxes (shading behind lines) -->
+  <rect x="300" y="552" width="420" height="348" fill="url(#hg)" stroke="#00e5c0" stroke-width="3"/>
+  <rect x="720" y="552" width="560" height="348" fill="url(#hy)" stroke="#ffd43b" stroke-width="3"/>
+
+  <line x1="300" y1="120" x2="300" y2="900" stroke="#8a8ac0" stroke-width="3"/>
+  <line x1="300" y1="900" x2="1500" y2="900" stroke="#8a8ac0" stroke-width="3"/>
+  <text x="200" y="500" fill="#b8b8dc" font-size="24" font-weight="800" text-anchor="middle" transform="rotate(-90 200 500)">Price ($/kg)</text>
+
+  <path d="M300 900 L1140 204" stroke="#00e5c0" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="1150" y="210" fill="#00e5c0" font-size="28" font-weight="900">S</text>
+  <path d="M440 204 L1460 830" stroke="#ff5c8a" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="1468" y="836" fill="#ff5c8a" font-size="28" font-weight="900">D</text>
+  <line x1="300" y1="552" x2="1400" y2="552" stroke="#ffd43b" stroke-width="4" stroke-dasharray="2 12" opacity="0.85"/>
+  <text x="1406" y="560" fill="#ffd43b" font-size="22" font-weight="800">World price $6</text>
+  <circle cx="720" cy="552" r="9" fill="#00e5c0" filter="url(#glow)"/>
+  <circle cx="1280" cy="552" r="9" fill="#ff5c8a" filter="url(#glow)"/>
+
+  <!-- ══ morphing labels (top layer, opaque chips) ══ -->
+  <g id="domLab" class="lab"><rect id="domChip" x="360" y="704" width="300" height="44" rx="10" fill="#05050c"/><text id="domTxt" x="510" y="734" fill="#7dffe8" font-size="30" font-weight="900" text-anchor="middle"></text></g>
+  <g id="impLab" class="lab"><rect id="impChip" x="850" y="704" width="300" height="44" rx="10" fill="#05050c"/><text id="impTxt" x="1000" y="734" fill="#ffe680" font-size="30" font-weight="900" text-anchor="middle"></text></g>
+  <g id="totLab" class="lab"><rect id="totChip" x="560" y="946" width="640" height="48" rx="12" fill="#0c0c18" stroke="#e8e8ff" stroke-width="2"/><text id="totTxt" x="880" y="978" fill="#e8e8ff" font-size="28" font-weight="900" text-anchor="middle"></text></g>
+</svg>
+</div>
+<div class="btns">
+  <button id="bQ" class="on">Quantities</button>
+  <button id="bR">Revenue</button>
+</div>
+
+<script>
+  const $=id=>document.getElementById(id);
+  const DATA={
+    q:{ dom:'60,000 t', imp:'80,000 t', tot:'Total demand: 140,000 t' },
+    r:{ dom:'$6 × 60,000 = $360m', imp:'$6 × 80,000 = $480m', tot:'Total consumer spending: $6 × 140,000 = $840m' }
+  };
+  function fit(txtId,chipId,pad){                    // size the chip to the text
+    const t=$(txtId), b=t.getBBox();
+    const c=$(chipId); c.setAttribute('x',(b.x-pad).toFixed(1)); c.setAttribute('width',(b.width+2*pad).toFixed(1));
+  }
+  function set(mode){
+    const d=DATA[mode];
+    $('bQ').classList.toggle('on',mode==='q'); $('bR').classList.toggle('on',mode==='r');
+    $('domTxt').textContent=d.dom; $('impTxt').textContent=d.imp; $('totTxt').textContent=d.tot;
+    fit('domTxt','domChip',18); fit('impTxt','impChip',18); fit('totTxt','totChip',22);
+  }
+  $('bQ').addEventListener('click',()=>set('q'));
+  $('bR').addEventListener('click',()=>set('r'));
+  set('q');
+</script>
+</body>
+</html>

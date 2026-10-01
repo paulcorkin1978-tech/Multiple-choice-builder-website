@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Subsidy flow — strip under graph</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#05050c;font-family:'Nunito',sans-serif;overflow:hidden}
+  #stage{position:absolute;inset:0}
+  svg{width:100%;height:100%}
+  .ex,.sbox{transition:opacity .5s ease}
+  #cap{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);color:#e8e8ff;font-size:26px;font-weight:800;text-align:center;max-width:1500px}
+  .nav{position:absolute;top:18px;right:24px;display:flex;gap:10px;z-index:5}
+  button{font-family:inherit;font-weight:800;font-size:16px;border:2px solid #3a3a68;border-radius:12px;background:#12122a;color:#e8e8ff;padding:9px 20px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="-40" y="-40" width="2000" height="1160"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <pattern id="hg" width="16" height="16" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#00e5c0" fill-opacity="0.10"/><line x1="0" y1="0" x2="0" y2="16" stroke="#00e5c0" stroke-width="2" stroke-opacity="0.5"/></pattern>
+    <pattern id="hy" width="16" height="16" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="16" height="16" fill="#ffd43b" fill-opacity="0.12"/><line x1="0" y1="0" x2="0" y2="16" stroke="#ffd43b" stroke-width="2" stroke-opacity="0.55"/></pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="#05050c"/>
+  <text x="810" y="56" fill="#e8e8ff" font-size="30" font-weight="900" text-anchor="middle">The market for <tspan fill="#00e5c0">beef</tspan></text>
+
+  <!-- per-step graph extras (areas + points) -->
+  <rect id="boxTot" class="ex" x="300" y="564" width="980" height="336" fill="none" stroke="#ff5c8a" stroke-width="3" stroke-dasharray="10 8" opacity="0"/>
+  <rect id="boxDom" class="ex" x="300" y="564" width="420" height="336" fill="url(#hg)" stroke="#00e5c0" stroke-width="3" opacity="0"/>
+  <rect id="boxImp" class="ex" x="720" y="564" width="560" height="336" fill="url(#hy)" stroke="#ffd43b" stroke-width="3" opacity="0"/>
+
+  <!-- axes -->
+  <line x1="300" y1="120" x2="300" y2="900" stroke="#8a8ac0" stroke-width="3"/>
+  <line x1="300" y1="900" x2="1500" y2="900" stroke="#8a8ac0" stroke-width="3"/>
+  <text x="205" y="500" fill="#b8b8dc" font-size="22" font-weight="800" text-anchor="middle" transform="rotate(-90 205 500)">Price ($/kg)</text>
+
+  <!-- curves (always on) -->
+  <path d="M300 900 L1140 228" stroke="#00e5c0" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="1150" y="234" fill="#00e5c0" font-size="26" font-weight="900">S</text>
+  <path d="M440 228 L1460 848" stroke="#ff5c8a" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <text x="1468" y="854" fill="#ff5c8a" font-size="26" font-weight="900">D</text>
+  <line x1="300" y1="564" x2="1400" y2="564" stroke="#ffd43b" stroke-width="4" stroke-dasharray="2 12" opacity="0.85"/>
+  <text x="1406" y="572" fill="#ffd43b" font-size="22" font-weight="800">World price $6</text>
+  <circle id="domPt" class="ex" cx="720" cy="564" r="9" fill="#00e5c0" filter="url(#glow)" opacity="0"/>
+  <circle id="demPt" class="ex" cx="1280" cy="564" r="9" fill="#ff5c8a" filter="url(#glow)" opacity="0"/>
+
+  <!-- ══ STRIP UNDER THE GRAPH — three boxes ══ -->
+  <g id="strip">
+    <g id="s0" class="sbox" opacity="0"><rect x="300" y="946" width="430" height="104" rx="14" fill="#0c0c18" stroke="#00e5c0" stroke-width="2.5"/><text id="s0h" x="515" y="984" fill="#00e5c0" font-size="20" font-weight="800" text-anchor="middle"></text><text id="s0v" x="515" y="1022" fill="#7dffe8" font-size="30" font-weight="900" text-anchor="middle"></text></g>
+    <g id="s1" class="sbox" opacity="0"><rect x="760" y="946" width="430" height="104" rx="14" fill="#0c0c18" stroke="#ffd43b" stroke-width="2.5"/><text id="s1h" x="975" y="984" fill="#ffd43b" font-size="20" font-weight="800" text-anchor="middle"></text><text id="s1v" x="975" y="1022" fill="#ffe680" font-size="30" font-weight="900" text-anchor="middle"></text></g>
+    <g id="s2" class="sbox" opacity="0"><rect x="1220" y="946" width="430" height="104" rx="14" fill="#0c0c18" stroke="#ff5c8a" stroke-width="2.5"/><text id="s2h" x="1435" y="984" fill="#ff5c8a" font-size="20" font-weight="800" text-anchor="middle"></text><text id="s2v" x="1435" y="1022" fill="#ff9bb0" font-size="30" font-weight="900" text-anchor="middle"></text></g>
+  </g>
+</svg>
+</div>
+<div id="cap"></div>
+<div class="nav"><button id="back">◀ Back</button><button id="next">Next ▶</button></div>
+
+<script>
+  const $=id=>document.getElementById(id);
+  const G=['boxTot','boxDom','boxImp','domPt','demPt'];
+  const CN={g:['#00e5c0','#7dffe8'], y:['#ffd43b','#ffe680'], r:['#ff5c8a','#ff9bb0']};
+  const STEPS=[
+   {cap:'The market for beef at a world price of $6.', ex:[], strip:[]},
+   {cap:'At $6, domestic farmers produce 60,000 tonnes.', ex:['domPt'],
+     strip:[{i:0,c:'g',h:'DOMESTIC PRODUCTION',v:'60,000 t'}]},
+   {cap:'Buyers want 140,000 tonnes — the 80,000 gap is imported.', ex:['domPt','demPt'],
+     strip:[{i:0,c:'g',h:'DOMESTIC PRODUCTION',v:'60,000 t'},{i:1,c:'y',h:'IMPORTS',v:'80,000 t'},{i:2,c:'r',h:'TOTAL DEMAND',v:'140,000 t'}]},
+   {cap:'Now, revenue. Domestic producer revenue is price × quantity — this area.', ex:['boxDom'], strip:[]},
+   {cap:'So it is $6 × 60,000 = $360 million.', ex:['boxDom'],
+     strip:[{i:0,c:'g',h:'DOMESTIC PRODUCER REVENUE',v:'$6 × 60,000 = $360m'}]},
+   {cap:'Import spending is price × quantity too — this area.', ex:['boxImp'],
+     strip:[{i:0,c:'g',h:'DOMESTIC PRODUCER REVENUE',v:'$6 × 60,000 = $360m'}]},
+   {cap:'So it is $6 × 80,000 = $480 million.', ex:['boxImp'],
+     strip:[{i:0,c:'g',h:'DOMESTIC PRODUCER REVENUE',v:'$6 × 60,000 = $360m'},{i:1,c:'y',h:'IMPORT SPENDING',v:'$6 × 80,000 = $480m'}]},
+   {cap:'Total consumer spending is the whole area — price × total quantity.', ex:['boxTot'],
+     strip:[{i:0,c:'g',h:'DOMESTIC PRODUCER REVENUE',v:'$6 × 60,000 = $360m'},{i:1,c:'y',h:'IMPORT SPENDING',v:'$6 × 80,000 = $480m'}]},
+   {cap:'So it is $6 × 140,000 = $840 million.', ex:['boxTot'],
+     strip:[{i:0,c:'g',h:'DOMESTIC PRODUCER REVENUE',v:'$6 × 60,000 = $360m'},{i:1,c:'y',h:'IMPORT SPENDING',v:'$6 × 80,000 = $480m'},{i:2,c:'r',h:'TOTAL CONSUMER SPENDING',v:'$6 × 140,000 = $840m'}]},
+  ];
+  let cur=0;
+  function render(n){
+    const st=STEPS[n]; $('cap').textContent=st.cap;
+    G.forEach(id=>$(id).setAttribute('opacity', st.ex.includes(id)?1:0));
+    [0,1,2].forEach(i=>{
+      const box=st.strip.find(b=>b.i===i);
+      const g=$('s'+i);
+      if(box){ g.setAttribute('opacity',1);
+        $('s'+i+'h').textContent=box.h; $('s'+i+'v').textContent=box.v;
+        const c=CN[box.c]; $('s'+i).querySelector('rect').setAttribute('stroke',c[0]);
+        $('s'+i+'h').setAttribute('fill',c[0]); $('s'+i+'v').setAttribute('fill',c[1]);
+      } else g.setAttribute('opacity',0);
+    });
+    $('back').disabled=n===0; $('next').disabled=n===STEPS.length-1;
+  }
+  $('next').onclick=()=>{ if(cur<STEPS.length-1) render(++cur); };
+  $('back').onclick=()=>{ if(cur>0) render(--cur); };
+  document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight')$('next').click(); if(e.key==='ArrowLeft')$('back').click(); });
+  render(0);
+</script>
+</body>
+</html>

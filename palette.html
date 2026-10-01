@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Colour language — Theory2Econ</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/graph-palette.css">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Nunito',system-ui,sans-serif;background:var(--t2e-surface);color:var(--t2e-ink);padding:40px 24px}
+  h1{font-size:1.6rem;font-weight:900;text-align:center}
+  .sub{text-align:center;color:var(--t2e-muted);font-weight:700;margin:4px 0 30px}
+  .wrap{max-width:1180px;margin:0 auto}
+  h2{font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:var(--t2e-muted);margin:30px 0 12px}
+  table{width:100%;border-collapse:collapse;font-weight:700;font-size:.92rem}
+  th{text-align:left;color:var(--t2e-muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.4px;padding:6px 10px;border-bottom:2px solid var(--t2e-grid)}
+  td{padding:9px 10px;border-bottom:1px solid var(--t2e-grid)}
+  .sw{width:26px;height:26px;border-radius:7px;border:1px solid rgba(0,0,0,.15);display:inline-block;vertical-align:middle}
+  code{font-family:ui-monospace,Menlo,monospace;font-weight:700}
+  .row{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+  .panel{flex:1 1 420px;max-width:540px}
+  .cap{text-align:center;font-weight:800;margin-top:10px}
+  .light-card{background:var(--t2e-card);border:3px solid var(--t2e-ink);border-radius:20px;box-shadow:8px 8px 0 var(--t2e-shadow);overflow:hidden}
+  .dark-card{background:#05050c;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+  svg{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Theory2Econ colour language</h1>
+  <div class="sub">One meaning per colour. Same identity in both themes, tuned to the background.</div>
+
+  <h2>The tokens</h2>
+  <table>
+    <thead><tr><th>Role</th><th>CSS variable</th><th>Light (quiz)</th><th>Dark (video)</th></tr></thead>
+    <tbody>
+      <tr><td>Supply</td><td><code>--t2e-supply</code></td>
+        <td><span class="sw" style="background:#00a98a"></span> <code>#00a98a</code></td>
+        <td><span class="sw" style="background:#00e5c0"></span> <code>#00e5c0</code></td></tr>
+      <tr><td>Demand</td><td><code>--t2e-demand</code></td>
+        <td><span class="sw" style="background:#e8447a"></span> <code>#e8447a</code></td>
+        <td><span class="sw" style="background:#ff5c8a"></span> <code>#ff5c8a</code></td></tr>
+      <tr><td>Price / equilibrium</td><td><code>--t2e-price</code></td>
+        <td><span class="sw" style="background:#f0a500"></span> <code>#f0a500</code></td>
+        <td><span class="sw" style="background:#ffd43b"></span> <code>#ffd43b</code></td></tr>
+      <tr><td>Price label text</td><td><code>--t2e-price-text</code></td>
+        <td><span class="sw" style="background:#c47f00"></span> <code>#c47f00</code></td>
+        <td><span class="sw" style="background:#ffd43b"></span> <code>#ffd43b</code></td></tr>
+      <tr><td>Intervention (tax / tariff / subsidy)</td><td><code>--t2e-intervention</code></td>
+        <td><span class="sw" style="background:#e06a1f"></span> <code>#e06a1f</code></td>
+        <td><span class="sw" style="background:#ff8c42"></span> <code>#ff8c42</code></td></tr>
+      <tr><td>Ink (axes + text)</td><td><code>--t2e-ink</code></td>
+        <td><span class="sw" style="background:#2d2a4a"></span> <code>#2d2a4a</code></td>
+        <td><span class="sw" style="background:#e8e8ff"></span> <code>#e8e8ff</code></td></tr>
+      <tr><td>Muted text</td><td><code>--t2e-muted</code></td>
+        <td><span class="sw" style="background:#7b7894"></span> <code>#7b7894</code></td>
+        <td><span class="sw" style="background:#8a8ac0"></span> <code>#8a8ac0</code></td></tr>
+      <tr><td>Gridlines</td><td><code>--t2e-grid</code></td>
+        <td><span class="sw" style="background:#efecff"></span> <code>#efecff</code></td>
+        <td><span class="sw" style="background:#17172e"></span> <code>#17172e</code></td></tr>
+      <tr><td>Surface</td><td><code>--t2e-surface</code></td>
+        <td><span class="sw" style="background:#fffdf5"></span> <code>#fffdf5</code></td>
+        <td><span class="sw" style="background:#05050c"></span> <code>#05050c</code></td></tr>
+      <tr><td>Brand accent</td><td><code>--t2e-accent</code></td>
+        <td><span class="sw" style="background:#6c5ce7"></span> <code>#6c5ce7</code></td>
+        <td><span class="sw" style="background:#00e5c0"></span> <code>#00e5c0</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Living proof — both driven by the same variables</h2>
+  <div class="row">
+    <!-- LIGHT: default theme -->
+    <div class="panel">
+      <div class="light-card"><div id="lightHost"></div></div>
+      <div class="cap">Quiz app — light (default)</div>
+    </div>
+    <!-- DARK: same markup, data-theme flips every token -->
+    <div class="panel">
+      <div class="dark-card" data-theme="dark"><div id="darkHost"></div></div>
+      <div class="cap">Video — dark (<code>data-theme="dark"</code>)</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // one diagram definition, rendered into both hosts; colours come entirely
+  // from CSS variables, so the theme is decided by the wrapper, not the markup.
+  function diagram(dark){
+    const glow = dark ? ' filter="url(#glow)"' : '';
+    return `<svg viewBox="0 0 560 460" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="glow" filterUnits="userSpaceOnUse" x="-40" y="-40" width="640" height="540">
+        <feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <rect width="560" height="460" fill="var(--t2e-card)"/>
+      <g stroke="var(--t2e-grid)" stroke-width="1.4">
+        <line x1="160" y1="60" x2="160" y2="380"/><line x1="250" y1="60" x2="250" y2="380"/>
+        <line x1="340" y1="60" x2="340" y2="380"/><line x1="430" y1="60" x2="430" y2="380"/>
+        <line x1="70" y1="300" x2="520" y2="300"/><line x1="70" y1="220" x2="520" y2="220"/><line x1="70" y1="140" x2="520" y2="140"/></g>
+      <line x1="70" y1="60" x2="70" y2="380" stroke="var(--t2e-ink)" stroke-width="3"/>
+      <line x1="70" y1="380" x2="520" y2="380" stroke="var(--t2e-ink)" stroke-width="3"/>
+      <line x1="290" y1="220" x2="290" y2="380" stroke="var(--t2e-price)" stroke-width="2.5" stroke-dasharray="3 8"${glow}/>
+      <line x1="70" y1="220" x2="290" y2="220" stroke="var(--t2e-price)" stroke-width="2.5" stroke-dasharray="3 8"${glow}/>
+      <line x1="110" y1="360" x2="470" y2="90" stroke="var(--t2e-supply)" stroke-width="5" stroke-linecap="round"${glow}/>
+      <line x1="110" y1="90" x2="470" y2="360" stroke="var(--t2e-demand)" stroke-width="5" stroke-linecap="round"${glow}/>
+      <circle cx="290" cy="220" r="8" fill="var(--t2e-price)"${glow}/>
+      <text x="480" y="92" fill="var(--t2e-supply)" font-size="26" font-weight="900" font-family="Nunito">S</text>
+      <text x="480" y="360" fill="var(--t2e-demand)" font-size="26" font-weight="900" font-family="Nunito">D</text>
+      <text x="42" y="226" fill="var(--t2e-price-text)" font-size="20" font-weight="900" text-anchor="middle" font-family="Nunito">P</text>
+      <text x="290" y="404" fill="var(--t2e-price-text)" font-size="20" font-weight="900" text-anchor="middle" font-family="Nunito">Q</text>
+      <text x="70" y="42" fill="var(--t2e-ink)" font-size="19" font-weight="800" font-family="Nunito">Price</text>
+      <text x="520" y="404" fill="var(--t2e-ink)" font-size="19" font-weight="800" text-anchor="end" font-family="Nunito">Quantity</text>
+    </svg>`;
+  }
+  document.getElementById('lightHost').innerHTML = diagram(false);
+  document.getElementById('darkHost').innerHTML = diagram(true);
+</script>
+</body>
+</html>

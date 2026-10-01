@@ -1,0 +1,43 @@
+/* ============================================================
+   Theory2Econ — canonical colour language
+   One meaning per colour, two themes.  Source of truth for every
+   graph, diagram and interactive on the site.
+
+   Usage:
+     <link rel="stylesheet" href="css/graph-palette.css">
+     Light (quiz) is the default. For the dark video/theatre look,
+     put data-theme="dark" on <html> or on a wrapper element:
+        <div data-theme="dark"> ...svg... </div>
+     Then colour SVG elements with the tokens, e.g.
+        stroke="var(--t2e-supply)"  fill="var(--t2e-price)"
+   ============================================================ */
+
+:root {                      /* LIGHT — quiz app (default) */
+  --t2e-supply:       #00a98a;   /* supply curve            */
+  --t2e-demand:       #e8447a;   /* demand curve            */
+  --t2e-price:        #f0a500;   /* price line / equilibrium dot */
+  --t2e-price-text:   #c47f00;   /* price label text (deeper for cream) */
+  --t2e-intervention: #e06a1f;   /* tax / tariff / subsidy / downward shift */
+  --t2e-ink:          #2d2a4a;   /* axes + primary text     */
+  --t2e-muted:        #7b7894;   /* secondary text          */
+  --t2e-grid:         #efecff;   /* gridlines               */
+  --t2e-surface:      #fffdf5;   /* page background         */
+  --t2e-card:         #ffffff;   /* card / plot background  */
+  --t2e-accent:       #6c5ce7;   /* brand purple (links, focus) */
+  --t2e-shadow:       #efecff;   /* neo-brutalist offset shadow */
+}
+
+[data-theme="dark"] {        /* DARK — video / theatre */
+  --t2e-supply:       #00e5c0;
+  --t2e-demand:       #ff5c8a;
+  --t2e-price:        #ffd43b;
+  --t2e-price-text:   #ffd43b;
+  --t2e-intervention: #ff8c42;
+  --t2e-ink:          #e8e8ff;
+  --t2e-muted:        #8a8ac0;
+  --t2e-grid:         #17172e;
+  --t2e-surface:      #05050c;
+  --t2e-card:         #05050c;
+  --t2e-accent:       #00e5c0;
+  --t2e-shadow:       rgba(0,0,0,.35);
+}

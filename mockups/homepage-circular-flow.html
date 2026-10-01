@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Theory2Econ — the circular flow (homepage prototype)</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Nunito','Segoe UI',system-ui,sans-serif;background:#fffdf5;color:#2d2a4a}
+  a{text-decoration:none;color:inherit}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:15px 40px;border-bottom:1px solid #efecff}
+  .logo{font-weight:900;font-size:22px}
+  .logo span{color:#00b894}
+  .nav-links{display:flex;gap:24px;align-items:center}
+  .nav-links a{color:#7b7894;font-weight:800;font-size:15px}
+  .nav-links a:hover{color:#6c5ce7}
+  .nav-links a.cta{background:#6c5ce7;color:#fff;padding:9px 18px;border-radius:10px;box-shadow:0 3px 0 #5346c4}
+
+  header{max-width:1180px;margin:0 auto;padding:34px 40px 6px;text-align:center}
+  header h1{font-size:34px;font-weight:900;line-height:1.15}
+  header h1 span{color:#6c5ce7}
+  header p{margin:12px auto 0;max-width:680px;color:#7b7894;font-size:16.5px;font-weight:700}
+  .startchip{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:#eef3ff;border:2px solid #cdd9f5;color:#3a4a86;font-weight:900;font-size:14px;padding:8px 16px;border-radius:999px;cursor:pointer;transition:all .15s}
+  .startchip:hover{background:#dce6ff;border-color:#6c5ce7;color:#2d2a4a}
+
+  #diagram{max-width:1160px;margin:8px auto 0;padding:0 24px}
+  svg{width:100%;height:auto;display:block}
+
+  .zone{cursor:pointer}
+  .box{transition:transform .16s ease, filter .16s ease}
+  .zone:hover .box{transform:translateY(-4px);filter:drop-shadow(0 7px 6px rgba(45,42,74,.28))}
+  .boxlabel{fill:#fff;font-weight:900;font-size:23px;pointer-events:none}
+  .zbg{fill:#6c5ce7;opacity:0;transition:opacity .16s}
+  .zone:hover .zbg{opacity:.10}
+  .zone:hover .mkbadge rect{fill:#6c5ce7}
+  .zone:hover .mkbadge text{fill:#fff}
+
+  .flowline{fill:none;stroke:#c2bfd6;stroke-width:3}
+  .track{fill:none;stroke:#c9ccd2;stroke-width:2.5;stroke-dasharray:2 9;stroke-linecap:round}
+  .flab{font-weight:800;font-size:17px;fill:#2d2a4a;pointer-events:none}
+  .rlab{font-weight:800;font-size:16px;fill:#5b6470;pointer-events:none}
+  .rlabbg{fill:#e6e8ea}
+  .rail{fill:#fff;stroke:#2d2a4a;stroke-width:2}
+  .raillab{font-weight:800;font-size:19px;fill:#2d2a4a}
+  .legend{font-weight:800;font-size:16px;fill:#2d2a4a}
+  .anim{pointer-events:none}
+
+  #panel{max-width:820px;margin:6px auto 50px;padding:0 24px;min-height:60px}
+  .pcard{background:#fff;border:2.5px solid #2d2a4a;border-radius:20px;box-shadow:6px 6px 0 #e0f7f1;padding:22px 26px;display:none}
+  .pcard.show{display:block}
+  .pcard h2{font-size:23px;font-weight:900;display:flex;align-items:center;gap:12px}
+  .dot{width:16px;height:16px;border-radius:5px;display:inline-block}
+  .pcard .sub{color:#7b7894;font-weight:700;margin:4px 0 16px;font-size:15px}
+  .qlist{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .qlist a{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;border:2px solid #e4e2f4;border-radius:12px;font-weight:800;font-size:15px;transition:all .13s}
+  .qlist a:hover{border-color:#6c5ce7;background:#f7f5ff;color:#6c5ce7}
+  .qlist a .go{color:#6c5ce7}
+  .soon{color:#9a5f00;background:#fff1e0;border:1.5px solid #ffd6a3;font-weight:900;font-size:14px;padding:10px 14px;border-radius:12px;display:inline-block}
+  footer{max-width:1180px;margin:0 auto;padding:20px 40px 40px;border-top:1px solid #efecff;text-align:center;color:#b7b4cc;font-size:13px;font-weight:700}
+</style>
+</head>
+<body>
+  <nav>
+    <div class="logo">theory2<span>Econ</span></div>
+    <div class="nav-links"><a href="../student.html">All quizzes</a><a class="cta" href="../builder.html">Build a diagram</a></div>
+  </nav>
+
+  <header>
+    <h1>The whole course, in <span>one diagram</span>.</h1>
+    <p>The circular flow of income is the map of Year 11 Economics. Click a sector to practise it.</p>
+    <div class="startchip" data-topic="intro">◆ New here? Start with Introduction to economics</div>
+  </header>
+
+  <div id="diagram">
+  <svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+      <marker id="am" markerWidth="9" markerHeight="9" refX="6.5" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#2d2a4a"/></marker>
+      <!-- banknote -->
+      <g id="note">
+        <rect x="-15" y="-8.5" width="30" height="17" rx="3" fill="#3faa72" stroke="#1f7a4e" stroke-width="1.4"/>
+        <circle cx="0" cy="0" r="6" fill="none" stroke="#eafff4" stroke-width="1.2"/>
+        <text x="0" y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#eafff4" font-family="Nunito,sans-serif">$</text>
+      </g>
+      <!-- walking stick figure -->
+      <g id="man" stroke="#2d2a4a" stroke-width="2.3" stroke-linecap="round" fill="none">
+        <circle cx="0" cy="-9" r="3.4" fill="#2d2a4a" stroke="none"/>
+        <line x1="0" y1="-5.5" x2="0" y2="3"/>
+        <line x1="0" y1="-3" x2="-5" y2="1"/><line x1="0" y1="-3" x2="5" y2="1"/>
+        <line x1="0" y1="3" x2="-5" y2="10"/><line x1="0" y1="3" x2="5" y2="10"/>
+      </g>
+      <!-- car (facing left) -->
+      <g id="car">
+        <path d="M-19 3 Q-19 -3 -12 -3 L-6 -9 L9 -9 Q13 -9 14 -3 L19 -3 Q21 -3 21 1 L21 4 Q21 7 18 7 L-16 7 Q-19 7 -19 3 Z" fill="#e2554e" stroke="#a8322c" stroke-width="1.5"/>
+        <rect x="-4" y="-6.5" width="10" height="4.5" rx="1" fill="#bfe4f5"/>
+        <circle cx="-9" cy="7" r="4.2" fill="#2d2a4a"/><circle cx="12" cy="7" r="4.2" fill="#2d2a4a"/>
+      </g>
+    </defs>
+
+    <!-- leakages / injections rails -->
+    <rect class="rail" x="40" y="150" width="46" height="360" rx="8"/>
+    <text class="raillab" x="63" y="330" text-anchor="middle" transform="rotate(-90 63 330)">Leakages</text>
+    <rect class="rail" x="1114" y="150" width="46" height="360" rx="8"/>
+    <text class="raillab" x="1137" y="330" text-anchor="middle" transform="rotate(-90 1137 330)">Injections</text>
+
+    <!-- ===== outer money flows (banknotes) ===== -->
+    <path id="pS" class="flowline" marker-end="url(#am)" d="M330 158 L330 300 L468 300"/>
+    <text class="flab" x="360" y="288">Savings (S)</text>
+    <path id="pI" class="flowline" marker-end="url(#am)" d="M732 300 L860 300 L860 160"/>
+    <text class="flab" x="742" y="288">Investment (I)</text>
+    <path id="pT" class="flowline" marker-end="url(#am)" d="M280 158 L280 428 L468 428"/>
+    <text class="flab" x="310" y="416">Taxation (T)</text>
+    <path id="pG" class="flowline" marker-end="url(#am)" d="M732 428 L905 428 L905 160"/>
+    <text class="flab" x="742" y="405">Government</text><text class="flab" x="742" y="426">expenditure (G)</text>
+    <path id="pM" class="flowline" marker-end="url(#am)" d="M230 158 L230 556 L468 556"/>
+    <text class="flab" x="262" y="544">Imports (M)</text>
+    <path id="pX" class="flowline" marker-end="url(#am)" d="M732 556 L952 556 L952 160"/>
+    <text class="flab" x="742" y="544">Exports (X)</text>
+
+    <use class="anim" xlink:href="#note"><animateMotion dur="3.6s" repeatCount="indefinite"><mpath xlink:href="#pS"/></animateMotion></use>
+    <use class="anim" xlink:href="#note"><animateMotion dur="3.6s" repeatCount="indefinite"><mpath xlink:href="#pI"/></animateMotion></use>
+    <use class="anim" xlink:href="#note"><animateMotion dur="4.0s" repeatCount="indefinite"><mpath xlink:href="#pT"/></animateMotion></use>
+    <use class="anim" xlink:href="#note"><animateMotion dur="4.0s" repeatCount="indefinite"><mpath xlink:href="#pG"/></animateMotion></use>
+    <use class="anim" xlink:href="#note"><animateMotion dur="4.6s" repeatCount="indefinite"><mpath xlink:href="#pM"/></animateMotion></use>
+    <use class="anim" xlink:href="#note"><animateMotion dur="4.6s" repeatCount="indefinite"><mpath xlink:href="#pX"/></animateMotion></use>
+
+    <!-- ===== central Markets zone ===== -->
+    <g class="zone" data-topic="markets">
+      <rect class="zbg" x="424" y="18" width="352" height="218" rx="16"/>
+
+      <!-- factor market: factors of production (stick men, HH -> Bus) + income (money, Bus -> HH) -->
+      <rect class="rlabbg" x="486" y="20" width="228" height="26" rx="6"/>
+      <text class="rlab" x="600" y="38" text-anchor="middle">Factors of production</text>
+      <path id="pFactors" class="track" d="M432 66 L768 66"/>
+      <use class="anim" xlink:href="#man"><animateMotion dur="5.2s" repeatCount="indefinite"><mpath xlink:href="#pFactors"/></animateMotion></use>
+      <use class="anim" xlink:href="#man"><animateMotion dur="5.2s" begin="-2.6s" repeatCount="indefinite"><mpath xlink:href="#pFactors"/></animateMotion></use>
+
+      <path id="pY" class="flowline" marker-end="url(#am)" d="M772 104 L428 104"/>
+      <text class="flab" x="600" y="96" text-anchor="middle">Income (Y)</text>
+      <use class="anim" xlink:href="#note"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath xlink:href="#pY"/></animateMotion></use>
+
+      <!-- product market: consumption (money, HH -> Bus) + goods & services (car, Bus -> HH) -->
+      <path id="pC" class="flowline" marker-end="url(#am)" d="M428 150 L772 150"/>
+      <text class="flab" x="600" y="142" text-anchor="middle">Consumption (C)</text>
+      <use class="anim" xlink:href="#note"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath xlink:href="#pC"/></animateMotion></use>
+
+      <path id="pGoods" class="track" d="M768 190 L432 190"/>
+      <use class="anim" xlink:href="#car"><animateMotion dur="4.8s" repeatCount="indefinite"><mpath xlink:href="#pGoods"/></animateMotion></use>
+      <rect class="rlabbg" x="500" y="206" width="200" height="26" rx="6"/>
+      <text class="rlab" x="600" y="224" text-anchor="middle">Goods &amp; services</text>
+
+      <g class="mkbadge"><rect x="424" y="14" width="86" height="24" rx="12" fill="#efe9ff" stroke="#c9bdf3" stroke-width="1.5"/><text x="467" y="30" text-anchor="middle" font-weight="900" font-size="12" fill="#6c5ce7">MARKETS</text></g>
+    </g>
+
+    <!-- ===== sector boxes ===== -->
+    <g class="zone" data-topic="hbs">
+      <rect class="zbg" x="160" y="62" width="270" height="104" rx="16"/>
+      <rect class="box" x="170" y="70" width="250" height="88" rx="10" fill="#e8956b"/>
+      <text class="boxlabel" x="295" y="122" text-anchor="middle">Households</text>
+    </g>
+    <g class="zone" data-topic="hbs">
+      <rect class="zbg" x="770" y="62" width="270" height="104" rx="16"/>
+      <rect class="box" x="780" y="70" width="250" height="88" rx="10" fill="#1f9dd4"/>
+      <text class="boxlabel" x="905" y="122" text-anchor="middle">Businesses</text>
+    </g>
+    <g class="zone" data-topic="financial">
+      <rect class="zbg" x="460" y="242" width="280" height="92" rx="16"/>
+      <rect class="box" x="470" y="250" width="260" height="76" rx="10" fill="#f5a623"/>
+      <text class="boxlabel" x="600" y="296" text-anchor="middle">Financial sector</text>
+    </g>
+    <g class="zone" data-topic="government">
+      <rect class="zbg" x="460" y="370" width="280" height="92" rx="16"/>
+      <rect class="box" x="470" y="378" width="260" height="76" rx="10" fill="#c264c2"/>
+      <text class="boxlabel" x="600" y="424" text-anchor="middle">Government sector</text>
+    </g>
+    <g class="zone" data-topic="international">
+      <rect class="zbg" x="460" y="498" width="280" height="92" rx="16"/>
+      <rect class="box" x="470" y="506" width="260" height="76" rx="10" fill="#16a34a"/>
+      <text class="boxlabel" x="600" y="552" text-anchor="middle">International sector</text>
+    </g>
+
+    <!-- ===== legend ===== -->
+    <text class="legend" x="250" y="648">Resource flows =</text>
+    <use xlink:href="#man" transform="translate(404 643)"/>
+    <text class="legend" x="250" y="680">Money flows =</text>
+    <use xlink:href="#note" transform="translate(410 675)"/>
+  </svg>
+  </div>
+
+  <div id="panel"><div class="pcard" id="pcard"></div></div>
+
+  <footer>© 2027 Theory2Econ · Aligned to NSW Economics 11–12 (2025) · prototype</footer>
+
+<script>
+  const Q = f => '../quizzes/' + encodeURIComponent(f);
+  const AREAS = {
+    intro:        { name:'Introduction to economics', color:'#6c5ce7',
+      sub:'The economic problem, the circular flow, leakages and injections.', quizzes:[] },
+    hbs:          { name:'Household and business sector', color:'#e8956b',
+      sub:'Households and businesses — consumption, income, saving and investment.', quizzes:[] },
+    markets:      { name:'Markets', color:'#00b894',
+      sub:'The product and factor markets — how prices and quantities are set.', quizzes:[
+        ['Demand','demand quiz.html'],['Supply','supply quiz.html'],['Equilibrium','equilibrium quiz.html'],
+        ['The price mechanism','price mechanism quiz.html'],['Consumer & producer surplus','consumer producer surplus.html'],
+        ['Surplus — energy drinks','energy drinks surplus.html'],['Positive externalities','positive externalities quiz.html'],
+        ['Taxes & subsidies','Tax subsidy quiz.html'] ] },
+    financial:    { name:'Financial sector', color:'#f5a623',
+      sub:'Saving, investment and the role of financial markets.', quizzes:[] },
+    government:   { name:'Government sector', color:'#c264c2',
+      sub:'Taxation, government spending and the budget.', quizzes:[] },
+    international:{ name:'International sector', color:'#16a34a',
+      sub:'Imports, exports and trade protection.', quizzes:[
+        ['Tariffs','tariffs quiz.html'],['Quotas','quotas quiz.html'],['Subsidies','subsidies quiz.html'] ] },
+  };
+  const pcard = document.getElementById('pcard');
+  function open(topic){
+    const a = AREAS[topic]; if(!a) return;
+    let inner = `<h2><span class="dot" style="background:${a.color}"></span>${a.name}</h2><div class="sub">${a.sub}</div>`;
+    inner += a.quizzes.length
+      ? '<div class="qlist">' + a.quizzes.map(q=>`<a href="${Q(q[1])}"><span>${q[0]}</span><span class="go">Start →</span></a>`).join('') + '</div>'
+      : '<div class="soon">Quizzes for this focus area are coming soon.</div>';
+    pcard.innerHTML = inner; pcard.className = 'pcard show';
+    pcard.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  document.querySelectorAll('[data-topic]').forEach(z=> z.addEventListener('click', ()=>open(z.getAttribute('data-topic'))));
+</script>
+</body>
+</html>

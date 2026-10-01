@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Two palettes, one colour language — Theory2Econ</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Nunito',system-ui,sans-serif;background:#e9e7f3;color:#2d2a4a;padding:36px 24px}
+  h1{font-size:1.5rem;font-weight:900;text-align:center;margin-bottom:4px}
+  .sub{text-align:center;color:#6b6890;font-weight:700;font-size:.95rem;margin-bottom:8px}
+  .legend{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin:14px 0 26px;font-weight:800;font-size:.9rem}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .dot{width:16px;height:16px;border-radius:5px;display:inline-block}
+  .row{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;max-width:1180px;margin:0 auto}
+  .panel{flex:1 1 420px;max-width:540px}
+  .cap{text-align:center;font-weight:800;margin-top:12px;font-size:.95rem}
+  .cap small{display:block;font-weight:700;color:#6b6890;margin-top:2px}
+  /* dark (video) card */
+  .dark{background:#05050c;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+  /* light (quiz) card */
+  .light{background:#fff;border:3px solid #2d2a4a;border-radius:20px;box-shadow:8px 8px 0 #efecff;overflow:hidden}
+  svg{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+  <h1>The same diagram, two palettes, one colour language</h1>
+  <div class="sub">green = supply · pink = demand · amber = price — identical meaning in both worlds</div>
+  <div class="legend">
+    <span><i class="dot" style="background:#00c9a7"></i>Supply</span>
+    <span><i class="dot" style="background:#ff5c8a"></i>Demand</span>
+    <span><i class="dot" style="background:#f0a500"></i>Price / equilibrium</span>
+  </div>
+
+  <div class="row">
+    <!-- ============ DARK (video theatre) ============ -->
+    <div class="panel">
+      <div class="dark">
+        <svg viewBox="0 0 560 460" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow" filterUnits="userSpaceOnUse" x="-40" y="-40" width="640" height="540">
+              <feGaussianBlur stdDeviation="3.2" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <radialGradient id="vig" cx="45%" cy="45%" r="75%">
+              <stop offset="0%" stop-color="#0b0b1a" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#000" stop-opacity="0.55"/>
+            </radialGradient>
+          </defs>
+          <rect width="560" height="460" fill="#05050c"/>
+          <g stroke="#17172e" stroke-width="1.4">
+            <line x1="160" y1="60" x2="160" y2="380"/><line x1="250" y1="60" x2="250" y2="380"/>
+            <line x1="340" y1="60" x2="340" y2="380"/><line x1="430" y1="60" x2="430" y2="380"/>
+            <line x1="70" y1="300" x2="520" y2="300"/><line x1="70" y1="220" x2="520" y2="220"/>
+            <line x1="70" y1="140" x2="520" y2="140"/>
+          </g>
+          <line x1="70" y1="60" x2="70" y2="380" stroke="#8a8ac0" stroke-width="2.5"/>
+          <line x1="70" y1="380" x2="520" y2="380" stroke="#8a8ac0" stroke-width="2.5"/>
+          <!-- guides -->
+          <line x1="290" y1="220" x2="290" y2="380" stroke="#f0a500" stroke-width="2.4" stroke-dasharray="2 9" filter="url(#glow)"/>
+          <line x1="70" y1="220" x2="290" y2="220" stroke="#f0a500" stroke-width="2.4" stroke-dasharray="2 9" filter="url(#glow)"/>
+          <!-- curves -->
+          <line x1="110" y1="360" x2="470" y2="90" stroke="#00e5c0" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+          <line x1="110" y1="90" x2="470" y2="360" stroke="#ff5c8a" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+          <circle cx="290" cy="220" r="8" fill="#f0a500" filter="url(#glow)"/>
+          <text x="480" y="92" fill="#00e5c0" font-size="26" font-weight="900">S</text>
+          <text x="480" y="360" fill="#ff5c8a" font-size="26" font-weight="900">D</text>
+          <text x="40" y="226" fill="#f0a500" font-size="20" font-weight="800" text-anchor="middle">P</text>
+          <text x="290" y="404" fill="#f0a500" font-size="20" font-weight="800" text-anchor="middle">Q</text>
+          <text x="70" y="40" fill="#e8e8ff" font-size="19" font-weight="800">Price</text>
+          <text x="520" y="404" fill="#e8e8ff" font-size="19" font-weight="800" text-anchor="end">Quantity</text>
+          <rect width="560" height="460" fill="url(#vig)"/>
+        </svg>
+      </div>
+      <div class="cap">Video theatre — dark<small>glow &amp; motion; commands attention on screen</small></div>
+    </div>
+
+    <!-- ============ LIGHT (quiz app) ============ -->
+    <div class="panel">
+      <div class="light">
+        <svg viewBox="0 0 560 460" xmlns="http://www.w3.org/2000/svg">
+          <rect width="560" height="460" fill="#fffdf5"/>
+          <g stroke="#efecff" stroke-width="1.4">
+            <line x1="160" y1="60" x2="160" y2="380"/><line x1="250" y1="60" x2="250" y2="380"/>
+            <line x1="340" y1="60" x2="340" y2="380"/><line x1="430" y1="60" x2="430" y2="380"/>
+            <line x1="70" y1="300" x2="520" y2="300"/><line x1="70" y1="220" x2="520" y2="220"/>
+            <line x1="70" y1="140" x2="520" y2="140"/>
+          </g>
+          <line x1="70" y1="60" x2="70" y2="380" stroke="#2d2a4a" stroke-width="3"/>
+          <line x1="70" y1="380" x2="520" y2="380" stroke="#2d2a4a" stroke-width="3"/>
+          <!-- guides -->
+          <line x1="290" y1="220" x2="290" y2="380" stroke="#f0a500" stroke-width="2.6" stroke-dasharray="3 7"/>
+          <line x1="70" y1="220" x2="290" y2="220" stroke="#f0a500" stroke-width="2.6" stroke-dasharray="3 7"/>
+          <!-- curves (same hues, deepened for cream) -->
+          <line x1="110" y1="360" x2="470" y2="90" stroke="#00a98a" stroke-width="5" stroke-linecap="round"/>
+          <line x1="110" y1="90" x2="470" y2="360" stroke="#e8447a" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="290" cy="220" r="7.5" fill="#f0a500" stroke="#2d2a4a" stroke-width="2"/>
+          <text x="480" y="92" fill="#00a98a" font-size="26" font-weight="900">S</text>
+          <text x="480" y="360" fill="#e8447a" font-size="26" font-weight="900">D</text>
+          <text x="42" y="226" fill="#c47f00" font-size="20" font-weight="900" text-anchor="middle">P</text>
+          <text x="290" y="404" fill="#c47f00" font-size="20" font-weight="900" text-anchor="middle">Q</text>
+          <text x="70" y="42" fill="#2d2a4a" font-size="19" font-weight="800">Price</text>
+          <text x="520" y="404" fill="#2d2a4a" font-size="19" font-weight="800" text-anchor="end">Quantity</text>
+        </svg>
+      </div>
+      <div class="cap">Quiz app — light<small>calm &amp; legible for repeated clicking; prints fine</small></div>
+    </div>
+  </div>
+</body>
+</html>

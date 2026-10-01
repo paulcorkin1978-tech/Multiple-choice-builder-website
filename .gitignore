@@ -13,3 +13,6 @@ ehthumbs.db
 
 # OneDrive / Office lock files
 ~$*
+recordings/
+*.m4a
+Recording-cleaned.m4a

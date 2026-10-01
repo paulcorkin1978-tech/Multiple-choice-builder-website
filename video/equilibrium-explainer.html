@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Equilibrium Explainer — Theory2Econ</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:#1b2620; height:100%; overflow:hidden; font-family:'Caveat',cursive; }
+
+  #stage {
+    position:absolute; top:50%; left:50%;
+    width:1920px; height:1080px;
+    transform:translate(-50%,-50%) scale(var(--s,1));
+    transform-origin:center center;
+  }
+  svg { display:block; width:1920px; height:1080px; }
+
+  .el     { opacity:0; transition:opacity .7s ease; }
+  .el.on  { opacity:.62; }
+  .el.hot { opacity:1; }
+  .keep.on{ opacity:.9; }
+
+  /* Every filter is filterUnits="userSpaceOnUse". With the default, a HORIZONTAL
+     line has a zero-height bbox, the filter region collapses to nothing, and the
+     element renders completely invisible. The price line is horizontal. */
+  .draw    { transition:stroke-dashoffset 1.6s cubic-bezier(.3,.5,.35,1); }
+  .draw.on { stroke-dashoffset:0 !important; }
+
+  /* the chalk hand: the title wipes on left-to-right */
+  #wipeHR { transform:scaleX(0); transform-origin:590px 420px; transition:transform 1.5s cubic-bezier(.4,.1,.3,1); }
+  #wipeHR.on { transform:scaleX(1); }
+
+  #introHead { transform:translateY(0); transition:transform 1s cubic-bezier(.4,.05,.25,1), opacity .7s ease; }
+  #introHead.up { transform:translateY(-260px); }
+
+  /* ── THE ADJUSTMENT ────────────────────────────────────────────────
+     Only the four MOVE slides animate. Everything else snaps: the panel
+     numbers are read off a settled diagram, not a travelling one. */
+  #pline, #dMark, #sMark, #dVert, #sVert, #gapBar {
+    transition:transform 2.4s cubic-bezier(.42,.05,.2,1),
+               stroke-dasharray 2.4s cubic-bezier(.42,.05,.2,1),
+               opacity .5s ease;
+  }
+  /* the gap is symmetric about x=750 — D and S are mirror images — so ONE bar
+     scaled about its centre is the whole surplus/shortage, at any price. */
+  #gapBar { transform-origin:750px 368px; }
+
+  .card { opacity:0; transition:opacity .6s ease; }
+
+  #bar { position:fixed; left:16px; bottom:14px; z-index:5; display:flex; align-items:center; gap:10px;
+         background:#243129; border:1.5px solid #3d5247; border-radius:10px; padding:7px 10px;
+         font-family:system-ui,sans-serif; transition:opacity .3s; }
+  #bar.hide { opacity:0; pointer-events:none; }
+  #bar button { width:36px; height:32px; border:1.5px solid #4e6759; background:#1b2620; color:#cfe0d6;
+                border-radius:6px; font-size:15px; cursor:pointer; font-family:inherit; }
+  #bar button:hover:not(:disabled) { background:#314237; color:#fff; }
+  #bar button:disabled { opacity:.28; cursor:default; }
+  #num { color:#fff59d; font-size:14px; font-weight:700; min-width:56px; text-align:center; }
+  #lbl { color:#7d9188; font-size:12px; max-width:560px; overflow:hidden;
+         text-overflow:ellipsis; white-space:nowrap; }
+
+  #stage.noanim, #stage.noanim * { transition:none !important; animation:none !important; }
+
+  #hint { position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+          color:#3d5247; font-size:12px; font-family:system-ui,sans-serif;
+          user-select:none; transition:opacity .3s; }
+  #hint.hide { opacity:0; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- chalk. Strong displacement on strokes, barely any on text — Caveat is
+         already a hand, and displacing it turns to mush. -->
+    <filter id="chalkL" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="chalkT" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="0.9" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="grain" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+      <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" seed="2"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+
+    <clipPath id="wipeH"><rect id="wipeHR" x="590" y="410" width="740" height="130"/></clipPath>
+
+    <marker id="arO" viewBox="0 0 10 10" refX="8" refY="5"
+            markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ffb74d"/>
+    </marker>
+
+    <radialGradient id="vig" cx="50%" cy="46%" r="78%">
+      <stop offset="58%"  stop-color="#2d4038" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1b2620" stop-opacity="0.85"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CHALK TRAY — inherited from the neon policy decks, so a student
+       who learns the colours here reads the tariff explainer for free.
+         white  #f4f1e8  axes, structure, text
+         green  #a5d6a7  SUPPLY
+         pink   #f48fb1  DEMAND
+         yellow #fff59d  PRICE
+         orange #ffb74d  the GAP — surplus/shortage, and the move it forces
+       ═══════════════════════════════════════════════════════════ -->
+
+  <rect width="1920" height="1080" fill="#2d4038"/>
+  <!-- old chalk, imperfectly wiped -->
+  <g stroke="#f4f1e8" fill="none" opacity="0.035" stroke-width="26" stroke-linecap="round">
+    <path d="M120 250 q260 -70 520 20"/>
+    <path d="M1180 880 q300 60 620 -30"/>
+    <path d="M300 960 q400 -50 700 40"/>
+    <path d="M1400 200 q220 80 420 -40"/>
+  </g>
+
+  <g id="grid" class="el keep" stroke="#3a5044" stroke-width="1.5"></g>
+
+  <g id="axes" class="el keep">
+    <line x1="320" y1="830" x2="1250" y2="830" stroke="#f4f1e8" stroke-width="3.5" filter="url(#chalkL)"/>
+    <line x1="320" y1="830" x2="320"  y2="150" stroke="#f4f1e8" stroke-width="3.5" filter="url(#chalkL)"/>
+    <text x="150" y="490" fill="#fff59d" font-size="40" font-weight="600" text-anchor="middle"
+          transform="rotate(-90 150 490)" filter="url(#chalkT)">Price ($ per tonne)</text>
+    <text x="780" y="946" fill="#f4f1e8" font-size="40" font-weight="600" text-anchor="middle"
+          filter="url(#chalkT)">Quantity (000 tonnes)</text>
+    <g id="ticks" font-size="30" font-weight="600"></g>
+  </g>
+
+  <g id="mktHead" class="el keep">
+    <text x="780" y="104" fill="#f4f1e8" font-size="58" font-weight="700" text-anchor="middle"
+          filter="url(#chalkT)">The market for rice</text>
+  </g>
+
+  <!-- ── the two curves. Mirror images, crossing at (750,500) = $500 / 50,000 ── -->
+  <path id="dcurve" class="el keep draw" d="M406 236 L1094 764" fill="none"
+        stroke="#f48fb1" stroke-width="5.5" stroke-linecap="round" filter="url(#chalkL)"/>
+  <g id="dlab" class="el keep">
+    <text x="1108" y="782" fill="#f48fb1" font-size="46" font-weight="700" filter="url(#chalkT)">D</text>
+  </g>
+  <path id="scurve" class="el keep draw" d="M406 764 L1094 236" fill="none"
+        stroke="#a5d6a7" stroke-width="5.5" stroke-linecap="round" filter="url(#chalkL)"/>
+  <g id="slab" class="el keep">
+    <text x="1108" y="240" fill="#a5d6a7" font-size="46" font-weight="700" filter="url(#chalkT)">S</text>
+  </g>
+
+  <!-- ── the price line and the two readings it takes ──
+       bases are drawn at $700 (y=368), where Qd=578 and Qs=922.
+       Everything else is a transform off those. -->
+  <path id="dVert" d="M578 150 L578 830" fill="none" stroke="#f48fb1"
+        stroke-width="2.5" stroke-dasharray="10 10" opacity="0"/>
+  <path id="sVert" d="M922 150 L922 830" fill="none" stroke="#a5d6a7"
+        stroke-width="2.5" stroke-dasharray="10 10" opacity="0"/>
+  <path id="pline" d="M320 368 L1240 368" fill="none" stroke="#fff59d"
+        stroke-width="4.5" filter="url(#chalkL)" opacity="0"/>
+  <path id="gapBar" d="M578 368 L922 368" fill="none" stroke="#ffb74d"
+        stroke-width="11" stroke-linecap="round" filter="url(#chalkL)" opacity="0"/>
+  <circle id="dMark" cx="578" cy="368" r="11" fill="#f48fb1" filter="url(#chalkL)" opacity="0"/>
+  <circle id="sMark" cx="922" cy="368" r="11" fill="#a5d6a7" filter="url(#chalkL)" opacity="0"/>
+
+  <!-- ringed on slide 13, once it has been earned -->
+  <g id="eqRing" class="card">
+    <circle cx="750" cy="500" r="30" fill="none" stroke="#f4f1e8" stroke-width="4" filter="url(#chalkL)"/>
+    <circle cx="750" cy="500" r="40" fill="none" stroke="#f4f1e8" stroke-width="2" opacity="0.5" filter="url(#chalkL)"/>
+  </g>
+
+  <!-- ══ the intro cards — no diagram behind them ══ -->
+  <g id="introHead" class="el">
+    <g clip-path="url(#wipeH)">
+      <text x="960" y="500" fill="#f4f1e8" font-size="84" font-weight="700" text-anchor="middle"
+            filter="url(#chalkT)">The Price Mechanism</text>
+    </g>
+  </g>
+
+  <g id="defn" class="card">
+    <text x="960" y="410" fill="#f4f1e8" font-size="50" font-weight="600" text-anchor="middle" filter="url(#chalkT)">The forces of <tspan fill="#a5d6a7">supply</tspan> and <tspan fill="#f48fb1">demand</tspan> interact</text>
+    <text x="960" y="478" fill="#f4f1e8" font-size="50" font-weight="600" text-anchor="middle" filter="url(#chalkT)">to determine a market <tspan fill="#fff59d">price</tspan> and a market quantity.</text>
+    <text x="960" y="620" fill="#fff59d" font-size="52" font-weight="700" text-anchor="middle" filter="url(#chalkT)">No one sets it.</text>
+    <text x="960" y="690" fill="#fff59d" font-size="52" font-weight="700" text-anchor="middle" filter="url(#chalkT)">It emerges.</text>
+  </g>
+
+  <g id="assum" class="card">
+    <text x="960" y="400" fill="#f4f1e8" font-size="54" font-weight="700" text-anchor="middle" filter="url(#chalkT)">We are assuming...</text>
+    <text x="640" y="510" fill="#f4f1e8" font-size="48" font-weight="600" filter="url(#chalkT)">1.   perfect competition</text>
+    <text x="640" y="586" fill="#f4f1e8" font-size="48" font-weight="600" filter="url(#chalkT)">2.   no government intervention</text>
+    <text x="640" y="662" fill="#f4f1e8" font-size="48" font-weight="600" filter="url(#chalkT)">3.   ceteris paribus</text>
+    <text x="700" y="722" fill="#7d9188" font-size="38" font-weight="500" filter="url(#chalkT)">all other factors held constant &#8212; so neither curve moves</text>
+  </g>
+
+  <!-- ══ the right-hand panel ══ -->
+  <g id="readLab" class="card">
+    <text id="rPrice" x="1590" y="280" fill="#fff59d" font-size="62" font-weight="700" text-anchor="middle" filter="url(#chalkT)">At $700</text>
+    <text id="rDem"   x="1590" y="376" fill="#f48fb1" font-size="44" font-weight="600" text-anchor="middle" filter="url(#chalkT)">buyers want 30,000</text>
+    <text id="rSup"   x="1590" y="436" fill="#a5d6a7" font-size="44" font-weight="600" text-anchor="middle" filter="url(#chalkT)">sellers offer 70,000</text>
+  </g>
+
+  <g id="gapLab" class="card">
+    <text id="gKind" x="1590" y="570" fill="#ffb74d" font-size="66" font-weight="700" text-anchor="middle" filter="url(#chalkT)">SURPLUS</text>
+    <text id="gQty"  x="1590" y="640" fill="#ffb74d" font-size="48" font-weight="600" text-anchor="middle" filter="url(#chalkT)">40,000 tonnes</text>
+    <text id="gNote" x="1590" y="716" fill="#7d9188" font-size="36" font-weight="500" text-anchor="middle" filter="url(#chalkT)">unsold rice in the silos</text>
+  </g>
+
+  <g id="moveLab" class="card">
+    <text id="mHead" x="1590" y="310" fill="#fff59d" font-size="66" font-weight="700" text-anchor="middle" filter="url(#chalkT)">Price falls</text>
+    <text id="mSup"  x="1590" y="438" fill="#a5d6a7" font-size="46" font-weight="600" text-anchor="middle" filter="url(#chalkT)">a contraction in supply</text>
+    <text id="mDem"  x="1590" y="500" fill="#f48fb1" font-size="46" font-weight="600" text-anchor="middle" filter="url(#chalkT)">an expansion in demand</text>
+    <text x="1590" y="600" fill="#f4f1e8" font-size="44" font-weight="700" text-anchor="middle" filter="url(#chalkT)">both at once</text>
+    <text x="1590" y="676" fill="#7d9188" font-size="36" font-weight="500" text-anchor="middle" filter="url(#chalkT)">the gap starts to close</text>
+  </g>
+
+  <g id="noticeLab" class="card">
+    <text x="1590" y="330" fill="#f4f1e8" font-size="62" font-weight="700" text-anchor="middle" filter="url(#chalkT)">Notice &#8212;</text>
+    <text x="1590" y="410" fill="#f4f1e8" font-size="62" font-weight="700" text-anchor="middle" filter="url(#chalkT)">neither curve moved.</text>
+    <text x="1590" y="520" fill="#7d9188" font-size="40" font-weight="500" text-anchor="middle" filter="url(#chalkT)">Only the points on them.</text>
+    <text x="1590" y="596" fill="#7d9188" font-size="40" font-weight="500" text-anchor="middle" filter="url(#chalkT)">That is what</text>
+    <text x="1590" y="646" fill="#7d9188" font-size="40" font-weight="500" text-anchor="middle" filter="url(#chalkT)">ceteris paribus buys us.</text>
+  </g>
+
+  <g id="eqLab" class="card">
+    <text x="1590" y="320" fill="#f4f1e8" font-size="70" font-weight="700" text-anchor="middle" filter="url(#chalkT)">Equilibrium</text>
+    <text x="1590" y="440" fill="#fff59d" font-size="54" font-weight="700" text-anchor="middle" filter="url(#chalkT)">Pe = $500</text>
+    <text x="1590" y="510" fill="#f4f1e8" font-size="54" font-weight="700" text-anchor="middle" filter="url(#chalkT)">Qe = 50,000 tonnes</text>
+    <text x="1590" y="620" fill="#7d9188" font-size="38" font-weight="500" text-anchor="middle" filter="url(#chalkT)">the only price where</text>
+    <text x="1590" y="668" fill="#7d9188" font-size="38" font-weight="500" text-anchor="middle" filter="url(#chalkT)">the gap is zero</text>
+  </g>
+
+  <!-- ══ the closing card ══ -->
+  <rect id="blackout" width="1920" height="1080" fill="#2d4038" opacity="0"
+        style="transition:opacity .6s ease" pointer-events="none"/>
+  <g id="summary" class="card">
+    <text x="960" y="230" fill="#f4f1e8" font-size="72" font-weight="700" text-anchor="middle" filter="url(#chalkT)">The Price Mechanism</text>
+    <line x1="480" y1="290" x2="1440" y2="290" stroke="#4e6759" stroke-width="3" filter="url(#chalkL)"/>
+
+    <text x="960" y="410" font-size="50" font-weight="600" text-anchor="middle" filter="url(#chalkT)"><tspan fill="#f4f1e8">price ABOVE  </tspan><tspan fill="#ffb74d">-&gt;  surplus  -&gt;</tspan><tspan fill="#fff59d">  price falls</tspan></text>
+    <text x="960" y="486" font-size="50" font-weight="600" text-anchor="middle" filter="url(#chalkT)"><tspan fill="#f4f1e8">price BELOW  </tspan><tspan fill="#ffb74d">-&gt;  shortage  -&gt;</tspan><tspan fill="#fff59d">  price rises</tspan></text>
+
+    <line x1="480" y1="570" x2="1440" y2="570" stroke="#4e6759" stroke-width="3" filter="url(#chalkL)"/>
+    <text x="960" y="670" fill="#f4f1e8" font-size="56" font-weight="700" text-anchor="middle" filter="url(#chalkT)">It settles where the gap is zero.</text>
+    <text x="960" y="760" fill="#7d9188" font-size="42" font-weight="500" text-anchor="middle" filter="url(#chalkT)">And neither curve ever moved.</text>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#vig)" pointer-events="none"/>
+  <rect width="1920" height="1080" filter="url(#grain)" opacity="0.05"
+        style="mix-blend-mode:overlay" pointer-events="none"/>
+</svg>
+</div>
+
+<div id="bar">
+  <button id="prev">&#8592;</button>
+  <span id="num">0 / 20</span>
+  <button id="next">&#8594;</button>
+  <button id="rep">&#8635;</button>
+  <span id="lbl"></span>
+</div>
+
+<div id="hint">SPACE / CLICK &#8594; next &#183; &#8592; back &#183; A repeat &#183; R restart &#183; H hide toolbar</div>
+
+<script>
+// RICE.  86px = 10,000 tonnes  ·  66px = $100/tonne
+//   D: P = 10 - Q      S: P = Q      crossing at (5,5) -> (750,500) = $500 / 50,000
+//
+//   At price p (in $100s):
+//     Qd = 10 - p  ->  x = 320 + (10-p)*86
+//     Qs = p       ->  x = 320 + p*86
+//   The two are MIRROR IMAGES about x=750, so the gap is always symmetric about
+//   the crossing — which is why one bar scaled about its centre is the whole
+//   surplus or shortage at any price.
+//
+//     $700   30,000 / 70,000   surplus  40,000
+//     $600   40,000 / 60,000   surplus  20,000    halved
+//     $500   50,000 / 50,000            0
+//     $300   70,000 / 30,000   shortage 40,000
+//     $400   60,000 / 40,000   shortage 20,000    halved
+const gx = q => 320 + q * 86;
+const gy = p => 830 - p * 66;
+
+let g = '';
+for (let i = 0; i <= 10; i++) {
+  g += `<line x1="${gx(i)}" y1="${gy(0)}" x2="${gx(i)}" y2="${gy(10)}"/>`;
+  g += `<line x1="${gx(0)}" y1="${gy(i)}" x2="${gx(10)}" y2="${gy(i)}"/>`;
+}
+document.getElementById('grid').innerHTML = g;
+
+// every $100 and every 10,000 — the story lands on $300/$400/$500/$600/$700,
+// so a coarser scale would leave half the beats unlabelled
+let t = '';
+for (let i = 1; i <= 10; i++) {
+  t += `<text x="292" y="${gy(i) + 10}" fill="#fff59d" text-anchor="end" filter="url(#chalkT)">$${i * 100}</text>`;
+  t += `<text x="${gx(i)}" y="882" fill="#f4f1e8" text-anchor="middle" filter="url(#chalkT)">${i * 10}</text>`;
+}
+document.getElementById('ticks').innerHTML = t;
+
+document.querySelectorAll('.draw').forEach(el => {
+  const len = el.getTotalLength();
+  el.style.strokeDasharray = len;
+  el.style.strokeDashoffset = len;
+});
+
+const STAGES = [
+  { cap:'Board. The title writes itself on.', show:['introHead'] },
+  { cap:'DEFINITION — the forces interact. No one sets the price.', show:[] },
+  { cap:'ASSUMPTIONS — competition, no government, ceteris paribus.', show:[] },
+
+  { cap:'The rice market. Axes only.', show:['grid','axes','mktHead'] },
+  { cap:'Demand — pink.', show:['dcurve','dlab'] },
+  { cap:'Supply — green. They cross, but we do not name it yet.', show:['scurve','slab'] },
+
+  { cap:'Price set at $700 — two squares above. Read BOTH curves.', show:[] },
+  { cap:'SURPLUS 40,000 — unsold rice.', show:[] },
+  { cap:'THE MOVE — price falls. Contraction in supply AND expansion in demand.', show:[] },
+  { cap:'At $600 the surplus has HALVED to 20,000. Still unsold.', show:[] },
+  { cap:'THE MOVE again — both points travel along fixed curves.', show:[] },
+  { cap:'At $500 the gap is ZERO. Nothing left to shift, so the price stops.', show:[] },
+  { cap:'NOTICE — neither curve moved. Only the points on them.', show:[] },
+  { cap:'Now it earns its name. Pe $500, Qe 50,000.', show:[] },
+
+  { cap:'Reset. Price set at $300 — two squares below.', show:[] },
+  { cap:'SHORTAGE 40,000 — buyers cannot get it.', show:[] },
+  { cap:'THE MOVE — price is bid UP. Expansion in supply, contraction in demand.', show:[] },
+  { cap:'At $400 the shortage has halved to 20,000.', show:[] },
+  { cap:'THE MOVE again.', show:[] },
+  { cap:'At $500 the gap is zero. The same point — reached from below.', show:[] },
+
+  { cap:'CLOSING — the rule.', show:[] },
+];
+
+// price (in $100s) per slide
+const P = { 6:7, 7:7, 8:6, 9:6, 10:5, 11:5, 12:5, 13:5,
+            14:3, 15:3, 16:4, 17:4, 18:5, 19:5 };
+// the four slides where the price actually travels
+const MOVE = [8, 10, 16, 18];
+// slides that show the price line and its two readings
+const LIVE = t => t >= 6 && t <= 19;
+
+let cur = -1;
+
+function render(target) {
+  const shown = new Set();
+  for (let i = 0; i <= target; i++) (STAGES[i].show || []).forEach(id => shown.add(id));
+  const hot = new Set(STAGES[target] ? (STAGES[target].show || []) : []);
+
+  document.querySelectorAll('.el').forEach(el => {
+    const on = shown.has(el.id);
+    el.classList.toggle('on', on);
+    el.classList.toggle('hot', hot.has(el.id));
+    el.querySelectorAll('.draw').forEach(d => d.classList.toggle('on', on));
+  });
+
+  // ── the intro cards. The title wipes on, then rises to make room. ──
+  document.getElementById('wipeHR').classList.toggle('on', target >= 0);
+  document.getElementById('introHead').classList.toggle('up', target >= 1);
+  document.getElementById('introHead').style.opacity = (target <= 2) ? 1 : 0;
+  document.getElementById('defn').style.opacity  = (target === 1) ? 1 : 0;
+  document.getElementById('assum').style.opacity = (target === 2) ? 1 : 0;
+
+  // ── the diagram ──
+  const p = P[target] || 7;
+  const py = gy(p);
+  const dx = gx(10 - p);          // where demand is at this price
+  const sx = gx(p);               // where supply is
+  const half = Math.abs(5 - p);   // grid squares each side of the crossing
+  const reach = 750 + half * 86;  // the price line spans out to the further one
+  const kind = p > 5 ? 'SURPLUS' : p < 5 ? 'SHORTAGE' : null;
+
+  const pl = document.getElementById('pline'), gb = document.getElementById('gapBar');
+  const dm = document.getElementById('dMark'), sm = document.getElementById('sMark');
+  const dv = document.getElementById('dVert'), sv = document.getElementById('sVert');
+  const rig = [pl, gb, dm, sm, dv, sv];
+
+  // Only the MOVE slides travel. Slide 6 is the price appearing and slide 14 is
+  // a reset — with a live transition those would slide in from wherever the last
+  // slide left them, which is a lie.
+  const SNAP = 'opacity .5s ease';
+  rig.forEach(e => e.style.transition = MOVE.includes(target) ? '' : SNAP);
+
+  pl.style.transform = `translateY(${py - 368}px)`;
+  pl.style.strokeDasharray = `${reach - 320} 9999`;
+  gb.style.transform = `translateY(${py - 368}px) scaleX(${half / 2})`;
+  dm.style.transform = `translate(${dx - 578}px, ${py - 368}px)`;
+  sm.style.transform = `translate(${sx - 922}px, ${py - 368}px)`;
+  dv.style.transform = `translateX(${dx - 578}px)`;
+  dv.style.strokeDasharray = `0 ${py - 150} ${830 - py} 9999`;
+  sv.style.transform = `translateX(${sx - 922}px)`;
+  sv.style.strokeDasharray = `0 ${py - 150} ${830 - py} 9999`;
+
+  const live = LIVE(target);
+  [pl, dm, sm, dv, sv].forEach(e => e.style.opacity = live ? 1 : 0);
+  // the bar is only up once the gap has been named, and there is nothing to
+  // draw at equilibrium anyway
+  gb.style.opacity = (live && kind && target !== 6 && target !== 14) ? 1 : 0;
+
+  document.getElementById('eqRing').style.opacity = (target === 13) ? 1 : 0;
+
+  // ── the panel ──
+  const READ = live && ![8, 10, 16, 18, 12, 13].includes(target);
+  document.getElementById('readLab').style.opacity = READ ? 1 : 0;
+  if (READ) {
+    document.getElementById('rPrice').textContent = 'At $' + p * 100;
+    document.getElementById('rDem').textContent = 'buyers want ' + ((10 - p) * 10).toLocaleString() + ',000';
+    document.getElementById('rSup').textContent = 'sellers offer ' + (p * 10).toLocaleString() + ',000';
+  }
+
+  const GAP = [7, 9, 11, 15, 17, 19].includes(target);
+  document.getElementById('gapLab').style.opacity = GAP ? 1 : 0;
+  if (GAP) {
+    const n = Math.abs(10 - 2 * p) * 10;
+    const NOTE = { 7:'unsold rice in the silos', 9:'halved &#8212; but still unsold',
+                   11:'nothing left to shift, so the price stops',
+                   15:'buyers cannot get it', 17:'halved',
+                   19:'the same point, reached from below' };
+    document.getElementById('gKind').textContent = kind || 'No gap';
+    document.getElementById('gQty').textContent = n ? n.toLocaleString() + ',000 tonnes' : 'zero';
+    document.getElementById('gQty').setAttribute('fill', kind ? '#ffb74d' : '#f4f1e8');
+    document.getElementById('gKind').setAttribute('fill', kind ? '#ffb74d' : '#f4f1e8');
+    document.getElementById('gNote').innerHTML = NOTE[target] || '';
+  }
+
+  const MV = MOVE.includes(target);
+  document.getElementById('moveLab').style.opacity = MV ? 1 : 0;
+  if (MV) {
+    const down = target === 8 || target === 10;   // surplus side: price falls
+    document.getElementById('mHead').textContent = down ? 'Price falls' : 'Price rises';
+    document.getElementById('mSup').textContent = down ? 'a contraction in supply' : 'an expansion in supply';
+    document.getElementById('mDem').textContent = down ? 'an expansion in demand' : 'a contraction in demand';
+  }
+
+  document.getElementById('noticeLab').style.opacity = (target === 12) ? 1 : 0;
+  document.getElementById('eqLab').style.opacity = (target === 13) ? 1 : 0;
+
+  const END = target === 20;
+  document.getElementById('blackout').style.opacity = END ? 1 : 0;
+  document.getElementById('summary').style.opacity = END ? 1 : 0;
+  document.getElementById('summary').style.transitionDelay = END ? '0.35s' : '0s';
+
+  document.getElementById('num').textContent = target + ' / ' + (STAGES.length - 1);
+  document.getElementById('lbl').textContent = STAGES[target].cap;
+  document.getElementById('prev').disabled = (target === 0);
+  document.getElementById('next').disabled = (target === STAGES.length - 1);
+}
+
+function go(n) {
+  n = Math.max(0, Math.min(STAGES.length - 1, n));
+  if (n === cur) return;
+  cur = n; render(cur);
+}
+
+// Repeat needs the step BACK to be instant. Without this the rewind is itself
+// animated, so the replay starts ~97% done and nothing appears to move.
+function repeat() {
+  if (cur <= 0) return;
+  const t = cur, st = document.getElementById('stage');
+  st.classList.add('noanim');
+  render(t - 1);
+  void st.getBoundingClientRect();
+  requestAnimationFrame(() => {
+    st.classList.remove('noanim');
+    void st.getBoundingClientRect();
+    render(t);
+  });
+}
+
+document.getElementById('prev').addEventListener('click', e => { e.stopPropagation(); go(cur - 1); });
+document.getElementById('next').addEventListener('click', e => { e.stopPropagation(); go(cur + 1); });
+document.getElementById('rep').addEventListener('click',  e => { e.stopPropagation(); repeat(); });
+document.addEventListener('click', () => go(cur + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'ArrowRight' || e.code === 'Enter') { e.preventDefault(); go(cur + 1); }
+  else if (e.code === 'ArrowLeft' || e.code === 'Backspace') { e.preventDefault(); go(cur - 1); }
+  else if (e.key === 'a' || e.key === 'A') { e.preventDefault(); repeat(); }
+  else if (e.key === 'r' || e.key === 'R') { cur = -1; go(0); }
+  else if (e.key === 'h' || e.key === 'H') {
+    document.getElementById('hint').classList.toggle('hide');
+    document.getElementById('bar').classList.toggle('hide');
+  }
+});
+
+function fit() {
+  document.getElementById('stage').style.setProperty('--s', Math.min(innerWidth / 1920, innerHeight / 1080));
+}
+addEventListener('resize', fit);
+fit();
+go(0);
+</script>
+
+</body>
+</html>

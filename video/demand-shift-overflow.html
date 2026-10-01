@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Demand shift — frame-runway idea</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Nunito',system-ui,sans-serif;background:#fffdf5;color:#2d2a4a;
+       min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px}
+  h1{font-size:1.3rem;font-weight:900}
+  .sub{color:#9a97b0;font-weight:700;font-size:.9rem;margin:3px 0 18px;text-align:center;max-width:560px}
+  /* the FRAME — the curve slides out over this, past the graph paper */
+  .frame{background:#fff;border:3px solid #2d2a4a;border-radius:18px;box-shadow:0 8px 20px rgba(45,42,74,.08);
+         padding:14px;max-width:680px;width:100%}
+  svg{width:100%;height:auto;display:block}
+  .controls{margin-top:20px;display:flex;gap:10px}
+  button{font-family:inherit;font-weight:800;font-size:.95rem;border:1.5px solid #d9d6ea;border-radius:10px;
+         background:#fff;color:#2d2a4a;padding:9px 20px;cursor:pointer;transition:background .15s,border-color .15s}
+  button:hover{border-color:#e8447a;color:#e8447a}
+  button.go{background:#e8447a;color:#fff;border-color:#e8447a}
+  button.go:hover{background:#d63a6e}
+</style>
+</head>
+<body>
+  <h1>Increase in demand — using the frame as runway</h1>
+  <div class="sub">the full curve slides right, out over the frame, then settles into the correct shorter curve inside the graph paper</div>
+  <div class="frame">
+    <svg id="svg" viewBox="0 0 620 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="paper"><rect x="70" y="50" width="360" height="310"/></clipPath>
+        <linearGradient id="overGrad" gradientUnits="userSpaceOnUse">
+          <stop id="overS0" offset="0" stop-color="#e8447a" stop-opacity="1"/>
+          <stop id="overS1" offset="1" stop-color="#e8447a" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- the GRAPH PAPER (plot) — curve is clipped to this at the end -->
+      <rect x="70" y="50" width="360" height="310" fill="#fdfcff" stroke="#e6e3f2" stroke-width="1.5"/>
+      <g stroke="#f1eff8" stroke-width="1.3">
+        <line x1="160" y1="50" x2="160" y2="360"/><line x1="250" y1="50" x2="250" y2="360"/>
+        <line x1="340" y1="50" x2="340" y2="360"/>
+        <line x1="70" y1="127" x2="430" y2="127"/><line x1="70" y1="205" x2="430" y2="205"/><line x1="70" y1="282" x2="430" y2="282"/>
+      </g>
+      <line x1="70" y1="44" x2="70" y2="360" stroke="#2d2a4a" stroke-width="2.5"/>
+      <line x1="70" y1="360" x2="430" y2="360" stroke="#2d2a4a" stroke-width="2.5"/>
+      <text x="40" y="205" fill="#6b6890" font-size="18" font-weight="800" text-anchor="middle" transform="rotate(-90 40 205)">Price</text>
+      <text x="250" y="392" fill="#6b6890" font-size="18" font-weight="800" text-anchor="middle">Quantity</text>
+
+      <!-- ghost D1 (stays), clipped to the graph paper -->
+      <g clip-path="url(#paper)">
+        <line id="ghost" x1="70" y1="70" x2="410" y2="360" stroke="#e8447a" stroke-width="4" stroke-linecap="round" opacity="0"/>
+      </g>
+      <text id="ghostLab" fill="#e8447a" font-size="19" font-weight="900" opacity="0">D₁</text>
+
+      <!-- the part of the moving curve INSIDE the graph paper (always solid) -->
+      <g clip-path="url(#paper)">
+        <line id="lineIn" stroke="#e8447a" stroke-width="4.5" stroke-linecap="round"/>
+      </g>
+      <!-- the part OUT on the frame runway (fades away once it settles) -->
+      <line id="lineOver" stroke="url(#overGrad)" stroke-width="4.5" stroke-linecap="round"/>
+      <text id="curveLab" fill="#e8447a" font-size="19" font-weight="900">D</text>
+    </svg>
+  </div>
+  <div class="controls">
+    <button class="go" id="play">Increase demand</button>
+    <button id="reset">Reset</button>
+  </div>
+
+<script>
+  const A1={x:70,y:70}, B1={x:410,y:360};   // D1: touches price axis (top) & quantity axis (bottom)
+  const SHIFT=150, PAPER_R=430;             // slide distance in px; right edge of the graph paper
+  const lineIn=document.getElementById('lineIn'), lineOver=document.getElementById('lineOver');
+  const ghost=document.getElementById('ghost'), ghostLab=document.getElementById('ghostLab');
+  const curveLab=document.getElementById('curveLab');
+  const overGrad=document.getElementById('overGrad'), overS0=document.getElementById('overS0');
+  ghostLab.setAttribute('x',A1.x+6); ghostLab.setAttribute('y',A1.y-6);
+
+  function frame(o, edgeAlpha, ghostA){
+    const ax=A1.x+o, ay=A1.y, bx=B1.x+o, by=B1.y;   // rigid translation of the full curve
+    let cx=bx, cy=by;
+    if(bx>PAPER_R){ const t=(PAPER_R-ax)/(bx-ax); cx=PAPER_R; cy=ay+t*(by-ay); }
+    lineIn.setAttribute('x1',ax); lineIn.setAttribute('y1',ay); lineIn.setAttribute('x2',cx); lineIn.setAttribute('y2',cy);
+    const over = bx>PAPER_R;
+    lineOver.setAttribute('x1',cx); lineOver.setAttribute('y1',cy); lineOver.setAttribute('x2',bx); lineOver.setAttribute('y2',by);
+    // gradient runs from the paper edge (opaque) to the tip (transparent) — far end fades first
+    overGrad.setAttribute('x1',cx); overGrad.setAttribute('y1',cy);
+    overGrad.setAttribute('x2',bx); overGrad.setAttribute('y2',by);
+    overS0.setAttribute('stop-opacity', (over?edgeAlpha:0).toFixed(3));
+    ghost.setAttribute('opacity',(0.30*ghostA).toFixed(3));
+    ghostLab.setAttribute('opacity',(0.55*ghostA).toFixed(3));
+    const lx = over && edgeAlpha>0.05 ? bx : cx, ly = over && edgeAlpha>0.05 ? by : cy;
+    curveLab.setAttribute('x', Math.min(lx+6, 604)); curveLab.setAttribute('y', ly-6);
+    curveLab.textContent = o>SHIFT*0.15 ? 'D₂' : 'D';
+  }
+
+  let anim=null;
+  const ease=t=>1-Math.pow(1-t,3);
+  function play(){
+    cancelAnimationFrame(anim);
+    const moveDur=1300, settleDur=550, t0=performance.now();
+    (function step(now){
+      const e=now-t0;
+      if(e<moveDur){                                   // full curve slides right, out over the frame
+        const t=e/moveDur; frame(SHIFT*ease(t), 1, Math.min(1,t/0.5)); anim=requestAnimationFrame(step);
+      } else {                                         // settle: the runway part fades, leaving the correct shorter curve
+        const st=Math.min(1,(e-moveDur)/settleDur); frame(SHIFT, 1-st, 1);
+        if(st<1) anim=requestAnimationFrame(step);
+      }
+    })(t0);
+  }
+  function reset(){ cancelAnimationFrame(anim); frame(0,0,0); curveLab.textContent='D'; }
+  document.getElementById('play').addEventListener('click',play);
+  document.getElementById('reset').addEventListener('click',reset);
+  reset(); setTimeout(play,500);
+</script>
+</body>
+</html>

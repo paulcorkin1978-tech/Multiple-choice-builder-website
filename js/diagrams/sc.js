@@ -18,7 +18,7 @@ function scSetCurve(c) {
   scCurve = c;
   document.getElementById('scBtnD').className = 'btn' + (c === 'demand' ? ' btn-primary' : '');
   document.getElementById('scBtnS').className = 'btn' + (c === 'supply' ? ' btn-primary' : '');
-  document.getElementById('scCol').value = '#000000';
+  document.getElementById('scCol').value = (c === 'supply' ? '#00a98a' : '#e8447a');
   scDraw();
 }
 
@@ -214,7 +214,7 @@ function scLoad(q) {
     document.getElementById('scTitle').value    = q.title  || '';
     document.getElementById('scYLbl').value     = q.yLabel || 'Price ($)';
     document.getElementById('scXLbl').value     = q.xLabel || 'Quantity';
-    document.getElementById('scCol').value      = q.color  || '#185FA5';
+    document.getElementById('scCol').value      = q.color  || (q.curve === 'supply' ? '#00a98a' : '#e8447a');
     document.getElementById('scShowEq').checked = q.showEqLines !== false;
     document.getElementById('scHideGrid').checked = !!q.hideGrid;
     document.getElementById('scHideNums').checked = !!q.hideNums;

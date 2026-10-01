@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Demand shift animation — prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Nunito',system-ui,sans-serif;background:#fffdf5;color:#2d2a4a;
+       min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px}
+  h1{font-size:1.3rem;font-weight:900}
+  .sub{color:#9a97b0;font-weight:700;font-size:.9rem;margin:3px 0 18px}
+  .card{background:#fff;border:1px solid #eceaf5;border-radius:16px;box-shadow:0 10px 26px rgba(45,42,74,.07);
+        padding:14px;max-width:660px;width:100%}
+  svg{width:100%;height:auto;display:block}
+  .controls{margin-top:20px;display:flex;gap:10px}
+  button{font-family:inherit;font-weight:800;font-size:.95rem;border:1.5px solid #d9d6ea;border-radius:10px;
+         background:#fff;color:#2d2a4a;padding:9px 20px;cursor:pointer;transition:background .15s,border-color .15s}
+  button:hover{border-color:#e8447a;color:#e8447a}
+  button.go{background:#e8447a;color:#fff;border-color:#e8447a}
+  button.go:hover{background:#d63a6e}
+</style>
+</head>
+<body>
+  <h1>Increase in demand</h1>
+  <div class="sub">the shading fills the whole sweep, then fades once D₂ settles</div>
+  <div class="card">
+    <svg id="svg" viewBox="0 0 640 460" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="0">
+          <stop offset="0" stop-color="#e8447a" stop-opacity="0"/>
+          <stop offset="1" stop-color="#e8447a" stop-opacity="0.16"/>
+        </linearGradient>
+        <clipPath id="plot"><rect x="90" y="55" width="510" height="345"/></clipPath>
+      </defs>
+      <g id="grid" stroke="#f1eff8" stroke-width="1.3"></g>
+      <line x1="90" y1="55" x2="90" y2="400" stroke="#2d2a4a" stroke-width="2.5"/>
+      <line x1="90" y1="400" x2="600" y2="400" stroke="#2d2a4a" stroke-width="2.5"/>
+      <text x="54" y="238" fill="#6b6890" font-size="19" font-weight="800" text-anchor="middle" transform="rotate(-90 54 238)">Price</text>
+      <text x="345" y="440" fill="#6b6890" font-size="19" font-weight="800" text-anchor="middle">Quantity</text>
+
+      <g clip-path="url(#plot)">
+        <polygon id="wash" fill="url(#tail)" opacity="0"/>
+        <line id="ghost" stroke="#e8447a" stroke-width="4" stroke-linecap="round" opacity="0"/>
+        <line id="curve" stroke="#e8447a" stroke-width="4.5" stroke-linecap="round"/>
+      </g>
+      <text id="ghostLab" fill="#e8447a" font-size="20" font-weight="900" opacity="0">D₁</text>
+      <text id="curveLab" fill="#e8447a" font-size="20" font-weight="900">D</text>
+    </svg>
+  </div>
+  <div class="controls">
+    <button class="go" id="play">Increase demand</button>
+    <button id="reset">Reset</button>
+  </div>
+
+<script>
+  const OX=90, OY=400, SX=17, SY=17;
+  const gx=q=>OX+q*SX, gy=p=>OY-p*SY;
+  // D1 reaches the axes at (0,14)-(14,0).  D2 is the SAME line shifted right by SHIFT,
+  // so its full axis-to-axis form is (0,20)-(20,0) — longer and higher.  We animate D2's
+  // FINAL shape translating in from behind the price axis; the clip hides the part still
+  // to the left of q=0, so the extra length just emerges — the line never grows or tilts.
+  const SHIFT=6;
+  const D2TOP={q:0,p:20}, D2BOT={q:20,p:0};      // D2's final, axis-touching endpoints
+  const D1TOP={q:0,p:14}, D1BOT={q:14,p:0};      // D1 (what the clip reveals at the start)
+
+  let g='';
+  for(let q=5;q<=30;q+=5) g+=`<line x1="${gx(q)}" y1="55" x2="${gx(q)}" y2="400"/>`;
+  for(let p=4;p<=20;p+=4) g+=`<line x1="90" y1="${gy(p)}" x2="600" y2="${gy(p)}"/>`;
+  document.getElementById('grid').innerHTML=g;
+
+  const ghost=document.getElementById('ghost'), ghostLab=document.getElementById('ghostLab');
+  const curve=document.getElementById('curve'), curveLab=document.getElementById('curveLab');
+  const wash=document.getElementById('wash'), grad=document.getElementById('tail');
+
+  ghost.setAttribute('x1',gx(D1TOP.q)); ghost.setAttribute('y1',gy(D1TOP.p));
+  ghost.setAttribute('x2',gx(D1BOT.q)); ghost.setAttribute('y2',gy(D1BOT.p));
+  ghostLab.setAttribute('x',gx(D1TOP.q)+7); ghostLab.setAttribute('y',gy(D1TOP.p)-6);
+
+  function frame(s){                 // s = how far D2 has slid in (0..SHIFT)
+    const o = s - SHIFT;             // horizontal offset of D2's final shape (starts at -SHIFT)
+    curve.setAttribute('x1',gx(D2TOP.q+o)); curve.setAttribute('y1',gy(D2TOP.p));
+    curve.setAttribute('x2',gx(D2BOT.q+o)); curve.setAttribute('y2',gy(D2BOT.p));
+    const t=s/SHIFT;
+    curveLab.setAttribute('x',gx(D2BOT.q+o)+6); curveLab.setAttribute('y',gy(0)-10);
+    curveLab.textContent = t>0.15 ? 'D₂' : 'D';
+    ghost.setAttribute('opacity',(0.30*Math.min(1,t/0.5)).toFixed(3));
+    ghostLab.setAttribute('opacity',(0.55*Math.min(1,t/0.6)).toFixed(3));
+    // wash between D1 and the current line, over their shared price range 0..14
+    // fill the whole swept region up to the price axis: along the x-axis from D1 to the
+    // moving line, up the moving line to where it meets the axis, then down the axis to D1.
+    wash.setAttribute('points',
+      `${gx(D1BOT.q)},${gy(0)} ${gx(D1BOT.q+s)},${gy(0)} ${gx(0)},${gy(D1TOP.p+s)} ${gx(0)},${gy(D1TOP.p)}`);
+    wash.setAttribute('opacity',Math.min(1,t/0.25).toFixed(3));
+    // gradient perpendicular to the curves (light along D1, dark along the moving line)
+    const ux=gx(D2BOT.q)-gx(D2TOP.q), uy=gy(D2BOT.p)-gy(D2TOP.p), ulen=Math.hypot(ux,uy);
+    const nx=uy/ulen, ny=-ux/ulen, Dp=(s*SX)*nx;
+    grad.setAttribute('x1',gx(D1BOT.q).toFixed(1)); grad.setAttribute('y1',gy(0).toFixed(1));
+    grad.setAttribute('x2',(gx(D1BOT.q)+nx*Dp).toFixed(1)); grad.setAttribute('y2',(gy(0)+ny*Dp).toFixed(1));
+  }
+
+  let anim=null;
+  const ease=t=>1-Math.pow(1-t,3);
+  function play(){
+    cancelAnimationFrame(anim);
+    const moveDur=1300, fadeDur=1000, t0=performance.now();
+    (function step(now){
+      const e=now-t0;
+      if(e<moveDur){ frame(SHIFT*ease(e/moveDur)); anim=requestAnimationFrame(step); }
+      else { const ft=Math.min(1,(e-moveDur)/fadeDur); frame(SHIFT);
+             wash.setAttribute('opacity',(1-ft).toFixed(3)); if(ft<1) anim=requestAnimationFrame(step); }
+    })(t0);
+  }
+  function reset(){ cancelAnimationFrame(anim); frame(0);
+    ghost.setAttribute('opacity',0); ghostLab.setAttribute('opacity',0); wash.setAttribute('opacity',0);
+    curveLab.textContent='D'; }
+  document.getElementById('play').addEventListener('click',play);
+  document.getElementById('reset').addEventListener('click',reset);
+  reset(); setTimeout(play,500);
+</script>
+</body>
+</html>

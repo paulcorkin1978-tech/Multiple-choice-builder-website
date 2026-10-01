@@ -180,3 +180,40 @@ crossing lands off-grid.
 
 **Both** already have 20 verified questions with explanations — reuse those
 numbers so the video and the quiz agree.
+
+---
+
+## 9. THE LEGIBILITY CONTRACT — read before building, run before recording
+
+We kept finding unreadable numbers one slide at a time. This is the standing
+rule so it stops. **Every number a student has to read must survive a paused
+frame on a phone.** Three failures caused all of it:
+
+**1. A glowing line renders on top of the number.**
+This is the big one. SVG paints in document order, so an amount defined *before*
+the curves/tracers gets the bright stroke drawn across it — a semi-opaque pill
+behind it does nothing, because the line is *above* it.
+→ **Rule: number "chips" live on the TOP layer, after every curve/line/glow, on
+a FULLY OPAQUE pill (`opacity="1"`).** Keep the box *shading* behind the axes so
+the lines stay crisp; move only the chip (pill + amount text) to the top. See
+`tariff-practice.html` — box `<g>` holds the hatch; a separate `<g id="X_n">` in
+the top chip layer holds the number.
+
+**2. Too small.** On a 1920×1080 master a value shown on a 360px phone shrinks
+5.3×. Floors: **numbers a student reads ≥ 24px**, axis ticks ≥ 26px, supporting
+labels ≥ 20px. Bigger is fine; smaller is a rebuild.
+
+**3. Too dim.** Numbers are never in the muted greys (`#61618a`, `#7a7aa8`,
+`#2f8f3f`, …). Full-brightness phosphor only; dimming reads as elegant on a
+monitor and as illegible through YouTube compression.
+
+**Enforcement — not memory.** A checker encodes all three:
+
+```
+python3 video/check-legibility.py                    # every explainer
+python3 video/check-legibility.py video/NAME.html    # one file
+```
+
+It exits non-zero on any ERROR. **A build isn't done until its file reports
+0 errors.** Run it as the final verification step of every explainer, the same
+way we run `node --check` on the script and confirm the file ends in `</html>`.

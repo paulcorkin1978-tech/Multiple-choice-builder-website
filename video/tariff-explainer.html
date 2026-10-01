@@ -37,11 +37,14 @@
      extend, shrink and DISAPPEAR — the cumulative .el model can't hide. */
   #dsbar  { transition:stroke-dashoffset 1.1s cubic-bezier(.3,.7,.3,1), opacity .55s; }
   #impbar { transition:stroke-dasharray  .9s  cubic-bezier(.3,.7,.3,1), opacity .55s; }
-  #dmbar  { transition:stroke-dasharray  .9s  cubic-bezier(.3,.7,.3,1),
-                       stroke-dashoffset 1.1s cubic-bezier(.22,.61,.36,1), opacity .55s; }
+  #dmbar  { transition:opacity .55s ease; }
   .barlab { opacity:0; transition:opacity .55s ease, transform .9s cubic-bezier(.3,.7,.3,1); }
+  .qbox { opacity:0; transition:opacity .5s ease; }
+  #prodBox,#impBox,#totBox,#govBox { transition:x .6s ease, y .6s ease, width .6s ease; }
+  #prodVal,#prodHead,#impVal,#impHead,#totVal,#totHead { transition:x .6s ease; }
   .revbox { opacity:0; transition:opacity .8s ease; }
   .sumbox { opacity:0; transition:opacity .6s ease; }
+  .csbox  { opacity:0; transition:opacity .7s ease; }
 
   #pwtick, #pttick { transition:fill .7s ease, filter .7s ease; }
   #pwtick.lit { fill:#ffd43b; filter:drop-shadow(0 0 7px rgba(255,212,59,.9)); }
@@ -50,13 +53,8 @@
   .rise    { transform:translateY(132px); transition:transform 1.3s cubic-bezier(.34,1.16,.64,1), opacity .75s; }
   .rise.on { transform:translateY(0); }
 
-  .row    { opacity:0; transform:translateX(18px); transition:opacity .45s ease, transform .45s ease; }
-  .row.on { opacity:1; transform:translateX(0); }
   .flash  { animation:flash 1.1s ease-out; }
   @keyframes flash { 0%{opacity:.2} 30%{opacity:1} 100%{opacity:1} }
-
-  .cap    { opacity:0; transition:opacity .45s ease; }
-  .cap.on { opacity:.9; }
 
   #bar { position:fixed; left:16px; bottom:14px; z-index:5; display:flex; align-items:center; gap:10px;
          background:#0d0d1c; border:1.5px solid #23233f; border-radius:12px; padding:7px 10px;
@@ -114,6 +112,11 @@
       <line x1="0" y1="0" x2="0"  y2="13" stroke="#ff8c42" stroke-width="1.7" opacity="0.85"/>
       <line x1="0" y1="0" x2="13" y2="0"  stroke="#ff8c42" stroke-width="1.7" opacity="0.85"/>
     </pattern>
+    <pattern id="hatchW" width="13" height="13" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="13" height="13" fill="rgba(232,232,255,0.10)"/>
+      <line x1="0" y1="0" x2="0"  y2="13" stroke="#e8e8ff" stroke-width="1.6" opacity="0.8"/>
+      <line x1="0" y1="0" x2="13" y2="0"  stroke="#e8e8ff" stroke-width="1.6" opacity="0.8"/>
+    </pattern>
 
     <radialGradient id="vig" cx="50%" cy="45%" r="78%">
       <stop offset="62%"  stop-color="#05050c" stop-opacity="0"/>
@@ -127,81 +130,40 @@
 
   <!-- ══ revenue boxes sit UNDER the axes and curves so the lines stay crisp ══
        86px = 10,000 tonnes · 66px = $100
-       revDom1  172x132 = 20,000 x $200 = $4m
-       revImp1  516x132 = 60,000 x $200 = $12m
-       revDom2  344x264 = 40,000 x $400 = $16m
-       revTar   172x132 = 20,000 x $200 = $4m   (tariff)
-       revImp2  172x132 = 20,000 x $200 = $4m   (importers keep — stacks under the tariff) -->
-  <!-- P x Q: the green box's two edges. Height 132px = $200 (yellow, the price),
-       width 172px = 20,000 t (green, the quantity). Both zero-thickness bboxes —
-       they only render because the filters are pinned to user space. -->
-  <path id="pq1v" class="el draw quick" d="M320 830 L320 698" stroke="#ffd43b" stroke-width="12"
-        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
-  <path id="pq1h" class="el draw quick" d="M320 830 L492 830" stroke="#00e5c0" stroke-width="12"
-        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
-  <g id="pqlab" class="el">
-    <text x="346" y="764" fill="#ffd43b" font-size="19" font-weight="900" text-anchor="middle"
-          transform="rotate(-90 346 764)">PRICE  $200</text>
-    <text x="406" y="818" fill="#00e5c0" font-size="19" font-weight="900" text-anchor="middle">QUANTITY  20,000</text>
-  </g>
+       The $ amount labels are 32px on a near-opaque pill, so they read on top
+       of the hatch and the green supply line crossing behind them. -->
 
-  <!-- P x Q #2 — the IMPORT box: 132px tall = $200, 516px wide = 60,000 t.
-       Both edges yellow: the height is the world price, the width is imports. -->
-  <path id="pq2v" class="el draw quick" d="M492 830 L492 698" stroke="#ffd43b" stroke-width="12"
-        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
-  <path id="pq2h" class="el draw quick" d="M492 830 L1008 830" stroke="#ffd43b" stroke-width="12"
-        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
-  <g id="pq2lab" class="el">
-    <text x="518" y="764" fill="#ffd43b" font-size="19" font-weight="900" text-anchor="middle"
-          transform="rotate(-90 518 764)">PRICE  $200</text>
-    <text x="750" y="818" fill="#ffd43b" font-size="19" font-weight="900" text-anchor="middle">QUANTITY  60,000</text>
-  </g>
-
-  <!-- P x Q #3 — the TARIFF box: 132px tall = the $200 TARIFF (orange, not a price),
-       172px wide = 20,000 t of imports (yellow). -->
-  <path id="pq3v" class="el draw quick" d="M664 698 L664 566" stroke="#ff8c42" stroke-width="12"
-        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
-  <path id="pq3h" class="el draw quick" d="M664 698 L836 698" stroke="#ffd43b" stroke-width="12"
-        fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
-  <g id="pq3lab" class="el">
-    <text x="690" y="632" fill="#ff8c42" font-size="19" font-weight="900" text-anchor="middle"
-          transform="rotate(-90 690 632)">TARIFF  $200</text>
-    <text x="750" y="724" fill="#ffd43b" font-size="19" font-weight="900" text-anchor="middle">IMPORTS  20,000</text>
-  </g>
-
+  <rect id="revTot" x="320" y="698" width="688" height="132" fill="url(#hatchW)" stroke="#e8e8ff" stroke-width="3" opacity="0"/>
   <g id="revDom1" class="revbox">
     <rect x="320" y="698" width="172" height="132" fill="url(#hatchG)" stroke="#00e5c0" stroke-width="3.5"/>
-    <rect x="372" y="748" width="68" height="36" rx="9" fill="#05050c" opacity="0.85"/>
-    <text x="406" y="773" fill="#7dffe8" font-size="24" font-weight="900" text-anchor="middle">$4m</text>
   </g>
   <g id="revImp1" class="revbox">
     <rect x="492" y="698" width="516" height="132" fill="url(#hatchY)" stroke="#ffd43b" stroke-width="3.5"/>
-    <rect x="710" y="748" width="80" height="36" rx="9" fill="#05050c" opacity="0.85"/>
-    <text x="750" y="773" fill="#ffe680" font-size="24" font-weight="900" text-anchor="middle">$12m</text>
   </g>
   <g id="revDom2" class="revbox">
     <rect x="320" y="566" width="344" height="264" fill="url(#hatchG)" stroke="#00e5c0" stroke-width="3.5"/>
-    <rect x="450" y="748" width="84" height="36" rx="9" fill="#05050c" opacity="0.85"/>
-    <text x="492" y="773" fill="#7dffe8" font-size="24" font-weight="900" text-anchor="middle">$16m</text>
   </g>
   <g id="revTar" class="revbox">
     <rect x="664" y="566" width="172" height="132" fill="url(#hatchO)" stroke="#ff8c42" stroke-width="4"/>
-    <rect x="714" y="614" width="72" height="36" rx="9" fill="#05050c" opacity="0.85"/>
-    <text x="750" y="639" fill="#ffb37a" font-size="24" font-weight="900" text-anchor="middle">$4m</text>
   </g>
   <g id="revImp2" class="revbox">
     <rect x="664" y="698" width="172" height="132" fill="url(#hatchY)" stroke="#ffd43b" stroke-width="3.5"/>
-    <rect x="716" y="748" width="68" height="36" rx="9" fill="#05050c" opacity="0.85"/>
-    <text x="750" y="773" fill="#ffe680" font-size="24" font-weight="900" text-anchor="middle">$4m</text>
   </g>
+
+  <!-- ══ TOTAL CONSUMER SPENDING = price × total quantity ══
+       The whole rectangle from the origin to the point buyers actually buy.
+       Free trade: $200 × 80,000 = $16m.  Tariff: $400 × 60,000 = $24m.
+       The sub-boxes are hidden on these slides, so the rectangle stands alone;
+       the sum sits on the right, in the space the old readout panel left free.
+       Top-right corner sits exactly on the demand curve in each case. -->
 
   <g id="axes" class="el keep">
     <line x1="320" y1="830" x2="1250" y2="830" stroke="#3a3a5e" stroke-width="3"/>
     <line x1="320" y1="830" x2="320"  y2="150" stroke="#3a3a5e" stroke-width="3"/>
-    <text x="132" y="500" fill="#8b8bb0" font-size="24" font-weight="800"
+    <text x="132" y="500" fill="#a6a6d0" font-size="24" font-weight="800"
           text-anchor="middle" transform="rotate(-90 132 500)">Price ($ per tonne)</text>
-    <text x="1196" y="812" fill="#8b8bb0" font-size="22" font-weight="800">Quantity (000 tonnes)</text>
-    <g id="ticks" fill="#61618a" font-size="21" font-weight="700"></g>
+    <text x="1196" y="812" fill="#a6a6d0" font-size="22" font-weight="800">Quantity (000 tonnes)</text>
+    <g id="ticks" fill="#b8b8dc" font-size="26" font-weight="800"></g>
   </g>
 
   <g id="title" class="el keep">
@@ -215,9 +177,12 @@
         fill="none" stroke-linecap="round" filter="url(#glow)"/>
   <path id="pwline" class="el keep draw" d="M320 698 L1240 698" fill="none" stroke="#ffd43b"
         stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
-  <g id="curvelabs" class="el keep">
+  <!-- S and D labels reveal on slide 1; the world-price label waits for slide 2 -->
+  <g id="sdlabs" class="el keep">
     <text x="1110" y="230" fill="#00e5c0" font-size="30" font-weight="900" filter="url(#glowSoft)">S</text>
     <text x="1110" y="774" fill="#ff5c8a" font-size="30" font-weight="900" filter="url(#glowSoft)">D</text>
+  </g>
+  <g id="pwlab" class="el keep">
     <text x="1252" y="706" fill="#ffd43b" font-size="24" font-weight="900" filter="url(#glowSoft)">World price</text>
   </g>
 
@@ -245,8 +210,8 @@
         fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
   <g id="tsize" class="el">
     <path d="M350 698 L330 698 L330 566 L350 566" fill="none" stroke="#ff8c42" stroke-width="3.5"/>
-    <text x="362" y="622" fill="#ff8c42" font-size="23" font-weight="900">$200</text>
-    <text x="362" y="648" fill="#ff8c42" font-size="19" font-weight="800" opacity="0.8">tariff</text>
+    <text x="362" y="622" fill="#ff8c42" font-size="26" font-weight="900">$200</text>
+    <text x="362" y="648" fill="#ff8c42" font-size="20" font-weight="800" opacity="0.8">tariff</text>
   </g>
 
   <path id="trace3" class="el draw trace" d="M492 698 L664 566" stroke="#00e5c0" stroke-width="11"
@@ -263,14 +228,11 @@
     <line x1="836" y1="566" x2="836" y2="830" stroke="#ff5c8a" stroke-width="3" stroke-dasharray="7 6"/>
   </g>
 
-  <!-- the squeeze: yellow import line at the world price, closing from BOTH ends.
-       492->664 is what the mills take; 1008->836 is what buyers stop buying.
-       Ends at 664-836 — exactly the tariff box's bottom edge. -->
+  <!-- the squeeze: yellow import line at the world price, closing from BOTH ends. -->
   <path id="impsqueeze" d="M320 698 L1240 698" fill="none" stroke="#ffd43b" stroke-width="13"
         stroke-linecap="butt" filter="url(#glowBig)" opacity="0"/>
 
-  <!-- closing tracers: the FULL climb up each curve to $400, not just the
-       segment above the world price. Both 325px — mirror images. -->
+  <!-- closing tracers: the FULL climb up each curve to $400. Both 325px — mirrors. -->
   <path id="trace5" class="el draw slow" d="M406 764 L664 566" stroke="#00e5c0" stroke-width="14"
         fill="none" stroke-linecap="round" filter="url(#glowBig)"/>
   <path id="trace6" class="el draw slow" d="M1094 764 L836 566" stroke="#ff5c8a" stroke-width="14"
@@ -279,69 +241,54 @@
   <path id="imp2" class="el draw" d="M664 566 L836 566" fill="none" stroke="#ff8c42" stroke-width="11"
         stroke-linecap="round" filter="url(#glowBig)"/>
 
-  <!-- below the axis: production + imports = total demand -->
-  <path id="impbar" d="M320 876 L1008 876" fill="none" stroke="#ffd43b" stroke-width="8"
-        stroke-linecap="butt" filter="url(#glow)" opacity="0"/>
-  <path id="dsbar"  d="M320 876 L664 876"  fill="none" stroke="#00e5c0" stroke-width="8"
-        stroke-linecap="butt" filter="url(#glow)" opacity="0"/>
-  <path id="dmbar"  d="M320 972 L1008 972" fill="none" stroke="#ff5c8a" stroke-width="8"
-        stroke-linecap="butt" filter="url(#glow)" opacity="0"/>
+  <!-- ══ under-graph proportional quantity boxes (green production, yellow imports) ══ -->
+  <g id="calc" opacity="0">
+    <path id="calcH" fill="none" stroke-width="9" stroke-linecap="round" filter="url(#glowBig)"/>
+    <path id="calcV" fill="none" stroke-width="9" stroke-linecap="round" filter="url(#glowBig)"/>
+    <text id="calcVlab" font-size="30" font-weight="900" filter="url(#glowSoft)"></text>
+    <text id="calcHlab" font-size="30" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"></text>
+  </g>
+  <g id="prodBoxG" class="qbox">
+    <rect id="prodBox" x="320" y="872" width="172" height="92" rx="12" fill="#08130f" stroke="#00e5c0" stroke-width="2.5"/>
+    <text id="prodVal" x="406" y="912" fill="#7dffe8" font-size="28" font-weight="900" text-anchor="middle">20,000 t</text>
+    <text id="prodHead" x="406" y="940" fill="#00e5c0" font-size="20" font-weight="800" text-anchor="middle">PRODUCTION</text>
+  </g>
+  <g id="impBoxG" class="qbox">
+    <rect id="impBox" x="492" y="872" width="516" height="92" rx="12" fill="#14100a" stroke="#ffd43b" stroke-width="2.5"/>
+    <text id="impVal" x="750" y="912" fill="#ffe680" font-size="28" font-weight="900" text-anchor="middle">60,000 t</text>
+    <text id="impHead" x="750" y="940" fill="#ffd43b" font-size="20" font-weight="800" text-anchor="middle">IMPORTS</text>
+  </g>
+  <g id="totBoxG" class="qbox">
+    <rect id="totBox" x="320" y="872" width="688" height="92" rx="12" fill="#111120" stroke="#e8e8ff" stroke-width="2.5"/>
+    <text id="totVal" x="664" y="912" fill="#e8e8ff" font-size="28" font-weight="900" text-anchor="middle">80,000 t</text>
+    <text id="totHead" x="664" y="940" fill="#b8b8dc" font-size="20" font-weight="800" text-anchor="middle">TOTAL DEMAND</text>
+  </g>
+  <g id="govBoxG" class="qbox">
+    <rect id="govBox" x="320" y="968" width="344" height="92" rx="12" fill="#1a0f06" stroke="#ff8c42" stroke-width="2.5"/>
+    <text id="govVal" x="492" y="1052" fill="#ffb37a" font-size="28" font-weight="900" text-anchor="middle"></text>
+    <text id="govHead" x="492" y="1000" fill="#ff8c42" font-size="20" font-weight="800" text-anchor="middle"></text>
+  </g>
 
-  <g id="dslab" class="barlab">
-    <text id="dsval" x="406" y="904" fill="#00e5c0" font-size="22" font-weight="900" text-anchor="middle">20,000</text>
-    <text x="406" y="928" fill="#00e5c0" font-size="18" font-weight="800" text-anchor="middle" opacity="0.75">Domestic production</text>
-  </g>
-  <g id="implab" class="barlab">
-    <text id="impval" x="750" y="904" fill="#ffd43b" font-size="22" font-weight="900" text-anchor="middle">60,000</text>
-    <text x="750" y="928" fill="#ffd43b" font-size="18" font-weight="800" text-anchor="middle" opacity="0.75">Imports</text>
-  </g>
-  <g id="dmlab" class="barlab">
-    <text id="dmval" x="664" y="1000" fill="#ff5c8a" font-size="22" font-weight="900" text-anchor="middle">80,000</text>
-    <text x="664" y="1024" fill="#ff5c8a" font-size="18" font-weight="800" text-anchor="middle" opacity="0.75">Total demand</text>
-  </g>
-
-  <!-- closing cards: the three effects. Boxes are cleared on 15-16 so only
-       the curves remain; the tariff box returns alone on 17. -->
+  <!-- closing cards: the four effects. -->
+  <!-- slide 18 carries the two supply-side effects the animation shows at once:
+       the higher price, and the domestic production/revenue the green climb draws -->
   <g id="sumPrice" class="sumbox">
-    <text x="750" y="944" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#ff8c42">1.  </tspan><tspan fill="#ff8c42">A HIGHER PRICE</tspan></text>
+    <text x="750" y="916" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#ff8c42">1.  A HIGHER PRICE</tspan></text>
+  </g>
+  <g id="sumProd" class="sumbox">
+    <text x="750" y="968" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#00e5c0">2.  INCREASED DOMESTIC PRODUCTION &amp; REVENUE</tspan></text>
   </g>
   <g id="sumDemand" class="sumbox">
-    <text x="750" y="944" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#ff5c8a">2.  </tspan><tspan fill="#ff5c8a">A CONTRACTION IN DEMAND</tspan></text>
+    <text x="750" y="944" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#ff5c8a">3.  A CONTRACTION IN DEMAND</tspan></text>
   </g>
   <g id="sumRev" class="sumbox">
-    <text x="750" y="944" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#ff8c42">3.  </tspan><tspan fill="#ff8c42">TARIFF REVENUE</tspan></text>
+    <text x="750" y="944" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#ff8c42">4.  TARIFF REVENUE</tspan></text>
   </g>
-
-
-  <g id="panel">
-    <g id="r-price" class="row">
-      <text x="1480" y="212" fill="#61618a" font-size="20" font-weight="800">PRICE</text>
-      <text id="v-price" x="1480" y="256" fill="#ffd43b" font-size="36" font-weight="900" filter="url(#glowSoft)">$200</text>
-    </g>
-    <g id="r-dom" class="row">
-      <text x="1480" y="336" fill="#61618a" font-size="20" font-weight="800">DOMESTIC PRODUCTION</text>
-      <text id="v-dom" x="1480" y="380" fill="#00e5c0" font-size="36" font-weight="900" filter="url(#glowSoft)">20,000</text>
-    </g>
-    <g id="r-imp" class="row">
-      <text x="1480" y="460" fill="#61618a" font-size="20" font-weight="800">IMPORTS</text>
-      <text id="v-imp" x="1480" y="504" fill="#ffd43b" font-size="36" font-weight="900" filter="url(#glowSoft)">60,000</text>
-    </g>
-    <g id="r-dem" class="row">
-      <text x="1480" y="584" fill="#61618a" font-size="20" font-weight="800">TOTAL DEMAND</text>
-      <text id="v-dem" x="1480" y="628" fill="#ff5c8a" font-size="36" font-weight="900" filter="url(#glowSoft)">80,000</text>
-    </g>
-    <g id="r-rev" class="row">
-      <text x="1480" y="708" fill="#61618a" font-size="20" font-weight="800">TARIFF REVENUE</text>
-      <text id="v-rev" x="1480" y="752" fill="#ff8c42" font-size="36" font-weight="900" filter="url(#glowSoft)">$4 million</text>
-      <text x="1480" y="788" fill="#7a7aa8" font-size="21" font-weight="800">$200 × 20,000</text>
-    </g>
-  </g>
-
   <g id="sumImp" class="sumbox">
-    <text x="750" y="944" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#ffd43b">4.  </tspan><tspan fill="#ffd43b">A REDUCTION IN IMPORTS</tspan></text>
+    <text x="750" y="944" font-size="33" font-weight="900" text-anchor="middle" filter="url(#glowSoft)"><tspan fill="#ffd43b">5.  A REDUCTION IN IMPORTS &amp; IMPORTER REVENUE</tspan></text>
   </g>
 
-  <!-- ══ 19 — closing slide: generic, succinct, all neon. The diagram blacks out. ══ -->
+  <!-- ══ closing slide: generic, succinct, all neon. The diagram blacks out. ══ -->
   <rect id="blackout" width="1920" height="1080" fill="#05050c" opacity="0"
         style="transition:opacity .8s ease" pointer-events="none"/>
   <g id="impact" class="sumbox">
@@ -356,16 +303,15 @@
 
     <text x="420" y="612" fill="#00e5c0" font-size="34" font-weight="900" filter="url(#glowSoft)">FIRMS</text>
 
-    <!-- the domestic/foreign split, made visible -->
     <path d="M866 528 L850 528 L850 630 L866 630" fill="none" stroke="#8b8bb0" stroke-width="3"/>
     <text x="832" y="588" fill="#e8e8ff" font-size="24" font-weight="900" text-anchor="end" filter="url(#glowSoft)">DOMESTIC</text>
 
-    <text x="884" y="558" fill="#00e5c0" font-size="34" font-weight="800" filter="url(#glowSoft)">Import-competing firms — higher revenue</text>
+    <text x="884" y="558" fill="#00e5c0" font-size="34" font-weight="800" filter="url(#glowSoft)">Import-competing firms — higher revenue, more jobs</text>
     <text x="884" y="620" fill="#ff8c42" font-size="34" font-weight="800" filter="url(#glowSoft)">Firms using it as an input — higher costs</text>
 
     <text x="832" y="700" fill="#e8e8ff" font-size="24" font-weight="900" text-anchor="end" filter="url(#glowSoft)">FOREIGN</text>
     <path d="M866 676 L850 676 L850 712 L866 712" fill="none" stroke="#8b8bb0" stroke-width="3"/>
-    <text x="884" y="700" fill="#ff5c8a" font-size="34" font-weight="800" filter="url(#glowSoft)">Foreign firms — lower revenue</text>
+    <text x="884" y="700" fill="#ff5c8a" font-size="34" font-weight="800" filter="url(#glowSoft)">Foreign firms — fewer imports, lower revenue</text>
 
     <line x1="380" y1="768" x2="1540" y2="768" stroke="#23233f" stroke-width="2"/>
 
@@ -379,7 +325,7 @@
 
 <div id="bar">
   <button id="prev" title="Back (left arrow)">←</button>
-  <span id="num">0 / 21</span>
+  <span id="num">0 / 24</span>
   <button id="next" title="Next (space / right arrow)">→</button>
   <button id="rep" title="Repeat this stage (A)">↻</button>
   <span id="lbl"></span>
@@ -394,6 +340,52 @@
 //   with tariff: dom 4 (40k) | demand 6 (60k) | imports 2 (20k)
 const gx = q => 320 + q * 86;
 const gy = p => 830 - p * 66;
+function drawCalc(xL,xR,gLo,gHi,col,pLab,qLab){
+  const yLo=gy(gLo), yHi=gy(gHi);
+  const H=document.getElementById('calcH'), V=document.getElementById('calcV');
+  H.setAttribute('d',`M${xL} ${yLo} L${xR} ${yLo}`);
+  V.setAttribute('d',`M${xL} ${yLo} L${xL} ${yHi}`);
+  [H,V].forEach(p=>{ p.setAttribute('stroke',col); const L=p.getTotalLength();
+    p.style.transition='none'; p.style.strokeDasharray=L; p.style.strokeDashoffset=L;
+    void p.getBoundingClientRect(); p.style.transition='stroke-dashoffset 1s ease';
+    requestAnimationFrame(()=>{ p.style.strokeDashoffset=0; }); });
+  const vl=document.getElementById('calcVlab'), hl=document.getElementById('calcHlab');
+  vl.setAttribute('x',xL+14); vl.setAttribute('y',(yLo+yHi)/2+9); vl.setAttribute('fill',col); vl.textContent=pLab||'';
+  hl.setAttribute('x',(xL+xR)/2); hl.setAttribute('y',yLo-16); hl.setAttribute('fill',col); hl.textContent=qLab||'';
+  document.getElementById('calc').style.opacity=1;
+}
+const BOXES = {
+  3:{G:['DOMESTIC\nPRODUCTION','20,000 t',320,172]},
+  4:{G:['DOMESTIC\nPRODUCTION','20,000 t',320,172],Y:['IMPORTS','60,000 t',492,516]},
+  5:{W:['TOTAL DEMAND','80,000 t',320,688]},
+  6:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4,000,000',320,172]},
+  7:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4,000,000',320,172],Y:['FOREIGN PRODUCER\nREVENUE','$12,000,000',492,516]},
+  8:{W:['TOTAL CONSUMER\nSPENDING','$16,000,000',320,688]},
+  11:{G:['DOMESTIC\nPRODUCTION','40,000 t',320,344]},
+  12:{G:['DOMESTIC\nPRODUCTION','40,000 t',320,344],Y:['IMPORTS','20,000 t',664,172]},
+  13:{W:['TOTAL DEMAND','60,000 t',320,516]},
+  14:{G:['DOMESTIC PRODUCER\nREVENUE','$16,000,000',320,344]},
+  15:{G:['DOMESTIC PRODUCER\nREVENUE','$16,000,000',320,344],O:['GOVERNMENT\nREVENUE','$4,000,000',320,344]},
+  16:{G:['DOMESTIC PRODUCER\nREVENUE','$16,000,000',320,344],O:['GOVERNMENT\nREVENUE','$4,000,000',320,344],Y:['FOREIGN\nPRODUCER\nREVENUE','$4,000,000',664,172]},
+  17:{W:['TOTAL CONSUMER\nSPENDING','$24,000,000',320,516]},
+};
+function renderBoxes(t){
+  const NS='http://www.w3.org/2000/svg', B=BOXES[t]||{};
+  const set=(k,rid,vid,hid,y)=>{
+    const g=document.getElementById(rid+'G'), d=B[k];
+    if(!d){ g.style.opacity=0; return; }
+    g.style.opacity=1;
+    const head=d[0], val=d[1], x=d[2], w=d[3], cx=x+w/2;
+    const r=document.getElementById(rid); r.setAttribute('x',x); r.setAttribute('width',w); r.setAttribute('y',y);
+    const vt=document.getElementById(vid); vt.setAttribute('x',cx); vt.setAttribute('y',y+84); vt.textContent=val;
+    const ht=document.getElementById(hid); ht.setAttribute('x',cx); ht.textContent='';
+    head.split('\n').forEach((ln,i)=>{ const ts=document.createElementNS(NS,'tspan'); ts.setAttribute('x',cx); ts.setAttribute('y',y+18+i*17); ts.textContent=ln; ht.appendChild(ts); });
+  };
+  set('G','prodBox','prodVal','prodHead',872);
+  set('Y','impBox','impVal','impHead',872);
+  set('W','totBox','totVal','totHead',872);
+  set('O','govBox','govVal','govHead',968);
+}
 
 let g = '';
 for (let i = 0; i <= 10; i++) {
@@ -405,8 +397,8 @@ document.getElementById('grid').innerHTML = g;
 let t = '';
 for (let i = 1; i <= 10; i++) {
   const id = i === 2 ? 'id="pwtick" ' : (i === 4 ? 'id="pttick" ' : '');
-  t += `<text ${id}x="300" y="${gy(i) + 7}" text-anchor="end">$${i * 100}</text>`;
-  t += `<text x="${gx(i)}" y="858" text-anchor="middle">${i * 10}</text>`;
+  t += `<text ${id}x="300" y="${gy(i) + 8}" text-anchor="end">$${i * 100}</text>`;
+  t += `<text x="${gx(i)}" y="862" text-anchor="middle">${i * 10}</text>`;
 }
 document.getElementById('ticks').innerHTML = t;
 
@@ -416,7 +408,7 @@ document.querySelectorAll('.draw').forEach(el => {
   el.style.strokeDashoffset = len;
 });
 
-const NUMS = { dsval:20000, impval:60000, dmval:80000 };
+const NUMS = { dsval:20000, impval:60000 };
 function tweenNum(el, from, to, ms) {
   const t0 = performance.now();
   (function step(now) {
@@ -436,80 +428,40 @@ function setNum(id, v) {
 
 const STAGES = [
   { cap:'', show:['grid','axes','title'] },
-
-  { cap:'Steel: domestic supply, domestic demand, and a world price of $200.',
-    show:['scurve','dcurve','pwline','curvelabs'], set:{'v-price':'$200'}, rows:['r-price'] },
-
-  { cap:'At $200, domestic mills produce 20,000 tonnes.',
-    show:['trace1','dom1'], set:{'v-dom':'20,000'}, rows:['r-dom'] },
-
-  { cap:'Buyers want 80,000 — the 60,000 gap is imported.',
-    show:['trace2','dem1'], set:{'v-dem':'80,000','v-imp':'60,000'}, rows:['r-imp','r-dem'] },
-
-  { cap:'Domestic producer revenue: $200 × 20,000 = $4 million.', show:[] },
-
-  { cap:'Revenue is price × quantity — the height and the width of that box.',
-    show:['pq1v','pq1h','pqlab'], replay:['pq1v','pq1h'] },
-
-  { cap:'Import spending: $200 × 60,000 = $12 million.', show:[] },
-
-  { cap:'Again — price × quantity: $200 tall, 60,000 wide.',
-    show:['pq2v','pq2h','pq2lab'], replay:['pq2v','pq2h'] },
-
-  { cap:'A $200 tariff is imposed. The price rises to $400.',
-    show:['pt'], set:{'v-price':'$400'} },
-
-  { cap:'The tariff is that vertical gap: $400 − $200 = $200 a tonne.',
-    show:['tvert','tsize'], replay:['tvert'] },
-
-  { cap:'Mills move up the supply curve — production rises to 40,000.',
-    show:['trace3','dom2'], set:{'v-dom':'40,000'} },
-
-  { cap:'Buyers move up the demand curve — demand contracts to 60,000.',
-    show:['trace4','dem2'], set:{'v-dem':'60,000'} },
-
-  { cap:'Squeezed from both ends, imports fall to 20,000.',
-    show:['imp2'], set:{'v-imp':'20,000'} },
-
-  { cap:'Tariff revenue: $200 × 20,000 = $4 million.',
-    show:[], rows:['r-rev'] },
-
-  { cap:'Same again — but this box is $200 of TARIFF tall, and 20,000 wide.',
-    show:['pq3v','pq3h','pq3lab'], replay:['pq3v','pq3h'] },
-
-  { cap:'Domestic producer revenue quadruples: $400 × 40,000 = $16 million.', show:[] },
-
-  { cap:'Importers keep just $4 million — the tariff takes the rest.', show:[] },
-
-  { cap:'', show:['trace5','dom2'], replay:['trace5'] },
-  { cap:'', show:['trace6','dem2'], replay:['trace6'] },
-  { cap:'', show:['tvert','imp2'], replay:['tvert','imp2'] },
-
+  { cap:'Steel: domestic supply and domestic demand.', show:['scurve','dcurve','sdlabs'] },
+  { cap:'Now bring in the world price — $200 a tonne.', show:['pwline','pwlab'] },
+  { cap:'At $200, domestic mills produce 20,000 tonnes.', show:['trace1','dom1'] },
+  { cap:'Buyers want 80,000 tonnes; the 60,000 gap is imported.', show:['trace2','dem1'] },
+  { cap:'Together, that is total demand — 80,000 tonnes.', show:[] },
+  { cap:'Domestic producer revenue — price × quantity, $200 × 20,000.', show:[] },
+  { cap:'Foreign producer revenue — price × quantity, $200 × 60,000.', show:[] },
+  { cap:'Total consumer spending — price × total quantity, $200 × 80,000.', show:[] },
+  { cap:'A $200 tariff is imposed. The price rises to $400.', show:['pt'] },
+  { cap:'The tariff is that vertical gap: $400 − $200 = $200 a tonne.', show:['tvert','tsize'], replay:['tvert'] },
+  { cap:'Mills move up the supply curve — production rises to 40,000.', show:['trace3','dom2'] },
+  { cap:'Squeezed from both ends, imports fall to 20,000.', show:['trace4','dem2','imp2'] },
+  { cap:'Buyers moved up the demand curve — total demand is now 60,000.', show:[] },
+  { cap:'Domestic producer revenue — price × quantity, $400 × 40,000.', show:[] },
+  { cap:'Government revenue — the $200 tariff × 20,000 imports.', show:[] },
+  { cap:'Foreign producer revenue — the world price $200 × 20,000.', show:[] },
+  { cap:'Total consumer spending — price × total quantity, $400 × 60,000.', show:[] },
   { cap:'', show:[] },
-
+  { cap:'', show:[] },
+  { cap:'', show:[] },
+  { cap:'', show:[] },
   { cap:'', show:[] },
 ];
 
-// revenue boxes. A window isn't enough: stages 15-16 clear every box to leave
-// just the curves, then the tariff box returns alone on 17.
-const BOXVIS = {
-  revDom1: t => t >= 4 && t <= 7,
-  revImp1: t => t >= 6 && t <= 7,
-  revDom2: t => t >= 15 && t <= 16,
-  revTar : t => (t >= 13 && t <= 16) || t === 19 || t === 20,
-  revImp2: t => t === 16,
-};
-const BOXHOT = { revDom1:[4], revImp1:[6], revDom2:[15], revTar:[13,19], revImp2:[16] };
+// revenue boxes. Stages 16-17 clear every box to leave just the curves,
+// then the tariff box returns alone on 20.
+// boxes reveal on the RESULT slide (after the method), so each is one later
 
 let cur = -1;
 
 function render(target) {
-  const shown = new Set(), rows = new Set(), vals = {};
+  const shown = new Set();
   for (let i = 0; i <= target; i++) {
-    const s = STAGES[i];
-    (s.show || []).forEach(id => shown.add(id));
-    (s.rows || []).forEach(id => rows.add(id));
-    Object.assign(vals, s.set || {});
+    (STAGES[i].show || []).forEach(id => shown.add(id));
   }
   const hot = new Set(STAGES[target] ? (STAGES[target].show || []) : []);
 
@@ -519,7 +471,6 @@ function render(target) {
     el.classList.toggle('hot', hot.has(el.id));
     el.querySelectorAll('.draw').forEach(d => d.classList.toggle('on', on));
   });
-  document.querySelectorAll('.row').forEach(el => el.classList.toggle('on', rows.has(el.id)));
 
   (STAGES[target] && STAGES[target].replay || []).forEach(id => {
     const e = document.getElementById(id);
@@ -528,103 +479,46 @@ function render(target) {
     requestAnimationFrame(() => e.classList.add('on'));
   });
 
-  // revenue boxes — full neon on the stage that introduces them, then dull
-  for (const [id, vis] of Object.entries(BOXVIS)) {
-    const on = vis(target);
-    document.getElementById(id).style.opacity = on ? (BOXHOT[id].includes(target) ? 1 : 0.7) : 0;
-  }
+  // graph shaded areas (the method visual)
+  const rt=document.getElementById('revTot');
+  if(target===17){ rt.setAttribute('y',566); rt.setAttribute('height',264); rt.setAttribute('width',516); }
+  else { rt.setAttribute('y',698); rt.setAttribute('height',132); rt.setAttribute('width',688); }
+  const AREA = {
+    revDom1: target===6 || target===7,
+    revImp1: target===7,
+    revTot : target===8 || target===17,
+    revDom2: target>=14 && target<=16,
+    revTar : target>=15 && target<=16,
+    revImp2: target===16,
+  };
+  for (const [id,on] of Object.entries(AREA)){ const e=document.getElementById(id); if(e) e.style.opacity = on?0.85:0; }
 
-  // closing tracers live only on their own stage
-  document.getElementById('trace5').style.opacity = (target === 17) ? 1 : 0;
-  document.getElementById('trace6').style.opacity = (target === 18) ? 1 : 0;
+  // generic calculation animation (height x width + flashed numbers)
+  const CALC = {
+    6:[320,492,0,2,'#00e5c0','$200','20,000 t'], 7:[492,1008,0,2,'#ffd43b','$200','60,000 t'], 8:[320,1008,0,2,'#e8e8ff','$200','80,000 t'],
+    14:[320,664,0,4,'#00e5c0','$400','40,000 t'], 15:[664,836,2,4,'#ff8c42','$200','20,000 t'],
+    16:[664,836,0,2,'#ffd43b','$200','20,000 t'], 17:[320,836,0,4,'#e8e8ff','$400','60,000 t'],
+  };
+  if (CALC[target]) drawCalc.apply(null, CALC[target]); else document.getElementById('calc').style.opacity=0;
 
-  // P x Q edges: a quick beat, gone once the point has landed
-  ['pq1v','pq1h','pqlab'].forEach(id => {
-    document.getElementById(id).style.opacity = (target === 5) ? 1 : 0;
-  });
-  ['pq2v','pq2h','pq2lab'].forEach(id => {
-    document.getElementById(id).style.opacity = (target === 7) ? 1 : 0;
-  });
-  ['pq3v','pq3h','pq3lab'].forEach(id => {
-    document.getElementById(id).style.opacity = (target === 14) ? 1 : 0;
-  });
+  document.getElementById('tvert').style.opacity = (target===10 || target===11) ? 1 : 0;
+  document.getElementById('tsize').style.opacity = (target===10 || target===11) ? 1 : 0;
+  document.getElementById('impsqueeze').style.opacity = 0;
+  document.getElementById('pwtick').classList.toggle('lit', target>=2 && target<=8);
+  document.getElementById('pttick').classList.toggle('lit', target>=9);
 
-  // the tariff-size highlight burns on its own stage and again for government, then fades
-  document.getElementById('tvert').style.opacity = (target === 9 || target === 19) ? 1 : 0;
+  renderBoxes(target);
 
-  document.getElementById('pwtick').classList.toggle('lit', target >= 1 && target <= 7);
-  document.getElementById('pttick').classList.toggle('lit', target >= 8);
-
-  // ── below-axis bars ──
-  // stage 6 (the tariff) clears green + yellow but keeps pink;
-  // stage 13+ clears the lot for the summary cards.
-  const SUM = target >= 17;
-  const showDs  = !SUM && ((target >= 2 && target <= 7) || target >= 10);
-  const showImp = !SUM && ((target >= 3 && target <= 7) || target >= 12);
-  const showDm  = !SUM && target >= 3;
-
-  const ds = document.getElementById('dsbar');
-  ds.style.opacity = showDs ? 1 : 0;
-  ds.style.strokeDasharray = 344;
-  ds.style.strokeDashoffset = target <= 7 ? 172 : (target === 8 ? 344 : 0);
-
-  const ib = document.getElementById('impbar');
-  ib.style.opacity = showImp ? 1 : 0;
-  ib.style.strokeDasharray = target >= 12 ? '0 344 172 9999' : '0 172 516 9999';
-
-  const dm = document.getElementById('dmbar');
-  dm.style.opacity = showDm ? 1 : 0;
-  dm.style.strokeDasharray  = target >= 11 ? '516 9999' : '688 9999';
-  dm.style.strokeDashoffset = target >= 3 ? 0 : 688;
-
-  const dsl = document.getElementById('dslab');
-  dsl.style.opacity = showDs ? 1 : 0;
-  dsl.style.transform = target >= 10 ? 'translateX(86px)' : 'translateX(0)';
-  document.getElementById('implab').style.opacity = showImp ? 1 : 0;
-  const dml = document.getElementById('dmlab');
-  dml.style.opacity = showDm ? 1 : 0;
-  dml.style.transform = target >= 11 ? 'translateX(-86px)' : 'translateX(0)';
-
-  setNum('dsval',  target >= 10 ? 40000 : 20000);
-  setNum('dmval',  target >= 11 ? 60000 : 80000);
-  setNum('impval', target >= 12 ? 20000 : 60000);
-
-  // the squeeze — both ends close in on the tariff box
-  const sq = document.getElementById('impsqueeze');
-  if (target === 20) {
-    sq.style.opacity = 1;
-    sq.style.transition = 'none';
-    sq.style.strokeDasharray = '0 172 516 9999';   // 492 -> 1008  (60,000)
-    void sq.getBoundingClientRect();
-    requestAnimationFrame(() => {
-      sq.style.transition = 'stroke-dasharray 2.4s cubic-bezier(.42,.1,.25,1)';
-      sq.style.strokeDasharray = '0 344 172 9999'; // 664 ->  836  (20,000)
-    });
-  } else {
-    sq.style.transition = 'opacity .5s ease';
-    sq.style.opacity = 0;
-  }
-  document.getElementById('sumImp').style.opacity = target === 20 ? 1 : 0;
-
-  // final slide: black the diagram out entirely and give the impacts the screen
-  document.getElementById('blackout').style.opacity = target === 21 ? 0.94 : 0;
-  document.getElementById('impact').style.opacity   = target === 21 ? 1 : 0;
-
-  document.getElementById('sumPrice').style.opacity  = target === 17 ? 1 : 0;
-  document.getElementById('sumDemand').style.opacity = target === 18 ? 1 : 0;
-  document.getElementById('sumRev').style.opacity    = target === 19 ? 1 : 0;
-
-  for (const [id, v] of Object.entries(vals)) {
-    const el = document.getElementById(id);
-    if (el.textContent !== v) {
-      el.textContent = v;
-      el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
-    }
-  }
+  document.getElementById('sumPrice').style.opacity  = target===18 ? 1 : 0;
+  document.getElementById('sumProd').style.opacity   = target===18 ? 1 : 0;
+  document.getElementById('sumDemand').style.opacity = target===19 ? 1 : 0;
+  document.getElementById('sumRev').style.opacity    = target===20 ? 1 : 0;
+  document.getElementById('sumImp').style.opacity    = target===21 ? 1 : 0;
+  document.getElementById('blackout').style.opacity  = target===22 ? 0.94 : 0;
+  document.getElementById('impact').style.opacity    = target===22 ? 1 : 0;
 
   const cap = STAGES[target] ? STAGES[target].cap : '';   // toolbar only — no on-screen caption
-
-  const LBL = { 17:'EFFECT — higher price', 18:'EFFECT — demand contracts', 19:'EFFECT — tariff revenue', 20:'EFFECT — reduction in imports', 21:'CLOSING — impact by group' };
+  const LBL = { 10:'FREE TRADE — total consumer spending', 20:'WITH TARIFF — total consumer spending', 21:'EFFECT — higher price & more production', 22:'EFFECT — demand contracts', 23:'EFFECT — tariff revenue', 24:'EFFECT — reduction in imports', 25:'CLOSING — impact by group' };
   document.getElementById('num').textContent = target + ' / ' + (STAGES.length - 1);
   document.getElementById('lbl').textContent = LBL[target] || cap || '(opening frame — axes only)';
   document.getElementById('prev').disabled = (target === 0);
@@ -640,12 +534,8 @@ function go(n) {
 
 document.getElementById('prev').addEventListener('click', e => { e.stopPropagation(); go(cur - 1); });
 document.getElementById('next').addEventListener('click', e => { e.stopPropagation(); go(cur + 1); });
-// Repeat this stage's animation.
-//   1. kill all transitions, render the PREVIOUS stage -> snaps back instantly
-//   2. force a reflow so the browser commits that state
-//   3. restore transitions, render THIS stage -> everything animates in again
-// Doing it via render() means bars, boxes, counters and tracers all replay —
-// not just the elements listed in `show`.
+// Repeat this stage's animation. Kill transitions, render the previous stage
+// (snaps back), reflow, then render this one so everything animates in again.
 function repeat() {
   if (cur <= 0) return;
   const t = cur, stage = document.getElementById('stage');
@@ -669,7 +559,7 @@ document.addEventListener('click', () => go(cur + 1));
 document.addEventListener('keydown', e => {
   if (e.code === 'Space' || e.code === 'ArrowRight' || e.code === 'Enter') { e.preventDefault(); go(cur + 1); }
   else if (e.code === 'ArrowLeft' || e.code === 'Backspace') { e.preventDefault(); go(cur - 1); }
-  else if (e.key === 'r' || e.key === 'R') { cur = -1; NUMS.dsval=20000; NUMS.impval=60000; NUMS.dmval=80000; go(0); }
+  else if (e.key === 'r' || e.key === 'R') { cur = -1; NUMS.dsval=20000; NUMS.impval=60000; go(0); }
   else if (e.key === 'a' || e.key === 'A') { e.preventDefault(); repeat(); }
   else if (e.key === 'h' || e.key === 'H') {
     document.getElementById('hint').classList.toggle('hide');

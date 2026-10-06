@@ -4,35 +4,35 @@ Here we have the domestic market for steel: an upward-sloping supply curve and a
 
 Now we bring in the world supply of steel, at a price of two hundred dollars a tonne. It's drawn as a perfectly elastic — that is, horizontal — supply curve, because we're a small open economy: the world price is fixed at two hundred dollars, and nothing we do here can move it.
 
-At that world price, our domestic producers are willing to supply twenty thousand tonnes.
+At that world price, our domestic producers are willing to supply twenty tonnes.
 
-Buyers want more than that, and the rest is met by imports. We measure imports as the horizontal distance between the supply and demand curves — here, sixty thousand tonnes.
+At the world price, buyers want eighty tonnes in total — that is total demand.
 
-Domestic production plus imports gives us total demand: eighty thousand tonnes.
+Our domestic mills supply twenty, so the remaining sixty are met by imports — the horizontal gap between the supply and demand curves.
 
-Now we can read some revenues straight off the diagram, and revenue is simply price times quantity. Domestic producer revenue is the world price times the quantity our own firms supply — two hundred dollars times twenty thousand.
+Now we can read some revenues straight off the diagram, and revenue is simply price times quantity. Start with total consumer spending — the price times the total quantity bought, two hundred dollars times eighty.
 
-Foreign producer revenue is the world price times the quantity imported — two hundred dollars times sixty thousand.
+Of that spending, a proportion is domestic producer revenue — the world price times what our own firms supply, two hundred dollars times twenty.
 
-And total consumer spending is the price times the total quantity bought — two hundred dollars times eighty thousand.
+And the remaining proportion is foreign producer revenue — the world price times the quantity imported, two hundred dollars times sixty.
 
 Now we introduce a tariff, which is simply a tax on imports.
 
 We measure the size of the tariff as the vertical distance between the world price and the new price with the tariff. Here we've lifted it by two hundred dollars, so the tariff is two hundred dollars a tonne — and the price of steel in our economy rises to four hundred dollars.
 
-That higher price expands domestic production: our producers move up their supply curve, from twenty thousand to forty thousand tonnes.
+That higher price expands domestic production: our producers move up their supply curve, from twenty to forty tonnes.
 
-Imports fall, down to twenty thousand tonnes, and they fall for two reasons: domestic production has risen, and, at the higher price, demand has contracted.
+Imports fall, down to twenty tonnes, and they fall for two reasons: domestic production has risen, and, at the higher price, demand has contracted.
 
-That contraction in demand takes total demand from eighty thousand down to sixty thousand tonnes.
+That contraction in demand takes total demand from eighty down to sixty tonnes.
 
-Now the revenues again, at the new price. Domestic producer revenue is four hundred dollars times forty thousand tonnes.
+Now the revenues again, at the new price. Start with total consumer spending — the new price times the total quantity, four hundred dollars times sixty tonnes.
 
-Government tariff revenue is the tariff itself, two hundred dollars, times the quantity of imports, twenty thousand tonnes. On the diagram, it is the rectangle sitting directly on top of the world price, between the world price and the tariff price, across the imported quantity.
+Of that, domestic producer revenue is four hundred dollars times the forty tonnes our own firms now supply.
 
-Foreign producer revenue is the world price times the imports: two hundred dollars times twenty thousand tonnes. Here is the important bit. Steel now sells for four hundred dollars, but foreign producers still only get two hundred. That is because the importer who brings the steel in pays the two-hundred-dollar tariff to the government. So the foreign producer keeps the world price, which is the lower rectangle, and the government takes the tariff, the rectangle stacked on top.
+Government tariff revenue is the tariff itself, two hundred dollars, times the twenty tonnes imported. On the diagram it is the rectangle sitting directly on top of the world price, between the world price and the tariff price, across the imports.
 
-And total consumer spending is the new price times the total quantity: four hundred dollars times sixty thousand tonnes.
+And foreign producer revenue is the world price times the imports: two hundred dollars times twenty tonnes. Here is the important bit. Steel now sells for four hundred dollars, but foreign producers still only get two hundred. That is because the importer who brings the steel in pays the two-hundred-dollar tariff to the government. So the foreign producer keeps the world price, which is the lower rectangle, and the government takes the tariff, the rectangle stacked on top.
 
 So, in summary. Consumers pay a higher price. There is increased domestic production and revenue, which can mean more employment in these protected industries. The higher price causes a contraction in demand. The government collects tariff revenue. And foreign producers lose out, with falling revenue and fewer imports coming into the economy.
 

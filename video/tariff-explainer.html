@@ -129,7 +129,7 @@
   <g id="grid" class="el keep" stroke="#15152c" stroke-width="1.5"></g>
 
   <!-- ══ revenue boxes sit UNDER the axes and curves so the lines stay crisp ══
-       86px = 10,000 tonnes · 66px = $100
+       86px = 10 tonnes · 66px = $100
        The $ amount labels are 32px on a near-opaque pill, so they read on top
        of the hatch and the green supply line crossing behind them. -->
 
@@ -152,7 +152,7 @@
 
   <!-- ══ TOTAL CONSUMER SPENDING = price × total quantity ══
        The whole rectangle from the origin to the point buyers actually buy.
-       Free trade: $200 × 80,000 = $16m.  Tariff: $400 × 60,000 = $24m.
+       Free trade: $200 × 80 = $16m.  Tariff: $400 × 60 = $24m.
        The sub-boxes are hidden on these slides, so the rectangle stands alone;
        the sum sits on the right, in the space the old readout panel left free.
        Top-right corner sits exactly on the demand curve in each case. -->
@@ -162,12 +162,12 @@
     <line x1="320" y1="830" x2="320"  y2="150" stroke="#3a3a5e" stroke-width="3"/>
     <text x="132" y="500" fill="#a6a6d0" font-size="24" font-weight="800"
           text-anchor="middle" transform="rotate(-90 132 500)">Price ($ per tonne)</text>
-    <text x="1196" y="812" fill="#a6a6d0" font-size="22" font-weight="800">Quantity (000 tonnes)</text>
+    <text x="1196" y="812" fill="#a6a6d0" font-size="22" font-weight="800">Quantity (tonnes)</text>
     <g id="ticks" fill="#b8b8dc" font-size="26" font-weight="800"></g>
   </g>
 
   <g id="title" class="el keep">
-    <text x="960" y="66" fill="#e8e8ff" font-size="38" font-weight="900" text-anchor="middle"
+    <text x="780" y="66" fill="#e8e8ff" font-size="38" font-weight="900" text-anchor="middle"
           filter="url(#glowSoft)">The market for <tspan fill="#00e5c0">steel</tspan></text>
   </g>
 
@@ -250,17 +250,17 @@
   </g>
   <g id="prodBoxG" class="qbox">
     <rect id="prodBox" x="320" y="872" width="172" height="92" rx="12" fill="#08130f" stroke="#00e5c0" stroke-width="2.5"/>
-    <text id="prodVal" x="406" y="912" fill="#7dffe8" font-size="28" font-weight="900" text-anchor="middle">20,000 t</text>
+    <text id="prodVal" x="406" y="912" fill="#7dffe8" font-size="28" font-weight="900" text-anchor="middle">20 t</text>
     <text id="prodHead" x="406" y="940" fill="#00e5c0" font-size="20" font-weight="800" text-anchor="middle">PRODUCTION</text>
   </g>
   <g id="impBoxG" class="qbox">
     <rect id="impBox" x="492" y="872" width="516" height="92" rx="12" fill="#14100a" stroke="#ffd43b" stroke-width="2.5"/>
-    <text id="impVal" x="750" y="912" fill="#ffe680" font-size="28" font-weight="900" text-anchor="middle">60,000 t</text>
+    <text id="impVal" x="750" y="912" fill="#ffe680" font-size="28" font-weight="900" text-anchor="middle">60 t</text>
     <text id="impHead" x="750" y="940" fill="#ffd43b" font-size="20" font-weight="800" text-anchor="middle">IMPORTS</text>
   </g>
   <g id="totBoxG" class="qbox">
     <rect id="totBox" x="320" y="872" width="688" height="92" rx="12" fill="#111120" stroke="#e8e8ff" stroke-width="2.5"/>
-    <text id="totVal" x="664" y="912" fill="#e8e8ff" font-size="28" font-weight="900" text-anchor="middle">80,000 t</text>
+    <text id="totVal" x="664" y="912" fill="#e8e8ff" font-size="28" font-weight="900" text-anchor="middle">80 t</text>
     <text id="totHead" x="664" y="940" fill="#b8b8dc" font-size="20" font-weight="800" text-anchor="middle">TOTAL DEMAND</text>
   </g>
   <g id="govBoxG" class="qbox">
@@ -334,7 +334,7 @@
 <div id="hint">SPACE / CLICK → next · ← back · A repeat · R restart · H hide toolbar</div>
 
 <script>
-// grid 0..10 both axes. Price unit $100, quantity unit 10,000 tonnes.
+// grid 0..10 both axes. Price unit $100, quantity unit 10 tonnes.
 // supply P=Q, demand P=10-Q. World price grid 2 ($200); +$200 tariff -> grid 4 ($400).
 //   free trade : dom 2 (20k) | demand 8 (80k) | imports 6 (60k)
 //   with tariff: dom 4 (40k) | demand 6 (60k) | imports 2 (20k)
@@ -355,19 +355,19 @@ function drawCalc(xL,xR,gLo,gHi,col,pLab,qLab){
   document.getElementById('calc').style.opacity=1;
 }
 const BOXES = {
-  3:{G:['DOMESTIC\nPRODUCTION','20,000 t',320,172]},
-  4:{G:['DOMESTIC\nPRODUCTION','20,000 t',320,172],Y:['IMPORTS','60,000 t',492,516]},
-  5:{W:['TOTAL DEMAND','80,000 t',320,688]},
-  6:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4,000,000',320,172]},
-  7:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4,000,000',320,172],Y:['FOREIGN PRODUCER\nREVENUE','$12,000,000',492,516]},
-  8:{W:['TOTAL CONSUMER\nSPENDING','$16,000,000',320,688]},
-  11:{G:['DOMESTIC\nPRODUCTION','40,000 t',320,344]},
-  12:{G:['DOMESTIC\nPRODUCTION','40,000 t',320,344],Y:['IMPORTS','20,000 t',664,172]},
-  13:{W:['TOTAL DEMAND','60,000 t',320,516]},
-  14:{G:['DOMESTIC PRODUCER\nREVENUE','$16,000,000',320,344]},
-  15:{G:['DOMESTIC PRODUCER\nREVENUE','$16,000,000',320,344],O:['GOVERNMENT\nREVENUE','$4,000,000',320,344]},
-  16:{G:['DOMESTIC PRODUCER\nREVENUE','$16,000,000',320,344],O:['GOVERNMENT\nREVENUE','$4,000,000',320,344],Y:['FOREIGN\nPRODUCER\nREVENUE','$4,000,000',664,172]},
-  17:{W:['TOTAL CONSUMER\nSPENDING','$24,000,000',320,516]},
+  3:{G:['DOMESTIC\nPRODUCTION','20 t',320,172]},
+  4:{W:['TOTAL DEMAND','80 t',320,688]},
+  5:{G:['DOMESTIC\nPRODUCTION','20 t',320,172],Y:['IMPORTS','60 t',492,516]},
+  6:{W:['TOTAL CONSUMER\nSPENDING','$16,000',320,688]},
+  7:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4,000',320,172]},
+  8:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4,000',320,172],Y:['FOREIGN PRODUCER\nREVENUE','$12,000',492,516]},
+  11:{G:['DOMESTIC\nPRODUCTION','40 t',320,344]},
+  12:{G:['DOMESTIC\nPRODUCTION','40 t',320,344],Y:['IMPORTS','20 t',664,172]},
+  13:{W:['TOTAL DEMAND','60 t',320,516]},
+  14:{W:['TOTAL CONSUMER\nSPENDING','$24,000',320,516]},
+  15:{G:['DOMESTIC PRODUCER\nREVENUE','$16,000',320,344]},
+  16:{G:['DOMESTIC PRODUCER\nREVENUE','$16,000',320,344],O:['GOVERNMENT\nREVENUE','$4,000',320,344]},
+  17:{G:['DOMESTIC PRODUCER\nREVENUE','$16,000',320,344],O:['GOVERNMENT\nREVENUE','$4,000',320,344],Y:['FOREIGN\nPRODUCER\nREVENUE','$4,000',664,172]},
 };
 function renderBoxes(t){
   const NS='http://www.w3.org/2000/svg', B=BOXES[t]||{};
@@ -430,21 +430,21 @@ const STAGES = [
   { cap:'', show:['grid','axes','title'] },
   { cap:'Steel: domestic supply and domestic demand.', show:['scurve','dcurve','sdlabs'] },
   { cap:'Now bring in the world price — $200 a tonne.', show:['pwline','pwlab'] },
-  { cap:'At $200, domestic mills produce 20,000 tonnes.', show:['trace1','dom1'] },
-  { cap:'Buyers want 80,000 tonnes; the 60,000 gap is imported.', show:['trace2','dem1'] },
-  { cap:'Together, that is total demand — 80,000 tonnes.', show:[] },
-  { cap:'Domestic producer revenue — price × quantity, $200 × 20,000.', show:[] },
-  { cap:'Foreign producer revenue — price × quantity, $200 × 60,000.', show:[] },
-  { cap:'Total consumer spending — price × total quantity, $200 × 80,000.', show:[] },
+  { cap:'At $200, domestic mills produce 20 tonnes.', show:['trace1','dom1'] },
+  { cap:'At the world price, buyers want 80 tonnes in total — that is total demand.', show:['dem1'] },
+  { cap:'Domestic mills supply 20; the remaining 60 are met by imports.', show:['trace2'] },
+  { cap:'Total consumer spending — price × total quantity, $200 × 80.', show:[] },
+  { cap:'Of that spending, domestic producer revenue — $200 × 20.', show:[] },
+  { cap:'And the rest is foreign producer revenue — $200 × 60.', show:[] },
   { cap:'A $200 tariff is imposed. The price rises to $400.', show:['pt'] },
   { cap:'The tariff is that vertical gap: $400 − $200 = $200 a tonne.', show:['tvert','tsize'], replay:['tvert'] },
-  { cap:'Mills move up the supply curve — production rises to 40,000.', show:['trace3','dom2'] },
-  { cap:'Squeezed from both ends, imports fall to 20,000.', show:['trace4','dem2','imp2'] },
-  { cap:'Buyers moved up the demand curve — total demand is now 60,000.', show:[] },
-  { cap:'Domestic producer revenue — price × quantity, $400 × 40,000.', show:[] },
-  { cap:'Government revenue — the $200 tariff × 20,000 imports.', show:[] },
-  { cap:'Foreign producer revenue — the world price $200 × 20,000.', show:[] },
-  { cap:'Total consumer spending — price × total quantity, $400 × 60,000.', show:[] },
+  { cap:'Mills move up the supply curve — production rises to 40.', show:['trace3','dom2'] },
+  { cap:'Squeezed from both ends, imports fall to 20.', show:['trace4','dem2','imp2'] },
+  { cap:'Buyers moved up the demand curve — total demand is now 60.', show:[] },
+  { cap:'Total consumer spending after the tariff — price × total quantity, $400 × 60.', show:[] },
+  { cap:'Of that, domestic producer revenue — $400 × 40.', show:[] },
+  { cap:'Government tariff revenue — the $200 tariff × 20 imports.', show:[] },
+  { cap:'And foreign producer revenue — the world price $200 × 20.', show:[] },
   { cap:'', show:[] },
   { cap:'', show:[] },
   { cap:'', show:[] },
@@ -481,23 +481,23 @@ function render(target) {
 
   // graph shaded areas (the method visual)
   const rt=document.getElementById('revTot');
-  if(target===17){ rt.setAttribute('y',566); rt.setAttribute('height',264); rt.setAttribute('width',516); }
+  if(target===14){ rt.setAttribute('y',566); rt.setAttribute('height',264); rt.setAttribute('width',516); }
   else { rt.setAttribute('y',698); rt.setAttribute('height',132); rt.setAttribute('width',688); }
   const AREA = {
-    revDom1: target===6 || target===7,
-    revImp1: target===7,
-    revTot : target===8 || target===17,
-    revDom2: target>=14 && target<=16,
-    revTar : target>=15 && target<=16,
-    revImp2: target===16,
+    revDom1: target===7 || target===8,
+    revImp1: target===8,
+    revTot : target===6 || target===14,
+    revDom2: target>=15 && target<=17,
+    revTar : target>=16 && target<=17,
+    revImp2: target===17,
   };
   for (const [id,on] of Object.entries(AREA)){ const e=document.getElementById(id); if(e) e.style.opacity = on?0.85:0; }
 
   // generic calculation animation (height x width + flashed numbers)
   const CALC = {
-    6:[320,492,0,2,'#00e5c0','$200','20,000 t'], 7:[492,1008,0,2,'#ffd43b','$200','60,000 t'], 8:[320,1008,0,2,'#e8e8ff','$200','80,000 t'],
-    14:[320,664,0,4,'#00e5c0','$400','40,000 t'], 15:[664,836,2,4,'#ff8c42','$200','20,000 t'],
-    16:[664,836,0,2,'#ffd43b','$200','20,000 t'], 17:[320,836,0,4,'#e8e8ff','$400','60,000 t'],
+    6:[320,1008,0,2,'#e8e8ff','$200','80 t'], 7:[320,492,0,2,'#00e5c0','$200','20 t'], 8:[492,1008,0,2,'#ffd43b','$200','60 t'],
+    14:[320,836,0,4,'#e8e8ff','$400','60 t'], 15:[320,664,0,4,'#00e5c0','$400','40 t'],
+    16:[664,836,2,4,'#ff8c42','$200','20 t'], 17:[664,836,0,2,'#ffd43b','$200','20 t'],
   };
   if (CALC[target]) drawCalc.apply(null, CALC[target]); else document.getElementById('calc').style.opacity=0;
 

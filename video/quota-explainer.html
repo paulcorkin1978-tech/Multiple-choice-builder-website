@@ -145,12 +145,12 @@
     <line x1="320" y1="830" x2="320"  y2="150" stroke="#3a3a5e" stroke-width="3"/>
     <text x="132" y="500" fill="#a6a6d0" font-size="24" font-weight="800"
           text-anchor="middle" transform="rotate(-90 132 500)">Price ($ per car)</text>
-    <text x="1196" y="812" fill="#a6a6d0" font-size="22" font-weight="800">Quantity (000 cars)</text>
+    <text x="1196" y="812" fill="#a6a6d0" font-size="22" font-weight="800">Quantity (cars)</text>
     <g id="ticks" fill="#b8b8dc" font-size="24" font-weight="800"></g>
   </g>
 
   <g id="title" class="el keep">
-    <text x="960" y="66" fill="#e8e8ff" font-size="38" font-weight="900" text-anchor="middle"
+    <text x="780" y="66" fill="#e8e8ff" font-size="38" font-weight="900" text-anchor="middle"
           filter="url(#glowSoft)">The market for <tspan fill="#00e5c0">cars</tspan></text>
   </g>
 
@@ -216,7 +216,7 @@
     <path d="M578 616 L578 596 L922 596 L922 616" fill="none" stroke="#ffd43b" stroke-width="3.5"/>
   </g>
   <g id="qgaplab" class="el">
-    <text x="750" y="584" fill="#ffd43b" font-size="26" font-weight="900" text-anchor="middle" filter="url(#glowSoft)">Import quota — 200,000</text>
+    <text x="750" y="584" fill="#ffd43b" font-size="26" font-weight="900" text-anchor="middle" filter="url(#glowSoft)">Import quota — 200</text>
   </g>
 
   <!-- ══ under-graph revenue calculation (height × width + flashed numbers) ══ -->
@@ -230,17 +230,17 @@
   <!-- ══ under-graph proportional boxes (green production, yellow imports, white total) ══ -->
   <g id="prodBoxG" class="qbox">
     <rect id="prodBox" x="320" y="872" width="172" height="92" rx="12" fill="#08130f" stroke="#00e5c0" stroke-width="2.5"/>
-    <text id="prodVal" x="406" y="912" fill="#7dffe8" font-size="28" font-weight="900" text-anchor="middle">100,000</text>
+    <text id="prodVal" x="406" y="912" fill="#7dffe8" font-size="28" font-weight="900" text-anchor="middle">100</text>
     <text id="prodHead" x="406" y="940" fill="#00e5c0" font-size="20" font-weight="800" text-anchor="middle">DOMESTIC PRODUCTION</text>
   </g>
   <g id="impBoxG" class="qbox">
     <rect id="impBox" x="492" y="872" width="516" height="92" rx="12" fill="#14100a" stroke="#ffd43b" stroke-width="2.5"/>
-    <text id="impVal" x="750" y="912" fill="#ffe680" font-size="28" font-weight="900" text-anchor="middle">300,000</text>
+    <text id="impVal" x="750" y="912" fill="#ffe680" font-size="28" font-weight="900" text-anchor="middle">300</text>
     <text id="impHead" x="750" y="940" fill="#ffd43b" font-size="20" font-weight="800" text-anchor="middle">IMPORTS</text>
   </g>
   <g id="totBoxG" class="qbox">
     <rect id="totBox" x="320" y="872" width="688" height="92" rx="12" fill="#111120" stroke="#e8e8ff" stroke-width="2.5"/>
-    <text id="totVal" x="664" y="912" fill="#e8e8ff" font-size="28" font-weight="900" text-anchor="middle">400,000</text>
+    <text id="totVal" x="664" y="912" fill="#e8e8ff" font-size="28" font-weight="900" text-anchor="middle">400</text>
     <text id="totHead" x="664" y="940" fill="#b8b8dc" font-size="20" font-weight="800" text-anchor="middle">TOTAL DEMAND</text>
   </g>
 
@@ -329,19 +329,18 @@ function drawCalc(xL,xR,gLo,gHi,col,pLab,qLab){
   document.getElementById('calc').style.opacity=1;
 }
 const BOXES = {
-  3:{G:['DOMESTIC\nPRODUCTION','100,000',320,172]},
-  4:{G:['DOMESTIC\nPRODUCTION','100,000',320,172],Y:['IMPORTS','300,000',492,516]},
-  5:{W:['TOTAL DEMAND','400,000',320,688]},
-  6:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4 billion',320,172]},
-  7:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4 billion',320,172],Y:['FOREIGN PRODUCER\nREVENUE','$12 billion',492,516]},
-  8:{W:['TOTAL CONSUMER\nSPENDING','$16 billion',320,688]},
-  10:{G:['DOMESTIC\nPRODUCTION','150,000',320,258]},
-  11:{G:['DOMESTIC\nPRODUCTION','150,000',320,258]},
-  12:{G:['DOMESTIC\nPRODUCTION','150,000',320,258],Y:['IMPORTS','200,000',578,344]},
-  13:{W:['TOTAL DEMAND','350,000',320,602]},
-  14:{G:['DOMESTIC PRODUCER\nREVENUE','$9 billion',320,258]},
-  15:{G:['DOMESTIC PRODUCER\nREVENUE','$9 billion',320,258],Y:['FOREIGN PRODUCER\nREVENUE','$12 billion',578,344]},
-  16:{W:['TOTAL CONSUMER\nSPENDING','$21 billion',320,602]},
+  3:{G:['DOMESTIC\nPRODUCTION','100',320,172]},
+  4:{W:['TOTAL DEMAND','400',320,688]},
+  5:{G:['DOMESTIC\nPRODUCTION','100',320,172],Y:['IMPORTS','300',492,516]},
+  6:{W:['TOTAL CONSUMER\nSPENDING','$16 million',320,688]},
+  7:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4 million',320,172]},
+  8:{G:['DOMESTIC\nPRODUCER\nREVENUE','$4 million',320,172],Y:['FOREIGN PRODUCER\nREVENUE','$12 million',492,516]},
+  10:{G:['DOMESTIC\nPRODUCTION','150',320,258]},
+  11:{W:['TOTAL DEMAND','350',320,602]},
+  12:{G:['DOMESTIC\nPRODUCTION','150',320,258],Y:['IMPORTS','200',578,344]},
+  13:{W:['TOTAL CONSUMER\nSPENDING','$21 million',320,602]},
+  14:{G:['DOMESTIC PRODUCER\nREVENUE','$9 million',320,258]},
+  15:{G:['DOMESTIC PRODUCER\nREVENUE','$9 million',320,258],Y:['FOREIGN PRODUCER\nREVENUE','$12 million',578,344]},
 };
 function renderBoxes(t){
   const NS='http://www.w3.org/2000/svg', B=BOXES[t]||{};
@@ -387,20 +386,19 @@ const STAGES = [
   { cap:'', show:['grid','axes','title'] },
   { cap:'Cars: domestic supply and domestic demand.', show:['scurve','dcurve','sdlabs'] },
   { cap:'Now bring in the world price — $40,000 a car.', show:['pwline','pwlab'] },
-  { cap:'At $40,000, domestic makers produce 100,000 cars.', show:['trace1','dom1'] },
-  { cap:'Buyers want 400,000 cars; the 300,000 gap is imported.', show:['trace2','dem1'] },
-  { cap:'Together, that is total demand — 400,000 cars.', show:[] },
-  { cap:'Domestic producer revenue — price × quantity, $40,000 × 100,000.', show:[] },
-  { cap:'Foreign producer revenue — price × quantity, $40,000 × 300,000.', show:[] },
-  { cap:'Total consumer spending — price × total quantity, $40,000 × 400,000.', show:[] },
-  { cap:'A quota is imposed — imports squeezed between supply and demand, down to the 200,000 limit.', show:['impclimb','pqL','pqR','qgap','qgaplab'], replay:['impclimb'] },
-  { cap:'Makers move up the supply curve — production rises to 150,000.', show:['trace3','dom2'] },
-  { cap:'Buyers move up the demand curve — total demand falls to 350,000.', show:['trace4','dem2'] },
-  { cap:'Imports fill that gap — the 200,000 cars the quota allows.', show:[] },
-  { cap:'Together, that is total demand — 350,000 cars.', show:[] },
-  { cap:'Domestic producer revenue — price × quantity, $60,000 × 150,000.', show:[] },
-  { cap:'Foreign producer revenue — the quota price $60,000 × 200,000.', show:[] },
-  { cap:'Total consumer spending — price × total quantity, $60,000 × 350,000.', show:[] },
+  { cap:'At $40,000, domestic makers produce 100 cars.', show:['trace1','dom1'] },
+  { cap:'Buyers want 400 cars in total — that is total demand.', show:['dem1'] },
+  { cap:'Domestic makers supply 100; the remaining 300 are imported.', show:['trace2'] },
+  { cap:'Total consumer spending — price × total quantity, $40,000 × 400.', show:[] },
+  { cap:'Of that, domestic producer revenue — $40,000 × 100.', show:[] },
+  { cap:'And foreign producer revenue — $40,000 × 300.', show:[] },
+  { cap:'A quota is imposed — imports squeezed between supply and demand, down to the 200 limit.', show:['impclimb','pqL','pqR','qgap','qgaplab'], replay:['impclimb'] },
+  { cap:'Makers move up the supply curve — production rises to 150.', show:['trace3','dom2'] },
+  { cap:'Demand contracts — total demand falls to 350 cars.', show:['trace4','dem2'] },
+  { cap:'Imports fill that gap — the 200 cars the quota allows.', show:[] },
+  { cap:'Total consumer spending — price × total quantity, $60,000 × 350.', show:[] },
+  { cap:'Of that, domestic producer revenue — $60,000 × 150.', show:[] },
+  { cap:'And foreign producer revenue — the quota price $60,000 × 200.', show:[] },
   { cap:'', show:[] },
   { cap:'', show:[] },
   { cap:'', show:[] },
@@ -434,12 +432,12 @@ function render(target) {
 
   // graph shaded areas (the method visual)
   const rt=document.getElementById('revTot');
-  if(target===16){ rt.setAttribute('y',632); rt.setAttribute('height',198); rt.setAttribute('width',602); }
+  if(target===13){ rt.setAttribute('y',632); rt.setAttribute('height',198); rt.setAttribute('width',602); }
   else { rt.setAttribute('y',698); rt.setAttribute('height',132); rt.setAttribute('width',688); }
   const AREA = {
-    revDom1: target===6 || target===7,
-    revImp1: target===7,
-    revTot : target===8 || target===16,
+    revDom1: target===7 || target===8,
+    revImp1: target===8,
+    revTot : target===6 || target===13,
     revDom2: target>=14 && target<=15,
     revImp2: target===15,
   };
@@ -447,12 +445,12 @@ function render(target) {
 
   // generic calculation animation (height x width + flashed numbers)
   const CALC = {
-    6:[320,492,0,2,'#00e5c0','$40,000','100,000'], 7:[492,1008,0,2,'#ffd43b','$40,000','300,000'], 8:[320,1008,0,2,'#e8e8ff','$40,000','400,000'],
-    14:[320,578,0,3,'#00e5c0','$60,000','150,000'], 15:[578,922,0,3,'#ffd43b','$60,000','200,000'], 16:[320,922,0,3,'#e8e8ff','$60,000','350,000'],
+    6:[320,1008,0,2,'#e8e8ff','$40,000','400'], 7:[320,492,0,2,'#00e5c0','$40,000','100'], 8:[492,1008,0,2,'#ffd43b','$40,000','300'],
+    13:[320,922,0,3,'#e8e8ff','$60,000','350'], 14:[320,578,0,3,'#00e5c0','$60,000','150'], 15:[578,922,0,3,'#ffd43b','$60,000','200'],
   };
   if (CALC[target]) drawCalc.apply(null, CALC[target]); else document.getElementById('calc').style.opacity=0;
 
-  // the "Import quota — 200,000" bracket names the quota on slide 9 as it squeezes in,
+  // the "Import quota — 200" bracket names the quota on slide 9 as it squeezes in,
   // then fades so it doesn't clutter the quantity and revenue slides
   document.getElementById('qgap').style.opacity    = (target===9) ? 1 : 0;
   document.getElementById('qgaplab').style.opacity = (target===9) ? 1 : 0;
@@ -462,17 +460,17 @@ function render(target) {
 
   renderBoxes(target);
 
-  document.getElementById('sumPrice').style.opacity  = target===17 ? 1 : 0;
-  document.getElementById('sumProd').style.opacity   = target===17 ? 1 : 0;
-  document.getElementById('sumDemand').style.opacity = target===18 ? 1 : 0;
-  document.getElementById('sumImp').style.opacity    = target===19 ? 1 : 0;
-  document.getElementById('sumImpRev').style.opacity = target===20 ? 1 : 0;
-  document.getElementById('sumGov').style.opacity    = target===21 ? 1 : 0;
-  document.getElementById('blackout').style.opacity  = target===22 ? 0.94 : 0;
-  document.getElementById('impact').style.opacity    = target===22 ? 1 : 0;
+  document.getElementById('sumPrice').style.opacity  = target===16 ? 1 : 0;
+  document.getElementById('sumProd').style.opacity   = target===16 ? 1 : 0;
+  document.getElementById('sumDemand').style.opacity = target===17 ? 1 : 0;
+  document.getElementById('sumImp').style.opacity    = target===18 ? 1 : 0;
+  document.getElementById('sumImpRev').style.opacity = target===19 ? 1 : 0;
+  document.getElementById('sumGov').style.opacity    = target===20 ? 1 : 0;
+  document.getElementById('blackout').style.opacity  = target===21 ? 0.94 : 0;
+  document.getElementById('impact').style.opacity    = target===21 ? 1 : 0;
 
   const cap = STAGES[target] ? STAGES[target].cap : '';   // toolbar only — no on-screen caption
-  const LBL = { 8:'FREE TRADE — total consumer spending', 16:'WITH QUOTA — total consumer spending', 17:'EFFECT — higher price & more production', 18:'EFFECT — demand contracts', 19:'EFFECT — reduction in imports', 20:'EFFECT — producers sell at a higher price', 21:'EFFECT — no government revenue or expenditure', 22:'CLOSING — impact by group' };
+  const LBL = { 6:'FREE TRADE — total consumer spending', 13:'WITH QUOTA — total consumer spending', 16:'EFFECT — higher price & more production', 17:'EFFECT — demand contracts', 18:'EFFECT — reduction in imports', 19:'EFFECT — producers sell at a higher price', 20:'EFFECT — no government revenue or expenditure', 21:'CLOSING — impact by group' };
   document.getElementById('num').textContent = target + ' / ' + (STAGES.length - 1);
   document.getElementById('lbl').textContent = LBL[target] || cap || '(opening frame — axes only)';
   document.getElementById('prev').disabled = (target === 0);

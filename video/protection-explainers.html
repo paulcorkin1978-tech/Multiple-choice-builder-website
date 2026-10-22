@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Protection explainers and quizzes — Theory2Econ</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05050c; --panel:#0d0d1c; --line:#23233f; --ink:#ecebff; --mut:#a9a8cc;
+    --tariff:#ff8c42; --subsidy:#00e5c0; --quota:#ffd43b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,Arial,sans-serif}
+  body{min-height:100vh;padding:20px max(16px,env(safe-area-inset-right)) 28px max(16px,env(safe-area-inset-left))}
+  main{max-width:1180px;margin:0 auto}
+  header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 20px;margin-bottom:14px}
+  h1{font-size:26px;font-weight:900;letter-spacing:.2px}
+  header p{color:var(--mut);font-weight:700;font-size:15px}
+  .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+  .tab{appearance:none;text-align:left;cursor:pointer;font-family:inherit;color:var(--ink);
+       background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:12px 14px;
+       transition:border-color .15s, background .15s}
+  .tab b{display:block;font-size:19px;font-weight:900;color:var(--c)}
+  .tab span{display:block;font-size:14px;font-weight:700;color:var(--mut);margin-top:2px;line-height:1.3}
+  .tab:hover{border-color:var(--c)}
+  .tab:focus-visible{outline:3px solid var(--c);outline-offset:2px}
+  .tab[aria-selected="true"]{border-color:var(--c);background:#14142a;box-shadow:0 0 0 1px var(--c) inset}
+  .mode{display:inline-flex;margin-bottom:12px;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+  .m{appearance:none;border:0;cursor:pointer;font-family:inherit;font-weight:900;font-size:16px;color:var(--mut);background:transparent;padding:8px 22px}
+  .m[aria-pressed="true"]{color:#05050c;background:var(--c,var(--tariff))}
+  .m:focus-visible{outline:3px solid #fff;outline-offset:-3px}
+  .frame.quiz{aspect-ratio:auto;height:min(920px,calc(100vh - 230px));min-height:620px}
+  .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:2px solid var(--line);border-radius:14px;overflow:hidden}
+  .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#05050c}
+  .bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin-top:12px}
+  .hint{color:var(--mut);font-weight:700;font-size:15px;line-height:1.4}
+  .hint kbd{font-family:inherit;font-weight:900;color:var(--ink);background:var(--panel);border:1.5px solid var(--line);border-radius:6px;padding:1px 7px}
+  .open{display:inline-block;text-decoration:none;font-weight:900;font-size:16px;color:#05050c;background:var(--c);
+        border-radius:10px;padding:9px 16px}
+  .open:hover{filter:brightness(1.1)}
+  .open:focus-visible{outline:3px solid #fff;outline-offset:2px}
+  .mob{display:none}
+  @media (max-width:700px){
+    .mob{display:block}
+    h1{font-size:22px}
+    .tabs{grid-template-columns:1fr}
+    .tab span{display:none}
+    .tab{padding:10px 14px}
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Protection explainers</h1>
+    <p>Tariffs, subsidies and quotas · NSW HSC Economics</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Choose an explainer">
+    <button class="tab" role="tab" id="t-tariff"  data-k="tariff"  style="--c:var(--tariff)"  aria-selected="true"><b>Tariff</b><span>A tax on imports: who gains, who loses, and the revenue raised</span></button>
+    <button class="tab" role="tab" id="t-subsidy" data-k="subsidy" style="--c:var(--subsidy)" aria-selected="false"><b>Subsidy</b><span>A payment to domestic producers: output, cost and imports</span></button>
+    <button class="tab" role="tab" id="t-quota"   data-k="quota"   style="--c:var(--quota)"   aria-selected="false"><b>Quota</b><span>A limit on imports: why the government raises no revenue</span></button>
+  </div>
+
+  <div class="mode" role="group" aria-label="Choose explainer or quiz">
+    <button class="m" id="m-explainer" data-m="explainer" aria-pressed="true">Explainer</button>
+    <button class="m" id="m-quiz" data-m="quiz" aria-pressed="false">Quiz</button>
+  </div>
+
+  <div class="frame" id="frame"><iframe id="view" title="Explainer" allow="fullscreen" allowfullscreen></iframe></div>
+
+  <div class="bar">
+    <p class="hint" id="hint"></p>
+    <p class="hint mob">On a phone, tap Open full screen for a larger view.</p>
+    <a class="open" id="open" target="_blank" rel="noopener">Open full screen ↗</a>
+  </div>
+</main>
+<script>
+(function(){
+  var pages = { tariff:'tariff-explainer.html', subsidy:'subsidy-explainer.html', quota:'quota-explainer.html' };
+  var quizzes = { tariff:'../quizzes/tariffs%20quiz.html', subsidy:'../quizzes/subsidies%20quiz.html', quota:'../quizzes/quotas%20quiz.html' };
+  var hints = { explainer:'Click the animation once, then press <kbd>Space</kbd> or <kbd>\u2192</kbd> to move to the next step.', quiz:'Choose an answer. Keep trying until you get it right.' };
+  var mode = 'explainer', cur = 'tariff';
+  var names = { tariff:'Tariff explainer', subsidy:'Subsidy explainer', quota:'Quota explainer' };
+  var colours = { tariff:'var(--tariff)', subsidy:'var(--subsidy)', quota:'var(--quota)' };
+  var view = document.getElementById('view'), open = document.getElementById('open');
+  var frame = document.getElementById('frame'), hint = document.getElementById('hint');
+  function show(k, m){
+    if (!pages[k]) k = 'tariff';
+    cur = k; mode = (m === 'quiz') ? 'quiz' : 'explainer';
+    var src = mode === 'quiz' ? quizzes[k] : pages[k];
+    view.src = src; view.title = names[k] + (mode === 'quiz' ? ' quiz' : '');
+    open.href = src;
+    document.documentElement.style.setProperty('--c', colours[k]);
+    open.style.setProperty('--c', colours[k]);
+    frame.classList.toggle('quiz', mode === 'quiz');
+    hint.innerHTML = hints[mode];
+    Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
+      t.setAttribute('aria-selected', t.dataset.k === k ? 'true' : 'false');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.m'), function(b){
+      b.setAttribute('aria-pressed', b.dataset.m === mode ? 'true' : 'false');
+    });
+    try { history.replaceState(null, '', '#' + k + (mode === 'quiz' ? '-quiz' : '')); } catch(e){}
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
+    t.addEventListener('click', function(){ show(t.dataset.k, mode); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.m'), function(b){
+    b.addEventListener('click', function(){ show(cur, b.dataset.m); });
+  });
+  var h = (location.hash || '').replace('#','').split('-');
+  show(h[0], h[1] === 'quiz' ? 'quiz' : 'explainer');
+})();
+</script>
+</body>
+</html>

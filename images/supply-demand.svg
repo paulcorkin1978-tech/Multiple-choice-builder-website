@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" font-family="Nunito, Verdana, sans-serif">
+  <rect width="520" height="400" fill="#fffdf5"/>
+  <!-- axes -->
+  <line x1="80" y1="40" x2="80" y2="330" stroke="#2d2a4a" stroke-width="3" stroke-linecap="round"/>
+  <line x1="80" y1="330" x2="470" y2="330" stroke="#2d2a4a" stroke-width="3" stroke-linecap="round"/>
+  <text x="46" y="190" fill="#2d2a4a" font-size="18" font-weight="800" text-anchor="middle" transform="rotate(-90 46 190)">Price</text>
+  <text x="275" y="372" fill="#2d2a4a" font-size="18" font-weight="800" text-anchor="middle">Quantity</text>
+
+  <!-- demand (downward) -->
+  <line x1="110" y1="70" x2="440" y2="300" stroke="#e8447a" stroke-width="4.5" stroke-linecap="round"/>
+  <text x="452" y="305" fill="#e8447a" font-size="22" font-weight="900">D</text>
+  <!-- supply (upward) -->
+  <line x1="110" y1="300" x2="440" y2="70" stroke="#00a98a" stroke-width="4.5" stroke-linecap="round"/>
+  <text x="452" y="75" fill="#00a98a" font-size="22" font-weight="900">S</text>
+
+  <!-- equilibrium at (275,185) -->
+  <line x1="80" y1="185" x2="275" y2="185" stroke="#8b8794" stroke-width="2" stroke-dasharray="6 5"/>
+  <line x1="275" y1="185" x2="275" y2="330" stroke="#8b8794" stroke-width="2" stroke-dasharray="6 5"/>
+  <circle cx="275" cy="185" r="7" fill="#fff" stroke="#f0a500" stroke-width="4"/>
+  <text x="72" y="190" fill="#c47f00" font-size="15" font-weight="800" text-anchor="end">Pₑ</text>
+  <text x="275" y="349" fill="#c47f00" font-size="15" font-weight="800" text-anchor="middle">Qₑ</text>
+</svg>

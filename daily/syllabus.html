@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Syllabus · Theory2Econ</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#fffdf5;color:#2d2a4a;font-family:'Nunito','Segoe UI',system-ui,sans-serif}
+  #topbar{background:#2d2a4a;color:#fff;padding:12px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  #brand{font-weight:900;font-size:18px}#brand span{color:#00e5c0}#brand small{color:#b9b6d6;font-weight:800;font-size:13px;margin-left:8px}
+  main{max-width:860px;margin:0 auto;padding:26px 18px 60px}
+  .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .tab{font-family:inherit;font-weight:900;font-size:16px;padding:10px 22px;border-radius:14px;border:2.5px solid #2d2a4a;background:#fff;color:#2d2a4a;cursor:pointer;box-shadow:0 3px 0 #e0f7f1}
+  .tab small{display:block;font-weight:700;font-size:12px;color:#7b7894}
+  .tab.on{background:#6c5ce7;color:#fff;border-color:#6c5ce7;box-shadow:0 3px 0 #5346c4}.tab.on small{color:#e2deff}
+  .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  #q{flex:1;min-width:200px;font-family:inherit;font-size:15px;padding:10px 14px;border:2px solid #e4e2f4;border-radius:12px;color:#2d2a4a;background:#fff}
+  #q:focus{outline:none;border-color:#6c5ce7}
+  .sm{font-family:inherit;font-weight:800;font-size:13px;padding:9px 14px;border-radius:10px;border:2px solid #e4e2f4;background:#fff;color:#5346c4;cursor:pointer}
+  .sm:hover{border-color:#6c5ce7}
+  details.topic{background:#fff;border:2.5px solid #2d2a4a;border-radius:18px;margin-bottom:12px;box-shadow:5px 5px 0 #e0f7f1;overflow:hidden}
+  details.topic>summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;align-items:center;gap:12px;font-weight:900;font-size:19px}
+  details.topic>summary::-webkit-details-marker{display:none}
+  details.topic>summary::before{content:'';width:0;height:0;border-left:9px solid #6c5ce7;border-top:6px solid transparent;border-bottom:6px solid transparent;transition:transform .15s;flex-shrink:0}
+  details.topic[open]>summary::before{transform:rotate(90deg)}
+  .num{background:#6c5ce7;color:#fff;border-radius:999px;font-size:13px;font-weight:900;min-width:28px;height:28px;display:grid;place-items:center;padding:0 8px}
+  .meta{margin-left:auto;font-size:12.5px;font-weight:800;color:#7b7894;white-space:nowrap}
+  .subs{padding:4px 22px 18px;border-top:2px solid #efecff}
+  .sub h3{margin:18px 0 6px;font-size:14px;letter-spacing:.03em;color:#5346c4;font-weight:900;text-transform:uppercase}
+  .sub p{margin:4px 0 6px;font-size:15.5px;line-height:1.5;color:#3d3960}
+  .sub ul{margin:4px 0 0;padding-left:22px}
+  .sub li{font-size:15.5px;line-height:1.5;margin:4px 0}
+  .sub li ul{margin-top:2px}
+  .sub li::marker{color:#00b894}
+  .hide{display:none!important}
+  #none{display:none;padding:30px;text-align:center;color:#7b7894;font-weight:700}
+  .foot{margin-top:24px;font-size:12.5px;color:#9a97b4;font-weight:700;line-height:1.5}
+  mark{background:#fff0b3;border-radius:3px;padding:0 1px}
+</style>
+</head>
+<body>
+<div id="topbar"><div id="brand">theory2<span>Econ</span><small>· Syllabus</small></div></div>
+<main>
+  <div class="tabs" id="tabs"></div>
+  <div class="tools">
+    <input id="q" type="search" placeholder="Search the syllabus points…">
+    <button class="sm" id="openall">Open all</button>
+    <button class="sm" id="closeall">Close all</button>
+  </div>
+  <div id="out"></div>
+  <div id="none">No syllabus points match that search.</div>
+  <div class="foot">Year 11: NESA Economics 11–12 (2025), content only. Year 12: NESA Economics Stage 6 (2009), HSC course, “students learn about” only.</div>
+</main>
+<script src="data/syllabus.js"></script>
+<script>
+(function(){
+  var D=T2E.syllabus, cur=D[0].id, $=function(i){return document.getElementById(i)};
+  try{ var s=localStorage.getItem('t2e.syl.course'); if(s&&D.some(function(c){return c.id===s})) cur=s; }catch(e){}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function li(p){
+    if(typeof p==='string') return '<li>'+esc(p)+'</li>';
+    return '<li>'+esc(p.t)+'<ul>'+p.sub.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul></li>';
+  }
+  function count(t){ var n=0; t.subs.forEach(function(s){ s.points.forEach(function(p){ n+= typeof p==='string'?1:1+p.sub.length; }); }); return n; }
+  function render(){
+    var c=D.filter(function(x){return x.id===cur})[0];
+    $('tabs').innerHTML=D.map(function(x){return '<button class="tab'+(x.id===cur?' on':'')+'" data-c="'+x.id+'">'+esc(x.label)+'<small>'+esc(x.note)+'</small></button>'}).join('');
+    $('out').innerHTML=c.topics.map(function(t,i){
+      return '<details class="topic"><summary><span class="num">'+(i+1)+'</span><span>'+esc(t.label)+'</span><span class="meta">'+t.hours+' hours · '+count(t)+' points</span></summary><div class="subs">'+
+        t.subs.map(function(s){
+          return '<section class="sub"><h3>'+esc(s.label)+'</h3>'+(s.note?'<p>'+esc(s.note)+'</p>':'')+(s.points.length?'<ul>'+s.points.map(li).join('')+'</ul>':'')+'</section>';
+        }).join('')+'</div></details>';
+    }).join('');
+    $('q').value=''; $('none').style.display='none';
+    document.querySelectorAll('.tab').forEach(function(b){ b.onclick=function(){ cur=b.dataset.c; try{localStorage.setItem('t2e.syl.course',cur)}catch(e){} render(); }; });
+  }
+  function search(){
+    var q=$('q').value.trim().toLowerCase(), any=false;
+    document.querySelectorAll('details.topic').forEach(function(t){
+      var hit=false;
+      t.querySelectorAll('.sub').forEach(function(s){
+        var shown=false;
+        s.querySelectorAll(':scope > ul > li').forEach(function(l){
+          var m=!q||l.textContent.toLowerCase().indexOf(q)>-1; l.classList.toggle('hide',!m); if(m) shown=true;
+        });
+        var head=!q||s.querySelector('h3').textContent.toLowerCase().indexOf(q)>-1||(s.querySelector('p')&&s.querySelector('p').textContent.toLowerCase().indexOf(q)>-1);
+        if(head&&q){ s.querySelectorAll(':scope > ul > li').forEach(function(l){l.classList.remove('hide')}); shown=true; }
+        s.classList.toggle('hide',!shown&&!head); if(shown||head) hit=true;
+      });
+      t.classList.toggle('hide',!hit); if(hit){ any=true; if(q) t.open=true; }
+    });
+    $('none').style.display=(q&&!any)?'block':'none';
+  }
+  $('q').oninput=search;
+  $('openall').onclick=function(){document.querySelectorAll('details.topic:not(.hide)').forEach(function(d){d.open=true})};
+  $('closeall').onclick=function(){document.querySelectorAll('details.topic').forEach(function(d){d.open=false})};
+  render();
+})();
+</script>
+</body>
+</html>

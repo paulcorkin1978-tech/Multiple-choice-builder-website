@@ -17,3 +17,7 @@ recordings/
 *.m4a
 Recording-cleaned.m4a
 *.mp4
+
+# Daily bank: unreviewed drafts and source photos (may be past-HSC material) stay local
+daily/draft/
+daily/source/

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Comparative Advantage Explainer — Theory2Econ</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:#05050c;height:100%;overflow:hidden;font-family:'Nunito',system-ui,sans-serif;}
+  #stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--s,1));transform-origin:center center;}
+  svg{display:block;width:1920px;height:1080px;}
+  .el{opacity:0;transition:opacity .6s ease;}
+  .el.on{opacity:1;}
+  .glow{filter:drop-shadow(0 0 10px rgba(0,229,192,.7));}
+
+  #bar{position:fixed;left:16px;bottom:14px;z-index:5;display:flex;align-items:center;gap:10px;background:#0d0d1c;border:1.5px solid #23233f;border-radius:12px;padding:7px 10px;transition:opacity .3s;}
+  #bar.hide{opacity:0;pointer-events:none;}
+  #bar button{width:36px;height:32px;border:1.5px solid #2e2e52;background:#15152a;color:#c9c9e8;border-radius:8px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;}
+  #bar button:hover:not(:disabled){background:#23233f;color:#fff;border-color:#4a4a7a;}
+  #bar button:disabled{opacity:.28;cursor:default;}
+  #num{color:#ffd43b;font-size:16px;font-weight:900;min-width:60px;text-align:center;}
+  #lbl{color:#5a5a80;font-size:12.5px;font-weight:700;max-width:620px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);color:#33334d;font-size:13px;font-weight:800;user-select:none;transition:opacity .3s;}
+  #hint.hide{opacity:0;}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="1080" fill="#05050c"/>
+
+  <g id="title" class="el">
+    <text x="960" y="78" fill="#e8e8ff" font-size="52" font-weight="900" text-anchor="middle">Comparative advantage</text>
+    <text x="960" y="128" fill="#8a8ac0" font-size="28" font-weight="800" text-anchor="middle">Mark the miner <tspan fill="#f5a623">vs</tspan> Felicity the farmer</text>
+  </g>
+
+  <g id="prodG" class="el"></g>
+  <g id="absNote" class="el">
+    <text x="960" y="505" fill="#ffd43b" font-size="27" font-weight="800" text-anchor="middle">Mark makes more of <tspan font-weight="900">both</tspan> — an absolute advantage in each.</text>
+    <text x="960" y="548" fill="#ffd43b" font-size="27" font-weight="800" text-anchor="middle">So why would he ever trade with Felicity?</text>
+  </g>
+
+  <g id="oppG" class="el"></g>
+  <g id="caOre" class="el">
+    <text x="960" y="826" fill="#9aa6c4" font-size="25" font-weight="800" text-anchor="middle">Iron ore is cheaper for <tspan fill="#f5a623" font-weight="900">Mark</tspan> — ½ a beef vs 1 beef → his comparative advantage.</text>
+  </g>
+  <g id="caBeef" class="el">
+    <text x="960" y="872" fill="#9aa6c4" font-size="25" font-weight="800" text-anchor="middle">Beef is cheaper for <tspan fill="#16c95f" font-weight="900">Felicity</tspan> — 1 iron ore vs 2 → her comparative advantage.</text>
+  </g>
+  <g id="caConc" class="el">
+    <text x="960" y="924" fill="#00e5c0" font-size="28" font-weight="900" text-anchor="middle">So Mark should mine and Felicity should farm — even though Mark is better at both.</text>
+  </g>
+
+  <g id="ppfG" class="el"></g>
+  <g id="ppfSlope" class="el"></g>
+  <g id="tradeG" class="el"></g>
+  <g id="gainNote" class="el">
+    <text x="960" y="800" fill="#00e5c0" font-size="27" font-weight="900" text-anchor="middle">Specialising made 2 extra iron ore out of nothing —</text>
+    <text x="960" y="840" fill="#00e5c0" font-size="27" font-weight="900" text-anchor="middle">shared through trade, so both end up with MORE (+1 iron ore each).</text>
+  </g>
+
+  <g id="sumG" class="el">
+    <text x="960" y="360" fill="#e8e8ff" font-size="46" font-weight="900" text-anchor="middle">Ricardo's law of comparative advantage</text>
+    <text x="960" y="470" fill="#b8b8dc" font-size="32" font-weight="800" text-anchor="middle">Specialise in what you give up <tspan fill="#00e5c0">least</tspan> to produce — your lowest opportunity cost —</text>
+    <text x="960" y="520" fill="#b8b8dc" font-size="32" font-weight="800" text-anchor="middle">then trade. Even the best all-rounder gains.</text>
+    <text x="960" y="640" fill="#f5a623" font-size="34" font-weight="900" text-anchor="middle">And it is exactly why countries trade.</text>
+  </g>
+
+</svg>
+</div>
+
+<div id="bar">
+  <button id="prev" title="Back">←</button>
+  <span id="num">0 / 10</span>
+  <button id="next" title="Next">→</button>
+  <span id="lbl"></span>
+</div>
+<div id="hint">SPACE / CLICK → next · ← back · R restart · H hide toolbar</div>
+
+<script>
+  const NS='http://www.w3.org/2000/svg';
+  // ---- table builder ----
+  function cell(x,y,w,txt,{size=30,weight=800,fill='#e8e8ff',anchor='middle'}={}){
+    const t=document.createElementNS(NS,'text');
+    t.setAttribute('x', anchor==='start'?x+18:(anchor==='end'?x+w-18:x+w/2));
+    t.setAttribute('y', y); t.setAttribute('font-size',size); t.setAttribute('font-weight',weight);
+    t.setAttribute('fill',fill); t.setAttribute('text-anchor',anchor);
+    t.innerHTML=txt; return t;
+  }
+  function rect(x,y,w,h,fill,stroke){
+    const r=document.createElementNS(NS,'rect');
+    r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);
+    r.setAttribute('rx',10); r.setAttribute('fill',fill);
+    if(stroke){r.setAttribute('stroke',stroke);r.setAttribute('stroke-width',2);}
+    return r;
+  }
+  // generic 3-section table: colX = [x0,x1,x2,x3] boundaries; rows: [[c0,c1,c2],...]; first row is header
+  function buildTable(g, colX, y0, rowH, rows, hdrFill){
+    rows.forEach((row,ri)=>{
+      const y=y0+ri*rowH, isH=ri===0;
+      g.appendChild(rect(colX[0], y, colX[colX.length-1]-colX[0], rowH, isH?hdrFill:'#0c0c18', '#3a3a5e'));
+      row.forEach((c,ci)=>{
+        const x=colX[ci], w=colX[ci+1]-colX[ci];
+        const fill = isH ? '#cfcfe8' : (ci===0 ? '#e8e8ff' : '#ffffff');
+        const sz = isH?26:(ci===0?26:32);
+        g.appendChild(cell(x, y+rowH/2+sz/3, w, c, {size:sz, weight:isH?900:800, fill, anchor:ci===0?'start':'middle'}));
+      });
+    });
+  }
+
+  // ---- production table ----
+  (function(){
+    const g=document.getElementById('prodG');
+    const cols=[460,900,1200,1540];
+    buildTable(g, cols, 170, 90, [
+      ['In a day…','Iron ore','Beef'],
+      ['Mark — the miner','12','6'],
+      ['Felicity — the farmer','4','4'],
+    ], '#17213a');
+  })();
+
+  // ---- opportunity-cost table ----
+  (function(){
+    const g=document.getElementById('oppG');
+    const cols=[460,900,1200,1540];
+    buildTable(g, cols, 528, 82, [
+      ['Opportunity cost…','1 iron ore costs','1 beef costs'],
+      ['Mark','½ a beef','2 iron ore'],
+      ['Felicity','1 beef','1 iron ore'],
+    ], '#15152c');
+  })();
+
+  // ---- production possibility frontiers ----
+  (function(){
+    const g=document.getElementById('ppfG'), gs=document.getElementById('ppfSlope');
+    const ox=640, oy=740, gx=o=>ox+o*48, gy=b=>oy-b*72;
+    function line(p,x1,y1,x2,y2,col,w){const l=document.createElementNS(NS,'line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('stroke',col);l.setAttribute('stroke-width',w);l.setAttribute('stroke-linecap','round');p.appendChild(l);}
+    function dot(p,x,y,col){const c=document.createElementNS(NS,'circle');c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',8);c.setAttribute('fill',col);p.appendChild(c);}
+    function txt(p,x,y,s,size,col,anchor,weight,rot){const t=document.createElementNS(NS,'text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('font-size',size);t.setAttribute('font-weight',weight||800);t.setAttribute('fill',col);t.setAttribute('text-anchor',anchor||'middle');if(rot)t.setAttribute('transform','rotate(-90 '+x+' '+y+')');t.textContent=s;p.appendChild(t);}
+    // axes + titles + ticks
+    line(g,ox,oy,ox,gy(7),'#3a3a5e',3); line(g,ox,oy,gx(13),oy,'#3a3a5e',3);
+    txt(g,960,805,'Iron ore (per day)',24,'#a6a6d0'); txt(g,568,480,'Beef (per day)',24,'#a6a6d0','middle',800,true);
+    txt(g,ox-14,oy+8,'0',22,'#8a8ac0','end');
+    txt(g,gx(4),oy+34,'4',22,'#8a8ac0'); txt(g,gx(12),oy+34,'12',22,'#8a8ac0');
+    txt(g,ox-16,gy(4)+8,'4',22,'#8a8ac0','end'); txt(g,ox-16,gy(6)+8,'6',22,'#8a8ac0','end');
+    // Felicity frontier (0,4)->(4,0)
+    line(g,gx(0),gy(4),gx(4),gy(0),'#16c95f',5); dot(g,gx(0),gy(4),'#16c95f'); dot(g,gx(4),gy(0),'#16c95f');
+    txt(g,gx(4)+42,gy(0)-4,'Felicity',24,'#16c95f','start',900);
+    // Mark frontier (0,6)->(12,0)
+    line(g,gx(0),gy(6),gx(12),gy(0),'#f5a623',5); dot(g,gx(0),gy(6),'#f5a623'); dot(g,gx(12),gy(0),'#f5a623');
+    txt(g,gx(12)+16,gy(0)-4,'Mark',24,'#f5a623','start',900);
+    // slope callouts (second PPF slide)
+    txt(gs,1070,330,'Mark: 1 ore = ½ beef  (flatter)',24,'#f5a623','start',900);
+    txt(gs,1070,378,'Felicity: 1 ore = 1 beef  (steeper)',24,'#16c95f','start',900);
+  })();
+
+  // ---- trade table (3 revealable data columns) ----
+  (function(){
+    const g=document.getElementById('tradeG');
+    const Lx=120, c0=Lx+300, cw=460;           // label col then three data cols
+    const colsX=[Lx, c0, c0+cw, c0+2*cw, c0+3*cw];
+    const y0=210, rowH=118;
+    const rowLbl=['','Mark','Felicity','Together'];
+    const data=[
+      ['Before — self-sufficient','Specialise fully','After trading 3 ore for 2 beef'],
+      ['8 ore, 2 beef','12 ore, 0 beef','9 ore, 2 beef'],
+      ['2 ore, 2 beef','0 ore, 4 beef','3 ore, 2 beef'],
+      ['10 ore, 4 beef','12 ore, 4 beef','12 ore, 4 beef'],
+    ];
+    // label column (always in base group)
+    rowLbl.forEach((t,ri)=>{
+      const y=y0+ri*rowH, isH=ri===0;
+      g.appendChild(rect(Lx,y,300,rowH, isH?'#15152c':'#0c0c18','#3a3a5e'));
+      if(t) g.appendChild(cell(Lx,y+rowH/2+10,300,t,{size:30,weight:900,fill:'#e8e8ff',anchor:'start'}));
+    });
+    // three data columns as separate groups
+    const ids=['tcolBefore','tcolSpec','tcolAfter'];
+    const hfill=['#17213a','#2a1f0a','#0a2016'];
+    for(let ci=0;ci<3;ci++){
+      const cg=document.createElementNS(NS,'g'); cg.id=ids[ci]; cg.classList.add('el');
+      const x=colsX[ci+1];
+      for(let ri=0;ri<4;ri++){
+        const y=y0+ri*rowH, isH=ri===0;
+        cg.appendChild(rect(x,y,cw,rowH, isH?hfill[ci]:'#0c0c18','#3a3a5e'));
+        const txt=data[ri][ci];
+        const emph = (ci===2 && (ri===1||ri===2)); // highlight the gains in the After column
+        cg.appendChild(cell(x,y+rowH/2+ (isH?2:10), cw, txt,
+          {size:isH?25:30, weight:isH?900:800, fill: isH?'#cfcfe8':(emph?'#00e5c0':'#ffffff')}));
+        if(emph){ // up-arrow badge
+          cg.appendChild(cell(x,y+rowH/2+42,cw,'↑ +1 iron ore',{size:20,weight:900,fill:'#00e5c0'}));
+        }
+      }
+      document.getElementById('stage').querySelector('svg').insertBefore(cg, document.getElementById('gainNote'));
+    }
+  })();
+
+  const STAGES=[
+    {show:['title'], cap:''},
+    {show:['title','prodG'], cap:'In a day, Mark can make 12 iron ore or 6 beef; Felicity 4 of either.'},
+    {show:['title','prodG','absNote'], cap:'Mark is better at both — an absolute advantage. So why trade?'},
+    {show:['title','ppfG'], cap:'The same data as a production possibility frontier — Mark makes more of both, so his frontier lies outside.'},
+    {show:['title','ppfG','ppfSlope'], cap:'But the frontiers have different slopes, and the slope is the opportunity cost. Mark gives up less beef per ore.'},
+    {show:['title','prodG','oppG'], cap:'The answer is opportunity cost — what each gives up.'},
+    {show:['title','prodG','oppG','caOre'], cap:'Iron ore is cheaper for Mark — his comparative advantage.'},
+    {show:['title','prodG','oppG','caOre','caBeef'], cap:'Beef is cheaper for Felicity — her comparative advantage.'},
+    {show:['title','prodG','oppG','caOre','caBeef','caConc'], cap:'So Mark mines and Felicity farms — even though Mark is better at both.'},
+    {show:['title','tradeG','tcolBefore'], cap:'Before trade, each is self-sufficient.'},
+    {show:['title','tradeG','tcolBefore','tcolSpec'], cap:'Specialise fully — and 2 extra iron ore appear from nowhere.'},
+    {show:['title','tradeG','tcolBefore','tcolSpec','tcolAfter','gainNote'], cap:'Trade 3 ore for 2 beef — and both end up with more.'},
+    {show:['sumG'], cap:'Specialise by comparative advantage, then trade — everyone gains.'},
+  ];
+
+  let cur=-1;
+  function render(t){
+    const on=new Set(STAGES[t].show);
+    document.querySelectorAll('.el').forEach(e=>e.classList.toggle('on', on.has(e.id)));
+    document.getElementById('num').textContent=t+' / '+(STAGES.length-1);
+    document.getElementById('lbl').textContent=STAGES[t].cap||'(opening frame)';
+    document.getElementById('prev').disabled=(t===0);
+    document.getElementById('next').disabled=(t===STAGES.length-1);
+  }
+  function go(n){n=Math.max(0,Math.min(STAGES.length-1,n)); if(n===cur)return; cur=n; render(cur);}
+  document.getElementById('prev').addEventListener('click',e=>{e.stopPropagation();go(cur-1);});
+  document.getElementById('next').addEventListener('click',e=>{e.stopPropagation();go(cur+1);});
+  document.addEventListener('click',()=>go(cur+1));
+  document.addEventListener('keydown',e=>{
+    if(e.code==='Space'||e.code==='ArrowRight'||e.code==='Enter'){e.preventDefault();go(cur+1);}
+    else if(e.code==='ArrowLeft'||e.code==='Backspace'){e.preventDefault();go(cur-1);}
+    else if(e.key==='r'||e.key==='R'){cur=-1;go(0);}
+    else if(e.key==='h'||e.key==='H'){document.getElementById('hint').classList.toggle('hide');document.getElementById('bar').classList.toggle('hide');}
+  });
+  function fit(){document.getElementById('stage').style.setProperty('--s',Math.min(innerWidth/1920,innerHeight/1080));}
+  addEventListener('resize',fit); fit(); go(0);
+</script>
+</body>
+</html>
